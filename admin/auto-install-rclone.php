@@ -9,7 +9,7 @@ function execute($cmd) {
 
 if (isset($_POST['token'])) {
     $token = trim($_POST['token']);
-    
+
     // Simpan token ke file sementara
     $tmpTokenPath = "/tmp/token.json";
     file_put_contents($tmpTokenPath, $token);
@@ -27,10 +27,8 @@ if [ ! -f "\$TOKEN_FILE" ]; then
     exit 1
 fi
 
-TOKEN=\$(cat "\$TOKEN_FILE")
-
 # Validasi token JSON
-if ! echo "\$TOKEN" | jq .access_token &>/dev/null; then
+if ! jq .access_token "\$TOKEN_FILE" &>/dev/null; then
     echo "❌ Token JSON tidak valid atau rusak!"
     exit 1
 fi
@@ -51,14 +49,11 @@ fi
 RCLONE_CONF="/root/.config/rclone/rclone.conf"
 mkdir -p "\$(dirname "\$RCLONE_CONF")"
 
-# Bersihkan newline dan carriage return dari token
-TOKEN_CLEAN=$(echo "$TOKEN" | tr -d '\n' | tr -d '\r')
-
-cat > "$RCLONE_CONF" <<EOF
+cat > "\$RCLONE_CONF" <<EOF
 [GDRIVE]
 type = drive
 scope = drive
-token = "$TOKEN_CLEAN"
+token = $(cat "\$TOKEN_FILE")
 team_drive =
 EOF
 
