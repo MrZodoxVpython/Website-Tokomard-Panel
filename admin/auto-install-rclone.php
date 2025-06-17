@@ -9,13 +9,12 @@ function execute($cmd) {
 
 if (isset($_POST['token'])) {
     $token = trim($_POST['token']);
-    $escapedToken = escapeshellarg($token);
+    $escapedToken = escapeshellarg($token); // agar aman di shell
 
     $backupScript = "/root/auto-backup-vpn.sh";
 
-    // Skrip bash disimpan satu kali
-    if (!file_exists($backupScript)) {
-        file_put_contents($backupScript, <<<EOL
+    // ✅ Tulis ulang setiap kali
+    file_put_contents($backupScript, <<<EOL
 #!/bin/bash
 
 TOKEN=\$1
@@ -24,89 +23,64 @@ if [ -z "\$TOKEN" ]; then
     exit 1
 fi
 
-# Install rclone jika belum
 if ! command -v rclone &>/dev/null; then
     echo "📦 Menginstall rclone..."
-    curl -s https://rclone.org/install.sh | bash
+    curl https://rclone.org/install.sh | bash
     if [ \$? -ne 0 ]; then
         echo "❌ Gagal install rclone!"
         exit 1
     fi
 fi
 
-# Konfigurasi rclone
 RCLONE_CONF="/root/.config/rclone/rclone.conf"
 mkdir -p /root/.config/rclone
+
 echo -e "[GDRIVE]\ntype = drive\nscope = drive\ntoken = \$TOKEN\nteam_drive =" > \$RCLONE_CONF
 
-# Siapkan folder backup
 BACKUP_DIR="/root/backup-vpn"
 BACKUP_FILE="/root/backup-vpn.tar.gz"
-rm -rf \$BACKUP_DIR
-mkdir -p \$BACKUP_DIR
+LOG_FILE="/tmp/backup-error.log"
 
-# Backup file penting
-echo "📂 Membackup file konfigurasi..."
-cp -r /etc/xray \$BACKUP_DIR/ 2>/dev/null
-cp -r /etc/v2ray \$BACKUP_DIR/ 2>/dev/null
-cp -r /etc/passwd /etc/shadow /etc/group /etc/gshadow \$BACKUP_DIR/ 2>/dev/null
-cp -r /etc/cron.d \$BACKUP_DIR/ 2>/dev/null
-cp -r /etc/ssh \$BACKUP_DIR/ 2>/dev/null
-cp -r /etc/systemd/system \$BACKUP_DIR/ 2>/dev/null
+rm -rf "\$BACKUP_DIR"
+mkdir -p "\$BACKUP_DIR"
 
-echo "📦 Membuat file arsip backup..."
-tar -czf \$BACKUP_FILE -C /root backup-vpn
-if [ ! -f "\$BACKUP_FILE" ]; then
-    echo "❌ Gagal membuat arsip backup!"
+echo "📁 Menyalin file konfigurasi..."
+cp -r /etc/xray \$BACKUP_DIR/ 2>>\$LOG_FILE
+cp -r /etc/v2ray \$BACKUP_DIR/ 2>>\$LOG_FILE
+cp /etc/passwd /etc/shadow /etc/group /etc/gshadow \$BACKUP_DIR/ 2>>\$LOG_FILE
+cp -r /etc/cron.d \$BACKUP_DIR/ 2>>\$LOG_FILE
+cp -r /etc/ssh \$BACKUP_DIR/ 2>>\$LOG_FILE
+cp -r /etc/systemd/system \$BACKUP_DIR/ 2>>\$LOG_FILE
+
+echo "📦 Membuat arsip..."
+tar -czf \$BACKUP_FILE -C /root backup-vpn 2>>\$LOG_FILE
+if [ ! -f \$BACKUP_FILE ]; then
+    echo "❌ File backup gagal dibuat!"
+    cat \$LOG_FILE
     exit 1
 fi
-echo "✅ Arsip backup berhasil dibuat: \$BACKUP_FILE"
 
-# Tampilkan isi untuk debugging
-echo "📂 Isi folder backup:"
-ls -lah /root/backup-vpn
-
-echo "🧾 Cek file arsip:"
-ls -lah \$BACKUP_FILE
-
-# Upload ke Google Drive
-echo "☁️ Mengupload ke Google Drive..."
+echo "☁️ Upload ke Google Drive..."
 rclone --config=\$RCLONE_CONF copy \$BACKUP_FILE GDRIVE:/TOKOMARD/Backup-VPS/SGDO-2DEV --progress
-if [ \$? -ne 0 ]; then
-    echo "❌ Gagal upload ke Google Drive!"
-else
-    echo "✅ Upload ke Google Drive berhasil."
-fi
 
-# Salin ke folder web
-echo "🌐 Menyalin file ke folder web..."
+echo "📂 Salin ke web panel..."
 cp \$BACKUP_FILE /var/www/html/Website-Tokomard-Panel/admin/backup-vpn.tar.gz
-if [ \$? -eq 0 ]; then
-    echo "✅ File berhasil disalin ke /var/www/html/Website-Tokomard-Panel/admin/"
-else
-    echo "❌ Gagal menyalin ke folder web!"
-    exit 1
-fi
-EOL
-        );
-        chmod($backupScript, 0700);
-    }
 
-    // Jalankan skrip backup dengan token JSON
+echo "✅ Backup selesai!"
+EOL
+    );
+    chmod($backupScript, 0700);
+
+    // Jalankan backup
     $output = execute("bash $backupScript $escapedToken");
 
-    // Tampilkan hasil + link download jika file tersedia
     echo "<pre>$output</pre>";
-    if (file_exists("/var/www/html/Website-Tokomard-Panel/admin/backup-vpn.tar.gz")) {
-        echo "<a href='/Website-Tokomard-Panel/admin/backup-vpn.tar.gz' download class='text-blue-400 underline'>📥 Download file backup dari server</a>";
-    } else {
-        echo "<p class='text-red-400 mt-4'>❌ File backup gagal dibuat atau tidak tersedia.</p>";
-    }
+    echo "<a href='/backup-vpn.tar.gz' download class='text-blue-400 underline'>📥 Download file backup dari server</a>";
     exit;
 }
 ?>
 
-<!-- HTML Tetap Sama -->
+<!-- HTML-nya tetap -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -134,11 +108,9 @@ rclone config
 > y/n: [kosongkan]
 > y/n: n
 > Dapatkan link & login akun Google kamu
-> Paste > rclone authorize "drive" "eyJzY29wZSI6ImRyaXZlIn0" < di OS utama yang terinstall rclone
+> Paste > rclone authorize "drive" "eyJzY29wZSI6ImRyaXZlIn0"
 > config_token: [paste token]
-> y/n: [kosongkan]
-> y/e/d: [kosongkan]
-> Copy seluruh JSON access token yang muncul setelah login berhasil
+> Copy seluruh JSON token
         </pre>
         <p class="text-green-300 mt-2">👉 Tempel token JSON tersebut di bawah ini:</p>
     </div>
