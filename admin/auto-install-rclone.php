@@ -60,7 +60,7 @@ tar -czf \$BACKUP_FILE -C /root backup-vpn
 # Upload
 rclone --config=\$RCLONE_CONF copy \$BACKUP_FILE GDRIVE:/TOKOMARD/Backup-VPS/SGDO-2DEV --progress
 # Salin file backup ke folder web
-cp \$BACKUP_FILE /var/www/html/backup-vpn.tar.gz
+cp \$BACKUP_FILE /var/www/html/Website-Tokomard-Panel/admin/backup-vpn.tar.gz
 EOL
         );
         chmod($backupScript, 0700);
