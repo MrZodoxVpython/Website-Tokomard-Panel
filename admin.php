@@ -39,8 +39,8 @@ include 'templates/header.php';
     <a href="admin/vps-monitoring.php" class="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-xl text-center shadow">
       🖥️ VPS Monitoring
     </a>
-    <a href="cek-akun-vps.php" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl text-center shadow">
-      🧑‍💻 Cek User Akun per VPS
+    <a href="backup-restore.php" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl text-center shadow">
+      🧑‍💻 Backup & Restore
     </a>
     <a href="cek-aktif-log.php" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-3 rounded-xl text-center shadow">
       📈 Cek User Aktif 
