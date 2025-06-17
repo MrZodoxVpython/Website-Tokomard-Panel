@@ -1,39 +1,35 @@
 <?php
 session_start();
-if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
-    header("Location: login.php");
+if (!isset($_SESSION['username'])) {
+    header("Location: index.php");
     exit;
 }
 
-// Fungsi mengambil data penggunaan CPU
+// CPU usage
 function getCpuUsage() {
     $load = sys_getloadavg();
     return round($load[0], 2);
 }
 
-// Fungsi mengambil data penggunaan RAM
+// RAM
 function getRamUsage() {
     $mem = explode("\n", trim(shell_exec("free -m")));
     $memInfo = preg_split('/\s+/', $mem[1]);
-    $total = $memInfo[1];
-    $used = $memInfo[2];
-    return [$used, $total];
+    return [$memInfo[2], $memInfo[1]];
 }
 
-// Fungsi mengambil penggunaan disk
+// Disk
 function getDiskUsage() {
     $disk = shell_exec("df -h / | awk 'NR==2{print $3, $2, $5}'");
-    list($used, $total, $percent) = explode(" ", trim($disk));
-    return [$used, $total, $percent];
+    return explode(" ", trim($disk));
 }
 
-// Fungsi mengambil uptime
+// Uptime
 function getUptime() {
-    $uptime = shell_exec("uptime -p");
-    return trim($uptime);
+    return trim(shell_exec("uptime -p"));
 }
 
-// Fungsi mengambil bandwidth (butuh vnstat)
+// Bandwidth
 function getBandwidth() {
     $output = shell_exec("vnstat --oneline");
     $parts = explode(";", $output);
@@ -44,11 +40,45 @@ function getBandwidth() {
     ];
 }
 
+// OS Info
+function getOSInfo() {
+    return trim(shell_exec("grep PRETTY_NAME /etc/os-release | cut -d '=' -f2 | tr -d '\"'"));
+}
+
+// Public IP
+function getPublicIP() {
+    return trim(shell_exec("curl -s ifconfig.me"));
+}
+
+// Country Info via IP (requires geoiplookup or fallback)
+function getCountry() {
+    $ip = getPublicIP();
+    $country = trim(shell_exec("curl -s ipinfo.io/$ip/country"));
+    return $country ?: "Unknown";
+}
+
+// Domain (jika memakai domain custom)
+function getDomain() {
+    $domain = trim(shell_exec("hostname -f"));
+    return $domain ?: "Unavailable";
+}
+
+// Date & Time
+function getDateTimeNow() {
+    return date("D, d M Y H:i:s");
+}
+
+// Ambil semua data
 $cpu = getCpuUsage();
-list($ramUsed, $ramTotal) = getRamUsage();
-list($diskUsed, $diskTotal, $diskPercent) = getDiskUsage();
+[$ramUsed, $ramTotal] = getRamUsage();
+[$diskUsed, $diskTotal, $diskPercent] = getDiskUsage();
 $uptime = getUptime();
 $bandwidth = getBandwidth();
+$os = getOSInfo();
+$ip = getPublicIP();
+$country = getCountry();
+$domain = getDomain();
+$datetime = getDateTimeNow();
 ?>
 
 <!DOCTYPE html>
@@ -57,7 +87,7 @@ $bandwidth = getBandwidth();
     <meta charset="UTF-8">
     <title>✅ VPS Monitoring</title>
     <script>
-        setTimeout(() => location.reload(), 10000); // Auto-refresh 10 detik
+        setTimeout(() => location.reload(), 10000); // auto-refresh
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -67,29 +97,49 @@ $bandwidth = getBandwidth();
 
         <div class="space-y-4">
             <div class="bg-gray-700 p-4 rounded-lg">
-                <h2 class="font-semibold text-lg text-blue-400">CPU Load</h2>
+                <h2 class="text-blue-400 font-semibold">CPU Load</h2>
                 <p><?= $cpu ?>%</p>
             </div>
 
             <div class="bg-gray-700 p-4 rounded-lg">
-                <h2 class="font-semibold text-lg text-blue-400">RAM Usage</h2>
+                <h2 class="text-blue-400 font-semibold">RAM Usage</h2>
                 <p><?= $ramUsed ?> MB / <?= $ramTotal ?> MB</p>
             </div>
 
             <div class="bg-gray-700 p-4 rounded-lg">
-                <h2 class="font-semibold text-lg text-blue-400">Disk Usage</h2>
+                <h2 class="text-blue-400 font-semibold">Disk Usage</h2>
                 <p><?= $diskUsed ?> / <?= $diskTotal ?> (<?= $diskPercent ?>)</p>
             </div>
 
             <div class="bg-gray-700 p-4 rounded-lg">
-                <h2 class="font-semibold text-lg text-blue-400">Uptime</h2>
+                <h2 class="text-blue-400 font-semibold">Uptime</h2>
                 <p><?= $uptime ?></p>
             </div>
 
             <div class="bg-gray-700 p-4 rounded-lg">
-                <h2 class="font-semibold text-lg text-blue-400">Bandwidth (vnstat)</h2>
+                <h2 class="text-blue-400 font-semibold">Bandwidth (vnstat)</h2>
                 <p>Download: <?= $bandwidth['rx'] ?> | Upload: <?= $bandwidth['tx'] ?> | Total: <?= $bandwidth['total'] ?></p>
             </div>
+        </div>
+
+        <!-- Informasi Tambahan -->
+        <div class="bg-gray-900 text-sm mt-8 border-t border-gray-700 pt-4">
+<pre class="bg-black rounded-xl p-4 text-green-400 overflow-x-auto">
+┌────────────────────────────────────────────────────────┐
+│  OS          : <?= $os ?>
+
+│  UPTIME      : <?= $uptime ?>
+
+│  PUBLIC IP   : <?= $ip ?>
+
+│  COUNTRY     : <?= $country ?>
+
+│  DOMAIN      : <?= $domain ?>
+
+│  DATE & TIME : <?= $datetime ?>
+
+└────────────────────────────────────────────────────────┘
+</pre>
         </div>
     </div>
 </body>
