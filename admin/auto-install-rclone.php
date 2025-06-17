@@ -74,10 +74,8 @@ rclone config
 > service_account_file: [kosongkan]
 > y/n: [kosongkan]
 > y/n: n
-> root_folder_id: [kosongkan]
-> team_drive: [kosongkan jika tidak pakai shared drive]
-> Use auto config: n
 > Dapatkan link & login akun Google kamu
+> Paste > rclone authorize "drive" "eyJzY29wZSI6ImRyaXZlIn0" < di OS utama yang terinstall rclone
 > Copy seluruh JSON access token yang muncul setelah login berhasil
         </pre>
         <p class="text-green-300 mt-2">👉 Tempel token JSON tersebut di bawah ini:</p>
