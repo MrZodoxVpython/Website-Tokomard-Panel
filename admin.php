@@ -43,7 +43,7 @@ include 'templates/header.php';
       🧑‍💻 Cek User Akun per VPS
     </a>
     <a href="cek-aktif-log.php" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-3 rounded-xl text-center shadow">
-      📈 Cek User Aktif via Log
+      📈 Cek User Aktif 
     </a>
     <a href="admin/statistik-vps.php" class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-3 rounded-xl text-center shadow">
       📊 Statistik Penggunaan
