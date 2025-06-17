@@ -76,6 +76,7 @@ rclone config
 > y/n: n
 > Dapatkan link & login akun Google kamu
 > Paste > rclone authorize "drive" "eyJzY29wZSI6ImRyaXZlIn0" < di OS utama yang terinstall rclone
+> config_token: [paste token]
 > Copy seluruh JSON access token yang muncul setelah login berhasil
         </pre>
         <p class="text-green-300 mt-2">👉 Tempel token JSON tersebut di bawah ini:</p>
