@@ -9,12 +9,14 @@ function execute($cmd) {
 
 if (isset($_POST['token'])) {
     $token = trim($_POST['token']);
-    $escapedToken = escapeshellarg($token); // agar aman di shell
+    $escapedToken = escapeshellarg($token);
 
-    $backupScript = "/root/auto-backup-vpn.sh";
+    // Simpan skrip backup di lokasi yang dapat ditulis oleh web server
+    $backupScript = "/var/www/html/Website-Tokomard-Panel/admin/auto-backup-vpn.sh";
 
-    // ✅ Tulis ulang setiap kali
-    file_put_contents($backupScript, <<<EOL
+    // Jika belum ada, buat skrip backup
+    if (!file_exists($backupScript)) {
+        $scriptContent = <<<EOL
 #!/bin/bash
 
 TOKEN=\$1
@@ -23,6 +25,7 @@ if [ -z "\$TOKEN" ]; then
     exit 1
 fi
 
+# Install rclone jika belum
 if ! command -v rclone &>/dev/null; then
     echo "📦 Menginstall rclone..."
     curl https://rclone.org/install.sh | bash
@@ -32,55 +35,55 @@ if ! command -v rclone &>/dev/null; then
     fi
 fi
 
+# Konfigurasi rclone
 RCLONE_CONF="/root/.config/rclone/rclone.conf"
 mkdir -p /root/.config/rclone
 
 echo -e "[GDRIVE]\ntype = drive\nscope = drive\ntoken = \$TOKEN\nteam_drive =" > \$RCLONE_CONF
 
+# Backup
 BACKUP_DIR="/root/backup-vpn"
 BACKUP_FILE="/root/backup-vpn.tar.gz"
-LOG_FILE="/tmp/backup-error.log"
 
-rm -rf "\$BACKUP_DIR"
-mkdir -p "\$BACKUP_DIR"
+rm -rf \$BACKUP_DIR
+mkdir -p \$BACKUP_DIR
 
-echo "📁 Menyalin file konfigurasi..."
-cp -r /etc/xray \$BACKUP_DIR/ 2>>\$LOG_FILE
-cp -r /etc/v2ray \$BACKUP_DIR/ 2>>\$LOG_FILE
-cp /etc/passwd /etc/shadow /etc/group /etc/gshadow \$BACKUP_DIR/ 2>>\$LOG_FILE
-cp -r /etc/cron.d \$BACKUP_DIR/ 2>>\$LOG_FILE
-cp -r /etc/ssh \$BACKUP_DIR/ 2>>\$LOG_FILE
-cp -r /etc/systemd/system \$BACKUP_DIR/ 2>>\$LOG_FILE
+cp -r /etc/xray \$BACKUP_DIR/
+cp -r /etc/v2ray \$BACKUP_DIR/ 2>/dev/null
+cp -r /etc/passwd /etc/shadow /etc/group /etc/gshadow \$BACKUP_DIR/
+cp -r /etc/cron.d \$BACKUP_DIR/
+cp -r /etc/ssh \$BACKUP_DIR/
+cp -r /etc/systemd/system \$BACKUP_DIR/
 
-echo "📦 Membuat arsip..."
-tar -czf \$BACKUP_FILE -C /root backup-vpn 2>>\$LOG_FILE
-if [ ! -f \$BACKUP_FILE ]; then
-    echo "❌ File backup gagal dibuat!"
-    cat \$LOG_FILE
-    exit 1
-fi
+tar -czf \$BACKUP_FILE -C /root backup-vpn
 
-echo "☁️ Upload ke Google Drive..."
+# Upload ke Google Drive
 rclone --config=\$RCLONE_CONF copy \$BACKUP_FILE GDRIVE:/TOKOMARD/Backup-VPS/SGDO-2DEV --progress
 
-echo "📂 Salin ke web panel..."
+# Salin backup ke folder web
 cp \$BACKUP_FILE /var/www/html/Website-Tokomard-Panel/admin/backup-vpn.tar.gz
+EOL;
 
-echo "✅ Backup selesai!"
-EOL
-    );
-    chmod($backupScript, 0700);
+        if (file_put_contents($backupScript, $scriptContent) === false) {
+            die("❌ Gagal membuat script backup di: $backupScript. Periksa izin direktori.");
+        }
 
-    // Jalankan backup
-    $output = execute("bash $backupScript $escapedToken");
+        chmod($backupScript, 0700);
+    }
+
+    // Jalankan script dengan sudo (butuh konfigurasi sudoers)
+    $output = execute("sudo bash $backupScript $escapedToken");
 
     echo "<pre>$output</pre>";
-    echo "<a href='/backup-vpn.tar.gz' download class='text-blue-400 underline'>📥 Download file backup dari server</a>";
+    if (file_exists("/var/www/html/Website-Tokomard-Panel/admin/backup-vpn.tar.gz")) {
+        echo "<a href='backup-vpn.tar.gz' download class='text-blue-400 underline'>📥 Download file backup dari server</a>";
+    } else {
+        echo "<p class='text-red-400 mt-4'>❌ File backup gagal dibuat atau tidak tersedia.</p>";
+    }
     exit;
 }
 ?>
 
-<!-- HTML-nya tetap -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -108,9 +111,11 @@ rclone config
 > y/n: [kosongkan]
 > y/n: n
 > Dapatkan link & login akun Google kamu
-> Paste > rclone authorize "drive" "eyJzY29wZSI6ImRyaXZlIn0"
+> Paste > rclone authorize "drive" "eyJzY29wZSI6ImRyaXZlIn0" < di OS utama yang terinstall rclone
 > config_token: [paste token]
-> Copy seluruh JSON token
+> y/n: [kosongkan]
+> y/e/d: [kosongkan]
+> Copy seluruh JSON access token yang muncul setelah login berhasil
         </pre>
         <p class="text-green-300 mt-2">👉 Tempel token JSON tersebut di bawah ini:</p>
     </div>
