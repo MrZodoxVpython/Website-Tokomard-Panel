@@ -37,7 +37,7 @@ include 'templates/header.php';
       📋 Website User Check
     </a>
     <a href="cek-vps.php" class="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-xl text-center shadow">
-      🖥️ Cek Status Semua VPS
+      🖥️ VPS Monitoring
     </a>
     <a href="cek-akun-vps.php" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl text-center shadow">
       🧑‍💻 Cek User Akun per VPS
