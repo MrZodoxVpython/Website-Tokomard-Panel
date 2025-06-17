@@ -143,7 +143,7 @@ $datetime = getDateTimeNow();
 
 │  DOMAIN VPS  : <?= $domain ?>
 
-│  DOMAIN CF   : <?= $domaincf ?>
+│  DOMAIN XRAY : <?= $domaincf ?>
 
 │  DATE & TIME : <?= $datetime ?>
 
