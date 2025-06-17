@@ -1,0 +1,45 @@
+# Ignore log files and temp data (CakePHP & FuelPHP)
+tmp/*
+logs/*
+!tmp/.gitkeep
+!logs/.gitkeep
+
+# Ignore cache
+app/tmp/*
+fuel/app/cache/*
+!app/tmp/.gitkeep
+!fuel/app/cache/.gitkeep
+
+# Ignore compiled templates
+app/tmp/cache/*
+fuel/app/tmp/*
+fuel/app/logs/*
+!fuel/app/logs/.gitkeep
+
+# Ignore environment config
+.env
+.env.*
+
+# Ignore database config (optional, if stored separately)
+fuel/app/config/development/db.php
+fuel/app/config/production/db.php
+
+# Ignore Composer dependencies (if not committed)
+vendor/
+composer.lock
+
+# Ignore IDE/editor settings
+*.swp
+*.swo
+*~
+*.bak
+*.tmp
+.DS_Store
+.vscode/
+.idea/
+
+# Ignore node/npm stuff (if used for frontend)
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
