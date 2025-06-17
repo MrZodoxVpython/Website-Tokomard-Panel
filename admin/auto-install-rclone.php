@@ -1,6 +1,4 @@
 <?php
-// auto-install-rclone.php
-
 session_start();
 
 function execute($cmd) {
@@ -10,44 +8,72 @@ function execute($cmd) {
 }
 
 if (isset($_POST['token'])) {
-    $token = $_POST['token'];
-    $rcloneDir = '/root/.config/rclone';
-    $rcloneConf = $rcloneDir . '/rclone.conf';
+    $token = trim($_POST['token']);
+    $escapedToken = escapeshellarg($token); // penting agar JSON tidak rusak di shell
 
-    // Pastikan direktori rclone ada
-    if (!is_dir($rcloneDir)) {
-        mkdir($rcloneDir, 0700, true);
+    // Simpan skrip backup sementara
+    $backupScript = "/root/auto-backup-vpn.sh";
+
+    // Jika belum ada, buat skrip backup
+    if (!file_exists($backupScript)) {
+        file_put_contents($backupScript, <<<EOL
+#!/bin/bash
+
+TOKEN=\$1
+if [ -z "\$TOKEN" ]; then
+    echo "❌ Token JSON tidak diberikan!"
+    exit 1
+fi
+
+# Install rclone jika belum
+if ! command -v rclone &>/dev/null; then
+    echo "📦 Menginstall rclone..."
+    curl https://rclone.org/install.sh | bash
+    if [ \$? -ne 0 ]; then
+        echo "❌ Gagal install rclone!"
+        exit 1
+    fi
+fi
+
+# Konfigurasi rclone
+RCLONE_CONF="/root/.config/rclone/rclone.conf"
+mkdir -p /root/.config/rclone
+
+echo -e "[GDRIVE]\ntype = drive\nscope = drive\ntoken = \$TOKEN\nteam_drive =" > \$RCLONE_CONF
+
+# Backup
+BACKUP_DIR="/root/backup-vpn"
+BACKUP_FILE="/root/backup-vpn.tar.gz"
+
+rm -rf \$BACKUP_DIR
+mkdir -p \$BACKUP_DIR
+
+cp -r /etc/xray \$BACKUP_DIR/
+cp -r /etc/v2ray \$BACKUP_DIR/ 2>/dev/null
+cp -r /etc/passwd /etc/shadow /etc/group /etc/gshadow \$BACKUP_DIR/
+cp -r /etc/cron.d \$BACKUP_DIR/
+cp -r /etc/ssh \$BACKUP_DIR/
+cp -r /etc/systemd/system \$BACKUP_DIR/
+
+tar -czf \$BACKUP_FILE -C /root backup-vpn
+
+# Upload
+rclone --config=\$RCLONE_CONF copy \$BACKUP_FILE GDRIVE:/Backup-VPN/ --progress
+EOL
+        );
+        chmod($backupScript, 0700);
     }
 
-    // Tulis konfigurasi rclone.conf
-    file_put_contents($rcloneConf, "[GDRIVE]\n");
-    file_put_contents($rcloneConf, "type = drive\n", FILE_APPEND);
-    file_put_contents($rcloneConf, "scope = drive\n", FILE_APPEND);
-    file_put_contents($rcloneConf, "token = $token\n", FILE_APPEND);
-    file_put_contents($rcloneConf, "team_drive =\n", FILE_APPEND);
+    // Eksekusi backup dengan token sebagai argumen
+    $output = execute("bash $backupScript $escapedToken");
 
-    // Jalankan proses backup
-    $backupDir = "/root/backup-vpn";
-    $backupFile = "/root/backup-vpn.tar.gz";
-    if (!is_dir($backupDir)) mkdir($backupDir, 0700, true);
-
-    execute("cp -r /etc/xray $backupDir/");
-    execute("cp -r /etc/v2ray $backupDir/ 2>/dev/null");
-    execute("cp -r /etc/passwd /etc/shadow /etc/group /etc/gshadow $backupDir/");
-    execute("cp -r /etc/cron.d $backupDir/");
-    execute("cp -r /etc/ssh $backupDir/");
-    execute("cp -r /etc/systemd/system $backupDir/");
-
-    execute("tar -czf $backupFile -C /root backup-vpn");
-    $uploadOutput = execute("rclone --config=$rcloneConf copy $backupFile GDRIVE:/TOKOMARD/Backup-VPS/SGDO-2DEV --progress");
-
-    echo "<pre>✅ Backup selesai!\n\n$uploadOutput</pre>";
-    echo "<a href='/backup-vpn.tar.gz' download class='text-blue-400 underline'>Download file backup dari server</a>";
+    echo "<pre>$output</pre>";
+    echo "<a href='/backup-vpn.tar.gz' download class='text-blue-400 underline'>📥 Download file backup dari server</a>";
     exit;
 }
-
 ?>
 
+<!-- HTML UI TIDAK DIUBAH -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
