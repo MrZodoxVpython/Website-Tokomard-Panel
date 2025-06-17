@@ -58,7 +58,11 @@ fi
 
 # Upload ke Google Drive
 echo "☁ Mengupload ke Google Drive..."
-rclone --config="$RCLONE_CONF" copy "$BACKUP_FILE" GDRIVE:/TOKOMARD/Backup-VPS/SGDO-2DEV --progress
+if ! rclone --config="$RCLONE_CONF" copy "$BACKUP_FILE" GDRIVE:/TOKOMARD/Backup-VPS/SGDO-2DEV --progress 2>&1; then
+  echo "❌ Upload ke Google Drive gagal!"
+else
+  echo "✅ Upload ke Google Drive berhasil!"
+fi
 
 # Salin ke web folder
 cp "$BACKUP_FILE" "$WEB_DEST"
