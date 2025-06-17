@@ -42,6 +42,11 @@ include 'templates/header.php';
       class="bg-yellow-500 hover:bg-yellow-600 px-6 py-4 rounded-xl text-white text-xl shadow text-center">
       ♻️ Restore dari Backup
     </button>
+    <button type="submit" href="auto-install-rclone.php"  name="action" value=""
+      class="bg-green-600 hover:bg-green-700 px-6 py-4 rounded-xl text-white text-xl shadow text-center">
+      🗃 Install rclone
+    </button>
+
   </form>
 
   <!-- Hasil Eksekusi -->
