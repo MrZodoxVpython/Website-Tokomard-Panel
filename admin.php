@@ -36,7 +36,7 @@ include 'templates/header.php';
     <a href="admin/list-user.php" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-xl text-center shadow">
       📋 Registered Account
     </a>
-    <a href="cek-vps.php" class="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-xl text-center shadow">
+    <a href="admin/vps-monitoring.php" class="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-xl text-center shadow">
       🖥️ VPS Monitoring
     </a>
     <a href="cek-akun-vps.php" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl text-center shadow">
