@@ -49,12 +49,19 @@ fi
 
 # Konfigurasi rclone
 RCLONE_CONF="/root/.config/rclone/rclone.conf"
-mkdir -p \$(dirname "\$RCLONE_CONF")
-echo -e "[GDRIVE]
+mkdir -p "$(dirname "$RCLONE_CONF")"
+
+# Hapus karakter newline dari token agar jadi satu baris
+TOKEN_CLEAN=$(echo "$TOKEN" | tr -d '\n' | tr -d '\r')
+
+cat > "$RCLONE_CONF" <<EOF
+[GDRIVE]
 type = drive
 scope = drive
-token = \$TOKEN
-team_drive =" > "\$RCLONE_CONF"
+token = $TOKEN_CLEAN
+team_drive =
+EOF
+
 
 # Lokasi backup
 BACKUP_DIR="/root/backup-vpn"
