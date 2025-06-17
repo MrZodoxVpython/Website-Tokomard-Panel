@@ -84,6 +84,7 @@ $os = getOSInfo();
 $ip = getPublicIP();
 $country = getCountry();
 $domain = getDomain();
+$domaincf = getDomaincf();
 $datetime = getDateTimeNow();
 ?>
 
@@ -140,7 +141,9 @@ $datetime = getDateTimeNow();
 
 │  COUNTRY     : <?= $country ?>
 
-│  DOMAIN      : <?= $domain ?>
+│  DOMAIN VPS  : <?= $domain ?>
+
+│  DOMAIN CF   : <?= $domaincf ?>
 
 │  DATE & TIME : <?= $datetime ?>
 
