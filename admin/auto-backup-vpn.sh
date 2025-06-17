@@ -1,9 +1,12 @@
 #!/bin/bash
 
-TOKEN=$1
-if [ -z "$TOKEN" ]; then
-    echo "❌ Token JSON tidak diberikan!"
-    exit 1
+TOKEN_BASE64="$1"
+TOKEN=$(echo "$TOKEN_BASE64" | base64 -d)
+
+# Cek validitas
+if ! echo "$TOKEN" | jq .access_token &>/dev/null; then
+  echo "❌ Token JSON tidak valid atau rusak!"
+  exit 1
 fi
 
 echo "📦 Menjalankan proses backup..."
