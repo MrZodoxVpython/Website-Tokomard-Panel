@@ -57,9 +57,15 @@ function getCountry() {
     return $country ?: "Unknown";
 }
 
-// Domain (jika memakai domain custom)
+// Domain (domain vps)
 function getDomain() {
     $domain = trim(shell_exec("hostname -f"));
+    return $domain ?: "Unavailable";
+}
+
+// Domain (domain xray cloudflare)
+function getDomaincf() {
+    $domain = trim(shell_exec("cat /etc/xray/domain"));
     return $domain ?: "Unavailable";
 }
 
