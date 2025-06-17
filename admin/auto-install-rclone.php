@@ -67,7 +67,7 @@ rclone config
 
 > n (new remote)
 > name: GDRIVE
-> storage: 18 (Google Drive)
+> storage: 20 (Google Drive)
 > scope: 1 (full access)
 > root_folder_id: [kosongkan]
 > team_drive: [kosongkan jika tidak pakai shared drive]
