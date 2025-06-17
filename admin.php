@@ -60,7 +60,7 @@ include 'templates/header.php';
       🧑‍💻 Backup & Restore
     </a>
     <a href="statistik.php" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-3 rounded-xl text-center shadow">
-      📈 Cek User Xray
+      📈 Cek User Xray Lengkap
     </a>
     <a href="admin/statistik-vps.php" class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-3 rounded-xl text-center shadow">
       📊 Statistik Bandwith
