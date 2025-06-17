@@ -34,7 +34,7 @@ include 'templates/header.php';
   <!-- Menu Admin -->
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
     <a href="admin/list-user.php" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-xl text-center shadow">
-      📋 Cek Semua Akun Terdaftar
+      📋 Website User Check
     </a>
     <a href="cek-vps.php" class="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-xl text-center shadow">
       🖥️ Cek Status Semua VPS
