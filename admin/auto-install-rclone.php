@@ -9,22 +9,30 @@ function execute($cmd) {
 
 if (isset($_POST['token'])) {
     $token = trim($_POST['token']);
-    $token_base64 = base64_encode($token); // Gunakan base64 agar aman diparsing di bash
+    
+    // Simpan token ke file sementara
+    $tmpTokenPath = "/tmp/token.json";
+    file_put_contents($tmpTokenPath, $token);
 
-    // Lokasi script backup
+    // Path ke script bash backup
     $backupScript = "/var/www/html/Website-Tokomard-Panel/admin/auto-backup-vpn.sh";
 
     if (!file_exists($backupScript)) {
         $scriptContent = <<<EOL
 #!/bin/bash
 
-TOKEN_BASE64="$1"
-TOKEN=$(echo "$TOKEN_BASE64" | base64 -d)
+TOKEN_FILE="/tmp/token.json"
+if [ ! -f "\$TOKEN_FILE" ]; then
+    echo "❌ Token file tidak ditemukan!"
+    exit 1
+fi
 
-# Cek validitas
-if ! echo "$TOKEN" | jq .access_token &>/dev/null; then
-  echo "❌ Token JSON tidak valid atau rusak!"
-  exit 1
+TOKEN=\$(cat "\$TOKEN_FILE")
+
+# Validasi token JSON
+if ! echo "\$TOKEN" | jq .access_token &>/dev/null; then
+    echo "❌ Token JSON tidak valid atau rusak!"
+    exit 1
 fi
 
 echo "📦 Menjalankan proses backup..."
@@ -56,25 +64,19 @@ WEB_DEST="/var/www/html/Website-Tokomard-Panel/admin/backup-vpn.tar.gz"
 rm -rf "\$BACKUP_DIR"
 mkdir -p "\$BACKUP_DIR"
 
-# File penting yang akan di-backup
-cp -r /etc/xray "\$BACKUP_DIR/" 2>/dev/null
-cp -r /etc/v2ray "\$BACKUP_DIR/" 2>/dev/null
+# File yang dibackup
+cp -r /etc/xray "\$BACKUP_DIR/" 2>/dev/null || echo "⚠ /etc/xray tidak ditemukan"
+cp -r /etc/v2ray "\$BACKUP_DIR/" 2>/dev/null || echo "⚠ /etc/v2ray tidak ditemukan"
 cp -r /etc/passwd /etc/shadow /etc/group /etc/gshadow "\$BACKUP_DIR/" 2>/dev/null
 cp -r /etc/cron.d "\$BACKUP_DIR/" 2>/dev/null
 cp -r /etc/ssh "\$BACKUP_DIR/" 2>/dev/null
 cp -r /etc/systemd/system "\$BACKUP_DIR/" 2>/dev/null
 
-echo "🗜️ Membuat arsip backup..."
-tar -czf "\$BACKUP_FILE" -C /root backup-vpn
-if [ ! -f "\$BACKUP_FILE" ]; then
-    echo "❌ File backup gagal dibuat."
-    exit 1
-fi
+echo "🗜 Membuat arsip backup..."
+tar -czf "\$BACKUP_FILE" -C /root backup-vpn || exit 1
 
 echo "☁ Mengupload ke Google Drive..."
-if ! rclone --config="\$RCLONE_CONF" copy "\$BACKUP_FILE" GDRIVE:/TOKOMARD/Backup-VPS/SGDO-2DEV --progress; then
-    echo "⚠️ Upload ke Google Drive gagal."
-fi
+rclone --config="\$RCLONE_CONF" copy "\$BACKUP_FILE" GDRIVE:/TOKOMARD/Backup-VPS/SGDO-2DEV --progress
 
 cp "\$BACKUP_FILE" "\$WEB_DEST"
 chmod 644 "\$WEB_DEST"
@@ -82,15 +84,12 @@ chmod 644 "\$WEB_DEST"
 echo "✅ Backup berhasil! File tersedia untuk diunduh di web panel."
 EOL;
 
-        if (file_put_contents($backupScript, $scriptContent) === false) {
-            die("❌ Gagal membuat script backup di: $backupScript. Periksa izin direktori.");
-        }
-
+        file_put_contents($backupScript, $scriptContent);
         chmod($backupScript, 0700);
     }
 
-    // Jalankan script backup dengan token encoded
-    $output = execute("sudo bash $backupScript $token_base64");
+    // Jalankan script backup
+    $output = execute("sudo bash $backupScript");
 
     echo "<pre>$output</pre>";
     if (file_exists("/var/www/html/Website-Tokomard-Panel/admin/backup-vpn.tar.gz")) {
@@ -102,6 +101,7 @@ EOL;
 }
 ?>
 
+<!-- HTML Form tetap sama -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -134,6 +134,7 @@ rclone config
 > y/n: [kosongkan]
 > y/e/d: [kosongkan]
 > Copy seluruh JSON access token yang muncul setelah login berhasil
+
         </pre>
         <p class="text-green-300 mt-2">👉 Tempel token JSON tersebut di bawah ini:</p>
     </div>
