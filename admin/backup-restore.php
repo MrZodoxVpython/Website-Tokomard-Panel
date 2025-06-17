@@ -35,7 +35,7 @@ include 'templates/header.php';
   <form method="POST" class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
     <button type="submit" name="action" value="backup"
       class="bg-green-600 hover:bg-green-700 px-6 py-4 rounded-xl text-white text-xl shadow text-center">
-      🗃 Install & Backup
+      🗃 Launch Backup
     </button>
 
     <button type="submit" name="action" value="restore"
@@ -44,6 +44,9 @@ include 'templates/header.php';
     </button>
     <a href="auto-install-rclone.php" class="bg-blue-600 hover:bg-green-700 px-6 py-4 rounded-xl text-white text-xl shadow text-center">
       🗃 Install rclone & backup
+    </a>
+     <a href="restore-vps.php" class="bg-blue-600 hover:bg-green-700 px-6 py-4 rounded-xl text-white text-xl shadow text-center">
+      🗃 Restore Data
     </a>
 
   </form>
