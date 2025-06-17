@@ -46,7 +46,7 @@ include 'templates/header.php';
       📈 Cek User Aktif 
     </a>
     <a href="admin/statistik-vps.php" class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-3 rounded-xl text-center shadow">
-      📊 Statistik Penggunaan
+      📊 Statistik Bandwith
     </a>
   </div>
 
