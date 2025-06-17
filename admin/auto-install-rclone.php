@@ -73,7 +73,7 @@ rclone config
 > scope: 1 (full access)
 > service_account_file: [kosongkan]
 > y/n: [kosongkan]
-> y/n: [kosongkan]
+> y/n: n
 > root_folder_id: [kosongkan]
 > team_drive: [kosongkan jika tidak pakai shared drive]
 > Use auto config: n
