@@ -70,6 +70,8 @@ rclone config
 > storage: 20 (Google Drive)
 > client_id: [kosongkan]
 > client_secret: [kosongkan]
+> service_account_file: [kosongkan]
+> y/n: [kosongkan]
 > scope: 1 (full access)
 > root_folder_id: [kosongkan]
 > team_drive: [kosongkan jika tidak pakai shared drive]
