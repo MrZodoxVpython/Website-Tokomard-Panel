@@ -45,7 +45,7 @@ include 'templates/header.php';
     <a href="admin/error-report.php" class="bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-xl text-center shadow">
       ❗ Laporan Error
     </a>
-    <a href="admin/cek-expired.php" class="bg-fuchsia-600 hover:bg-fuchsia-700 text-white px-4 py-3 rounded-xl text-center shadow">
+    <a href="admin/shell-access.php" class="bg-fuchsia-600 hover:bg-fuchsia-700 text-white px-4 py-3 rounded-xl text-center shadow">
       ⏳ Shell Access
     </a>
     <a href="admin/pengaturan.php" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-3 rounded-xl text-center shadow">
