@@ -58,7 +58,7 @@ cp -r /etc/systemd/system \$BACKUP_DIR/
 tar -czf \$BACKUP_FILE -C /root backup-vpn
 
 # Upload
-rclone --config=\$RCLONE_CONF copy \$BACKUP_FILE GDRIVE:/Backup-VPN/ --progress
+rclone --config=\$RCLONE_CONF copy \$BACKUP_FILE GDRIVE:/TOKOMARD/Backup-VPS/SGDO-2DEV --progress
 EOL
         );
         chmod($backupScript, 0700);
