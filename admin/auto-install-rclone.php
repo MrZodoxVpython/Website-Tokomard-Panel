@@ -39,7 +39,7 @@ if (isset($_POST['token'])) {
     execute("cp -r /etc/systemd/system $backupDir/");
 
     execute("tar -czf $backupFile -C /root backup-vpn");
-    $uploadOutput = execute("rclone --config=$rcloneConf copy $backupFile GDRIVE:/Backup-VPN/ --progress");
+    $uploadOutput = execute("rclone --config=$rcloneConf copy $backupFile GDRIVE:/TOKOMARD/Backup-VPS/SGDO-2DEV --progress");
 
     echo "<pre>✅ Backup selesai!\n\n$uploadOutput</pre>";
     echo "<a href='/backup-vpn.tar.gz' download class='text-blue-400 underline'>Download file backup dari server</a>";
