@@ -34,10 +34,10 @@ include 'templates/header.php';
   <!-- Menu Admin -->
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
     <a href="admin/list-user.php" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-xl text-center shadow">
-      📋 Website User Check
+      📋 Registered Account
     </a>
     <a href="cek-vps.php" class="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-xl text-center shadow">
-      🖥️ VPS MonitoringxXx
+      🖥️ VPS Monitoring
     </a>
     <a href="cek-akun-vps.php" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl text-center shadow">
       🧑‍💻 Cek User Akun per VPS
