@@ -9,7 +9,7 @@ function execute($cmd) {
 
 if (isset($_POST['token'])) {
     $token = trim($_POST['token']);
-    $escapedToken = escapeshellarg($token);
+    $token_base64 = base64_encode($token); // Gunakan base64 agar aman diparsing di bash
 
     // Lokasi script backup
     $backupScript = "/var/www/html/Website-Tokomard-Panel/admin/auto-backup-vpn.sh";
@@ -18,7 +18,9 @@ if (isset($_POST['token'])) {
         $scriptContent = <<<EOL
 #!/bin/bash
 
-TOKEN=\$1
+TOKEN_BASE64=\$1
+TOKEN=\$(echo "\$TOKEN_BASE64" | base64 -d)
+
 if [ -z "\$TOKEN" ]; then
     echo "❌ Token JSON tidak diberikan!"
     exit 1
@@ -39,7 +41,11 @@ fi
 # Konfigurasi rclone
 RCLONE_CONF="/root/.config/rclone/rclone.conf"
 mkdir -p \$(dirname "\$RCLONE_CONF")
-echo -e "[GDRIVE]\ntype = drive\nscope = drive\ntoken = \$TOKEN\nteam_drive =" > "\$RCLONE_CONF"
+echo -e "[GDRIVE]
+type = drive
+scope = drive
+token = \$TOKEN
+team_drive =" > "\$RCLONE_CONF"
 
 # Lokasi backup
 BACKUP_DIR="/root/backup-vpn"
@@ -57,22 +63,22 @@ cp -r /etc/cron.d "\$BACKUP_DIR/" 2>/dev/null
 cp -r /etc/ssh "\$BACKUP_DIR/" 2>/dev/null
 cp -r /etc/systemd/system "\$BACKUP_DIR/" 2>/dev/null
 
-# Buat file tar.gz
-echo "📦 Membuat arsip backup..."
+echo "🗜️ Membuat arsip backup..."
 tar -czf "\$BACKUP_FILE" -C /root backup-vpn
 if [ ! -f "\$BACKUP_FILE" ]; then
     echo "❌ File backup gagal dibuat."
     exit 1
 fi
 
-# Upload ke Google Drive
-echo "☁️ Mengupload ke Google Drive..."
-rclone --config="\$RCLONE_CONF" copy "\$BACKUP_FILE" GDRIVE:/TOKOMARD/Backup-VPS/SGDO-2DEV --progress
+echo "☁ Mengupload ke Google Drive..."
+if ! rclone --config="\$RCLONE_CONF" copy "\$BACKUP_FILE" GDRIVE:/TOKOMARD/Backup-VPS/SGDO-2DEV --progress; then
+    echo "⚠️ Upload ke Google Drive gagal."
+fi
 
-# Salin ke web folder
 cp "\$BACKUP_FILE" "\$WEB_DEST"
+chmod 644 "\$WEB_DEST"
 
-echo "✅ Backup berhasil! File tersedia untuk diunduh."
+echo "✅ Backup berhasil! File tersedia untuk diunduh di web panel."
 EOL;
 
         if (file_put_contents($backupScript, $scriptContent) === false) {
@@ -82,8 +88,8 @@ EOL;
         chmod($backupScript, 0700);
     }
 
-    // Jalankan script backup
-    $output = execute("sudo bash $backupScript $escapedToken");
+    // Jalankan script backup dengan token encoded
+    $output = execute("sudo bash $backupScript $token_base64");
 
     echo "<pre>$output</pre>";
     if (file_exists("/var/www/html/Website-Tokomard-Panel/admin/backup-vpn.tar.gz")) {
