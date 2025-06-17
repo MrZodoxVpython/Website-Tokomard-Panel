@@ -33,6 +33,23 @@ include 'templates/header.php';
 
   <!-- Menu Admin -->
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+      <a href="admin/log-akses.php" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-3 rounded-xl text-center shadow">
+      🧾 Log Akses User
+    </a>
+    <a href="admin/aktifitas-admin.php" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-3 rounded-xl text-center shadow">
+      ⚙️ Aktivitas Admin
+    </a>
+    <a href="admin/performa-server.php" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-3 rounded-xl text-center shadow">
+      🧠 Performa Server
+    </a>
+    <a href="admin/error-report.php" class="bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-xl text-center shadow">
+      ❗ Laporan Error
+    </a>
+    <a href="admin/cek-expired.php" class="bg-fuchsia-600 hover:bg-fuchsia-700 text-white px-4 py-3 rounded-xl text-center shadow">
+      ⏳ Cek Akun Expired
+    </a>
+    <a href="admin/pengaturan.php" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-3 rounded-xl text-center shadow">
+      🔧 Pengaturan Sistem
     <a href="admin/list-user.php" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-xl text-center shadow">
       📋 Registered Accounts
     </a>
