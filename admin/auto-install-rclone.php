@@ -18,12 +18,13 @@ if (isset($_POST['token'])) {
         $scriptContent = <<<EOL
 #!/bin/bash
 
-TOKEN_BASE64=\$1
-TOKEN=\$(echo "\$TOKEN_BASE64" | base64 -d)
+TOKEN_BASE64="$1"
+TOKEN=$(echo "$TOKEN_BASE64" | base64 -d)
 
-if [ -z "\$TOKEN" ]; then
-    echo "❌ Token JSON tidak diberikan!"
-    exit 1
+# Cek validitas
+if ! echo "$TOKEN" | jq .access_token &>/dev/null; then
+  echo "❌ Token JSON tidak valid atau rusak!"
+  exit 1
 fi
 
 echo "📦 Menjalankan proses backup..."
