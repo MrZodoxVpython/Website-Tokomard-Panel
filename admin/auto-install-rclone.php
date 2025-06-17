@@ -52,13 +52,13 @@ RCLONE_CONF="/root/.config/rclone/rclone.conf"
 mkdir -p "\$(dirname "\$RCLONE_CONF")"
 
 # Bersihkan newline dan carriage return dari token
-TOKEN_CLEAN=\$(echo "\$TOKEN" | tr -d '\n' | tr -d '\r')
+TOKEN_CLEAN=$(echo "$TOKEN" | tr -d '\n' | tr -d '\r')
 
-cat > "\$RCLONE_CONF" <<EOF
+cat > "$RCLONE_CONF" <<EOF
 [GDRIVE]
 type = drive
 scope = drive
-token = "\$TOKEN_CLEAN"
+token = "$TOKEN_CLEAN"
 team_drive =
 EOF
 
