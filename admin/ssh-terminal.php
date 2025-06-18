@@ -19,6 +19,11 @@ if ($command !== '') {
 
 // Ambil domain VPS dari shell command
 $domain = trim(shell_exec("cat /etc/xray/domain 2>/dev/null")) ?: 'Tidak ditemukan';
+
+// Cek IP yang sedang diproses
+$checkIP = shell_exec("hostname -I");
+echo "<p><strong>🧪 Debug: IP Aktif Shell =</strong> $checkIP</p>";
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
