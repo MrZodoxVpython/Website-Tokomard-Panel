@@ -61,7 +61,7 @@ $password = $_SESSION['vps_pass'] ?? null;
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="p-6 min-h-screen">
-<?php include 'templates/header.php'; ?>
+<?php include '../templates/header.php'; ?>
     <h1 class="text-3xl font-bold text-green-400 mb-6 text-center">✅ Monitoring 3 VPS</h1>
 
     <?php if (!$password): ?>
@@ -130,5 +130,5 @@ foreach ($labels as $k => $v) {
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
-<?php include 'templates/footer.php'; ?>
+<?php include '../templates/footer.php'; ?>
 
