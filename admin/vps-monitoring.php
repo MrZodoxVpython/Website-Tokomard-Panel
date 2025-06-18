@@ -14,37 +14,29 @@ function sshExec($host, $port, $user, $password, $command) {
     return trim(stream_get_contents($stream));
 }
 
-function checkXrayWebSocket($domain, $path = "/trojan-ws", $port = 443) {
-    $headers = [
-        "Connection: Upgrade",
-        "Upgrade: websocket",
-        "Host: $domain",
-        "User-Agent: curl",
-        "Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw==",
-        "Sec-WebSocket-Version: 13"
-    ];
-    $headerString = implode(" -H ", array_map('escapeshellarg', $headers));
-    $cmd = "curl -s -o /dev/null -w '%{http_code}' -k --connect-timeout 5 --max-time 10 -H $headerString https://$domain:$port$path";
-    $httpCode = shell_exec($cmd);
-    return trim($httpCode) === "101"; // 101 = Switching Protocols = WebSocket Success
+function checkXrayWebSocket($host, $port = 443, $path = '/trojan-ws') {
+    $host = str_replace(["https://", "http://"], "", $host);
+    $fp = @fsockopen("ssl://$host", $port, $errno, $errstr, 3);
+    if (!$fp) return false;
+
+    $key = base64_encode(random_bytes(16));
+    $headers = "GET $path HTTP/1.1\r\n"
+             . "Host: $host\r\n"
+             . "Upgrade: websocket\r\n"
+             . "Connection: Upgrade\r\n"
+             . "Sec-WebSocket-Key: $key\r\n"
+             . "Sec-WebSocket-Version: 13\r\n\r\n";
+
+    fwrite($fp, $headers);
+    $response = fread($fp, 1500);
+    fclose($fp);
+    return strpos($response, "101 Switching Protocols") !== false;
 }
 
 $servers = [
-    'RW-MARD1' => [
-        'ip' => '203.194.113.140',
-        'ssh_user' => 'root',
-        'ssh_port' => 22
-    ],
-    'SGDO-MARD1' => [
-        'ip' => '143.198.202.86',
-        'ssh_user' => 'root',
-        'ssh_port' => 22
-    ],
-    'SGDO-2DEV' => [
-        'ip' => '178.128.60.185',
-        'ssh_user' => 'root',
-        'ssh_port' => 22
-    ]
+    'RW-MARD1' => ['ip' => '203.194.113.140', 'ssh_user' => 'root', 'ssh_port' => 22],
+    'SGDO-MARD1' => ['ip' => '143.198.202.86', 'ssh_user' => 'root', 'ssh_port' => 22],
+    'SGDO-2DEV' => ['ip' => '178.128.60.185', 'ssh_user' => 'root', 'ssh_port' => 22]
 ];
 
 $password = $_POST['password'] ?? null;
@@ -60,21 +52,21 @@ $password = $_POST['password'] ?? null;
     <h1 class="text-3xl font-bold text-green-400 mb-6 text-center">✅ Monitoring 3 VPS</h1>
 
     <?php if (!$password): ?>
-    <form method="post" class="max-w-md mx-auto bg-gray-800 p-6 rounded-lg shadow-lg">
-        <label class="block text-white mb-2">Masukkan Password VPS:</label>
-        <input type="password" name="password" class="w-full mb-4 p-2 rounded bg-gray-700 text-white" required>
-        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded">Lanjut</button>
-    </form>
+        <form method="post" class="max-w-md mx-auto bg-gray-800 p-6 rounded-lg shadow-lg">
+            <label class="block text-white mb-2">Masukkan Password VPS:</label>
+            <input type="password" name="password" class="w-full mb-4 p-2 rounded bg-gray-700 text-white" required>
+            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded">Lanjut</button>
+        </form>
     <?php else: ?>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <?php foreach ($servers as $name => $srv): ?>
-        <div class="bg-gray-800 rounded-xl p-4 shadow">
-            <h2 class="text-xl font-semibold text-blue-400 text-center mb-4"><?= $name ?></h2>
-            <div class="text-sm font-mono bg-black text-green-400 p-4 rounded-lg whitespace-pre">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <?php foreach ($servers as $name => $srv): ?>
+                <div class="bg-gray-800 rounded-xl p-4 shadow">
+                    <h2 class="text-xl font-semibold text-blue-400 text-center mb-4"><?= $name ?></h2>
+                    <div class="text-sm font-mono bg-black text-green-400 p-4 rounded-lg whitespace-pre-wrap">
 <?php
 $ok = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "echo OK");
 if ($ok !== "OK") {
-    echo "Status VPS    : ❌ Autentikasi gagal.\n";
+    echo "Status VPS      : ❌ Autentikasi gagal.\n";
     continue;
 }
 
@@ -84,7 +76,8 @@ $ip        = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, 
 $country   = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "curl -s ipinfo.io/\$ip/country");
 $domain    = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "hostname -f");
 $domaincf  = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "cat /etc/xray/domain");
-$xrayStat  = checkXrayWebSocket($domaincf) ? '🟢 Online' : '🔴 Offline';
+
+$xrayStatus = checkXrayWebSocket($domaincf) ? "🟢 Online" : "🔴 Offline";
 
 $labels = [
     "Status VPS"   => "🟢 Online",
@@ -94,18 +87,18 @@ $labels = [
     "Country"      => $country,
     "Domain VPS"   => $domain,
     "Domain Xray"  => $domaincf,
-    "Xray Status"  => $xrayStat
+    "Xray Status"  => $xrayStatus
 ];
 
 $maxLen = max(array_map('strlen', array_keys($labels)));
-foreach ($labels as $key => $value) {
-    printf("%-{$maxLen}s : %s\n", $key, $value);
+foreach ($labels as $k => $v) {
+    printf("%-{$maxLen}s : %s\n", $k, $v);
 }
 ?>
-            </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
         </div>
-        <?php endforeach; ?>
-    </div>
     <?php endif; ?>
 </body>
 </html>
