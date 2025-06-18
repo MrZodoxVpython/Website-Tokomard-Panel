@@ -75,7 +75,7 @@ $password = $_SESSION['vps_pass'] ?? null;
                     <h2 class="text-xl font-semibold text-blue-400 text-center mb-4"><?= $name ?></h2>
                     <div class="text-sm font-mono bg-black text-green-400 p-4 rounded-lg whitespace-pre-wrap">
 <?php
-$pingMs = getPingMs($srv['ip']);
+$pingMs = getPingMs('google.com);
 
 if ($pingMs === false) {
     echo "Status VPS      : 🔴 Offline\n";
