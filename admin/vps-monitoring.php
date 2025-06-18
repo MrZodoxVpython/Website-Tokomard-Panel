@@ -33,6 +33,11 @@ function checkXrayWebSocket($host, $port = 443, $path = '/trojan-ws') {
     return strpos($response, "101 Switching Protocols") !== false;
 }
 
+function checkPing($ip) {
+    $ping = shell_exec("ping -c1 -W1 $ip 2>/dev/null");
+    return (strpos($ping, '1 received') !== false || strpos($ping, '1 packets received') !== false);
+}
+
 $servers = [
     'RW-MARD1' => ['ip' => '203.194.113.140', 'ssh_user' => 'root', 'ssh_port' => 22],
     'SGDO-MARD1' => ['ip' => '143.198.202.86', 'ssh_user' => 'root', 'ssh_port' => 22],
@@ -45,11 +50,12 @@ $password = $_POST['password'] ?? null;
 <html lang="en" class="bg-gray-900 text-white">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="5">
     <title>Monitoring VPS</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="p-6 min-h-screen">
-    <h1 class="text-3xl font-bold text-green-400 mb-6 text-center">✅ Monitoring 3 VPS</h1>
+    <h1 class="text-3xl font-bold text-green-400 mb-6 text-center">✅ Monitoring 3 VPS (Auto Refresh 5s)</h1>
 
     <?php if (!$password): ?>
         <form method="post" class="max-w-md mx-auto bg-gray-800 p-6 rounded-lg shadow-lg">
@@ -64,6 +70,12 @@ $password = $_POST['password'] ?? null;
                     <h2 class="text-xl font-semibold text-blue-400 text-center mb-4"><?= $name ?></h2>
                     <div class="text-sm font-mono bg-black text-green-400 p-4 rounded-lg whitespace-pre-wrap">
 <?php
+$vpsOnline = checkPing($srv['ip']);
+if (!$vpsOnline) {
+    echo "Status VPS      : ❌ Offline (Ping gagal)\n";
+    continue;
+}
+
 $ok = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "echo OK");
 if ($ok !== "OK") {
     echo "Status VPS      : ❌ Autentikasi gagal.\n";
