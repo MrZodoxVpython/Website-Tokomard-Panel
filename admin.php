@@ -23,32 +23,10 @@ include 'templates/header.php';
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta property="og:title" content="Tokomard Panel VPN - Kelola Xray & Trojan dengan Mudah">
-  <meta property="og:description" content="Panel web Tokomard untuk manajemen akun VPN Xray.">
-  <meta property="og:image" content="https://tokomard.com/assets/img/preview.jpg">
-  <meta property="og:url" content="https://tokomard.com/">
-  <meta property="og:type" content="website">
-  <title>Admin Panel - Xray Multi-VPS</title>
+   <title>Admin Panel - Xray Multi-VPS</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Tokomard VPN Panel",
-  "operatingSystem": "Linux",
-  "applicationCategory": "DeveloperApplication",
-  "description": "Panel web untuk mengelola akun VPN berbasis Xray.",
-  "url": "https://tokomard.com/",
-  "author": {
-    "@type": "Person",
-    "name": "Benjamin Wickman"
-  }
-}
-  </script>
-
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
-
 <div class="max-w-7xl mx-auto p-4">
   <h1 class="text-3xl font-bold mb-6 text-blue-400">Admin Panel - Kontrol Semua Akun</h1>
 
