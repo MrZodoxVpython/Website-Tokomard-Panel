@@ -23,6 +23,11 @@ include 'templates/header.php';
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <meta property="og:title" content="Tokomard Panel VPN - Kelola Xray & Trojan dengan Mudah">
+  <meta property="og:description" content="Panel web Tokomard untuk manajemen akun VPN Xray.">
+  <meta property="og:image" content="https://tokomard.com/assets/img/preview.jpg">
+  <meta property="og:url" content="https://tokomard.com/">
+  <meta property="og:type" content="website">
   <title>Admin Panel - Xray Multi-VPS</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script type="application/ld+json">
