@@ -31,20 +31,17 @@ $servers = [
     'RW-MARD1' => [
         'ip' => '203.194.113.140',
         'ssh_user' => 'root',
-        'ssh_port' => 22,
-        'ssh_pass' => 'your_password1'
+        'ssh_port' => 22
     ],
     'SGDO-MARD1' => [
         'ip' => '143.198.202.86',
         'ssh_user' => 'root',
-        'ssh_port' => 22,
-        'ssh_pass' => 'your_password2'
+        'ssh_port' => 22
     ],
     'SGDO-2DEV' => [
         'ip' => '203.194.113.140',
         'ssh_user' => 'root',
-        'ssh_port' => 22,
-        'ssh_pass' => 'your_password3'
+        'ssh_port' => 22
     ]
 ];
 
@@ -55,35 +52,36 @@ $servers = [
     <meta charset="UTF-8">
     <title>Monitoring 3 VPS</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        pre code {
-            white-space: pre;
-        }
-    </style>
 </head>
 <body class="p-6">
     <h1 class="text-3xl font-bold text-green-400 mb-6 text-center">✅ Monitoring 3 VPS</h1>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <?php foreach ($servers as $name => $server):
-            $conn = sshExec(
-                $server['ip'], $server['ssh_port'], $server['ssh_user'], $server['ssh_pass'],
-                "echo OK"
-            );
-            $isOnline = $conn === "OK";
-            if ($isOnline) {
-                $os = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $server['ssh_pass'], "grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d \"\"");
-                $uptime = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $server['ssh_pass'], "uptime -p");
-                $ip = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $server['ssh_pass'], "curl -s ifconfig.me");
-                $country = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $server['ssh_pass'], "curl -s ipinfo.io/\$ip/country");
-                $domain = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $server['ssh_pass'], "hostname -f");
-                $domaincf = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $server['ssh_pass'], "cat /etc/xray/domain");
-                $xrayStatus = checkXrayStatus($domaincf) ? '🟢 Online' : '🔴 Offline';
-            }
-        ?>
-        <div class="bg-gray-800 p-4 rounded-lg shadow">
-            <h2 class="text-xl font-semibold text-blue-300 mb-2 text-center"><?= $name ?></h2>
-            <div class="text-sm font-mono bg-black rounded-lg p-4 overflow-x-auto text-green-400">
-                <?php if ($isOnline): ?>
+        <?php foreach ($servers as $name => $server): ?>
+            <div class="bg-gray-800 p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold text-blue-300 mb-2 text-center"><?= $name ?></h2>
+                <form method="post" class="text-sm font-mono bg-black rounded-lg p-4 overflow-x-auto text-green-400">
+                    <input type="hidden" name="host" value="<?= $server['ip'] ?>">
+                    <input type="hidden" name="user" value="<?= $server['ssh_user'] ?>">
+                    <input type="hidden" name="port" value="<?= $server['ssh_port'] ?>">
+                    <label class="block text-white mb-2">Password:</label>
+                    <input type="password" name="password" class="w-full mb-4 p-2 rounded bg-gray-700 text-white" required>
+                    <button type="submit" class="bg-blue-500 px-4 py-2 rounded hover:bg-blue-600 w-full">Lihat Status</button>
+                </form>
+                <?php
+                if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['host'] === $server['ip']) {
+                    $password = $_POST['password'];
+                    $conn = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $password, "echo OK");
+                    $isOnline = $conn === "OK";
+                    if ($isOnline) {
+                        $os = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $password, "grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d \"\"");
+                        $uptime = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $password, "uptime -p");
+                        $ip = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $password, "curl -s ifconfig.me");
+                        $country = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $password, "curl -s ipinfo.io/\$ip/country");
+                        $domain = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $password, "hostname -f");
+                        $domaincf = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $password, "cat /etc/xray/domain");
+                        $xrayStatus = checkXrayStatus($domaincf) ? '🟢 Online' : '🔴 Offline';
+                ?>
+                        <div class="mt-4 text-sm font-mono bg-black rounded-lg p-4 overflow-x-auto text-green-400">
 <pre><code>
 Status        : 🟢 Online
 OS            : <?= $os ?>
@@ -94,11 +92,14 @@ Domain VPS    : <?= $domain ?>
 Domain Xray   : <?= $domaincf ?>
 Xray Status   : <?= $xrayStatus ?>
 </code></pre>
-                <?php else: ?>
-                    <p class="text-red-400 font-bold">❌ Autentikasi gagal.</p>
-                <?php endif; ?>
+                        </div>
+                <?php
+                    } else {
+                        echo '<p class="text-red-400 font-bold text-center mt-4">❌ Autentikasi gagal.</p>';
+                    }
+                }
+                ?>
             </div>
-        </div>
         <?php endforeach; ?>
     </div>
 </body>
