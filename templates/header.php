@@ -9,6 +9,12 @@ if (session_status() === PHP_SESSION_NONE) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="Tokomard Panel VPN - Kelola Trojan & Xray dengan Mudah">
+  <meta property="og:description" content="Panel Tokomard untuk manajemen VPN Xray (VLESS, VMess, Trojan, SS).">
+  <meta property="og:image" content="https://i.imgur.com/q3DzxiB.png">
+  <meta property="og:url" content="https://panel.tokomard.store/">
+  <meta property="og:type" content="website">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tokomard</title>
   <link rel="SHORTCUT ICON" href="https://i.imgur.com/q3DzxiB.png">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
