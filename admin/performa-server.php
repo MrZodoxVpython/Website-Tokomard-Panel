@@ -13,17 +13,17 @@ function isServerAlive($ip) {
 $servers = [
     'RW-MAR1' => [
         'ip' => '203.194.113.140',
-        'ssh_user' => 'benjamin',
+        'ssh_user' => 'root',
         'ssh_port' => 22
     ],
     'SGDO-MARD1' => [
         'ip' => '143.198.202.86',
-        'ssh_user' => 'benjamin',
+        'ssh_user' => 'root',
         'ssh_port' => 22
     ],
     'SGDO-2DEV' => [
         'ip' => '203.194.113.140',
-        'ssh_user' => 'benjamin',
+        'ssh_user' => 'root',
         'ssh_port' => 22
     ]
 ];
