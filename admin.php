@@ -25,6 +25,22 @@ include 'templates/header.php';
   <meta charset="UTF-8">
   <title>Admin Panel - Xray Multi-VPS</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Tokomard VPN Panel",
+  "operatingSystem": "Linux",
+  "applicationCategory": "DeveloperApplication",
+  "description": "Panel web untuk mengelola akun VPN berbasis Xray.",
+  "url": "https://tokomard.com/",
+  "author": {
+    "@type": "Person",
+    "name": "Benjamin Wickman"
+  }
+}
+  </script>
+
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
 
