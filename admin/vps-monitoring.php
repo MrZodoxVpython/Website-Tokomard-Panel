@@ -82,11 +82,14 @@ if ($pingMs === false) {
     continue;
 }
 
-$pingColor = match(true) {
-    $pingMs < 150    => 'green-400',
-    $pingMs < 1000   => 'yellow-300',
-    default          => 'red-500',
-};
+if ($pingMs < 150) {
+    $pingColor = 'green-400';
+} elseif ($pingMs < 1000) {
+    $pingColor = 'yellow-300';
+} else {
+    $pingColor = 'red-500';
+}
+
 $pingText = "<span class='text-$pingColor'>{$pingMs}ms</span>";
 
 $ok = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "echo OK");
