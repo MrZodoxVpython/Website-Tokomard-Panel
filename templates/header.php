@@ -18,6 +18,22 @@ if (session_status() === PHP_SESSION_NONE) {
   <title>Tokomard</title>
   <link rel="SHORTCUT ICON" href="https://i.imgur.com/q3DzxiB.png">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Tokomard VPN Panel",
+  "operatingSystem": "Linux",
+  "applicationCategory": "DeveloperApplication",
+  "description": "Panel web untuk mengelola akun VPN berbasis Xray.",
+  "url": "https://tokomard.com/",
+  "author": {
+    "@type": "Person",
+    "name": "Benjamin Wickman"
+  }
+}
+  </script>
+
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col">
 
