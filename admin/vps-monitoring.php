@@ -45,8 +45,7 @@ $servers = [
     ]
 ];
 
-$password = $_POST['password'] ?? null;
-$submit = isset($_POST['submit']);
+$passwordInput = $_POST['password'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="en" class="bg-gray-900 text-white">
@@ -58,29 +57,29 @@ $submit = isset($_POST['submit']);
 <body class="p-6">
     <h1 class="text-3xl font-bold text-green-400 mb-6 text-center">✅ Monitoring 3 VPS</h1>
     <form method="post" class="max-w-md mx-auto mb-8">
-        <label class="block text-white mb-2 text-center">Masukkan Password root untuk semua VPS:</label>
-        <input type="password" name="password" class="w-full mb-4 p-2 rounded bg-gray-700 text-white" required>
-        <button type="submit" name="submit" class="bg-blue-500 px-4 py-2 rounded hover:bg-blue-600 w-full">Terapkan & Lihat Status Semua VPS</button>
+        <label class="block text-white mb-2 text-lg font-semibold text-center">Masukkan Password (untuk semua VPS):</label>
+        <input type="password" name="password" value="<?= htmlspecialchars($passwordInput) ?>" class="w-full mb-4 p-2 rounded bg-gray-700 text-white" required>
+        <button type="submit" class="bg-blue-500 px-4 py-2 rounded hover:bg-blue-600 w-full">Lihat Status Semua VPS</button>
     </form>
+
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <?php foreach ($servers as $name => $server): ?>
             <div class="bg-gray-800 p-4 rounded-lg shadow">
-                <h2 class="text-xl font-semibold text-blue-300 mb-4 text-center"><?= $name ?></h2>
+                <h2 class="text-xl font-semibold text-blue-300 mb-4 text-center">🌐 <?= $name ?></h2>
                 <?php
-                if ($submit) {
-                    $conn = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $password, "echo OK");
+                if ($passwordInput) {
+                    $conn = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $passwordInput, "echo OK");
                     $isOnline = $conn === "OK";
                     if ($isOnline) {
-                        $os = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $password, "grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d \"\"");
-                        $uptime = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $password, "uptime -p");
-                        $ip = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $password, "curl -s ifconfig.me");
-                        $country = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $password, "curl -s ipinfo.io/\$ip/country");
-                        $domain = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $password, "hostname -f");
-                        $domaincf = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $password, "cat /etc/xray/domain");
+                        $os = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $passwordInput, "grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d \"\"");
+                        $uptime = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $passwordInput, "uptime -p");
+                        $ip = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $passwordInput, "curl -s ifconfig.me");
+                        $country = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $passwordInput, "curl -s ipinfo.io/\$ip/country");
+                        $domain = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $passwordInput, "hostname -f");
+                        $domaincf = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $passwordInput, "cat /etc/xray/domain");
                         $xrayStatus = checkXrayStatus($domaincf) ? '🟢 Online' : '🔴 Offline';
                 ?>
-                        <div class="text-sm font-mono bg-black rounded-lg p-4 overflow-x-auto text-green-400">
-<pre><code>
+                        <div class="text-sm font-mono bg-black rounded-lg p-4 overflow-hidden text-green-400 whitespace-pre">
 Status VPS   : 🟢 Online
 OS           : <?= $os ?>
 Uptime       : <?= $uptime ?>
@@ -89,11 +88,10 @@ Country      : <?= $country ?>
 Domain VPS   : <?= $domain ?>
 Domain Xray  : <?= $domaincf ?>
 Xray Status  : <?= $xrayStatus ?>
-</code></pre>
                         </div>
                 <?php
                     } else {
-                        echo '<p class="text-red-400 font-bold text-center">❌ Autentikasi gagal.</p>';
+                        echo '<p class="text-red-400 font-bold text-center mt-4">❌ Autentikasi gagal.</p>';
                     }
                 }
                 ?>
