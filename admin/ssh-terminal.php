@@ -16,7 +16,6 @@ $domain = '[Tidak diketahui]';
 $ipAktif = '[Tidak diketahui]';
 $ssh_error = false;
 
-// 🔐 Cek ekstensi SSH
 if (!function_exists('ssh2_connect')) {
     $output = '[❌ PHP tidak memiliki ekstensi ssh2]';
     $ssh_error = true;
@@ -24,17 +23,17 @@ if (!function_exists('ssh2_connect')) {
     $conn = @ssh2_connect($host, $port);
     if ($conn && @ssh2_auth_password($conn, $user, $password)) {
 
-        // Ambil Domain VPS
+        // Ambil domain dari /etc/xray/domain
         $stream1 = ssh2_exec($conn, 'cat /etc/xray/domain');
         stream_set_blocking($stream1, true);
         $domain = trim(stream_get_contents($stream1)) ?: '[Tidak ditemukan]';
 
-        // Ambil IP aktif VPS
+        // Ambil IP aktif (hostname -I)
         $stream2 = ssh2_exec($conn, 'hostname -I');
         stream_set_blocking($stream2, true);
         $ipAktif = trim(stream_get_contents($stream2)) ?: '[Tidak ditemukan]';
 
-        // Jalankan perintah jika ada
+        // Jalankan perintah dari user
         if (!empty($command)) {
             $stream3 = ssh2_exec($conn, $command);
             stream_set_blocking($stream3, true);
