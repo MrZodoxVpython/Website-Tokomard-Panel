@@ -29,10 +29,8 @@
   }
 }
   </script>
-
 </head>
 <body class="bg-gray-900 flex items-center justify-center min-h-screen text-white px-4">
-
   <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-md">
   <div class="text-center mb-4">
   <img src="https://i.imgur.com/8IiXQqY.png" alt="Logo" class="mx-auto mb-4 w-15">
