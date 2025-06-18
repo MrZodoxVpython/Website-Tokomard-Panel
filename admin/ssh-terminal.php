@@ -17,8 +17,8 @@ if ($command !== '') {
     $output = shell_exec($command . ' 2>&1');
 }
 
-// Ambil domain VPS dari file /etc/xray/domain jika ada
-$domain = file_exists('/etc/xray/domain') ? trim(file_get_contents('/etc/xray/domain')) : 'Tidak ditemukan';
+// Ambil domain VPS dari shell command
+$domain = trim(shell_exec("cat /etc/xray/domain 2>/dev/null")) ?: 'Tidak ditemukan';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,8 +28,7 @@ $domain = file_exists('/etc/xray/domain') ? trim(file_get_contents('/etc/xray/do
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen p-6">
-    <h1 class="text-2xl font-bold mb-2">🖥 Akses Shell: <?= htmlspecialchars($host) ?></h1>
-    <p class="text-sm text-gray-400 mb-6">🌐 Domain VPS: <span class="text-yellow-300 font-semibold"><?= htmlspecialchars($domain) ?></span></p>
+    <h1 class="text-2xl font-bold mb-6">🖥 Akses Shell: <?= htmlspecialchars($host) ?></h1>
 
     <form method="post" class="bg-gray-800 p-6 rounded shadow w-full max-w-3xl mb-4">
         <input type="hidden" name="host" value="<?= htmlspecialchars($host) ?>">
@@ -38,7 +37,9 @@ $domain = file_exists('/etc/xray/domain') ? trim(file_get_contents('/etc/xray/do
 
         <label class="block mb-2">Masukkan Perintah:</label>
         <input type="text" name="command" autofocus required placeholder="Contoh: ls -lah /etc"
-               class="w-full p-2 mb-4 rounded bg-gray-700 text-white">
+               class="w-full p-2 mb-2 rounded bg-gray-700 text-white">
+
+        <p class="text-sm text-gray-400 mb-4">🌐 Domain VPS: <span class="text-yellow-300 font-semibold"><?= htmlspecialchars($domain) ?></span></p>
 
         <button type="submit" class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 w-full">Jalankan</button>
     </form>
