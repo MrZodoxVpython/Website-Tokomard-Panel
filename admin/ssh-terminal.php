@@ -25,7 +25,7 @@ if ($command !== '') {
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen p-6">
-    <h1 class="text-2xl font-bold mb-6">🖥 Akses Shell: <?= htmlspecialchars($host) ?></h1>
+    <h1 class="text-2xl font-bold mb-6">🖥  Akses Shell: <?= htmlspecialchars($host) ?></h1>
 
     <form method="post" class="bg-gray-800 p-6 rounded shadow w-full max-w-3xl mb-4">
         <input type="hidden" name="host" value="<?= htmlspecialchars($host) ?>">
@@ -47,4 +47,5 @@ if ($command !== '') {
     <?php endif; ?>
 </body>
 </html>
+
 
