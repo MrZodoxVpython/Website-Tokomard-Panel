@@ -133,4 +133,5 @@ foreach ($labels as $k => $v) {
     <?php endif; ?>
 </body>
 </html>
+<?php include 'templates/footer.php'; ?>
 
