@@ -11,7 +11,7 @@ function isServerAlive($ip) {
 }
 
 $servers = [
-    'RW-MAR1' => [
+    'RW-MARD1' => [
         'ip' => '203.194.113.140',
         'ssh_user' => 'root',
         'ssh_port' => 22
