@@ -31,8 +31,8 @@ function checkXrayWebSocket($host, $port = 443, $path = '/trojan-ws') {
     return strpos($response, "101 Switching Protocols") !== false;
 }
 
-function getPingMs($ip) {
-    $ping = shell_exec("ping -c1 -W1 $ip 2>/dev/null");
+function getPingMs($host) {
+    $ping = shell_exec("ping -c1 -W1 $host 2>/dev/null");
     if (preg_match('/time=([0-9.]+) ms/', $ping, $match)) {
         return (float) $match[1];
     }
@@ -50,7 +50,6 @@ if (isset($_POST['password'])) {
 }
 
 $password = $_SESSION['vps_pass'] ?? null;
-
 ?>
 <?php include '../templates/header.php'; ?>
 <!DOCTYPE html>
@@ -91,8 +90,7 @@ if ($pingMs < 150) {
 } else {
     $pingColor = 'red-500';
 }
-
-$pingText = "<span class='text-$pingColor'>{$pingMs}ms</span>";
+$pingText = "{$pingMs}ms";
 
 $ok = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "echo OK");
 if ($ok !== "OK") {
@@ -106,18 +104,26 @@ $ip        = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, 
 $country   = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "curl -s ipinfo.io/\$ip/country");
 $domain    = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "hostname -f");
 $domaincf  = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "cat /etc/xray/domain");
+$cpu       = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "cat /proc/loadavg | awk '{print \$1\", \"\$2\", \"\$3}'");
+$ram       = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "free -m | awk '/Mem/ {printf \"%dMB / %dMB\", \$3, \$2}'");
+$disk      = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "df -h / | awk 'NR==2 {print \$3\" / \"\$2\" (\"\$5\")\"}'");
+$bandwidth = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "vnstat --oneline | awk -F';' '{printf \"DL: %s UL: %s TOTAL: %s/s\", \$10, \$11, \$9}'");
 
 $xrayStatus = checkXrayWebSocket($domaincf) ? "🟢 Online" : "🔴 Offline";
 
 $labels = [
-    "Status VPS"   => "🟢 Online ({$pingMs}ms)",
+    "Status VPS"   => "🟢 Online ($pingText)",
     "OS"           => $os,
     "Uptime"       => $uptime,
     "Public IP"    => $ip,
     "Country"      => $country,
     "Domain VPS"   => $domain,
     "Domain Xray"  => $domaincf,
-    "Xray Status"  => $xrayStatus
+    "Xray Status"  => $xrayStatus,
+    "CPU"          => $cpu,
+    "RAM"          => $ram,
+    "Disk"         => $disk,
+    "Bandwidth"    => $bandwidth
 ];
 
 $maxLen = max(array_map('strlen', array_keys($labels)));
