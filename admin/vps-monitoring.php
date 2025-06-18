@@ -39,7 +39,7 @@ $servers = [
         'ssh_port' => 22
     ],
     'SGDO-2DEV' => [
-        'ip' => '203.194.113.140',
+        'ip' => '178.128.60.185',
         'ssh_user' => 'root',
         'ssh_port' => 22
     ]
