@@ -51,7 +51,7 @@ include 'templates/header.php';
     <a href="admin/pengaturan.php" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-3 rounded-xl text-center shadow">
       🔧 Pengaturan Sistem
     <a href="admin/list-user.php" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-xl text-center shadow">
-      📋 Registered Accounts
+      📋 Registered Users
     </a>
     <a href="admin/vps-monitoring.php" class="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-xl text-center shadow">
       🖥️ VPS Monitoring
