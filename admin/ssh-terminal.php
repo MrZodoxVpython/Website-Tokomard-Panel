@@ -9,13 +9,16 @@ $host = $_POST['host'] ?? '';
 $user = $_POST['user'] ?? 'root';
 $port = $_POST['port'] ?? 22;
 
-// Form perintah dan hasil eksekusi
 $output = '';
 $command = $_POST['command'] ?? '';
 
+// Jalankan perintah dari user
 if ($command !== '') {
     $output = shell_exec($command . ' 2>&1');
 }
+
+// Ambil domain VPS dari file /etc/xray/domain jika ada
+$domain = file_exists('/etc/xray/domain') ? trim(file_get_contents('/etc/xray/domain')) : 'Tidak ditemukan';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +28,8 @@ if ($command !== '') {
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen p-6">
-    <h1 class="text-2xl font-bold mb-6">🖥  Akses Shell: <?= htmlspecialchars($host) ?></h1>
+    <h1 class="text-2xl font-bold mb-2">🖥 Akses Shell: <?= htmlspecialchars($host) ?></h1>
+    <p class="text-sm text-gray-400 mb-6">🌐 Domain VPS: <span class="text-yellow-300 font-semibold"><?= htmlspecialchars($domain) ?></span></p>
 
     <form method="post" class="bg-gray-800 p-6 rounded shadow w-full max-w-3xl mb-4">
         <input type="hidden" name="host" value="<?= htmlspecialchars($host) ?>">
@@ -47,5 +51,4 @@ if ($command !== '') {
     <?php endif; ?>
 </body>
 </html>
-
 
