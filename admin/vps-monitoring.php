@@ -6,7 +6,7 @@ if (!isset($_SESSION['username'])) {
 }
 
 $servers = [
-    'RW‑MARD'     => ['ip'=>'203.194.113.140','user'=>'root','port'=>22,'alias'=>'RW‑MAR1'],
+    'RW‑MARD'     => ['ip'=>'203.194.113.140','user'=>'root','port'=>22,'alias'=>'RW‑MARD'],
     'SGDO‑MARD1'  => ['ip'=>'143.198.202.86','user'=>'root','port'=>22,'alias'=>'SGDO‑MARD1'],
     'SGDO‑2DEV'   => ['ip'=>'203.194.113.140','user'=>'root','port'=>22,'alias'=>'SGDO‑2DEV'],
 ];
