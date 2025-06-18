@@ -33,7 +33,6 @@ if (session_status() === PHP_SESSION_NONE) {
   }
 }
   </script>
-
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col">
 
