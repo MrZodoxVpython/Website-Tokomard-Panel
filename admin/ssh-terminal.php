@@ -6,40 +6,70 @@ if (!isset($_SESSION['username'])) {
 }
 
 ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Ambil data koneksi
+// Ambil parameter koneksi
 $host = $_POST['host'] ?? $_GET['host'] ?? '';
 $user = $_POST['user'] ?? $_GET['user'] ?? 'root';
-$port = 7681; // port ttyd default
+$port = $_POST['port'] ?? $_GET['port'] ?? 22;
+$password = $_POST['password'] ?? '';
+$authSuccess = false;
+$error = '';
+$ttydPort = 7681;
+
+// Cek password via SSH
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $password) {
+    if (!function_exists('ssh2_connect')) {
+        $error = "Ekstensi ssh2 tidak tersedia di PHP.";
+    } else {
+        $connection = @ssh2_connect($host, $port);
+        if (!$connection) {
+            $error = "Gagal konek ke $host.";
+        } elseif (!@ssh2_auth_password($connection, $user, $password)) {
+            $error = "Autentikasi gagal. Password salah.";
+        } else {
+            $authSuccess = true;
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Akses Terminal Interaktif</title>
+    <title>Akses Terminal VPS</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-black text-white flex flex-col items-center justify-center min-h-screen p-6">
-    <h1 class="text-2xl font-bold mb-4">Akses Terminal: <?= htmlspecialchars($host) ?></h1>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-6">
 
-    <p class="mb-6 text-center text-gray-300">
-        Klik tombol di bawah untuk membuka terminal penuh via browser untuk akun: <br>
-        <code class="text-green-400"><?= htmlspecialchars($user) ?>@<?= htmlspecialchars($host) ?></code><br>
-        Port: <code class="text-yellow-400"><?= $port ?></code>
-    </p>
+    <h1 class="text-2xl font-bold mb-6">Akses Terminal: <?= htmlspecialchars($host) ?></h1>
 
-    <a href="http://<?= $host ?>:<?= $port ?>" target="_blank"
-       class="bg-green-600 px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold">
-        Buka Terminal Interaktif
-    </a>
+    <?php if ($error): ?>
+        <div class="bg-red-600 text-white p-4 rounded mb-4 w-full max-w-md"><?= htmlspecialchars($error) ?></div>
+    <?php endif; ?>
 
-    <p class="text-sm mt-6 text-gray-500">
-        Pastikan VPS memiliki <code>ttyd</code> aktif seperti: <br>
-        <code>ttyd -p <?= $port ?> -c <?= $user ?>:password /bin/login</code>
-    </p>
+    <?php if ($authSuccess): ?>
+        <div class="bg-green-700 text-white p-4 rounded mb-6 w-full max-w-md">
+            ✅ Autentikasi berhasil sebagai <strong><?= htmlspecialchars($user) ?></strong> di <strong><?= htmlspecialchars($host) ?></strong>.
+        </div>
+        <a href="http://<?= $host ?>:<?= $ttydPort ?>" target="_blank"
+           class="bg-green-600 px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold">
+           Buka Terminal Interaktif
+        </a>
+        <p class="text-sm text-gray-400 mt-4">Pastikan <code>ttyd</code> aktif di VPS pada port <?= $ttydPort ?>.</p>
+    <?php else: ?>
+        <form method="post" class="bg-gray-800 p-6 rounded shadow w-full max-w-md">
+            <input type="hidden" name="host" value="<?= htmlspecialchars($host) ?>">
+            <input type="hidden" name="user" value="<?= htmlspecialchars($user) ?>">
+            <input type="hidden" name="port" value="<?= htmlspecialchars($port) ?>">
+
+            <label class="block mb-2">Password untuk <?= htmlspecialchars($user) ?>@<?= htmlspecialchars($host) ?>:</label>
+            <input type="password" name="password" required class="w-full p-2 mb-4 rounded bg-gray-700 text-white">
+
+            <button type="submit" class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 w-full">Login & Verifikasi</button>
+        </form>
+    <?php endif; ?>
 </body>
 </html>
 
