@@ -31,15 +31,18 @@ function checkXrayWebSocket($host, $port = 443, $path = '/trojan-ws') {
     return strpos($response, "101 Switching Protocols") !== false;
 }
 
-function checkPing($ip) {
+function getPingMs($ip) {
     $ping = shell_exec("ping -c1 -W1 $ip 2>/dev/null");
-    return (strpos($ping, '1 received') !== false || strpos($ping, '1 packets received') !== false);
+    if (preg_match('/time=([0-9.]+) ms/', $ping, $match)) {
+        return (float) $match[1];
+    }
+    return false;
 }
 
 $servers = [
-    'RW-MARD1' => ['ip' => '203.194.113.140', 'ssh_user' => 'root', 'ssh_port' => 22],
-    'SGDO-MARD1' => ['ip' => '143.198.202.86', 'ssh_user' => 'root', 'ssh_port' => 22],
-    'SGDO-2DEV' => ['ip' => '178.128.60.185', 'ssh_user' => 'root', 'ssh_port' => 22]
+    'RW-MARD1'     => ['ip' => '203.194.113.140', 'ssh_user' => 'root', 'ssh_port' => 22],
+    'SGDO-MARD1'   => ['ip' => '143.198.202.86',  'ssh_user' => 'root', 'ssh_port' => 22],
+    'SGDO-2DEV'    => ['ip' => '178.128.60.185',  'ssh_user' => 'root', 'ssh_port' => 22]
 ];
 
 if (isset($_POST['password'])) {
@@ -72,15 +75,23 @@ $password = $_SESSION['vps_pass'] ?? null;
                     <h2 class="text-xl font-semibold text-blue-400 text-center mb-4"><?= $name ?></h2>
                     <div class="text-sm font-mono bg-black text-green-400 p-4 rounded-lg whitespace-pre-wrap">
 <?php
-$vpsOnline = checkPing($srv['ip']);
-if (!$vpsOnline) {
-    echo "Status VPS      : ❌ Offline (Ping gagal)\n";
+$pingMs = getPingMs($srv['ip']);
+
+if ($pingMs === false) {
+    echo "Status VPS      : 🔴 Offline\n";
     continue;
 }
 
+$pingColor = match(true) {
+    $pingMs < 150    => 'green-400',
+    $pingMs < 1000   => 'yellow-300',
+    default          => 'red-500',
+};
+$pingText = "<span class='text-$pingColor'>{$pingMs}ms</span>";
+
 $ok = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "echo OK");
 if ($ok !== "OK") {
-    echo "Status VPS      : ❌ Autentikasi gagal\n";
+    echo "Status VPS      : 🔴 Autentikasi gagal\n";
     continue;
 }
 
@@ -94,7 +105,7 @@ $domaincf  = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, 
 $xrayStatus = checkXrayWebSocket($domaincf) ? "🟢 Online" : "🔴 Offline";
 
 $labels = [
-    "Status VPS"   => "🟢 Online",
+    "Status VPS"   => "🟢 Online ({$pingMs}ms)",
     "OS"           => $os,
     "Uptime"       => $uptime,
     "Public IP"    => $ip,
@@ -106,7 +117,7 @@ $labels = [
 
 $maxLen = max(array_map('strlen', array_keys($labels)));
 foreach ($labels as $k => $v) {
-    printf("%-{$maxLen}s : %s\n", $k, $v);
+    echo str_pad($k, $maxLen) . " : " . $v . "\n";
 }
 ?>
                     </div>
