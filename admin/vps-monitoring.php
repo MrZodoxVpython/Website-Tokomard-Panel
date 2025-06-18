@@ -14,17 +14,19 @@ function sshExec($host, $port, $user, $password, $command) {
     return trim(stream_get_contents($stream));
 }
 
-function checkXrayStatus($host, $port = 443) {
-    $ch = curl_init("https://$host:$port");
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-    curl_setopt($ch, CURLOPT_NOBODY, true);
-    curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-    return $httpCode > 0;
+function checkXrayWebSocket($domain, $path = "/trojan-ws", $port = 443) {
+    $headers = [
+        "Connection: Upgrade",
+        "Upgrade: websocket",
+        "Host: $domain",
+        "User-Agent: curl",
+        "Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw==",
+        "Sec-WebSocket-Version: 13"
+    ];
+    $headerString = implode(" -H ", array_map('escapeshellarg', $headers));
+    $cmd = "curl -s -o /dev/null -w '%{http_code}' -k --connect-timeout 5 --max-time 10 -H $headerString https://$domain:$port$path";
+    $httpCode = shell_exec($cmd);
+    return trim($httpCode) === "101"; // 101 = Switching Protocols = WebSocket Success
 }
 
 $servers = [
@@ -68,7 +70,7 @@ $password = $_POST['password'] ?? null;
         <?php foreach ($servers as $name => $srv): ?>
         <div class="bg-gray-800 rounded-xl p-4 shadow">
             <h2 class="text-xl font-semibold text-blue-400 text-center mb-4"><?= $name ?></h2>
-            <div class="text-sm font-mono bg-black text-green-400 p-4 rounded-lg whitespace-pre-wrap">
+            <div class="text-sm font-mono bg-black text-green-400 p-4 rounded-lg whitespace-pre">
 <?php
 $ok = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "echo OK");
 if ($ok !== "OK") {
@@ -82,7 +84,7 @@ $ip        = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, 
 $country   = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "curl -s ipinfo.io/\$ip/country");
 $domain    = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "hostname -f");
 $domaincf  = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "cat /etc/xray/domain");
-$xrayStat  = checkXrayStatus($domaincf) ? '🟢 Online' : '🔴 Offline';
+$xrayStat  = checkXrayWebSocket($domaincf) ? '🟢 Online' : '🔴 Offline';
 
 $labels = [
     "Status VPS"   => "🟢 Online",
@@ -95,7 +97,6 @@ $labels = [
     "Xray Status"  => $xrayStat
 ];
 
-// Format agar titik dua lurus
 $maxLen = max(array_map('strlen', array_keys($labels)));
 foreach ($labels as $key => $value) {
     printf("%-{$maxLen}s : %s\n", $key, $value);
