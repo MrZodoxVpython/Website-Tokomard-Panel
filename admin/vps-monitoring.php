@@ -45,6 +45,8 @@ $servers = [
     ]
 ];
 
+$password = $_POST['password'] ?? null;
+$submit = isset($_POST['submit']);
 ?>
 <!DOCTYPE html>
 <html lang="en" class="bg-gray-900 text-white">
@@ -55,21 +57,17 @@ $servers = [
 </head>
 <body class="p-6">
     <h1 class="text-3xl font-bold text-green-400 mb-6 text-center">✅ Monitoring 3 VPS</h1>
+    <form method="post" class="max-w-md mx-auto mb-8">
+        <label class="block text-white mb-2 text-center">Masukkan Password root untuk semua VPS:</label>
+        <input type="password" name="password" class="w-full mb-4 p-2 rounded bg-gray-700 text-white" required>
+        <button type="submit" name="submit" class="bg-blue-500 px-4 py-2 rounded hover:bg-blue-600 w-full">Terapkan & Lihat Status Semua VPS</button>
+    </form>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <?php foreach ($servers as $name => $server): ?>
             <div class="bg-gray-800 p-4 rounded-lg shadow">
-                <h2 class="text-xl font-semibold text-blue-300 mb-2 text-center"><?= $name ?></h2>
-                <form method="post" class="text-sm font-mono bg-black rounded-lg p-4 overflow-x-auto text-green-400">
-                    <input type="hidden" name="host" value="<?= $server['ip'] ?>">
-                    <input type="hidden" name="user" value="<?= $server['ssh_user'] ?>">
-                    <input type="hidden" name="port" value="<?= $server['ssh_port'] ?>">
-                    <label class="block text-white mb-2">Password:</label>
-                    <input type="password" name="password" class="w-full mb-4 p-2 rounded bg-gray-700 text-white" required>
-                    <button type="submit" class="bg-blue-500 px-4 py-2 rounded hover:bg-blue-600 w-full">Lihat Status</button>
-                </form>
+                <h2 class="text-xl font-semibold text-blue-300 mb-4 text-center"><?= $name ?></h2>
                 <?php
-                if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['host'] === $server['ip']) {
-                    $password = $_POST['password'];
+                if ($submit) {
                     $conn = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $password, "echo OK");
                     $isOnline = $conn === "OK";
                     if ($isOnline) {
@@ -81,21 +79,21 @@ $servers = [
                         $domaincf = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $password, "cat /etc/xray/domain");
                         $xrayStatus = checkXrayStatus($domaincf) ? '🟢 Online' : '🔴 Offline';
                 ?>
-                        <div class="mt-4 text-sm font-mono bg-black rounded-lg p-4 overflow-x-auto text-green-400">
+                        <div class="text-sm font-mono bg-black rounded-lg p-4 overflow-x-auto text-green-400">
 <pre><code>
-Status        : 🟢 Online
-OS            : <?= $os ?>
-Uptime        : <?= $uptime ?>
-Public IP     : <?= $ip ?>
-Country       : <?= $country ?>
-Domain VPS    : <?= $domain ?>
-Domain Xray   : <?= $domaincf ?>
-Xray Status   : <?= $xrayStatus ?>
+Status VPS   : 🟢 Online
+OS           : <?= $os ?>
+Uptime       : <?= $uptime ?>
+Public IP    : <?= $ip ?>
+Country      : <?= $country ?>
+Domain VPS   : <?= $domain ?>
+Domain Xray  : <?= $domaincf ?>
+Xray Status  : <?= $xrayStatus ?>
 </code></pre>
                         </div>
                 <?php
                     } else {
-                        echo '<p class="text-red-400 font-bold text-center mt-4">❌ Autentikasi gagal.</p>';
+                        echo '<p class="text-red-400 font-bold text-center">❌ Autentikasi gagal.</p>';
                     }
                 }
                 ?>
