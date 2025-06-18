@@ -3,8 +3,14 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="Tokomard Panel VPN - Kelola Xray & Trojan dengan Mudah">
+  <meta property="og:description" content="Panel web Tokomard untuk manajemen akun VPN Xray.">
+  <meta property="og:image" content="https://i.imgur.com/q3DzxiB.png">
+  <meta property="og:url" content="https://panel.tokomard.store/">
+  <meta property="og:type" content="website">
   <title>Login - X-Panel</title>
   <link rel="SHORTCUT ICON" href="https://i.imgur.com/q3DzxiB.png">
   <!-- Tailwind CSS CDN -->
