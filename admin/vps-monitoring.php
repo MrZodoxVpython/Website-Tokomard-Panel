@@ -18,7 +18,6 @@ function checkXrayWebSocket($host, $port = 443, $path = '/trojan-ws') {
     $host = str_replace(["https://", "http://"], "", $host);
     $fp = @fsockopen("ssl://$host", $port, $errno, $errstr, 3);
     if (!$fp) return false;
-
     $key = base64_encode(random_bytes(16));
     $headers = "GET $path HTTP/1.1\r\n"
              . "Host: $host\r\n"
@@ -26,7 +25,6 @@ function checkXrayWebSocket($host, $port = 443, $path = '/trojan-ws') {
              . "Connection: Upgrade\r\n"
              . "Sec-WebSocket-Key: $key\r\n"
              . "Sec-WebSocket-Version: 13\r\n\r\n";
-
     fwrite($fp, $headers);
     $response = fread($fp, 1500);
     fclose($fp);
@@ -44,7 +42,11 @@ $servers = [
     'SGDO-2DEV' => ['ip' => '178.128.60.185', 'ssh_user' => 'root', 'ssh_port' => 22]
 ];
 
-$password = $_POST['password'] ?? null;
+if (isset($_POST['password'])) {
+    $_SESSION['vps_pass'] = $_POST['password'];
+}
+
+$password = $_SESSION['vps_pass'] ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="en" class="bg-gray-900 text-white">
@@ -78,7 +80,7 @@ if (!$vpsOnline) {
 
 $ok = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "echo OK");
 if ($ok !== "OK") {
-    echo "Status VPS      : ❌ Autentikasi gagal.\n";
+    echo "Status VPS      : ❌ Autentikasi gagal\n";
     continue;
 }
 
