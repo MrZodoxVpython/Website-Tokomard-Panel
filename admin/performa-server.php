@@ -50,12 +50,20 @@ $servers = [
                         <span class="text-red-400 font-bold">Offline</span>
                     <?php endif; ?>
                 </p>
-                <form method="post" action="ssh-terminal.php" class="mt-4">
-                    <input type="hidden" name="host" value="<?= $data['ip']; ?>">
-                    <input type="hidden" name="user" value="<?= $data['ssh_user']; ?>">
-                    <input type="hidden" name="port" value="<?= $data['ssh_port']; ?>">
+
+                <!-- Form Akses Shell -->
+                <form method="post" action="ssh-terminal.php" class="mt-4 space-y-3">
+                    <input type="hidden" name="host" value="<?= htmlspecialchars($data['ip']); ?>">
+                    <input type="hidden" name="user" value="<?= htmlspecialchars($data['ssh_user']); ?>">
+                    <input type="hidden" name="port" value="<?= htmlspecialchars($data['ssh_port']); ?>">
+
+                    <label class="block text-sm">Password Root:</label>
+                    <input type="password" name="password" required
+                        class="w-full p-2 rounded bg-gray-700 text-white"
+                        placeholder="Masukkan password VPS" <?= !$alive ? 'disabled' : '' ?>>
+
                     <button type="submit"
-                        class="mt-2 px-4 py-2 bg-blue-500 rounded hover:bg-blue-600 transition <?= !$alive ? 'opacity-50 cursor-not-allowed' : '' ?>"
+                        class="w-full px-4 py-2 bg-blue-500 rounded hover:bg-blue-600 transition <?= !$alive ? 'opacity-50 cursor-not-allowed' : '' ?>"
                         <?= !$alive ? 'disabled' : '' ?>>
                         Akses Shell
                     </button>
