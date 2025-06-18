@@ -36,7 +36,7 @@ $servers = [
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen p-6">
-    <h1 class="text-3xl font-bold mb-6">🖥 VPS Monitoring</h1>
+    <h1 class="text-3xl font-bold mb-4 text-green-400">🖥  VPS Shell Access</h1>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <?php foreach ($servers as $name => $data): ?>
             <?php $alive = isServerAlive($data['ip']); ?>
