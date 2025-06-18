@@ -45,59 +45,67 @@ $servers = [
     ]
 ];
 
-$passwordInput = $_POST['password'] ?? '';
+$password = $_POST['password'] ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="en" class="bg-gray-900 text-white">
 <head>
     <meta charset="UTF-8">
-    <title>Monitoring 3 VPS</title>
+    <title>Monitoring VPS</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="p-6">
+<body class="p-6 min-h-screen">
     <h1 class="text-3xl font-bold text-green-400 mb-6 text-center">✅ Monitoring 3 VPS</h1>
-    <form method="post" class="max-w-md mx-auto mb-8">
-        <label class="block text-white mb-2 text-lg font-semibold text-center">Masukkan Password (untuk semua VPS):</label>
-        <input type="password" name="password" value="<?= htmlspecialchars($passwordInput) ?>" class="w-full mb-4 p-2 rounded bg-gray-700 text-white" required>
-        <button type="submit" class="bg-blue-500 px-4 py-2 rounded hover:bg-blue-600 w-full">Lihat Status Semua VPS</button>
-    </form>
 
+    <?php if (!$password): ?>
+    <form method="post" class="max-w-md mx-auto bg-gray-800 p-6 rounded-lg shadow-lg">
+        <label class="block text-white mb-2">Masukkan Password VPS:</label>
+        <input type="password" name="password" class="w-full mb-4 p-2 rounded bg-gray-700 text-white" required>
+        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded">Lanjut</button>
+    </form>
+    <?php else: ?>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <?php foreach ($servers as $name => $server): ?>
-            <div class="bg-gray-800 p-4 rounded-lg shadow">
-                <h2 class="text-xl font-semibold text-blue-300 mb-4 text-center">🌐 <?= $name ?></h2>
-                <?php
-                if ($passwordInput) {
-                    $conn = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $passwordInput, "echo OK");
-                    $isOnline = $conn === "OK";
-                    if ($isOnline) {
-                        $os = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $passwordInput, "grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d \"\"");
-                        $uptime = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $passwordInput, "uptime -p");
-                        $ip = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $passwordInput, "curl -s ifconfig.me");
-                        $country = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $passwordInput, "curl -s ipinfo.io/\$ip/country");
-                        $domain = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $passwordInput, "hostname -f");
-                        $domaincf = sshExec($server['ip'], $server['ssh_port'], $server['ssh_user'], $passwordInput, "cat /etc/xray/domain");
-                        $xrayStatus = checkXrayStatus($domaincf) ? '🟢 Online' : '🔴 Offline';
-                ?>
-                        <div class="text-sm font-mono bg-black rounded-lg p-4 overflow-hidden text-green-400 whitespace-pre">
-Status VPS   : 🟢 Online
-OS           : <?= $os ?>
-Uptime       : <?= $uptime ?>
-Public IP    : <?= $ip ?>
-Country      : <?= $country ?>
-Domain VPS   : <?= $domain ?>
-Domain Xray  : <?= $domaincf ?>
-Xray Status  : <?= $xrayStatus ?>
-                        </div>
-                <?php
-                    } else {
-                        echo '<p class="text-red-400 font-bold text-center mt-4">❌ Autentikasi gagal.</p>';
-                    }
-                }
-                ?>
+        <?php foreach ($servers as $name => $srv): ?>
+        <div class="bg-gray-800 rounded-xl p-4 shadow">
+            <h2 class="text-xl font-semibold text-blue-400 text-center mb-4"><?= $name ?></h2>
+            <div class="text-sm font-mono bg-black text-green-400 p-4 rounded-lg whitespace-pre-wrap">
+<?php
+$ok = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "echo OK");
+if ($ok !== "OK") {
+    echo "Status VPS    : ❌ Autentikasi gagal.\n";
+    continue;
+}
+
+$os        = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d '\"'");
+$uptime    = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "uptime -p");
+$ip        = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "curl -s ifconfig.me");
+$country   = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "curl -s ipinfo.io/\$ip/country");
+$domain    = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "hostname -f");
+$domaincf  = sshExec($srv['ip'], $srv['ssh_port'], $srv['ssh_user'], $password, "cat /etc/xray/domain");
+$xrayStat  = checkXrayStatus($domaincf) ? '🟢 Online' : '🔴 Offline';
+
+$labels = [
+    "Status VPS"   => "🟢 Online",
+    "OS"           => $os,
+    "Uptime"       => $uptime,
+    "Public IP"    => $ip,
+    "Country"      => $country,
+    "Domain VPS"   => $domain,
+    "Domain Xray"  => $domaincf,
+    "Xray Status"  => $xrayStat
+];
+
+// Format agar titik dua lurus
+$maxLen = max(array_map('strlen', array_keys($labels)));
+foreach ($labels as $key => $value) {
+    printf("%-{$maxLen}s : %s\n", $key, $value);
+}
+?>
             </div>
+        </div>
         <?php endforeach; ?>
     </div>
+    <?php endif; ?>
 </body>
 </html>
 
