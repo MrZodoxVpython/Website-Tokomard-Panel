@@ -50,6 +50,9 @@ if (isset($_POST['password'])) {
 }
 
 $password = $_SESSION['vps_pass'] ?? null;
+
+include 'templates/header.php';
+
 ?>
 <!DOCTYPE html>
 <html lang="en" class="bg-gray-900 text-white">
