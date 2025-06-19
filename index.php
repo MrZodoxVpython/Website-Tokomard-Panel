@@ -106,6 +106,15 @@
         <h3 class="text-xl font-semibold mb-2">⚡ Server TerMantap</h3>
         <p class="text-gray-400">Specs gahar, stabil, dan cepat diakses daremua perangkat.</p>
       </div>
+      <div>
+        <h3 class="text-xl font-semibold mb-2">⚡ Panel Cepat</h3>
+        <p class="text-gray-400">Desain ringan, responsif, dan cepat diakses dari semua perangkat.</p>
+      </div>
+      <div>
+        <h3 class="text-xl font-semibold mb-2">⚡ Panel Cepat</h3>
+        <p class="text-gray-400">Desain ringan, responsif, dan cepat diakses dari semua perangkat.</p>
+      </div>
+
 
     </div>
   </section>
