@@ -164,6 +164,31 @@ include 'templates/header.php';
 <div class="max-w-5xl mx-auto mt-10 bg-gray-800 p-6 rounded-xl shadow-md text-white">
 <?php if ($proses): ?>
     <?php
+
+    if (isset($vpsList[$vps])) {
+    $vpsData = $vpsList[$vps];
+    $vpsIp = $vpsData['ip'];
+    $vpsUser = $vpsData['user'];
+    
+    // Escape input untuk aman dijalankan via shell
+    $usernameSafe = escapeshellarg($username);
+    $expiredSafe  = escapeshellarg($expired);
+    $protokolSafe = escapeshellarg($protokol);
+    $keySafe      = escapeshellarg($key);
+
+    // Eksekusi PHP di remote VPS via SSH
+    $sshCmd = "ssh -o StrictHostKeyChecking=no $vpsUser@$vpsIp 'php /root/tambah-akun.php $usernameSafe $expiredSafe $protokolSafe $keySafe'";
+    $output = shell_exec($sshCmd);
+
+    echo "<pre class='bg-gray-900 text-green-300 p-4 rounded'>$output</pre>";
+    echo "<a href='kelola-akun.php' class='mt-4 inline-block bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded'>➕ Tambah Akun Lagi</a>";
+    return;
+} else {
+    echo "<p class='text-red-400'>❌ VPS tidak dikenali.</p>";
+    return;
+}
+
+
     if (akunSudahAda($username, $expired, $configPath)) {
         echo "<p class='text-yellow-400'>⚠ Akun sudah ada. Tidak ditambahkan ulang.</p>";
     } else {
