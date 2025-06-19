@@ -100,30 +100,36 @@ foreach ($servers as $name => $domain) {
 </head>
 <body class="bg-gray-900 text-white min-h-screen p-4 md:p-6 space-y-6">
 
-    <!-- STATUS SERVER -->
-    <div class="max-w-6xl mx-auto bg-gray-800 rounded-lg p-4 md:p-6 shadow-lg">
-        <h1 class="text-xl md:text-2xl font-semibold mb-4 text-center">Status WebSocket Xray Server Tokomard</h1>
-        <div class="overflow-x-auto">
-            <table class="w-full table-auto border-collapse text-xs md:text-sm">
-                <thead><tr class="bg-gray-700">
-                    <th class="p-2 md:p-3">Nama Server</th><th class="p-2 md:p-3">Host</th><th class="p-2 md:p-3">Negara</th><th class="p-2 md:p-3">Status WS</th>
-                </tr></thead>
-                <tbody>
-                    <?php foreach($results as $r): ?>
-                    <tr class="hover:bg-gray-700">
-                        <td class="p-2 md:p-3"><?=htmlspecialchars($r['name'])?></td>
-                        <td class="p-2 md:p-3"><?=htmlspecialchars($r['host'])?></td>
-                        <td class="p-2 md:p-3"><?=htmlspecialchars($r['country'])?></td>
-                        <td class="p-2 md:p-3 text-<?=$r['color']?>-400 font-bold"><?=htmlspecialchars($r['status'])?></td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-        <p class="text-xs text-gray-400 mt-4 text-center">
-            * Pengecekan Status Tunneling dilakukan otomatis tiap 5 detik.
-        </p>
+<!-- STATUS SERVER -->
+<div class="max-w-6xl mx-auto bg-gray-800 rounded-lg p-4 md:p-6 shadow-lg mb-6">
+    <h1 class="text-xl md:text-2xl font-semibold mb-4 text-center">Status WebSocket Xray Server Tokomard</h1>
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-700 text-sm text-left">
+            <thead class="bg-gray-700">
+                <tr>
+                    <th class="p-3 font-medium">Nama Server</th>
+                    <th class="p-3 font-medium">Host</th>
+                    <th class="p-3 font-medium">Negara</th>
+                    <th class="p-3 font-medium">Status WS</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-600">
+                <?php foreach($results as $r): ?>
+                <tr class="hover:bg-gray-700">
+                    <td class="p-3"><?= htmlspecialchars($r['name']) ?></td>
+                    <td class="p-3"><?= htmlspecialchars($r['host']) ?></td>
+                    <td class="p-3"><?= htmlspecialchars($r['country']) ?></td>
+                    <td class="p-3 font-bold text-<?= $r['color'] ?>-400"><?= htmlspecialchars($r['status']) ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
+    <p class="text-xs text-gray-400 mt-4 text-center">
+        * Pengukuran tunneling connect atau tidak pada setiap server ditentukan dari respon WebSocket handshake 101 Switching Protocols.<br>
+        * Pengecekan Status Tunneling dilakukan otomatis setiap 5 detik.
+    </p>
+</div>
 
 <!-- INFO PENGUNJUNG -->
 <div class="max-w-6xl mx-auto bg-gray-800 rounded-lg p-4 md:p-6 shadow-lg">
