@@ -110,7 +110,7 @@ foreach ($servers as $name => $domain) {
                     <th class="p-3 font-medium">Nama Server</th>
                     <th class="p-3 font-medium">Host</th>
                     <th class="p-3 font-medium">Negara</th>
-                    <th class="p-3 font-medium">Status WS</th>
+                    <th class="p-3 font-medium">Status</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-600">
