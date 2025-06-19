@@ -1,59 +1,51 @@
 <?php
 session_start();
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
-    header("Location: ../index.php");
+    header("Location: index.php");
     exit;
 }
 
-function check_ws_xray($host, $port, $path) {
-    $url = "https://$host$path";
-    $ch = curl_init($url);
+// Daftar server (gunakan domain valid yang dipasang di Xray config)
+$servers = [
+    'RW-MARD'     => 'rw-mard.tokomard.store',
+    'SGDO-MARD1'  => 'vpn-premium.tokomard.store',
+    'SGDO-2DEV'   => 'sgdo-2dev.tokomard.store',
+];
 
-    curl_setopt($ch, CURLOPT_PORT, $port);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HEADER, true);
-    curl_setopt($ch, CURLOPT_NOBODY, true);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 7);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "Host: $host",
-        "Connection: Upgrade",
-        "Upgrade: websocket",
-        "Sec-WebSocket-Version: 13",
-        "Sec-WebSocket-Key: " . base64_encode(random_bytes(16)),
-        "User-Agent: Mozilla/5.0"
-    ]);
+// Fungsi cek status WebSocket Xray via fsockopen + upgrade handshake
+function check_xray_ws($host, $port = 443, $path = '/trojan-ws') {
+    $fp = @fsockopen("ssl://$host", $port, $errno, $errstr, 5);
+    if (!$fp) {
+        return ['status' => 'Tidak Terkoneksi', 'color' => 'red'];
+    }
 
-    $response = curl_exec($ch);
-    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $err = curl_error($ch);
-    curl_close($ch);
+    $key = base64_encode(random_bytes(16));
+    $headers = "GET $path HTTP/1.1\r\n"
+             . "Host: $host\r\n"
+             . "Upgrade: websocket\r\n"
+             . "Connection: Upgrade\r\n"
+             . "Sec-WebSocket-Key: $key\r\n"
+             . "Sec-WebSocket-Version: 13\r\n\r\n";
+
+    fwrite($fp, $headers);
+    $response = fread($fp, 2048);
+    fclose($fp);
 
     if (strpos($response, '101 Switching Protocols') !== false) {
         return ['status' => 'Aktif', 'color' => 'green'];
-    } elseif ($err) {
-        return ['status' => "Error: $err", 'color' => 'yellow'];
-    } else {
-        return ['status' => 'Mati', 'color' => 'red'];
     }
+
+    return ['status' => 'Tidak Aktif', 'color' => 'red'];
 }
 
-$servers = [
-    'RW-MARD'     => ['host' => 'rw-mard.tokomard.store',    'port' => 443, 'path' => '/trojan-ws'],
-    'SGDO-MARD1'  => ['host' => 'vpn-premium.tokomard.store', 'port' => 443, 'path' => '/trojan-ws'],
-    'SGDO-2DEV'   => ['host' => 'sgdo-2dev.tokomard.store', 'port' => 443, 'path' => '/trojan-ws'],
-];
-
 $results = [];
-foreach ($servers as $name => $srv) {
-    $res = check_ws_xray($srv['host'], $srv['port'], $srv['path']);
+foreach ($servers as $name => $domain) {
+    $res = check_xray_ws($domain);
     $results[] = [
-        'name'  => $name,
-        'host'  => $srv['host'],
+        'name' => $name,
+        'host' => $domain,
         'status' => $res['status'],
-        'color'  => $res['color']
+        'color' => $res['color']
     ];
 }
 ?>
@@ -91,8 +83,9 @@ foreach ($servers as $name => $srv) {
             </tbody>
         </table>
 
-        <p class="text-xs text-gray-400 mt-4">* Status diukur berdasarkan handshake WebSocket (HTTP 101). Pastikan subdomain valid dan mengarah ke server.</p>
+        <p class="text-xs text-gray-400 mt-4">* Status dihitung dari respon WebSocket handshake 101 Switching Protocols.</p>
     </div>
 
 </body>
 </html>
+
