@@ -102,6 +102,11 @@
         <h3 class="text-xl font-semibold mb-2">📊 Monitoring Real-time</h3>
         <p class="text-gray-400">Lihat statistik pengguna, log koneksi, dan manajemen bandwidth dengan mudah.</p>
       </div>
+      <div>
+        <h3 class="text-xl font-semibold mb-2">⚡ Server TerMantap</h3>
+        <p class="text-gray-400">Specs gahar, stabil, dan cepat diakses daremua perangkat.</p>
+      </div>
+
     </div>
   </section>
 
