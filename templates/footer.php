@@ -2,7 +2,7 @@
 
 <!-- Footer -->
 <footer class="bg-gray-800 text-center text-sm text-gray-400 py-4 mt-10">
-  © <?= date("Y") ?> X-Panel. All rights reserved.
+  © <?= date("Y") ?> Tokomard. All rights reserved.
 </footer>
 <script>
   const toggle = document.getElementById('menu-toggle');
