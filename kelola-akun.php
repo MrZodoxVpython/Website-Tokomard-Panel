@@ -165,29 +165,6 @@ include 'templates/header.php';
 <?php if ($proses): ?>
     <?php
 
-    if (isset($vpsList[$vps])) {
-    $vpsData = $vpsList[$vps];
-    $vpsIp = $vpsData['ip'];
-    $vpsUser = $vpsData['user'];
-    
-    // Escape input untuk aman dijalankan via shell
-    $usernameSafe = escapeshellarg($username);
-    $expiredSafe  = escapeshellarg($expired);
-    $protokolSafe = escapeshellarg($protokol);
-    $keySafe      = escapeshellarg($key);
-
-    // Eksekusi PHP di remote VPS via SSH
-    $sshCmd = "ssh -o StrictHostKeyChecking=no $vpsUser@$vpsIp 'php /root/tambah-akun.php $usernameSafe $expiredSafe $protokolSafe $keySafe'";
-    $output = shell_exec($sshCmd);
-
-    echo "<pre class='bg-gray-900 text-green-300 p-4 rounded'>$output</pre>";
-    echo "<a href='kelola-akun.php' class='mt-4 inline-block bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded'>➕ Tambah Akun Lagi</a>";
-    return;
-} else {
-    echo "<p class='text-red-400'>❌ VPS tidak dikenali.</p>";
-    return;
-}
-
 
     if (akunSudahAda($username, $expired, $configPath)) {
         echo "<p class='text-yellow-400'>⚠ Akun sudah ada. Tidak ditambahkan ulang.</p>";
@@ -311,11 +288,11 @@ include 'templates/header.php';
 <!-- Dropdown Pilihan VPS -->
       <div>
         <label class="block mb-1">Pilih VPS</label>
-        <select name="vps" class="w-full p-2 bg-gray-700 rounded" required>
-          <option value="trojan">RW-MARD</option>
-          <option value="vmess">SGDO-MARD1</option>
-          <option value="vless">SGDO-2DEV</option>
-        </select>
+          <select name="vps" class="w-full p-2 bg-gray-700 rounded" required>
+	   <option value="rw-mard1">RW-MARD</option>
+  	   <option value="sgdo-mard1">SGDO-MARD1</option>
+  	   <option value="sgdo-2dev">SGDO-2DEV</option>
+	  </select>
       </div>
       <div>
         <label class="block mb-1">Protokol</label>
