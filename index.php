@@ -40,7 +40,7 @@
   <!-- Header -->
   <header class="flex items-center justify-between p-4 bg-gray-800 shadow-md">
     <div class="flex items-center space-x-3">
-      <img src="https://i.imgur.com/8IiXQqY.png" class="w-10" alt="Logo">
+      <img src="https://i.imgur.com/q3DzxiB.png" class="w-10" alt="Logo">
       <h1 class="text-xl font-bold">Tokomard VPN Panel</h1>
     </div>
     <div>
