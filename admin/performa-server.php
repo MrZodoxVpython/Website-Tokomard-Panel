@@ -125,44 +125,47 @@ foreach ($servers as $name => $domain) {
         </p>
     </div>
 
-    <!-- INFO PENGUNJUNG -->
-    <div class="max-w-6xl mx-auto bg-gray-800 rounded-lg p-4 md:p-6 shadow-lg">
-        <h2 class="text-xl font-bold text-center mb-4">Who Are You?</h2>
-        <div class="overflow-x-auto">
-            <table class="w-full table-auto border-collapse text-sm">
-                <thead><tr class="bg-gray-700"><th class="p-3">Jenis</th><th class="p-3">Detail</th></tr></thead>
-                <tbody>
-                    <!-- Info PHP -->
-                    <tr><td class="p-3 border-b">Device</td><td class="p-3"><?=htmlspecialchars($deviceInfo['device'])?></td></tr>
-                    <tr><td class="p-3 border-b">OS</td><td class="p-3"><?=htmlspecialchars($deviceInfo['os'])?></td></tr>
-                    <tr><td class="p-3 border-b">Browser</td><td class="p-3"><?=htmlspecialchars($deviceInfo['browser'])?></td></tr>
-                    <tr><td class="p-3 border-b">User Agent</td><td class="p-3 break-words text-xs"><?=htmlspecialchars($deviceInfo['user_agent'])?></td></tr>
+<!-- INFO PENGUNJUNG -->
+<div class="max-w-6xl mx-auto bg-gray-800 rounded-lg p-4 md:p-6 shadow-lg">
+    <h2 class="text-xl font-bold text-center mb-4">Informasi Pengunjung</h2>
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-700 text-sm">
+            <thead class="bg-gray-700 text-left">
+                <tr>
+                    <th class="p-3 font-medium">Jenis</th>
+                    <th class="p-3 font-medium">Detail</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-600">
+                <tr><td class="p-3">Device</td><td class="p-3"><?= htmlspecialchars($deviceInfo['device']) ?></td></tr>
+                <tr><td class="p-3">OS</td><td class="p-3"><?= htmlspecialchars($deviceInfo['os']) ?></td></tr>
+                <tr><td class="p-3">Browser</td><td class="p-3"><?= htmlspecialchars($deviceInfo['browser']) ?></td></tr>
+                <tr><td class="p-3">User Agent</td><td class="p-3 break-all text-xs"><?= htmlspecialchars($deviceInfo['user_agent']) ?></td></tr>
 
-                    <?php if($visitorLoc): ?>
-                        <tr><td class="p-3 border-b">IP Publik</td><td class="p-3"><?=htmlspecialchars($visitorLoc['query'])?></td></tr>
-                        <tr><td class="p-3 border-b">Negara</td><td class="p-3"><?=htmlspecialchars($visitorLoc['country'])?></td></tr>
-                        <tr><td class="p-3 border-b">Provinsi/Negara Bagian</td><td class="p-3"><?=htmlspecialchars($visitorLoc['regionName'])?></td></tr>
-                        <tr><td class="p-3 border-b">Kota</td><td class="p-3"><?=htmlspecialchars($visitorLoc['city'])?></td></tr>
-                        <tr><td class="p-3 border-b">Kode POS</td><td class="p-3"><?=htmlspecialchars($visitorLoc['zip'])?></td></tr>
-                        <tr><td class="p-3 border-b">Koordinat</td><td class="p-3"><?=htmlspecialchars($visitorLoc['lat'])?>, <?=htmlspecialchars($visitorLoc['lon'])?></td></tr>
-                        <tr><td class="p-3 border-b">Zona Waktu</td><td class="p-3"><?=htmlspecialchars($visitorLoc['timezone'])?></td></tr>
-                        <tr><td class="p-3 border-b">ISP</td><td class="p-3"><?=htmlspecialchars($visitorLoc['isp'])?></td></tr>
-                    <?php else: ?>
-                        <tr><td class="p-3 border-b">Lokasi</td><td class="p-3">Tidak tersedia</td></tr>
-                    <?php endif; ?>
+                <?php if ($visitorLoc): ?>
+                    <tr><td class="p-3">IP Publik</td><td class="p-3"><?= htmlspecialchars($visitorLoc['query']) ?></td></tr>
+                    <tr><td class="p-3">Negara</td><td class="p-3"><?= htmlspecialchars($visitorLoc['country']) ?></td></tr>
+                    <tr><td class="p-3">Provinsi</td><td class="p-3"><?= htmlspecialchars($visitorLoc['regionName']) ?></td></tr>
+                    <tr><td class="p-3">Kota</td><td class="p-3"><?= htmlspecialchars($visitorLoc['city']) ?></td></tr>
+                    <tr><td class="p-3">Kode POS</td><td class="p-3"><?= htmlspecialchars($visitorLoc['zip']) ?></td></tr>
+                    <tr><td class="p-3">Koordinat</td><td class="p-3"><?= htmlspecialchars($visitorLoc['lat']) ?>, <?= htmlspecialchars($visitorLoc['lon']) ?></td></tr>
+                    <tr><td class="p-3">Zona Waktu</td><td class="p-3"><?= htmlspecialchars($visitorLoc['timezone']) ?></td></tr>
+                    <tr><td class="p-3">ISP</td><td class="p-3"><?= htmlspecialchars($visitorLoc['isp']) ?></td></tr>
+                <?php else: ?>
+                    <tr><td class="p-3">Lokasi</td><td class="p-3">Tidak tersedia</td></tr>
+                <?php endif; ?>
 
-                    <!-- Info JavaScript -->
-                    <tr><td class="p-3 border-b">Layar</td><td id="js-screen" class="p-3">—</td></tr>
-                    <tr><td class="p-3 border-b">Bahasa<br>(Browser)</td><td id="js-lang" class="p-3">—</td></tr>
-                    <tr><td class="p-3 border-b">RAM (GB)</td><td id="js-memory" class="p-3">—</td></tr>
-                    <tr><td class="p-3 border-b">CPU Cores</td><td id="js-cpu" class="p-3">—</td></tr>
-                    <tr><td class="p-3 border-b">Koneksi<br>(Online/Offline)</td><td id="js-online" class="p-3">—</td></tr>
-                    <tr><td class="p-3 border-b">Waktu Lokal<br>Visitor</td><td id="js-localtime" class="p-3">—</td></tr>
-                    <tr><td class="p-3 border-b">GPS Location</td><td id="js-gps" class="p-3">—</td></tr>
-                </tbody>
-            </table>
-        </div>
+                <tr><td class="p-3">Layar</td><td class="p-3" id="js-screen">—</td></tr>
+                <tr><td class="p-3">Bahasa</td><td class="p-3" id="js-lang">—</td></tr>
+                <tr><td class="p-3">RAM (GB)</td><td class="p-3" id="js-memory">—</td></tr>
+                <tr><td class="p-3">CPU Cores</td><td class="p-3" id="js-cpu">—</td></tr>
+                <tr><td class="p-3">Koneksi</td><td class="p-3" id="js-online">—</td></tr>
+                <tr><td class="p-3">Waktu Lokal</td><td class="p-3" id="js-localtime">—</td></tr>
+                <tr><td class="p-3">GPS</td><td class="p-3" id="js-gps">—</td></tr>
+            </tbody>
+        </table>
     </div>
+</div>
 
     <script>
         document.getElementById("js-screen").innerText = `${screen.width} x ${screen.height}`;
