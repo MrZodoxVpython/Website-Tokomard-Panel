@@ -5,48 +5,60 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
+// Daftar server (gunakan domain, bukan IP)
 $servers = [
-    'RW-MARD'     => ['ip' => '203.194.113.140', 'port' => 443, 'path' => '/trojan-ws'],
-    'SGDO-MARD1'  => ['ip' => '143.198.202.86',  'port' => 443, 'path' => '/trojan-ws'],
-    'SGDO-2DEV'   => ['ip' => '178.128.60.185',  'port' => 443, 'path' => '/trojan-ws'],
+    'RW-MARD'     => ['host' => 'rw-mard.tokomard.store',    'port' => 443, 'path' => '/trojan-ws'],
+    'SGDO-MARD1'  => ['host' => 'vpn-premium.tokomard.store', 'port' => 443, 'path' => '/trojan-ws'],
+    'SGDO-2DEV'   => ['host' => 'sgdo-2dev.tokomard.store', 'port' => 443, 'path' => '/trojan-ws'],
 ];
 
+// Fungsi pengecekan WS via cURL
 function check_ws_xray($host, $port, $path) {
-    $ch = curl_init("https://$host$path");
+    $url = "https://$host$path";
+    $ch = curl_init($url);
+
+    curl_setopt($ch, CURLOPT_PORT, $port);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HEADER, true);
-    curl_setopt($ch, CURLOPT_NOBODY, true);
+    curl_setopt($ch, CURLOPT_NOBODY, true); // kita hanya butuh header
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 7);
+
+    // Nonaktifkan verifikasi TLS untuk tes ini
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Host: $host",
         "Connection: Upgrade",
         "Upgrade: websocket",
         "Sec-WebSocket-Version: 13",
         "Sec-WebSocket-Key: " . base64_encode(random_bytes(16)),
+        "User-Agent: Mozilla/5.0"
     ]);
 
-    curl_exec($ch);
+    $response = curl_exec($ch);
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $error     = curl_error($ch);
+    $err = curl_error($ch);
     curl_close($ch);
 
-    if ($http_code === 101) {
-        return 'Aktif';
-    } elseif ($error) {
-        return 'Error: ' . $error;
+    if (strpos($response, '101 Switching Protocols') !== false) {
+        return ['status' => 'Aktif', 'color' => 'green'];
+    } elseif ($err) {
+        return ['status' => "Error: $err", 'color' => 'yellow'];
     } else {
-        return 'Mati';
+        return ['status' => 'Mati', 'color' => 'red'];
     }
 }
 
 $results = [];
-foreach ($servers as $name => $server) {
-    $status = check_ws_xray($server['ip'], $server['port'], $server['path']);
-    $results[$name] = [
-        'ip'     => $server['ip'],
-        'status' => $status,
-        'color'  => $status === 'Aktif' ? 'green' : 'red'
+foreach ($servers as $name => $srv) {
+    $res = check_ws_xray($srv['host'], $srv['port'], $srv['path']);
+    $results[] = [
+        'name'  => $name,
+        'host'  => $srv['host'],
+        'status' => $res['status'],
+        'color'  => $res['color']
     ];
 }
 ?>
@@ -55,7 +67,7 @@ foreach ($servers as $name => $server) {
 <html lang="id" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <title>Status Xray WS</title>
+    <title>Status Xray WebSocket</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen p-6">
@@ -63,26 +75,28 @@ foreach ($servers as $name => $server) {
     <div class="max-w-4xl mx-auto bg-gray-800 rounded-lg p-6 shadow-lg">
         <h1 class="text-2xl font-semibold mb-4">Status WebSocket Xray (/trojan-ws)</h1>
 
-        <table class="w-full table-auto border-collapse">
+        <table class="w-full table-auto border-collapse text-sm">
             <thead>
                 <tr class="bg-gray-700">
-                    <th class="p-3 text-left border-b border-gray-600">Server</th>
-                    <th class="p-3 text-left border-b border-gray-600">IP</th>
+                    <th class="p-3 text-left border-b border-gray-600">Nama Server</th>
+                    <th class="p-3 text-left border-b border-gray-600">Host</th>
                     <th class="p-3 text-left border-b border-gray-600">Status WS</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($results as $name => $data): ?>
+                <?php foreach ($results as $row): ?>
                     <tr class="hover:bg-gray-700">
-                        <td class="p-3 border-b border-gray-700"><?= $name ?></td>
-                        <td class="p-3 border-b border-gray-700"><?= $data['ip'] ?></td>
-                        <td class="p-3 border-b border-gray-700 text-<?= $data['color'] ?>-400 font-bold"><?= $data['status'] ?></td>
+                        <td class="p-3 border-b border-gray-700"><?= htmlspecialchars($row['name']) ?></td>
+                        <td class="p-3 border-b border-gray-700"><?= htmlspecialchars($row['host']) ?></td>
+                        <td class="p-3 border-b border-gray-700 text-<?= $row['color'] ?>-400 font-bold">
+                            <?= htmlspecialchars($row['status']) ?>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
 
-        <p class="text-xs text-gray-400 mt-4">* Deteksi aktif jika server merespons handshake WebSocket pada path <code>/trojan-ws</code>.</p>
+        <p class="text-xs text-gray-400 mt-4">* Status diukur berdasarkan handshake WebSocket (HTTP 101). Pastikan subdomain valid dan mengarah ke server.</p>
     </div>
 
 </body>
