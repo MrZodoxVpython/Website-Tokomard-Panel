@@ -278,7 +278,7 @@ include 'templates/header.php';
 <!-- Dropdown Pilihan VPS -->
       <div>
         <label class="block mb-1">Pilih VPS</label>
-        <select name="protokol" class="w-full p-2 bg-gray-700 rounded" required>
+        <select name="vps" class="w-full p-2 bg-gray-700 rounded" required>
           <option value="trojan">RW-MARD</option>
           <option value="vmess">SGDO-MARD1</option>
           <option value="vless">SGDO-2DEV</option>
