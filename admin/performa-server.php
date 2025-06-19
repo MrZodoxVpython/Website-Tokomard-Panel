@@ -72,7 +72,7 @@ function detect_device_info() {
 
 function get_visitor_location() {
     $ip = $_SERVER['REMOTE_ADDR'];
-    $url = "http://ip-api.com/json/{$ip}?fields=status,country,regionName,city,zip,lat,lon,isp,timezone,query";
+    $url = "http://ip-api.com/json/{$ip}?fields=status,country,regionName,city,zip,lat,lon,isp,timezone,query,org,as";
     $ctx = @file_get_contents($url);
     if (!$ctx) return null;
     $data = json_decode($ctx, true);
@@ -81,7 +81,6 @@ function get_visitor_location() {
 
 $deviceInfo = detect_device_info();
 $visitorLoc = get_visitor_location();
-
 $results = [];
 foreach ($servers as $name => $domain) {
     $ws = check_xray_ws($domain);
@@ -99,10 +98,10 @@ foreach ($servers as $name => $domain) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 text-white min-h-screen p-4 md:p-6">
+<body class="bg-gray-900 text-white min-h-screen p-4 md:p-6 space-y-6">
 
-    <!-- TABEL STATUS SERVER -->
-    <div class="max-w-5xl mx-auto bg-gray-800 rounded-lg p-4 md:p-6 shadow-lg mb-6">
+    <!-- STATUS SERVER -->
+    <div class="max-w-6xl mx-auto bg-gray-800 rounded-lg p-4 md:p-6 shadow-lg">
         <h1 class="text-xl md:text-2xl font-semibold mb-4 text-center">Status WebSocket Xray Server Tokomard</h1>
         <div class="overflow-x-auto">
             <table class="w-full table-auto border-collapse text-xs md:text-sm">
@@ -122,40 +121,72 @@ foreach ($servers as $name => $domain) {
             </table>
         </div>
         <p class="text-xs text-gray-400 mt-4 text-center">
-            * Pengukuran tunneling connect atau tidak pada setiap server ditentukan dari respon WebSocket handshake 101 Switching Protocols. <br>
-            * Pengecekan Status Tunneling dilakukan otomatis setiap 5 detik.
+            * Status Tunneling diperbarui otomatis tiap 5 detik berdasarkan WebSocket handshake.
         </p>
     </div>
 
-    <!-- TABEL INFO PENGUNJUNG -->
-    <div class="max-w-5xl mx-auto bg-gray-800 rounded-lg p-4 md:p-6 shadow-lg">
-        <h2 class="text-xl font-bold text-center mb-4">How Are You?</h2>
+    <!-- INFO PENGUNJUNG -->
+    <div class="max-w-6xl mx-auto bg-gray-800 rounded-lg p-4 md:p-6 shadow-lg">
+        <h2 class="text-xl font-bold text-center mb-4">Informasi Pengunjung</h2>
         <div class="overflow-x-auto">
             <table class="w-full table-auto border-collapse text-sm">
-                <thead><tr class="bg-gray-700">
-                    <th class="p-3">Informasi</th><th class="p-3">Detail</th>
-                </tr></thead>
+                <thead><tr class="bg-gray-700"><th class="p-3">Jenis</th><th class="p-3">Detail</th></tr></thead>
                 <tbody>
-                    <tr><td class="p-3 border-b border-gray-700">Device</td><td class="p-3 border-b border-gray-700"><?=htmlspecialchars($deviceInfo['device'])?></td></tr>
-                    <tr><td class="p-3 border-b border-gray-700">OS</td><td class="p-3 border-b border-gray-700"><?=htmlspecialchars($deviceInfo['os'])?></td></tr>
-                    <tr><td class="p-3 border-b border-gray-700">Browser</td><td class="p-3 border-b border-gray-700"><?=htmlspecialchars($deviceInfo['browser'])?></td></tr>
-                    <tr><td class="p-3 border-b border-gray-700">User Agent</td><td class="p-3 border-b border-gray-700 text-xs break-words"><?=htmlspecialchars($deviceInfo['user_agent'])?></td></tr>
+                    <!-- Info PHP -->
+                    <tr><td class="p-3 border-b">Device</td><td class="p-3"><?=htmlspecialchars($deviceInfo['device'])?></td></tr>
+                    <tr><td class="p-3 border-b">OS</td><td class="p-3"><?=htmlspecialchars($deviceInfo['os'])?></td></tr>
+                    <tr><td class="p-3 border-b">Browser</td><td class="p-3"><?=htmlspecialchars($deviceInfo['browser'])?></td></tr>
+                    <tr><td class="p-3 border-b">User Agent</td><td class="p-3 break-words text-xs"><?=htmlspecialchars($deviceInfo['user_agent'])?></td></tr>
+
                     <?php if($visitorLoc): ?>
-                        <tr><td class="p-3 border-b border-gray-700">IP Publik</td><td class="p-3 border-b border-gray-700"><?=$visitorLoc['query']?></td></tr>
-                        <tr><td class="p-3 border-b border-gray-700">Negara</td><td class="p-3 border-b border-gray-700"><?=$visitorLoc['country']?></td></tr>
-                        <tr><td class="p-3 border-b border-gray-700">Provinsi/Negara Bagian</td><td class="p-3 border-b border-gray-700"><?=$visitorLoc['regionName']?></td></tr>
-                        <tr><td class="p-3 border-b border-gray-700">Kota</td><td class="p-3 border-b border-gray-700"><?=$visitorLoc['city']?></td></tr>
-                        <tr><td class="p-3 border-b border-gray-700">Kode POS</td><td class="p-3 border-b border-gray-700"><?=$visitorLoc['zip']?></td></tr>
-                        <tr><td class="p-3 border-b border-gray-700">Koordinat</td><td class="p-3 border-b border-gray-700"><?=$visitorLoc['lat']?>, <?=$visitorLoc['lon']?></td></tr>
-                        <tr><td class="p-3 border-b border-gray-700">Zona Waktu</td><td class="p-3 border-b border-gray-700"><?=$visitorLoc['timezone']?></td></tr>
-                        <tr><td class="p-3 border-b border-gray-700">ISP</td><td class="p-3 border-b border-gray-700"><?=$visitorLoc['isp']?></td></tr>
+                        <tr><td class="p-3 border-b">IP Publik</td><td class="p-3"><?=htmlspecialchars($visitorLoc['query'])?></td></tr>
+                        <tr><td class="p-3 border-b">Negara</td><td class="p-3"><?=htmlspecialchars($visitorLoc['country'])?></td></tr>
+                        <tr><td class="p-3 border-b">Provinsi/Negara Bagian</td><td class="p-3"><?=htmlspecialchars($visitorLoc['regionName'])?></td></tr>
+                        <tr><td class="p-3 border-b">Kota</td><td class="p-3"><?=htmlspecialchars($visitorLoc['city'])?></td></tr>
+                        <tr><td class="p-3 border-b">Kode POS</td><td class="p-3"><?=htmlspecialchars($visitorLoc['zip'])?></td></tr>
+                        <tr><td class="p-3 border-b">Koordinat</td><td class="p-3"><?=htmlspecialchars($visitorLoc['lat'])?>, <?=htmlspecialchars($visitorLoc['lon'])?></td></tr>
+                        <tr><td class="p-3 border-b">Zona Waktu</td><td class="p-3"><?=htmlspecialchars($visitorLoc['timezone'])?></td></tr>
+                        <tr><td class="p-3 border-b">ISP</td><td class="p-3"><?=htmlspecialchars($visitorLoc['isp'])?></td></tr>
                     <?php else: ?>
-                        <tr><td class="p-3 border-b border-gray-700">Lokasi</td><td class="p-3 border-b border-gray-700">Tidak tersedia</td></tr>
+                        <tr><td class="p-3 border-b">Lokasi</td><td class="p-3">Tidak tersedia</td></tr>
                     <?php endif; ?>
+
+                    <!-- Info JavaScript -->
+                    <tr><td class="p-3 border-b">Layar</td><td id="js-screen" class="p-3">—</td></tr>
+                    <tr><td class="p-3 border-b">Bahasa<br>(Browser)</td><td id="js-lang" class="p-3">—</td></tr>
+                    <tr><td class="p-3 border-b">RAM (GB)</td><td id="js-memory" class="p-3">—</td></tr>
+                    <tr><td class="p-3 border-b">CPU Cores</td><td id="js-cpu" class="p-3">—</td></tr>
+                    <tr><td class="p-3 border-b">Koneksi<br>(Online/Offline)</td><td id="js-online" class="p-3">—</td></tr>
+                    <tr><td class="p-3 border-b">Waktu Lokal<br>Visitor</td><td id="js-localtime" class="p-3">—</td></tr>
+                    <tr><td class="p-3 border-b">GPS Location</td><td id="js-gps" class="p-3">—</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
+
+    <script>
+        document.getElementById("js-screen").innerText = `${screen.width} x ${screen.height}`;
+        document.getElementById("js-lang").innerText = navigator.language || 'N/A';
+        document.getElementById("js-memory").innerText = navigator.deviceMemory || '—';
+        document.getElementById("js-cpu").innerText = navigator.hardwareConcurrency || '—';
+        document.getElementById("js-online").innerText = navigator.onLine ? "Online" : "Offline";
+        document.getElementById("js-localtime").innerText = new Date().toLocaleString();
+
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const lat = pos.coords.latitude.toFixed(4);
+                    const lon = pos.coords.longitude.toFixed(4);
+                    document.getElementById("js-gps").innerText = `${lat}, ${lon}`;
+                },
+                () => {
+                    document.getElementById("js-gps").innerText = "Tidak diizinkan";
+                }
+            );
+        } else {
+            document.getElementById("js-gps").innerText = "Tidak didukung";
+        }
+    </script>
 
 </body>
 </html>
