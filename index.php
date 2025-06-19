@@ -107,7 +107,7 @@
         <p class="text-gray-400">Specs gahar, stabil, cepat dan dapat dipakai kapanpun dimanapun.</p>
       </div>
       <div>
-       <h3 class="text-xl font-semibold mb-2">⚡ Reseller Sistem</h3>
+       <h3 class="text-xl font-semibold mb-2">🔐 Reseller Sistem</h3>
         <p class="text-gray-400">Full access, ui friendly, minim top-up Rp,50.000.</p>
       </div>
       <div>
