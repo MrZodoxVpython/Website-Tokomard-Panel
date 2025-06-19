@@ -121,7 +121,10 @@ foreach ($servers as $name => $domain) {
                 </tbody>
             </table>
         </div>
-        <p class="text-xs text-gray-400 mt-4 text-center">* Auto refresh setiap 5 detik.</p>
+        <p class="text-xs text-gray-400 mt-4 text-center">
+            * Status Tunneling/Inject connect atau tidak pada setiap server ditentukan dari respon WebSocket handshake 101 Switching Protocols. <br>
+            * Pengecekan Status Tunneling akan otomatis direfresh setiap 5 detik.
+        </p>
     </div>
 
     <!-- TABEL INFO PENGUNJUNG -->
