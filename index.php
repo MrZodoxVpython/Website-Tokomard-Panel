@@ -59,7 +59,7 @@
 <div
   x-data="{
     activeSlide: 0,
-    slides: ['https://i.imgur.com/yE5I0b4.png', 'https://i.imgur.com/2f62rRU.png', 'https://i.imgur.com/9PejP0R.png'],
+    slides: ['https://i.imgur.com/CX6v5kU.jpeg', 'https://i.imgur.com/2f62rRU.png', 'https://i.imgur.com/9PejP0R.png'],
     init() {
       setInterval(() => {
         this.activeSlide = (this.activeSlide + 1) % this.slides.length;
