@@ -62,10 +62,6 @@
     slides: [
       'https://i.imgur.com/CX6v5kU.jpeg', 
       'https://i.imgur.com/q3DzxiB.ng', 
-      'https://i.imgur.com/CX6v5kU.jpeg', 
-      'https://i.imgur.com/q3DzxiB.ng', 
-      'https://i.imgur.com/CX6v5kU.jpeg', 
-      'https://i.imgur.com/q3DzxiB.ng', 
       'https://i.imgur.com/8IiXQqY.png'
     ],
     init() {
