@@ -94,6 +94,7 @@ foreach ($servers as $name => $domain) {
 <head>
     <meta charset="UTF-8">
     <title>Status & Info Pengunjung</title>
+    <link rel="SHORTCUT ICON" href="https://i.imgur.com/q3DzxiB.png">
     <meta http-equiv="refresh" content="5">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
