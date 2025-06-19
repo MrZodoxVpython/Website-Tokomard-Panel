@@ -3,7 +3,7 @@ session_start();
 
 // Arahkan ke index.php jika tidak login atau bukan admin
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
-    header("Location: index.php");
+    header("Location: /index.php");
     exit;
 }
 // Tambahkan log aktivitas
