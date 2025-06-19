@@ -34,7 +34,7 @@ function check_xray_ws($host, $port = 443, $path = '/trojan-ws') {
 
 function get_country($domain) {
     $ip = gethostbyname($domain);
-    $url = "http://ip-api.com/json/{$ip}?fields=country";
+    $url = "https://ipwhois.app/json/{$ip}";
     $json = @file_get_contents($url);
     if ($json) {
         $data = json_decode($json, true);
@@ -42,6 +42,7 @@ function get_country($domain) {
     }
     return 'Tidak Diketahui';
 }
+
 
 
 $results = [];
