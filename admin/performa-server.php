@@ -1,18 +1,10 @@
 <?php
 session_start();
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
-    header("Location: index.php");
+    header("Location: ../index.php");
     exit;
 }
 
-// Daftar server (gunakan domain, bukan IP)
-$servers = [
-    'RW-MARD'     => ['host' => 'rw-mard.tokomard.store',    'port' => 443, 'path' => '/trojan-ws'],
-    'SGDO-MARD1'  => ['host' => 'vpn-premium.tokomard.store', 'port' => 443, 'path' => '/trojan-ws'],
-    'SGDO-2DEV'   => ['host' => 'sgdo-2dev.tokomard.store', 'port' => 443, 'path' => '/trojan-ws'],
-];
-
-// Fungsi pengecekan WS via cURL
 function check_ws_xray($host, $port, $path) {
     $url = "https://$host$path";
     $ch = curl_init($url);
@@ -20,14 +12,11 @@ function check_ws_xray($host, $port, $path) {
     curl_setopt($ch, CURLOPT_PORT, $port);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HEADER, true);
-    curl_setopt($ch, CURLOPT_NOBODY, true); // kita hanya butuh header
+    curl_setopt($ch, CURLOPT_NOBODY, true);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
     curl_setopt($ch, CURLOPT_TIMEOUT, 7);
-
-    // Nonaktifkan verifikasi TLS untuk tes ini
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         "Host: $host",
         "Connection: Upgrade",
@@ -50,6 +39,12 @@ function check_ws_xray($host, $port, $path) {
         return ['status' => 'Mati', 'color' => 'red'];
     }
 }
+
+$servers = [
+    'RW-MARD'     => ['host' => 'rw-mard.tokomard.store',    'port' => 443, 'path' => '/trojan-ws'],
+    'SGDO-MARD1'  => ['host' => 'vpn-premium.tokomard.store', 'port' => 443, 'path' => '/trojan-ws'],
+    'SGDO-2DEV'   => ['host' => 'sgdo-2dev.tokomard.store', 'port' => 443, 'path' => '/trojan-ws'],
+];
 
 $results = [];
 foreach ($servers as $name => $srv) {
@@ -101,4 +96,3 @@ foreach ($servers as $name => $srv) {
 
 </body>
 </html>
-
