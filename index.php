@@ -55,19 +55,31 @@
       Tokomard VPN Panel adalah solusi manajemen layanan tunneling yang mendukung protokol Xray seperti VMess, VLESS, Trojan, Shadowsocks, dan SSH.
     </p>
 
-    <!-- Slider -->
-    <div x-data="{ activeSlide: 0, slides: ['https://i.imgur.com/8IiXQqY.png', 'https://i.imgur.com/q3DzxiB.png', 'https://i.imgur.com/CX6v5kU.jpeg'] }" class="relative w-full overflow-hidden rounded-xl shadow-lg max-w-3xl mx-auto">
-      <div class="flex transition-all duration-500" :style="`transform: translateX(-${activeSlide * 100}%);`">
-        <template x-for="slide in slides" :key="slide">
-          <img :src="slide" class="w-full object-cover" alt="Preview Gambar">
-        </template>
-      </div>
-      <div class="absolute inset-0 flex items-center justify-between px-4">
-        <button @click="activeSlide = (activeSlide - 1 + slides.length) % slides.length" class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full">&#10094;</button>
-        <button @click="activeSlide = (activeSlide + 1) % slides.length" class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full">&#10095;</button>
-      </div>
-    </div>
-  </section>
+<!-- Slider dengan auto-slide -->
+<div
+  x-data="{
+    activeSlide: 0,
+    slides: ['https://i.imgur.com/yE5I0b4.png', 'https://i.imgur.com/2f62rRU.png', 'https://i.imgur.com/9PejP0R.png'],
+    init() {
+      setInterval(() => {
+        this.activeSlide = (this.activeSlide + 1) % this.slides.length;
+      }, 5000); // Ganti 5000 ke 3000 untuk 3 detik
+    }
+  }"
+  x-init="init"
+  class="relative w-full overflow-hidden rounded-xl shadow-lg max-w-3xl mx-auto"
+>
+  <div class="flex transition-all duration-700" :style="`transform: translateX(-${activeSlide * 100}%);`">
+    <template x-for="slide in slides" :key="slide">
+      <img :src="slide" class="w-full object-cover" alt="Preview Gambar">
+    </template>
+  </div>
+  <div class="absolute inset-0 flex items-center justify-between px-4">
+    <button @click="activeSlide = (activeSlide - 1 + slides.length) % slides.length" class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full">&#10094;</button>
+    <button @click="activeSlide = (activeSlide + 1) % slides.length" class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full">&#10095;</button>
+  </div>
+</div>
+
 
   <!-- Features -->
   <section class="bg-gray-800 py-12 px-4">
