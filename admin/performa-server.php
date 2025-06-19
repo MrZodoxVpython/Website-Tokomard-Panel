@@ -93,7 +93,7 @@ foreach ($servers as $name => $domain) {
         </div>
 
         <p class="text-xs text-gray-400 mt-4 text-center">
-            * Status Tunneling/Inject connect atau tidak untuk setiap server ditentukan dari respon WebSocket handshake 101 Switching Protocols. <br>
+            * Status Tunneling/Inject connect atau tidak pada setiap server ditentukan dari respon WebSocket handshake 101 Switching Protocols. <br>
             * Pengecekan Status Tunneling akan otomatis direfresh setiap 5 detik.
         </p>
     </div>
