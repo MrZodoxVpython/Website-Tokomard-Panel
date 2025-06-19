@@ -1,4 +1,11 @@
 <?php
+session_start();
+// Cek role
+if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
+    header("Location: index.php");
+    exit;
+}
+
 $file = '/root/backup-vpn.tar.gz';
 if (file_exists($file)) {
     header('Content-Description: File Transfer');
