@@ -33,14 +33,14 @@ function check_xray_ws($host, $port = 443, $path = '/trojan-ws') {
 }
 
 function get_country($domain) {
-    $ip = @file_get_contents("https://{$domain}/ipinfo.txt");
-    if (!$ip) return 'Tidak Diketahui';
+    $manual_map = [
+        'rw-mard.tokomard.store'     => 'Indonesia',
+        'vpn-premium.tokomard.store' => 'Singapore',
+        'sgdo-2dev.tokomard.store'   => 'Singapore',
+    ];
 
-    $url = "https://ipapi.co/{$ip}/country_name/";
-    $country = @file_get_contents($url);
-    return $country ?: 'Tidak Diketahui';
+    return $manual_map[$domain] ?? 'Tidak Diketahui';
 }
-
 
 $results = [];
 foreach ($servers as $name => $domain) {
