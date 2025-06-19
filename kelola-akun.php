@@ -5,10 +5,6 @@ echo "Script dimulai<br>";
 
 session_start();
 
-var_dump($vpsMap);
-var_dump($vps);
-var_dump($vpsMap[$vps] ?? null);
-
 // Daftar IP VPS kamu + nama VPS + user SSH
 $vpsList = [
     'rw-mard' => ['ip' => '203.194.113.140', 'user' => 'root'],
