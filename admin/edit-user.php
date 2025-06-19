@@ -1,11 +1,11 @@
 <?php
 session_start();
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
-    header("Location: ../login.php");
+    header("Location: /login.php");
     exit;
 }
 
-require '../koneksi.php';
+require '/koneksi.php';
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     die("❌ ID tidak valid.");
@@ -57,5 +57,5 @@ if (!$user) {
     <a href="list-akun.php" class="ml-4 text-gray-400 hover:text-white">Kembali</a>
   </form>
 </div>
-<?php include '../templates/footer.php'; ?>
+<?php include '/templates/footer.php'; ?>
 
