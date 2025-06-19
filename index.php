@@ -4,31 +4,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tokomard Panel VPN - Kelola Trojan & Xray dengan Mudah</title>
-
-  <!-- SEO -->
   <meta property="og:title" content="Tokomard Panel VPN - Kelola Trojan & Xray dengan Mudah">
-  <meta property="og:description" content="Panel Tokomard mempermudah pengelolaan akun Xray: VMess, VLESS, Trojan, SSH, dan lainnya.">
+  <meta property="og:description" content="Panel untuk manajemen SSH, Xray (VLESS, VMess, Trojan, Shadowsocks).">
   <meta property="og:image" content="https://i.imgur.com/q3DzxiB.png">
   <meta property="og:url" content="https://panel.tokomard.store/">
   <meta property="og:type" content="website">
-  <link rel="shortcut icon" href="https://i.imgur.com/q3DzxiB.png">
-
-  <!-- JSON-LD Structured Data -->
+  <title>Login Tokomard</title>
+  <link rel="SHORTCUT ICON" href="https://i.imgur.com/q3DzxiB.png">
+  <!-- Tailwind CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Tokomard Panel VPN",
-    "url": "https://panel.tokomard.store/",
-    "description": "Panel web untuk mengelola layanan tunneling Xray seperti VMess, VLESS, Trojan, dan SSH.",
-    "author": {
-      "@type": "Person",
-      "name": "Benjamin Wickman"
-    }
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Tokomard VPN Panel",
+  "operatingSystem": "Linux",
+  "applicationCategory": "DeveloperApplication",
+  "description": "Panel web untuk mengelola akun VPN berbasis Xray.",
+  "url": "https://tokomard.com/",
+  "author": {
+    "@type": "Person",
+    "name": "Benjamin Wickman"
   }
+}
   </script>
-
+ 
   <!-- Tailwind CSS -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
