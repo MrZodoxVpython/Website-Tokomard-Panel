@@ -5,6 +5,10 @@ echo "Script dimulai<br>";
 
 session_start();
 
+var_dump($vpsMap);
+var_dump($vps);
+var_dump($vpsMap[$vps] ?? null);
+
 // Daftar IP VPS kamu + nama VPS + user SSH
 $vpsList = [
     'rw-mard' => ['ip' => '203.194.113.140', 'user' => 'root'],
@@ -179,9 +183,6 @@ $vpsMap = [
     'sgdo-mard1' => '/etc/xray-sgdo/config.json',
     'sgdo-2dev' => '/etc/xray-dev/config.json'
 ];
-var_dump($vpsMap);
-var_dump($vps);
-var_dump($vpsMap[$vps] ?? null);
 
 $configPath = $vpsMap[$vps] ?? '/etc/xray/config.json';
 
