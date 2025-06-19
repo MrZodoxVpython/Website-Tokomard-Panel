@@ -101,7 +101,7 @@ foreach ($servers as $name => $domain) {
     <meta property="og:type" content="website">
     <title>Status & Info Pengunjung</title>
     <link rel="SHORTCUT ICON" href="https://i.imgur.com/q3DzxiB.png">
-    <meta http-equiv="refresh" content="5">
+    <meta http-equiv="refresh" content="10">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -134,7 +134,7 @@ foreach ($servers as $name => $domain) {
     </div>
     <p class="text-xs text-gray-400 mt-4 text-center">
         * Pengukuran tunneling connect atau tidak pada setiap server ditentukan dari respon WebSocket handshake 101 Switching Protocols.<br>
-        * Pengecekan Status Tunneling dilakukan otomatis tiap 5 detik.
+        * Pengecekan Status Tunneling dilakukan otomatis tiap 10 detik.
     </p>
 </div>
 
