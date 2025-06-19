@@ -132,7 +132,7 @@ foreach ($servers as $name => $domain) {
 
         <p class="text-xs text-gray-400 mt-4 text-center">
             * Status diukur berdasarkan respon WebSocket 101 Switching Protocols<br>
-            * Pengecekan dilakukan setiap 5 detik.
+            * Pengecekan dilakukan otomatis setiap 5 detik.
         </p>
     </div>
 
