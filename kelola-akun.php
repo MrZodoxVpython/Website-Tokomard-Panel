@@ -179,6 +179,9 @@ $vpsMap = [
     'sgdo-mard1' => '/etc/xray-sgdo/config.json',
     'sgdo-2dev' => '/etc/xray-dev/config.json'
 ];
+var_dump($vpsMap);
+var_dump($vps);
+var_dump($vpsMap[$vps] ?? null);
 
 $configPath = $vpsMap[$vps] ?? '/etc/xray/config.json';
 
