@@ -104,11 +104,11 @@
       </div>
       <div>
         <h3 class="text-xl font-semibold mb-2">⚡ Server TerMantap</h3>
-        <p class="text-gray-400">Specs gahar, stabil, dan cepat diakses daremua perangkat.</p>
+        <p class="text-gray-400">Specs gahar, stabil, cepat dan dapat dipakai kapanpun dimanapun.</p>
       </div>
       <div>
-        <h3 class="text-xl font-semibold mb-2">⚡ Panel Cepat</h3>
-        <p class="text-gray-400">Desain ringan, responsif, dan cepat diakses dari semua perangkat.</p>
+        <h3 class="text-xl font-semibold mb-2">⚡ Reseller sistem</h3>
+        <p class="text-gray-400">Full access, ui friendly,.</p>
       </div>
       <div>
         <h3 class="text-xl font-semibold mb-2">⚡ Panel Cepat</h3>
