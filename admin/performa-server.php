@@ -33,15 +33,14 @@ function check_xray_ws($host, $port = 443, $path = '/trojan-ws') {
 }
 
 function get_country($domain) {
-    $ip = gethostbyname($domain);
-    $url = "https://ipwhois.app/json/{$ip}";
-    $json = @file_get_contents($url);
-    if ($json) {
-        $data = json_decode($json, true);
-        return $data['country'] ?? 'Tidak Diketahui';
-    }
-    return 'Tidak Diketahui';
+    $ip = @file_get_contents("https://{$domain}/ipinfo.txt");
+    if (!$ip) return 'Tidak Diketahui';
+
+    $url = "https://ipapi.co/{$ip}/country_name/";
+    $country = @file_get_contents($url);
+    return $country ?: 'Tidak Diketahui';
 }
+
 
 $results = [];
 foreach ($servers as $name => $domain) {
