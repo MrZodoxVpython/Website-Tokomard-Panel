@@ -11,32 +11,30 @@ $servers = [
     'SGDO-2DEV'   => ['ip' => '178.128.60.185',  'port' => 443, 'path' => '/trojan-ws'],
 ];
 
-function check_ws_xray($host, $port, $path)
-{
-    $timeout = 5;
-    $errno = 0;
-    $errstr = '';
+function check_ws_xray($host, $port, $path) {
+    $ch = curl_init("https://$host$path");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HEADER, true);
+    curl_setopt($ch, CURLOPT_NOBODY, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-    $fp = fsockopen("ssl://$host", $port, $errno, $errstr, $timeout);
-    if (!$fp) return 'Tidak Terhubung';
-
-    $key = base64_encode(random_bytes(16));
-    $headers = [
-        "GET $path HTTP/1.1",
-        "Host: $host",
-        "Upgrade: websocket",
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
         "Connection: Upgrade",
-        "Sec-WebSocket-Key: $key",
+        "Upgrade: websocket",
         "Sec-WebSocket-Version: 13",
-        "\r\n"
-    ];
-    $request = implode("\r\n", $headers);
-    fwrite($fp, $request);
-    $response = fread($fp, 1500);
-    fclose($fp);
+        "Sec-WebSocket-Key: " . base64_encode(random_bytes(16)),
+    ]);
 
-    if (strpos($response, '101 Switching Protocols') !== false) {
+    curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $error     = curl_error($ch);
+    curl_close($ch);
+
+    if ($http_code === 101) {
         return 'Aktif';
+    } elseif ($error) {
+        return 'Error: ' . $error;
     } else {
         return 'Mati';
     }
