@@ -1,5 +1,10 @@
 <?php
 session_start();
+// Cek role
+if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
+    header("Location: index.php");
+    exit;
+}
 
 // Hanya admin yang boleh mengakses
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
