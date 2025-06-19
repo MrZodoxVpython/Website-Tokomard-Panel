@@ -28,8 +28,8 @@ function check_xray_ws($host, $port = 443, $path = '/trojan-ws') {
     fclose($fp);
 
     return (strpos($response, '101 Switching Protocols') !== false)
-        ? ['status' => 'Aktif', 'color' => 'green']
-        : ['status' => 'Tidak Aktif', 'color' => 'red'];
+        ? ['status' => 'Connect!', 'color' => 'green']
+        : ['status' => 'Conneting..', 'color' => 'red'];
 }
 
 function get_country($domain) {
