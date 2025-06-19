@@ -41,52 +41,52 @@ function get_country($domain) {
     return $manual_map[$domain] ?? 'Tidak Diketahui';
 }
 
-// Info Perangkat
 function detect_device_info() {
-    $userAgent = strtolower($_SERVER['HTTP_USER_AGENT']);
+    $ua = strtolower($_SERVER['HTTP_USER_AGENT'] ?? '');
     $device = 'Desktop';
     $os = 'Unknown OS';
     $browser = 'Unknown Browser';
 
-    // Jenis device
-    if (preg_match('/mobile|iphone|android/', $userAgent)) $device = 'HP / Smartphone';
-    if (preg_match('/tablet|ipad/', $userAgent)) $device = 'Tablet';
+    if (preg_match('/mobile|iphone|android/', $ua)) $device = 'HP / Smartphone';
+    if (preg_match('/tablet|ipad/', $ua)) $device = 'Tablet';
 
-    // Sistem operasi
-    if (strpos($userAgent, 'windows') !== false) $os = 'Windows';
-    elseif (strpos($userAgent, 'android') !== false) $os = 'Android';
-    elseif (strpos($userAgent, 'linux') !== false) $os = 'Linux';
-    elseif (strpos($userAgent, 'mac') !== false) $os = 'MacOS';
-    elseif (strpos($userAgent, 'iphone') !== false) $os = 'iOS';
+    if (strpos($ua, 'windows') !== false) $os = 'Windows';
+    elseif (strpos($ua, 'android') !== false) $os = 'Android';
+    elseif (strpos($ua, 'linux') !== false) $os = 'Linux';
+    elseif (strpos($ua, 'mac') !== false) $os = 'MacOS';
+    elseif (strpos($ua, 'iphone') !== false) $os = 'iOS';
 
-    // Browser
-    if (strpos($userAgent, 'firefox') !== false) $browser = 'Firefox';
-    elseif (strpos($userAgent, 'chrome') !== false) $browser = 'Chrome';
-    elseif (strpos($userAgent, 'safari') !== false) $browser = 'Safari';
-    elseif (strpos($userAgent, 'edge') !== false) $browser = 'Edge';
-    elseif (strpos($userAgent, 'opera') !== false || strpos($userAgent, 'opr/') !== false) $browser = 'Opera';
+    if (strpos($ua, 'firefox') !== false) $browser = 'Firefox';
+    elseif (strpos($ua, 'chrome') !== false) $browser = 'Chrome';
+    elseif (strpos($ua, 'safari') !== false && !strpos($ua, 'chrome')) $browser = 'Safari';
+    elseif (strpos($ua, 'edge') !== false) $browser = 'Edge';
+    elseif (strpos($ua, 'opr/') !== false || strpos($ua, 'opera') !== false) $browser = 'Opera';
 
     return [
         'device' => $device,
         'os' => $os,
         'browser' => $browser,
-        'user_agent' => $_SERVER['HTTP_USER_AGENT']
+        'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? ''
     ];
 }
 
+function get_visitor_location() {
+    $ip = $_SERVER['REMOTE_ADDR'];
+    $url = "http://ip-api.com/json/{$ip}?fields=status,country,regionName,city,zip,lat,lon,isp,timezone,query";
+    $ctx = @file_get_contents($url);
+    if (!$ctx) return null;
+    $data = json_decode($ctx, true);
+    return ($data['status'] === 'success') ? $data : null;
+}
+
 $deviceInfo = detect_device_info();
+$visitorLoc = get_visitor_location();
 
 $results = [];
 foreach ($servers as $name => $domain) {
     $ws = check_xray_ws($domain);
     $country = get_country($domain);
-    $results[] = [
-        'name' => $name,
-        'host' => $domain,
-        'status' => $ws['status'],
-        'color' => $ws['color'],
-        'country' => $country
-    ];
+    $results[] = ['name'=>$name,'host'=>$domain,'status'=>$ws['status'],'color'=>$ws['color'],'country'=>$country];
 }
 ?>
 
@@ -94,64 +94,61 @@ foreach ($servers as $name => $domain) {
 <html lang="id" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <title>Status Xray WebSocket</title>
+    <title>Status & Info Pengunjung</title>
     <meta http-equiv="refresh" content="5">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen p-4 md:p-6">
 
-    <!-- TABEL 1: STATUS SERVER XRAY -->
+    <!-- TABEL STATUS SERVER -->
     <div class="max-w-5xl mx-auto bg-gray-800 rounded-lg p-4 md:p-6 shadow-lg mb-6">
-        <h1 class="text-xl md:text-2xl font-semibold mb-4 text-center">Status Inject Tunneling WebSocket Server Tokomard</h1>
-
+        <h1 class="text-xl md:text-2xl font-semibold mb-4 text-center">Status WebSocket Xray Server Tokomard</h1>
         <div class="overflow-x-auto">
             <table class="w-full table-auto border-collapse text-xs md:text-sm">
-                <thead>
-                    <tr class="bg-gray-700">
-                        <th class="p-2 md:p-3 text-left border-b border-gray-600">Nama Server</th>
-                        <th class="p-2 md:p-3 text-left border-b border-gray-600">Host</th>
-                        <th class="p-2 md:p-3 text-left border-b border-gray-600">Negara</th>
-                        <th class="p-2 md:p-3 text-left border-b border-gray-600">Status WS</th>
-                    </tr>
-                </thead>
+                <thead><tr class="bg-gray-700">
+                    <th class="p-2 md:p-3">Nama Server</th><th class="p-2 md:p-3">Host</th><th class="p-2 md:p-3">Negara</th><th class="p-2 md:p-3">Status WS</th>
+                </tr></thead>
                 <tbody>
-                    <?php foreach ($results as $row): ?>
-                        <tr class="hover:bg-gray-700">
-                            <td class="p-2 md:p-3 border-b border-gray-700"><?= htmlspecialchars($row['name']) ?></td>
-                            <td class="p-2 md:p-3 border-b border-gray-700"><?= htmlspecialchars($row['host']) ?></td>
-                            <td class="p-2 md:p-3 border-b border-gray-700"><?= htmlspecialchars($row['country']) ?></td>
-                            <td class="p-2 md:p-3 border-b border-gray-700 text-<?= $row['color'] ?>-400 font-bold">
-                                <?= htmlspecialchars($row['status']) ?>
-                            </td>
-                        </tr>
+                    <?php foreach($results as $r): ?>
+                    <tr class="hover:bg-gray-700">
+                        <td class="p-2 md:p-3"><?=htmlspecialchars($r['name'])?></td>
+                        <td class="p-2 md:p-3"><?=htmlspecialchars($r['host'])?></td>
+                        <td class="p-2 md:p-3"><?=htmlspecialchars($r['country'])?></td>
+                        <td class="p-2 md:p-3 text-<?=$r['color']?>-400 font-bold"><?=htmlspecialchars($r['status'])?></td>
+                    </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
-
-        <p class="text-xs text-gray-400 mt-4 text-center">
-            * Status diukur berdasarkan respon WebSocket 101 Switching Protocols<br>
-            * Pengecekan status dilakukan otomatis setiap 5 detik.
-        </p>
+        <p class="text-xs text-gray-400 mt-4 text-center">* Auto refresh setiap 5 detik.</p>
     </div>
 
-    <!-- TABEL 2: INFO PENGUNJUNG -->
+    <!-- TABEL INFO PENGUNJUNG -->
     <div class="max-w-5xl mx-auto bg-gray-800 rounded-lg p-4 md:p-6 shadow-lg">
         <h2 class="text-xl font-bold text-center mb-4">How Are You?</h2>
         <div class="overflow-x-auto">
             <table class="w-full table-auto border-collapse text-sm">
-                <thead>
-                    <tr class="bg-gray-700">
-                        <th class="p-3 text-left border-b border-gray-600">Informasi</th>
-                        <th class="p-3 text-left border-b border-gray-600">Detail</th>
-                    </tr>
-                </thead>
+                <thead><tr class="bg-gray-700">
+                    <th class="p-3">Informasi</th><th class="p-3">Detail</th>
+                </tr></thead>
                 <tbody>
-                    <tr><td class="p-3 border-b border-gray-700">Your Device</td><td class="p-3 border-b border-gray-700"><?= htmlspecialchars($deviceInfo['device']) ?></td></tr>
-                    <tr><td class="p-3 border-b border-gray-700">OS</td><td class="p-3 border-b border-gray-700"><?= htmlspecialchars($deviceInfo['os']) ?></td></tr>
-                    <tr><td class="p-3 border-b border-gray-700">Browser</td><td class="p-3 border-b border-gray-700"><?= htmlspecialchars($deviceInfo['browser']) ?></td></tr>
-                    <tr><td class="p-3 border-b border-gray-700">User Agent</td><td class="p-3 border-b border-gray-700 text-xs break-words"><?= htmlspecialchars($deviceInfo['user_agent']) ?></td></tr>
+                    <tr><td class="p-3 border-b border-gray-700">Device</td><td class="p-3 border-b border-gray-700"><?=htmlspecialchars($deviceInfo['device'])?></td></tr>
+                    <tr><td class="p-3 border-b border-gray-700">OS</td><td class="p-3 border-b border-gray-700"><?=htmlspecialchars($deviceInfo['os'])?></td></tr>
+                    <tr><td class="p-3 border-b border-gray-700">Browser</td><td class="p-3 border-b border-gray-700"><?=htmlspecialchars($deviceInfo['browser'])?></td></tr>
+                    <tr><td class="p-3 border-b border-gray-700">User Agent</td><td class="p-3 border-b border-gray-700 text-xs break-words"><?=htmlspecialchars($deviceInfo['user_agent'])?></td></tr>
+                    <?php if($visitorLoc): ?>
+                        <tr><td class="p-3 border-b border-gray-700">IP Publik</td><td class="p-3 border-b border-gray-700"><?=$visitorLoc['query']?></td></tr>
+                        <tr><td class="p-3 border-b border-gray-700">Negara</td><td class="p-3 border-b border-gray-700"><?=$visitorLoc['country']?></td></tr>
+                        <tr><td class="p-3 border-b border-gray-700">Provinsi/Negara Bagian</td><td class="p-3 border-b border-gray-700"><?=$visitorLoc['regionName']?></td></tr>
+                        <tr><td class="p-3 border-b border-gray-700">Kota</td><td class="p-3 border-b border-gray-700"><?=$visitorLoc['city']?></td></tr>
+                        <tr><td class="p-3 border-b border-gray-700">Kode POS</td><td class="p-3 border-b border-gray-700"><?=$visitorLoc['zip']?></td></tr>
+                        <tr><td class="p-3 border-b border-gray-700">Koordinat</td><td class="p-3 border-b border-gray-700"><?=$visitorLoc['lat']?>, <?=$visitorLoc['lon']?></td></tr>
+                        <tr><td class="p-3 border-b border-gray-700">Zona Waktu</td><td class="p-3 border-b border-gray-700"><?=$visitorLoc['timezone']?></td></tr>
+                        <tr><td class="p-3 border-b border-gray-700">ISP</td><td class="p-3 border-b border-gray-700"><?=$visitorLoc['isp']?></td></tr>
+                    <?php else: ?>
+                        <tr><td class="p-3 border-b border-gray-700">Lokasi</td><td class="p-3 border-b border-gray-700">Tidak tersedia</td></tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
