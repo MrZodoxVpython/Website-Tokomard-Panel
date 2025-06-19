@@ -262,7 +262,7 @@ include 'templates/header.php';
         <input type="text" name="expired" placeholder="2025-07-01 atau 30" class="w-full p-2 bg-gray-700 rounded" required>
       </div>
 <!-- Dropdown Pilihan VPS -->
-<div class="mb-2">
+<div class="mb-4">
   <label class="block text-sm font-medium text-white mb-1">Pilih VPS</label>
   <select name="vps" class="w-full p-2 bg-gray-700 text-white rounded" required>
     <option value="rw-mard1">RW-MARD1</option>
