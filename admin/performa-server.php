@@ -43,8 +43,6 @@ function get_country($domain) {
     return 'Tidak Diketahui';
 }
 
-
-
 $results = [];
 foreach ($servers as $name => $domain) {
     $ws = check_xray_ws($domain);
