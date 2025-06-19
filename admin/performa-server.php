@@ -38,15 +38,48 @@ function get_country($domain) {
         'vpn-premium.tokomard.store' => 'Singapore',
         'sgdo-2dev.tokomard.store'   => 'Singapore',
     ];
-
     return $manual_map[$domain] ?? 'Tidak Diketahui';
 }
+
+// Info Perangkat
+function detect_device_info() {
+    $userAgent = strtolower($_SERVER['HTTP_USER_AGENT']);
+    $device = 'Desktop';
+    $os = 'Unknown OS';
+    $browser = 'Unknown Browser';
+
+    // Jenis device
+    if (preg_match('/mobile|iphone|android/', $userAgent)) $device = 'HP / Smartphone';
+    if (preg_match('/tablet|ipad/', $userAgent)) $device = 'Tablet';
+
+    // Sistem operasi
+    if (strpos($userAgent, 'windows') !== false) $os = 'Windows';
+    elseif (strpos($userAgent, 'android') !== false) $os = 'Android';
+    elseif (strpos($userAgent, 'linux') !== false) $os = 'Linux';
+    elseif (strpos($userAgent, 'mac') !== false) $os = 'MacOS';
+    elseif (strpos($userAgent, 'iphone') !== false) $os = 'iOS';
+
+    // Browser
+    if (strpos($userAgent, 'firefox') !== false) $browser = 'Firefox';
+    elseif (strpos($userAgent, 'chrome') !== false) $browser = 'Chrome';
+    elseif (strpos($userAgent, 'safari') !== false) $browser = 'Safari';
+    elseif (strpos($userAgent, 'edge') !== false) $browser = 'Edge';
+    elseif (strpos($userAgent, 'opera') !== false || strpos($userAgent, 'opr/') !== false) $browser = 'Opera';
+
+    return [
+        'device' => $device,
+        'os' => $os,
+        'browser' => $browser,
+        'user_agent' => $_SERVER['HTTP_USER_AGENT']
+    ];
+}
+
+$deviceInfo = detect_device_info();
 
 $results = [];
 foreach ($servers as $name => $domain) {
     $ws = check_xray_ws($domain);
     $country = get_country($domain);
-
     $results[] = [
         'name' => $name,
         'host' => $domain,
@@ -68,7 +101,8 @@ foreach ($servers as $name => $domain) {
 </head>
 <body class="bg-gray-900 text-white min-h-screen p-4 md:p-6">
 
-    <div class="max-w-5xl mx-auto bg-gray-800 rounded-lg p-4 md:p-6 shadow-lg">
+    <!-- TABEL 1: STATUS SERVER XRAY -->
+    <div class="max-w-5xl mx-auto bg-gray-800 rounded-lg p-4 md:p-6 shadow-lg mb-6">
         <h1 class="text-xl md:text-2xl font-semibold mb-4 text-center">Status Inject Tunneling WebSocket Server Tokomard</h1>
 
         <div class="overflow-x-auto">
@@ -97,9 +131,30 @@ foreach ($servers as $name => $domain) {
         </div>
 
         <p class="text-xs text-gray-400 mt-4 text-center">
-            * Status Tunneling/Inject connect atau tidak pada setiap server ditentukan dari respon WebSocket handshake 101 Switching Protocols. <br>
-            * Pengecekan Status Tunneling akan otomatis direfresh setiap 5 detik.
+            * Status diukur berdasarkan respon WebSocket 101 Switching Protocols<br>
+            * Halaman ini otomatis refresh setiap 5 detik.
         </p>
+    </div>
+
+    <!-- TABEL 2: INFO PENGUNJUNG -->
+    <div class="max-w-5xl mx-auto bg-gray-800 rounded-lg p-4 md:p-6 shadow-lg">
+        <h2 class="text-xl font-bold text-center mb-4">How Are You?</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full table-auto border-collapse text-sm">
+                <thead>
+                    <tr class="bg-gray-700">
+                        <th class="p-3 text-left border-b border-gray-600">Informasi</th>
+                        <th class="p-3 text-left border-b border-gray-600">Detail</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="p-3 border-b border-gray-700">Your Device</td><td class="p-3 border-b border-gray-700"><?= htmlspecialchars($deviceInfo['device']) ?></td></tr>
+                    <tr><td class="p-3 border-b border-gray-700">OS</td><td class="p-3 border-b border-gray-700"><?= htmlspecialchars($deviceInfo['os']) ?></td></tr>
+                    <tr><td class="p-3 border-b border-gray-700">Browser</td><td class="p-3 border-b border-gray-700"><?= htmlspecialchars($deviceInfo['browser']) ?></td></tr>
+                    <tr><td class="p-3 border-b border-gray-700">User Agent</td><td class="p-3 border-b border-gray-700 text-xs break-words"><?= htmlspecialchars($deviceInfo['user_agent']) ?></td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
 </body>
