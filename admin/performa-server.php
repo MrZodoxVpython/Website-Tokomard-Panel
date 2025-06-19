@@ -121,7 +121,7 @@ foreach ($servers as $name => $domain) {
             </table>
         </div>
         <p class="text-xs text-gray-400 mt-4 text-center">
-            * Status Tunneling diperbarui otomatis tiap 5 detik berdasarkan WebSocket handshake.
+            * Pengecekan Status Tunneling dilakukan otomatis tiap 5 detik.
         </p>
     </div>
 
