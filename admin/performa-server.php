@@ -1,3 +1,5 @@
+<?php include '/templates/header.php'; ?>
+
 <?php
 session_start();
 #if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
@@ -196,6 +198,7 @@ foreach ($servers as $name => $domain) {
             document.getElementById("js-gps").innerText = "Tidak didukung";
         }
     </script>
+<?php include '/templates/footer.php'; ?>
 
 </body>
 </html>
