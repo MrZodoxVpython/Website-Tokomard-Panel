@@ -141,6 +141,15 @@ if (!$key) {
 $expired = calculateExpiredDate($expired);
 $proses = ($_SERVER['REQUEST_METHOD'] === 'POST' && $username && $expired && $protokol);
 
+$vps = trim($_POST['vps'] ?? '');
+$vpsMap = [
+    'rw-mard1' => '/etc/xray-rw/config.json',
+    'sgdo-mard1' => '/etc/xray-sgdo/config.json',
+    'sgdo-2dev' => '/etc/xray-dev/config.json'
+];
+
+$configPath = $vpsMap[$vps] ?? '/etc/xray/config.json';
+
 include 'templates/header.php';
 ?>
 
