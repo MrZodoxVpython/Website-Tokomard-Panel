@@ -69,7 +69,7 @@ foreach ($servers as $name => $domain) {
 <body class="bg-gray-900 text-white min-h-screen p-4 md:p-6">
 
     <div class="max-w-5xl mx-auto bg-gray-800 rounded-lg p-4 md:p-6 shadow-lg">
-        <h1 class="text-xl md:text-2xl font-semibold mb-4 text-center">Status Inject Tunneling Server Tokomard</h1>
+        <h1 class="text-xl md:text-2xl font-semibold mb-4 text-center">Status Inject Tunneling WebSocket Server Tokomard</h1>
 
         <div class="overflow-x-auto">
             <table class="w-full table-auto border-collapse text-xs md:text-sm">
