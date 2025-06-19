@@ -3,12 +3,6 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 session_start();
-if (!isset($_SESSION['username'])) {
-    header("Location: index.php");
-    exit;
-}
-
-$configPath = '/etc/xray/config.json';
 
 // Daftar IP VPS kamu + nama VPS + user SSH
 $vpsList = [
@@ -17,6 +11,12 @@ $vpsList = [
     'sgdo-2dev' => ['ip' => '178.128.60.185', 'user' => 'root'],
 ];
 
+if (!isset($_SESSION['username'])) {
+    header("Location: index.php");
+    exit;
+}
+
+$configPath = '/etc/xray/config.json';
 
 if (isset($_GET['action']) && isset($_GET['user']) && isset($_GET['proto'])) {
     $action = $_GET['action'];
@@ -142,6 +142,29 @@ $username = trim($_POST['username'] ?? '');
 $expired = trim($_POST['expired'] ?? '');
 $protokol = trim($_POST['protokol'] ?? '');
 $key = trim($_POST['key'] ?? '');
+
+    // 🔽 Langkah No. 2: Eksekusi via SSH
+    if (isset($vpsList[$vps])) {
+        $vpsData = $vpsList[$vps];
+        $vpsIp = $vpsData['ip'];
+        $vpsUser = $vpsData['user'];
+
+        $usernameSafe = escapeshellarg($username);
+        $expiredSafe  = escapeshellarg($expired);
+        $protokolSafe = escapeshellarg($protokol);
+        $keySafe      = escapeshellarg($key);
+
+        $sshCmd = "ssh -o StrictHostKeyChecking=no $vpsUser@$vpsIp 'php /root/tambah-akun.php $usernameSafe $expiredSafe $protokolSafe $keySafe'";
+        $output = shell_exec($sshCmd);
+
+        echo "<pre class='bg-gray-900 text-green-300 p-4 rounded'>$output</pre>";
+        echo "<a href='kelola-akun.php' class='mt-4 inline-block bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded'>➕ Tambah Akun Lagi</a>";
+        return;
+    } else {
+        echo "<p class='text-red-400'>❌ VPS tidak dikenali.</p>";
+        return;
+    }
+}
 
 if (!$key) {
     $key = generateUUID();
