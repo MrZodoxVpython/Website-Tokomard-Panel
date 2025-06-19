@@ -174,7 +174,7 @@ $proses = ($_SERVER['REQUEST_METHOD'] === 'POST' && $username && $expired && $pr
 
 $vps = trim($_POST['vps'] ?? '');
 $vpsMap = [
-    'rw-mard1' => '/etc/xray-rw/config.json',
+    'rw-mard' => '/etc/xray-rw/config.json',
     'sgdo-mard1' => '/etc/xray-sgdo/config.json',
     'sgdo-2dev' => '/etc/xray-dev/config.json'
 ];
