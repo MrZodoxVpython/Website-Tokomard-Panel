@@ -1,4 +1,4 @@
-<?php include '/templates/header.php'; ?>
+<?php include '../templates/header.php'; ?>
 
 <?php
 session_start();
@@ -198,7 +198,7 @@ foreach ($servers as $name => $domain) {
             document.getElementById("js-gps").innerText = "Tidak didukung";
         }
     </script>
-<?php include '/templates/footer.php'; ?>
+<?php include '../templates/footer.php'; ?>
 
 </body>
 </html>
