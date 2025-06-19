@@ -12,9 +12,9 @@ $configPath = '/etc/xray/config.json';
 
 // Daftar IP VPS kamu + nama VPS + user SSH
 $vpsList = [
-    'rw-mard1' => ['ip' => '123.123.123.10', 'user' => 'root'],
-    'sgdo-mard1' => ['ip' => '123.123.123.11', 'user' => 'root'],
-    'sgdo-2dev' => ['ip' => '123.123.123.12', 'user' => 'root'],
+    'rw-mard' => ['ip' => '203.194.113.140', 'user' => 'root'],
+    'sgdo-mard1' => ['ip' => '143.198.202.86', 'user' => 'root'],
+    'sgdo-2dev' => ['ip' => '178.128.60.185', 'user' => 'root'],
 ];
 
 
