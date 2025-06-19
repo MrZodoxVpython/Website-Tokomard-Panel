@@ -38,7 +38,7 @@ include 'templates/header.php';
     <a href="admin/aktifitas-admin.php" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-3 rounded-xl text-center shadow">
       ⚙️ Aktivitas Admin
     </a>
-    <a href="admin/performa-server.php" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-3 rounded-xl text-center shadow">
+    <a href="/cek-status-server-tokomard.php" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-3 rounded-xl text-center shadow">
       🧠 XxX
     </a>
     <a href="admin/error-report.php" class="bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-xl text-center shadow">
@@ -102,7 +102,7 @@ include 'templates/header.php';
               <a href="unlock-akun.php?id=<?= $row['id'] ?>" class="bg-blue-500 px-3 py-1 rounded hover:bg-blue-600">Unlock</a>
             <?php endif; ?>
           </td>
-        </tr>
+       </tr>
         <?php endwhile; ?>
       </tbody>
     </table>
