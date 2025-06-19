@@ -10,6 +10,14 @@ if (!isset($_SESSION['username'])) {
 
 $configPath = '/etc/xray/config.json';
 
+// Daftar IP VPS kamu + nama VPS + user SSH
+$vpsList = [
+    'rw-mard1' => ['ip' => '123.123.123.10', 'user' => 'root'],
+    'sgdo-mard1' => ['ip' => '123.123.123.11', 'user' => 'root'],
+    'sgdo-2dev' => ['ip' => '123.123.123.12', 'user' => 'root'],
+];
+
+
 if (isset($_GET['action']) && isset($_GET['user']) && isset($_GET['proto'])) {
     $action = $_GET['action'];
     $user = $_GET['user'];
