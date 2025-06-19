@@ -6,6 +6,10 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
     header("Location: index.php");
     exit;
 }
+// Tambahkan log aktivitas
+$log_entry = date("Y-m-d H:i:s") . " | " . $_SESSION['username'] . " | Mengubah pengaturan panel";
+file_put_contents('log_aktivitas_admin.txt', $log_entry . PHP_EOL, FILE_APPEND);
+
 // Simulasi proses simpan pengaturan admin
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $panel_name = $_POST['panel_name'] ?? '';
