@@ -133,8 +133,8 @@ foreach ($servers as $name => $domain) {
         </table>
     </div>
     <p class="text-xs text-gray-400 mt-4 text-center">
-        * Pengukuran tunneling connect atau tidak pada setiap server ditentukan dari respon WebSocket handshake 101 Switching Protocols.<br>
-        * Pengecekan Status dilakukan otomatis tiap 5 detik, jika status connecting selama 1 menit penuh, maka dipastikan server = DOWN.
+        * Pengukuran status tunneling ditentukan dari respon WebSocket handshake 101 Switching Protocols.<br>
+        * Pengecekan status dilakukan otomatis tiap 5 detik, jika status connecting selama 1 menit penuh, maka dipastikan server = DOWN.
     </p>
 </div>
 
