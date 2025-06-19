@@ -133,7 +133,7 @@ foreach ($servers as $name => $domain) {
 
 <!-- INFO PENGUNJUNG -->
 <div class="max-w-6xl mx-auto bg-gray-800 rounded-lg p-4 md:p-6 shadow-lg">
-    <h2 class="text-xl font-bold text-center mb-4">Informasi Pengunjung</h2>
+    <h2 class="text-xl font-bold text-center mb-4">Who Are You?</h2>
     <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-700 text-sm">
             <thead class="bg-gray-700 text-left">
