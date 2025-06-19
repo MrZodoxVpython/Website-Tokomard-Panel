@@ -93,6 +93,12 @@ foreach ($servers as $name => $domain) {
 <html lang="id" data-theme="dark">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="Tokomard Panel VPN - Kelola Trojan & Xray dengan Mudah">
+    <meta property="og:description" content="Panel untuk manajemen SSH, Xray (VLESS, VMess, Trojan, Shadowsocks).">
+    <meta property="og:image" content="https://i.imgur.com/q3DzxiB.png">
+    <meta property="og:url" content="https://panel.tokomard.store/">
+    <meta property="og:type" content="website">
     <title>Status & Info Pengunjung</title>
     <link rel="SHORTCUT ICON" href="https://i.imgur.com/q3DzxiB.png">
     <meta http-equiv="refresh" content="5">
