@@ -60,7 +60,7 @@ foreach ($servers as $name => $domain) {
 <body class="bg-gray-900 text-white min-h-screen p-6">
 
     <div class="max-w-4xl mx-auto bg-gray-800 rounded-lg p-6 shadow-lg">
-        <h1 class="text-2xl font-semibold mb-4">Status WebSocket Xray Server</h1>
+        <h1 class="text-2xl font-semibold mb-4">Status WebSocket Xray Server Tokomard</h1>
 
         <table class="w-full table-auto border-collapse text-sm">
             <thead>
