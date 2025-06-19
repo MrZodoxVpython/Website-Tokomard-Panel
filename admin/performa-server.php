@@ -127,7 +127,7 @@ foreach ($servers as $name => $domain) {
     </div>
     <p class="text-xs text-gray-400 mt-4 text-center">
         * Pengukuran tunneling connect atau tidak pada setiap server ditentukan dari respon WebSocket handshake 101 Switching Protocols.<br>
-        * Pengecekan Status Tunneling dilakukan otomatis setiap 5 detik.
+        * Pengecekan Status Tunneling dilakukan otomatis tiap 5 detik.
     </p>
 </div>
 
