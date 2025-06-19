@@ -69,9 +69,11 @@
       'https://i.imgur.com/8IiXQqY.png'
     ],
     init() {
-      setInterval(() => {
-        this.activeSlide = (this.activeSlide + 1) % this.slides.length;
-      }, 5000); // Ganti 5000 ke 3000 untuk 3 detik
+      if (this.slides.length >1) {
+        setInterval(() => {
+          this.activeSlide = (this.activeSlide + 1) % this.slides.length;
+        }, 5000); // Ganti 5000 ke 3000 untuk 3 detik
+      }
     }
   }"
   x-init="init"
