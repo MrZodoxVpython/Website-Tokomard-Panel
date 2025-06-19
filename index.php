@@ -107,12 +107,12 @@
         <p class="text-gray-400">Specs gahar, stabil, cepat dan dapat dipakai kapanpun dimanapun.</p>
       </div>
       <div>
-        <h3 class="text-xl font-semibold mb-2">⚡ Reseller sistem</h3>
+       <h3 class="text-xl font-semibold mb-2">⚡ Reseller Sistem</h3>
         <p class="text-gray-400">Full access, ui friendly, minim top-up Rp,50.000.</p>
       </div>
       <div>
-        <h3 class="text-xl font-semibold mb-2">⚡ Panel Cepat</h3>
-        <p class="text-gray-400">Desain ringan, responsif, dan cepat diakses dari semua perangkat.</p>
+        <h3 class="text-xl font-semibold mb-2">⚡ Admin Support 25 Jam</h3>
+        <p class="text-gray-400">Top reselling free bonus saldo, harga vpn miring, full admin mainten.</p>
       </div>
 
 
