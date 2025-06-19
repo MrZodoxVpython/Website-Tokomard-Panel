@@ -127,7 +127,7 @@ foreach ($servers as $name => $domain) {
 
     <!-- INFO PENGUNJUNG -->
     <div class="max-w-6xl mx-auto bg-gray-800 rounded-lg p-4 md:p-6 shadow-lg">
-        <h2 class="text-xl font-bold text-center mb-4">Informasi Pengunjung</h2>
+        <h2 class="text-xl font-bold text-center mb-4">Who Are You?</h2>
         <div class="overflow-x-auto">
             <table class="w-full table-auto border-collapse text-sm">
                 <thead><tr class="bg-gray-700"><th class="p-3">Jenis</th><th class="p-3">Detail</th></tr></thead>
