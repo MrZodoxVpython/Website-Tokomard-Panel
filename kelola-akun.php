@@ -225,10 +225,17 @@ include 'templates/header.php';
                 exit;
         }
         switch ($vps) {
-            case 'rw-mard': shell_exec('systemctl restart xray'); break;
-            case 'sgdo-mard1': shell_exec('systemctl restart xray'); break;
-            case 'sgdo-2dev': shell_exec('systemctl restart xray'); break;
-        }
+    case 'rw-mard1':
+        shell_exec("ssh root@IP_RW_MARD1 'systemctl restart xray'");
+        break;
+    case 'sgdo-mard1':
+        shell_exec("ssh root@IP_SGDO_MARD1 'systemctl restart xray'");
+        break;
+    case 'sgdo-2dev':
+        shell_exec("ssh root@IP_SGDO_2DEV 'systemctl restart xray'");
+        break;
+}
+        
 
         // Backup config sebelum edit
         copy($configPath, $configPath . '.bak-' . date('YmdHis'));
