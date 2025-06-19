@@ -191,6 +191,11 @@ include 'templates/header.php';
                 echo "<p class='text-red-400'>❌ Protokol tidak dikenali.</p>";
                 exit;
         }
+        switch ($vps) {
+            case 'rw-mard1': shell_exec('systemctl restart xray-rw'); break;
+            case 'sgdo-mard1': shell_exec('systemctl restart xray-sgdo'); break;
+            case 'sgdo-2dev': shell_exec('systemctl restart xray-dev'); break;
+        }
 
         // Backup config sebelum edit
         copy($configPath, $configPath . '.bak-' . date('YmdHis'));
