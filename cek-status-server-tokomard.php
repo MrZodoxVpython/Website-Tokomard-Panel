@@ -99,7 +99,7 @@ foreach ($servers as $name => $domain) {
     <meta property="og:image" content="https://i.imgur.com/q3DzxiB.png">
     <meta property="og:url" content="https://panel.tokomard.store/">
     <meta property="og:type" content="website">
-    S<title>Status Server & Info Pengunjung</title>
+    <title>Status Server & Info Pengunjung</title>
     <link rel="SHORTCUT ICON" href="https://i.imgur.com/q3DzxiB.png">
     <meta http-equiv="refresh" content="5">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
