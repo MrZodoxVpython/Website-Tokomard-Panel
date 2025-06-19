@@ -89,7 +89,7 @@
 
   <!-- Footer -->
   <footer class="text-center text-gray-500 py-6 text-sm">
-    &copy; <?= date('Y') ?> Tokomard Panel VPN. Developed by Benjamin Wickman.
+    &copy; <?= date('Y') ?> Tokomard Panel VPN. Developed by Benjamin Wickman & MrZodoxVpython.
   </footer>
 </body>
 </html>
