@@ -225,9 +225,9 @@ include 'templates/header.php';
                 exit;
         }
         switch ($vps) {
-            case 'rw-mard': shell_exec('systemctl restart xray-rw'); break;
-            case 'sgdo-mard1': shell_exec('systemctl restart xray-sgdo'); break;
-            case 'sgdo-2dev': shell_exec('systemctl restart xray-dev'); break;
+            case 'rw-mard': shell_exec('systemctl restart xray'); break;
+            case 'sgdo-mard1': shell_exec('systemctl restart xray'); break;
+            case 'sgdo-2dev': shell_exec('systemctl restart xray'); break;
         }
 
         // Backup config sebelum edit
