@@ -56,7 +56,7 @@
     </p>
 
     <!-- Slider -->
-    <div x-data="{ activeSlide: 0, slides: ['https://i.imgur.com/yE5I0b4.png', 'https://i.imgur.com/2f62rRU.png', 'https://i.imgur.com/9PejP0R.png'] }" class="relative w-full overflow-hidden rounded-xl shadow-lg max-w-3xl mx-auto">
+    <div x-data="{ activeSlide: 0, slides: ['https://i.imgur.com/8IiXQqY.png', 'https://i.imgur.com/2f62rRU.png', 'https://i.imgur.com/9PejP0R.png'] }" class="relative w-full overflow-hidden rounded-xl shadow-lg max-w-3xl mx-auto">
       <div class="flex transition-all duration-500" :style="`transform: translateX(-${activeSlide * 100}%);`">
         <template x-for="slide in slides" :key="slide">
           <img :src="slide" class="w-full object-cover" alt="Preview Gambar">
