@@ -109,7 +109,7 @@ foreach ($servers as $name => $domain) {
 
 <!-- STATUS SERVER -->
 <div class="max-w-6xl mx-auto bg-gray-800 rounded-lg p-4 md:p-6 shadow-lg mb-6">
-    <h1 class="text-xl md:text-2xl font-semibold mb-4 text-center">Status WebSocket Xray Server Tokomard</h1>
+    <h1 class="text-xl md:text-2xl font-semibold mb-4 text-center">Status Server Tokomard</h1>
     <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-700 text-sm text-left">
             <thead class="bg-gray-700">
