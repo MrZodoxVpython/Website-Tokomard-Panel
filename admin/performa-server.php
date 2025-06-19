@@ -94,7 +94,7 @@ foreach ($servers as $name => $domain) {
 
         <p class="text-xs text-gray-400 mt-4 text-center">
             * Status ditentukan dari respon WebSocket handshake 101 Switching Protocols. <br>
-            * Halaman ini akan otomatis refresh setiap 5 detik.
+            * Status Tunneling akan otomatis refresh setiap 5 detik.
         </p>
     </div>
 
