@@ -28,7 +28,7 @@ function check_xray_ws($host, $port = 443, $path = '/trojan-ws') {
     fclose($fp);
 
     return (strpos($response, '101 Switching Protocols') !== false)
-        ? ['status' => 'Connect!', 'color' => 'green']
+        ? ['status' => 'Connected!', 'color' => 'green']
         : ['status' => 'Connecting..', 'color' => 'red'];
 }
 
