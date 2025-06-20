@@ -1,9 +1,9 @@
 <?php
 session_start();
-#if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
-#    header("Location: /index.php");
-#    exit;
-#}
+if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
+    header("Location: /index.php");
+    exit;
+}
 
 $servers = [
     'RW-MARD'     => 'rw-mard.tokomard.store',
@@ -28,8 +28,8 @@ function check_xray_ws($host, $port = 443, $path = '/trojan-ws') {
     fclose($fp);
 
     return (strpos($response, '101 Switching Protocols') !== false)
-        ? ['status' => 'Aktif', 'color' => 'green']
-        : ['status' => 'Tidak Aktif', 'color' => 'red'];
+        ? ['status' => 'Connected!', 'color' => 'green']
+        : ['status' => 'Connecting..', 'color' => 'red'];
 }
 
 function get_country($domain) {
@@ -99,9 +99,9 @@ foreach ($servers as $name => $domain) {
     <meta property="og:image" content="https://i.imgur.com/q3DzxiB.png">
     <meta property="og:url" content="https://panel.tokomard.store/">
     <meta property="og:type" content="website">
-    <title>Status & Info Pengunjung</title>
+    <title>Status Server & Info Pengunjung</title>
     <link rel="SHORTCUT ICON" href="https://i.imgur.com/q3DzxiB.png">
-    <meta http-equiv="refresh" content="10">
+    <meta http-equiv="refresh" content="5">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -109,7 +109,7 @@ foreach ($servers as $name => $domain) {
 
 <!-- STATUS SERVER -->
 <div class="max-w-6xl mx-auto bg-gray-800 rounded-lg p-4 md:p-6 shadow-lg mb-6">
-    <h1 class="text-xl md:text-2xl font-semibold mb-4 text-center">Status WebSocket Xray Server Tokomard</h1>
+    <h1 class="text-xl md:text-2xl font-semibold mb-4 text-center">Status Server Tokomard</h1>
     <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-700 text-sm text-left">
             <thead class="bg-gray-700">
@@ -133,8 +133,8 @@ foreach ($servers as $name => $domain) {
         </table>
     </div>
     <p class="text-xs text-gray-400 mt-4 text-center">
-        * Pengukuran tunneling connect atau tidak pada setiap server ditentukan dari respon WebSocket handshake 101 Switching Protocols.<br>
-        * Pengecekan Status Tunneling dilakukan otomatis tiap 10 detik.
+        * Pengukuran status tunneling ditentukan dari respon WebSocket handshake 101 Switching Protocols.<br>
+        * Pengecekan status dilakukan otomatis tiap 5 detik, jika status connecting selama 1 menit penuh, maka dipastikan server = DOWN.
     </p>
 </div>
 
