@@ -1,4 +1,5 @@
 <?php
+include 'templates/header.php';
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 echo "Script dimulai<br>";
@@ -16,7 +17,6 @@ if (!isset($_SESSION['username'])) {
     header("Location: index.php");
     exit;
 }
-
 
 if (isset($_GET['action']) && isset($_GET['user']) && isset($_GET['proto'])) {
     $action = $_GET['action'];
@@ -109,7 +109,7 @@ for ($i = 0; $i < count($lines); $i++) {
 
             if ($updated) {
         file_put_contents($configPath, implode("\n", array_map('rtrim', $lines)) . "\n");
-	shell_exec('sudo /usr/local/bin/restart-xray.sh');
+        shell_exec('sudo /usr/local/bin/restart-xray.sh');
     }
 
     header("Location: kelola-akun.php");
@@ -159,7 +159,7 @@ $key = trim($_POST['key'] ?? '');
 
         echo "<pre class='bg-gray-900 text-green-300 p-4 rounded'>$output</pre>";
         echo "<a href='kelola-akun.php' class='mt-4 inline-block bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded'>➕ Tambah Akun Lagi</a>";
-        return;
+        exit;
     } else {
         echo "<p class='text-red-400'>❌ VPS tidak dikenali.</p>";
         return;
@@ -174,14 +174,31 @@ $proses = ($_SERVER['REQUEST_METHOD'] === 'POST' && $username && $expired && $pr
 
 $vps = trim($_POST['vps'] ?? '');
 $vpsMap = [
-    'rw-mard' => '/etc/xray-rw/config.json',
-    'sgdo-mard1' => '/etc/xray-sgdo/config.json',
-    'sgdo-2dev' => '/etc/xray-dev/config.json'
+    'rw-mard' => '/etc/xray/config.json',
+    'sgdo-mard1' => '/etc/xray/config.json',
+    'sgdo-2dev' => '/etc/xray/config.json'
 ];
 
 $configPath = $vpsMap[$vps] ?? '/etc/xray/config.json';
 
-include 'templates/header.php';
+// Backup config sebelum edit
+copy($configPath, $configPath . '.bak-' . date('YmdHis'));
+
+function insertIntoTag($configPath, $tag, $commentLine, $jsonLine) {
+    $lines = file($configPath);
+    $inserted = false;
+
+    foreach ($lines as $i => $line) {
+        if (strpos($line, "#$tag") !== false) {
+            array_splice($lines, $i + 1, 0, [$commentLine . "\n", $jsonLine . "\n"]);
+            file_put_contents($configPath, implode("\n", array_map('rtrim', $lines)) . "\n");
+            $inserted = true;
+            break;
+        }
+    }
+
+    return $inserted;
+}
 ?>
 
 <div class="max-w-5xl mx-auto mt-10 bg-gray-800 p-6 rounded-xl shadow-md text-white">
@@ -235,26 +252,6 @@ include 'templates/header.php';
         shell_exec("ssh root@IP_SGDO_2DEV 'systemctl restart xray'");
         break;
 }
-        
-
-        // Backup config sebelum edit
-        copy($configPath, $configPath . '.bak-' . date('YmdHis'));
-
-        function insertIntoTag($configPath, $tag, $commentLine, $jsonLine) {
-            $lines = file($configPath);
-            $inserted = false;
-
-            foreach ($lines as $i => $line) {
-                if (strpos($line, "#$tag") !== false) {
-                    array_splice($lines, $i + 1, 0, [$commentLine . "\n", $jsonLine . "\n"]);
-		    file_put_contents($configPath, implode("\n", array_map('rtrim', $lines)) . "\n");
-                    $inserted = true;
-                    break;
-                }
-            }
-
-            return $inserted;
-        }
 
         $suksesSemua = true;
         foreach ($tags as $tag) {
@@ -319,10 +316,10 @@ include 'templates/header.php';
       <div>
         <label class="block mb-1">Pilih VPS</label>
           <select name="vps" class="w-full p-2 bg-gray-700 rounded" required>
-	   <option value="rw-mard1">RW-MARD</option>
-  	   <option value="sgdo-mard1">SGDO-MARD1</option>
-  	   <option value="sgdo-2dev">SGDO-2DEV</option>
-	  </select>
+           <option value="rw-mard1">RW-MARD</option>
+           <option value="sgdo-mard1">SGDO-MARD1</option>
+           <option value="sgdo-2dev">SGDO-2DEV</option>
+          </select>
       </div>
       <div>
         <label class="block mb-1">Protokol</label>
