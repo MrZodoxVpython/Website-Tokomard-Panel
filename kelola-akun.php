@@ -252,7 +252,7 @@ if ($proses && isset($vpsList[$vps])) {
     }
     ?>
     <a href="kelola-akun.php" class="inline-block mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">➕ Tambah Akun Lagi</a>
-<?php else: ?>
+<?php if (!$proses): ?>
     <h2 class="text-xl font-bold mb-4">Tambah Akun Baru</h2>
     <form action="" method="POST" class="grid gap-4">
       <div>
