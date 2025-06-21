@@ -17,7 +17,6 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 
-$configPath = $vpsMap[$vps] ?? '/etc/xray/config.json';
 
 if (isset($_GET['action']) && isset($_GET['user']) && isset($_GET['proto'])) {
     $action = $_GET['action'];
