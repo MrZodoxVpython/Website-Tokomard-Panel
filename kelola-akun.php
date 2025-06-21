@@ -1,52 +1,54 @@
 <?php
-
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 echo "✅ Script dijalankan<br>";
 
 session_start();
-
 if (!isset($_SESSION['username'])) {
     header("Location: index.php");
     exit;
 }
-include 'templates/header.php';
 
-// Daftar IP VPS kamu + nama VPS + user SSH
+// Daftar IP VPS + user SSH
 $vpsList = [
     'rw-mard'     => ['ip' => '203.194.113.140', 'user' => 'root'],
     'sgdo-mard1'  => ['ip' => '143.198.202.86', 'user' => 'root'],
     'sgdo-2dev'   => ['ip' => '178.128.60.185', 'user' => 'root'],
 ];
 
-// Daftar path config VPS
+// Path config untuk masing-masing VPS
 $vpsMap = [
     'rw-mard'     => '/etc/xray/config.json',
     'sgdo-mard1'  => '/etc/xray/config.json',
-    'sgdo-2dev'   => '/etc/xray/config.json'
+    'sgdo-2dev'   => '/etc/xray/config.json',
 ];
 
-// Ambil data dari POST/GET
+// Ambil input
 $vps      = trim($_POST['vps'] ?? $_GET['vps'] ?? '');
 $username = trim($_POST['username'] ?? '');
 $expired  = trim($_POST['expired'] ?? '');
 $protokol = trim($_POST['protokol'] ?? '');
 $key      = trim($_POST['key'] ?? '');
 
+// Tentukan path config
 $configPath = $vpsMap[$vps] ?? '/etc/xray/config.json';
-$proses     = ($_SERVER['REQUEST_METHOD'] === 'POST' && $username && $expired && $protokol);
 
-// Fungsi-fungsi penting
+// Jika config tidak ada, hentikan
+if (!file_exists($configPath)) {
+    die("❌ Config file tidak ditemukan: $configPath");
+}
+
+// Tentukan apakah form disubmit
+$proses = ($_SERVER['REQUEST_METHOD'] === 'POST' && $username && $expired && $protokol);
+
+// Fungsi
 function generateUUID() {
     return trim(shell_exec('cat /proc/sys/kernel/random/uuid'));
 }
-
 function calculateExpiredDate($input) {
     return preg_match('/^\d+$/', $input) ? date('Y-m-d', strtotime("+$input days")) : $input;
 }
-
 function akunSudahAda($username, $expired, $configPath) {
-    if (!file_exists($configPath)) return false;
     $lines = file($configPath);
     foreach ($lines as $line) {
         if (preg_match('/^\s*(###|#&|#!|#\$)\s+' . preg_quote($username, '/') . '\s+' . preg_quote($expired, '/') . '\s*$/', trim($line))) {
@@ -55,12 +57,9 @@ function akunSudahAda($username, $expired, $configPath) {
     }
     return false;
 }
-
 function insertIntoTag($configPath, $tag, $commentLine, $jsonLine) {
-    if (!file_exists($configPath)) return false;
     $lines = file($configPath);
     $inserted = false;
-
     foreach ($lines as $i => $line) {
         if (strpos($line, "#$tag") !== false) {
             array_splice($lines, $i + 1, 0, [$commentLine . "\n", $jsonLine . "\n"]);
@@ -69,26 +68,20 @@ function insertIntoTag($configPath, $tag, $commentLine, $jsonLine) {
             break;
         }
     }
-
     return $inserted;
 }
 
-// Jalankan aksi aktif/nonaktif akun
-if (isset($_GET['action']) && isset($_GET['user']) && isset($_GET['proto'])) {
+// Handle start/stop akun
+if (isset($_GET['action'], $_GET['user'], $_GET['proto'])) {
     $action = $_GET['action'];
     $user   = $_GET['user'];
     $proto  = $_GET['proto'];
-
-    if (!file_exists($configPath)) {
-        die("❌ Config file tidak ditemukan: $configPath");
-    }
 
     $lines = file($configPath);
     $updated = false;
 
     for ($i = 0; $i < count($lines); $i++) {
         $line = trim($lines[$i]);
-
         if (preg_match('/^\s*(###|#&|#!|#\$)\s+(\S+)\s+(\d{4}-\d{2}-\d{2})/', $line, $match)) {
             $prefix = $match[1];
             $foundUser = $match[2];
@@ -104,7 +97,6 @@ if (isset($_GET['action']) && isset($_GET['user']) && isset($_GET['proto'])) {
             if ($foundUser === $user && $prefixProto === $proto) {
                 for ($j = $i + 1; $j < count($lines); $j++) {
                     $jsonLine = trim($lines[$j]);
-
                     if (preg_match('/^\s*(###|#&|#!|#\$)\s+/', $jsonLine)) break;
 
                     // Lock/unlock ID
@@ -157,7 +149,6 @@ if (isset($_GET['action']) && isset($_GET['user']) && isset($_GET['proto'])) {
         }
     }
 
-    // Simpan dan restart jika ada perubahan
     if ($updated) {
         file_put_contents($configPath, implode("\n", array_map('rtrim', $lines)) . "\n");
         shell_exec('sudo /usr/local/bin/restart-xray.sh');
@@ -167,11 +158,13 @@ if (isset($_GET['action']) && isset($_GET['user']) && isset($_GET['proto'])) {
     exit;
 }
 
-// Generate key jika kosong
-if (!$key) $key = generateUUID();
+// Generate UUID kalau kosong
+if (!$key) {
+    $key = generateUUID();
+}
 $expired = calculateExpiredDate($expired);
 
-// Jalankan SSH untuk menambahkan akun
+// Eksekusi tambah akun via SSH
 if ($proses && isset($vpsList[$vps])) {
     $vpsData = $vpsList[$vps];
     $vpsIp   = $vpsData['ip'];
@@ -184,18 +177,6 @@ if ($proses && isset($vpsList[$vps])) {
 
     $sshCmd = "ssh -o StrictHostKeyChecking=no $vpsUser@$vpsIp 'php /root/tambah-akun.php $usernameSafe $expiredSafe $protokolSafe $keySafe'";
     $output = shell_exec($sshCmd);
-    
-switch ($vps) {
-    case 'rw-mard1':
-        shell_exec("ssh root@IP_RW_MARD1 'systemctl restart xray'");
-        break;
-    case 'sgdo-mard1':
-        shell_exec("ssh root@IP_SGDO_MARD1 'systemctl restart xray'");
-        break;
-    case 'sgdo-2dev':
-        shell_exec("ssh root@IP_SGDO_2DEV 'systemctl restart xray'");
-        break;
-}
 
     echo "<pre class='bg-gray-900 text-green-300 p-4 rounded'>$output</pre>";
     echo "<a href='kelola-akun.php' class='mt-4 inline-block bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded'>➕ Tambah Akun Lagi</a>";
@@ -204,7 +185,6 @@ switch ($vps) {
     echo "<p class='text-red-400'>❌ VPS tidak dikenali.</p>";
     return;
 }
-
 
         $suksesSemua = true;
         foreach ($tags as $tag) {
@@ -252,7 +232,10 @@ switch ($vps) {
             echo "<p class='text-yellow-400'>⚠ Akun berhasil ditambahkan.</p>";
         }
     }
-    ?>
+// Sekarang tinggal tampilkan form HTML...
+include 'templates/header.php';
+// Form HTML dan daftar akun lanjutan...
+?>
     <a href="kelola-akun.php" class="inline-block mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">➕ Tambah Akun Lagi</a>
 <?php if (!$proses): ?>
     <h2 class="text-xl font-bold mb-4">Tambah Akun Baru</h2>
