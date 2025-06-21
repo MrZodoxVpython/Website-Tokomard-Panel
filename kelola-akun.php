@@ -187,6 +187,39 @@ if ($proses && isset($vpsList[$vps])) {
 }
 
         $suksesSemua = true;
+        $tagMap = [
+    'vmess' => ['vmess', 'vmessgrpc'],
+    'vless' => ['vless', 'vlessgrpc'],
+    'trojan' => ['trojanws', 'trojangrpc'],
+    'shadowsocks' => ['ssws', 'ssgrpc']
+];
+
+$tags = $tagMap[$protokol] ?? [];
+
+$commentPrefix = '';
+$jsonEntry = '';
+// Set prefix & json entry sesuai protokol
+switch ($protokol) {
+    case 'vmess':
+        $commentPrefix = '###';
+        $jsonEntry = "},{\"id\": \"$key\", \"alterId\": 0, \"email\": \"$username\"";
+        break;
+    case 'vless':
+        $commentPrefix = '#&';
+        $jsonEntry = "},{\"id\": \"$key\", \"email\": \"$username\"";
+        break;
+    case 'trojan':
+        $commentPrefix = '#!';
+        $jsonEntry = "},{\"password\": \"$key\", \"email\": \"$username\"";
+        break;
+    case 'shadowsocks':
+        $commentPrefix = '#$';
+        $jsonEntry = "},{\"password\": \"$key\", \"method\": \"aes-128-gcm\", \"email\": \"$username\"";
+        break;
+    default:
+        echo "<p class='text-red-400'>❌ Protokol tidak dikenali.</p>";
+        exit;
+}
         foreach ($tags as $tag) {
             $commentLine = "$commentPrefix $username $expired";
             if (!insertIntoTag($configPath, $tag, $commentLine, $jsonEntry)) {
