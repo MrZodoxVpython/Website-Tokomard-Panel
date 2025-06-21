@@ -231,7 +231,7 @@ if ($proses && isset($vpsList[$vps])) {
         } else {
             echo "<p class='text-yellow-400'>⚠ Akun berhasil ditambahkan.</p>";
         }
-    }
+    
 // Sekarang tinggal tampilkan form HTML...
 include 'templates/header.php';
 // Form HTML dan daftar akun lanjutan...
