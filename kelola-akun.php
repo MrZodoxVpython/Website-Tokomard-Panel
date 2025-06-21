@@ -184,15 +184,8 @@ if ($proses && isset($vpsList[$vps])) {
 
     $sshCmd = "ssh -o StrictHostKeyChecking=no $vpsUser@$vpsIp 'php /root/tambah-akun.php $usernameSafe $expiredSafe $protokolSafe $keySafe'";
     $output = shell_exec($sshCmd);
-
-    echo "<pre class='bg-gray-900 text-green-300 p-4 rounded'>$output</pre>";
-    echo "<a href='kelola-akun.php' class='mt-4 inline-block bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded'>➕ Tambah Akun Lagi</a>";
-    exit;
-} elseif ($proses) {
-    echo "<p class='text-red-400'>❌ VPS tidak dikenali.</p>";
-    return;
-}
-        switch ($vps) {
+    
+switch ($vps) {
     case 'rw-mard1':
         shell_exec("ssh root@IP_RW_MARD1 'systemctl restart xray'");
         break;
@@ -203,6 +196,15 @@ if ($proses && isset($vpsList[$vps])) {
         shell_exec("ssh root@IP_SGDO_2DEV 'systemctl restart xray'");
         break;
 }
+
+    echo "<pre class='bg-gray-900 text-green-300 p-4 rounded'>$output</pre>";
+    echo "<a href='kelola-akun.php' class='mt-4 inline-block bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded'>➕ Tambah Akun Lagi</a>";
+    exit;
+} elseif ($proses) {
+    echo "<p class='text-red-400'>❌ VPS tidak dikenali.</p>";
+    return;
+}
+
 
         $suksesSemua = true;
         foreach ($tags as $tag) {
