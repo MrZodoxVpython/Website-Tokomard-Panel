@@ -186,8 +186,10 @@ if ($proses && isset($vpsList[$vps])) {
     return;
 }
 
-        $suksesSemua = true;
-        $tagMap = [
+
+$suksesSemua = true;
+
+$tagMap = [
     'vmess' => ['vmess', 'vmessgrpc'],
     'vless' => ['vless', 'vlessgrpc'],
     'trojan' => ['trojanws', 'trojangrpc'],
@@ -198,138 +200,90 @@ $tags = $tagMap[$protokol] ?? [];
 
 $commentPrefix = '';
 $jsonEntry = '';
-// Set prefix & json entry sesuai protokol
-$username = trim($_POST['username'] ?? '');
-$expired = trim($_POST['expired'] ?? '');
-$protokol = trim($_POST['protokol'] ?? '');
-$key = trim($_POST['key'] ?? '');
 
 switch ($protokol) {
     case 'vmess':
         $commentPrefix = '###';
-        $jsonEntry = "},{\"id\": \"$key\", \"alterId\": 0, \"email\": \"$username\"";
+        $jsonEntry = "{\"id\": \"$key\", \"alterId\": 0, \"email\": \"$username\"}";
         break;
     case 'vless':
         $commentPrefix = '#&';
-        $jsonEntry = "},{\"id\": \"$key\", \"email\": \"$username\"";
+        $jsonEntry = "{\"id\": \"$key\", \"email\": \"$username\"}";
         break;
     case 'trojan':
         $commentPrefix = '#!';
-        $jsonEntry = "},{\"password\": \"$key\", \"email\": \"$username\"";
+        $jsonEntry = "{\"password\": \"$key\", \"email\": \"$username\"}";
         break;
     case 'shadowsocks':
         $commentPrefix = '#$';
-        $jsonEntry = "},{\"password\": \"$key\", \"method\": \"aes-128-gcm\", \"email\": \"$username\"";
+        $jsonEntry = "{\"password\": \"$key\", \"method\": \"aes-128-gcm\", \"email\": \"$username\"}";
         break;
     default:
         echo "<p class='text-red-400'>❌ Protokol tidak dikenali.</p>";
         exit;
 }
-        foreach ($tags as $tag) {
-            $commentLine = "$commentPrefix $username $expired";
-            if (!insertIntoTag($configPath, $tag, $commentLine, $jsonEntry)) {
-                $suksesSemua = false;
-            }
-        }
 
-        if ($suksesSemua) {
-            echo "<h2 class='text-xl font-bold mb-4'>✅ Akun Berhasil Ditambahkan</h2>";
-                $domain = trim(shell_exec('cat /etc/xray/domain'));
-                $tls = "443";
-                $ntls = "80";
-                $path = "/trojan-ws";
-                $servicename = "trojan-grpc";
+foreach ($tags as $tag) {
+    $commentLine = "$commentPrefix $username $expired";
+    if (!insertIntoTag($configPath, $tag, $commentLine, $jsonEntry)) {
+        $suksesSemua = false;
+    }
+}
 
-                $trojanlink  = "trojan://$key@$domain:$tls?path=$path&security=tls&type=ws#$username";
-                $trojanlink2 = "trojan://$key@$domain:$ntls?path=$path&security=none&type=ws#$username";
-                $trojanlink1 = "trojan://$key@$domain:$tls?mode=gun&security=tls&type=grpc&serviceName=$servicename#$username";
+if ($suksesSemua) {
+    echo "<h2 class='text-xl font-bold mb-4'>✅ Akun Berhasil Ditambahkan</h2>";
+    $domain = trim(shell_exec('cat /etc/xray/domain'));
+    $tls = "443";
+    $ntls = "80";
+    $path = "/trojan-ws";
+    $servicename = "trojan-grpc";
 
-                echo '<pre style="background-color: #1e1e2e; color: #cdd6f4; padding: 1em; border-radius: 10px; overflow-x: auto">';
-                echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-                echo "           TROJAN ACCOUNT           \n";
-                echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-                echo "Remarks        : $username\n";
-                echo "Host/IP        : $domain\n";
-                echo "Wildcard       : (bug.com).$domain\n";
-                echo "Port TLS       : $tls\n";
-                echo "Port none TLS  : $ntls\n";
-                echo "Port gRPC      : $tls\n";
-                echo "Key            : $key\n";
-                echo "Path           : $path\n";
-                echo "ServiceName    : $servicename\n";
-                echo "Expired On     : $expired\n";
-                echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-                echo "Link TLS       : $trojanlink\n";
-                echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-                echo "Link none TLS  : $trojanlink2\n";
-                echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-                echo "Link gRPC      : $trojanlink1\n";
-                echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-                echo '</pre>';
-        } else {
-            echo "<p class='text-yellow-400'>⚠ Akun berhasil ditambahkan.</p>";
-        }
-    
-// Sekarang tinggal tampilkan form HTML...
-include 'templates/header.php';
-// Form HTML dan daftar akun lanjutan...
-?>
-    <a href="kelola-akun.php" class="inline-block mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">➕ Tambah Akun Lagi</a>
-<?php if (!$proses): ?>
-    <h2 class="text-xl font-bold mb-4">Tambah Akun Baru</h2>
-    <form action="" method="POST" class="grid gap-4">
-      <div>
-        <label class="block mb-1">Username</label>
-        <input type="text" name="username" class="w-full p-2 bg-gray-700 rounded" required>
-      </div>
-      <div>
-        <label class="block mb-1">Expired (tanggal atau jumlah hari)</label>
-        <input type="text" name="expired" placeholder="2025-07-01 atau 30" class="w-full p-2 bg-gray-700 rounded" required>
-      </div>
-<!-- Dropdown Pilihan VPS -->
-      <div>
-        <label class="block mb-1">Pilih VPS</label>
-          <select name="vps" class="w-full p-2 bg-gray-700 rounded" required>
-           <option value="rw-mard1">RW-MARD</option>
-           <option value="sgdo-mard1">SGDO-MARD1</option>
-           <option value="sgdo-2dev">SGDO-2DEV</option>
-          </select>
-      </div>
-      <div>
-        <label class="block mb-1">Protokol</label>
-        <select name="protokol" class="w-full p-2 bg-gray-700 rounded" required>
-          <option value="trojan">Trojan</option>
-          <option value="vmess">Vmess</option>
-          <option value="vless">Vless</option>
-          <option value="shadowsocks">Shadowsocks</option>
-        </select>
-      </div>
-      <div>
-        <label class="block mb-1">UUID / Password (otomatis jika kosong)</label>
-        <input type="text" name="key" class="w-full p-2 bg-gray-700 rounded">
-      </div>
-      <div>
-        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 py-2 rounded">Simpan Akun</button>
-      </div>
-    </form>
-<?php endif; ?>
-<hr class="my-6 border-gray-600">
-<h3 class="text-xl font-semibold mb-4">Daftar Akun Terdaftar</h3>
+    $trojanlink  = "trojan://$key@$domain:$tls?path=$path&security=tls&type=ws#$username";
+    $trojanlink2 = "trojan://$key@$domain:$ntls?path=$path&security=none&type=ws#$username";
+    $trojanlink1 = "trojan://$key@$domain:$tls?mode=gun&security=tls&type=grpc&serviceName=$servicename#$username";
 
-<!-- Tambahkan pembungkus scroll horizontal -->
-<div class="overflow-x-auto">
-  <table class="min-w-full text-sm text-left text-white border border-gray-600">
-    <thead class="bg-gray-700">
-      <tr>
-        <th class="py-2 px-3">No</th>
-        <th class="py-2 px-3">Nama Akun</th>
-        <th class="py-2 px-3">Protokol</th>
-        <th class="py-2 px-3">Expired</th>
-        <th class="py-2 px-3">Aksi</th>
-      </tr>
-    </thead>
-    <tbody>
-<?php
+    echo '<pre style="background-color: #1e1e2e; color: #cdd6f4; padding: 1em; border-radius: 10px; overflow-x: auto">';
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    echo "           TROJAN ACCOUNT           \n";
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    echo "Remarks        : $username\n";
+    echo "Host/IP        : $domain\n";
+    echo "Wildcard       : (bug.com).$domain\n";
+    echo "Port TLS       : $tls\n";
+    echo "Port none TLS  : $ntls\n";
+    echo "Port gRPC      : $tls\n";
+    echo "Key            : $key\n";
+    echo "Path           : $path\n";
+    echo "ServiceName    : $servicename\n";
+    echo "Expired On     : $expired\n";
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    echo "Link TLS       : $trojanlink\n";
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    echo "Link none TLS  : $trojanlink2\n";
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    echo "Link gRPC      : $trojanlink1\n";
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    echo '</pre>';
+} else {
+    echo "<p class='text-yellow-400'>⚠ Akun berhasil ditambahkan sebagian.</p>";
+}
+
+// Tabel daftar akun
+echo '<hr class="my-6 border-gray-600">';
+echo '<h3 class="text-xl font-semibold mb-4">Daftar Akun Terdaftar</h3>';
+echo '<div class="overflow-x-auto">';
+echo '<table class="min-w-full text-sm text-left text-white border border-gray-600">';
+echo '<thead class="bg-gray-700">';
+echo '<tr>';
+echo '<th class="py-2 px-3">No</th>';
+echo '<th class="py-2 px-3">Nama Akun</th>';
+echo '<th class="py-2 px-3">Protokol</th>';
+echo '<th class="py-2 px-3">Expired</th>';
+echo '<th class="py-2 px-3">Aksi</th>';
+echo '</tr>';
+echo '</thead>';
+echo '<tbody>';
+
 if (file_exists($configPath)) {
     $lines = file($configPath);
     $no = 1;
@@ -340,29 +294,24 @@ if (file_exists($configPath)) {
             $prefix = $match[1];
             $user = $match[2];
             $date = $match[3];
-            switch ($prefix) {
-                case '###': $proto = 'vmess'; break;
-                case '#&':  $proto = 'vless'; break;
-                case '#!':  $proto = 'trojan'; break;
-                case '#$':  $proto = 'shadowsocks'; break;
-                default: $proto = 'unknown'; break;
-            }
+            $proto = match ($prefix) {
+                '###' => 'vmess',
+                '#&'  => 'vless',
+                '#!'  => 'trojan',
+                '#$'  => 'shadowsocks',
+                default => 'unknown'
+            };
 
             $akunStatus = 'ACTIVE';
             for ($j = $i + 1; $j < count($lines); $j++) {
                 $nextLine = trim($lines[$j]);
+                if (preg_match('/^\s*(###|#&|#!|#\$)\s+/', $nextLine)) break;
 
-                if (preg_match('/^\s*(###|#&|#!|#\$)\s+/', $nextLine)) {
-                    break;
+                if (in_array($proto, ['vmess', 'vless']) && str_contains($nextLine, '"id": "locked"')) {
+                    $akunStatus = 'INACTIVE'; break;
                 }
-
-                if (in_array($proto, ['vmess', 'vless']) && preg_match('/"id"\s*:\s*"locked"/', $nextLine)) {
-                    $akunStatus = 'INACTIVE';
-                    break;
-                }
-                if (in_array($proto, ['trojan', 'shadowsocks']) && preg_match('/"password"\s*:\s*"locked"/', $nextLine)) {
-                    $akunStatus = 'INACTIVE';
-                    break;
+                if (in_array($proto, ['trojan', 'shadowsocks']) && str_contains($nextLine, '"password": "locked"')) {
+                    $akunStatus = 'INACTIVE'; break;
                 }
             }
 
@@ -371,18 +320,16 @@ if (file_exists($configPath)) {
             $akunTertampil[$uniqueKey] = true;
 
             echo "<tr class='border-t border-gray-600'>";
-            echo "<td class='py-2 px-3'>$no</td>";
-            echo "<td class='py-2 px-3'>$user</td>";
-            echo "<td class='py-2 px-3'>$proto</td>";
-            echo "<td class='py-2 px-3'>$date</td>";
+            echo "<td class='py-2 px-3'>{$no}</td>";
+            echo "<td class='py-2 px-3'>{$user}</td>";
+            echo "<td class='py-2 px-3'>{$proto}</td>";
+            echo "<td class='py-2 px-3'>{$date}</td>";
             echo "<td class='py-2 px-3'>";
-            echo "<a href='edit-akun.php?user=$user&proto=$proto' class='text-yellow-400 hover:underline'>Edit</a> | ";
-            echo "<a href='hapus-akun.php?user=$user&proto=$proto' class='text-red-400 hover:underline' onclick=\"return confirm('Yakin hapus akun $user?')\">Hapus</a> | ";
-            if ($akunStatus === 'INACTIVE') {
-                echo "<a href='?action=start&user=$user&proto=$proto' class='text-green-400 hover:underline'>Start</a>";
-            } else {
-                echo "<a href='?action=stop&user=$user&proto=$proto' class='text-red-400 hover:underline'>Stop</a>";
-            }
+            echo "<a href='edit-akun.php?user={$user}&proto={$proto}' class='text-yellow-400 hover:underline'>Edit</a> | ";
+            echo "<a href='hapus-akun.php?user={$user}&proto={$proto}' class='text-red-400 hover:underline' onclick=\"return confirm('Yakin hapus akun $user?')\">Hapus</a> | ";
+            echo $akunStatus === 'INACTIVE'
+                ? "<a href='?action=start&user={$user}&proto={$proto}' class='text-green-400 hover:underline'>Start</a>"
+                : "<a href='?action=stop&user={$user}&proto={$proto}' class='text-red-400 hover:underline'>Stop</a>";
             echo "</td></tr>";
             $no++;
         }
@@ -398,6 +345,7 @@ if (file_exists($configPath)) {
     </tbody>
   </table>
 </div>
+
 
 
 <?php include 'templates/footer.php'; ?>
