@@ -1,8 +1,8 @@
 <?php
 include 'templates/header.php';
-error_reporting(E_ALL);
 ini_set('display_errors', 1);
-echo "Script dimulai<br>";
+error_reporting(E_ALL);
+echo "✅ Script dijalankan<br>";
 
 session_start();
 
@@ -23,7 +23,10 @@ if (isset($_GET['action']) && isset($_GET['user']) && isset($_GET['proto'])) {
     $user = $_GET['user'];
     $proto = $_GET['proto'];
 
-    $lines = file($configPath);
+if (!file_exists($configPath)) {
+    die("❌ Config file tidak ditemukan: $configPath");
+}
+$lines = file($configPath);
 $updated = false;
 
 for ($i = 0; $i < count($lines); $i++) {
@@ -129,6 +132,7 @@ function calculateExpiredDate($input) {
 }
 
 function akunSudahAda($username, $expired, $configPath) {
+    if (!file_exists($configPath)) return false;
     $lines = file($configPath);
     foreach ($lines as $line) {
         if (preg_match('/^\s*(###|#&|#!|#\$)\s+' . preg_quote($username, '/') . '\s+' . preg_quote($expired, '/') . '\s*$/', trim($line))) {
@@ -143,6 +147,9 @@ $expired = trim($_POST['expired'] ?? '');
 $protokol = trim($_POST['protokol'] ?? '');
 $key = trim($_POST['key'] ?? '');
 $vps = trim($_POST['vps'] ?? '');
+
+$proses = ($_SERVER['REQUEST_METHOD'] === 'POST' && $username && $expired && $protokol);
+
 $vpsMap = [
     'rw-mard' => '/etc/xray/config.json',
     'sgdo-mard1' => '/etc/xray/config.json',
@@ -152,7 +159,7 @@ $vpsMap = [
 $configPath = $vpsMap[$vps] ?? '/etc/xray/config.json';
 
     // 🔽 Langkah No. 2: Eksekusi via SSH
-    if (isset($vpsList[$vps])) {
+    if ($proses && isset($vpsList[$vps])) {
         $vpsData = $vpsList[$vps];
         $vpsIp = $vpsData['ip'];
         $vpsUser = $vpsData['user'];
@@ -178,7 +185,7 @@ if (!$key) {
     $key = generateUUID();
 }
 $expired = calculateExpiredDate($expired);
-$proses = ($_SERVER['REQUEST_METHOD'] === 'POST' && $username && $expired && $protokol);
+
 
 
 
@@ -186,6 +193,7 @@ $proses = ($_SERVER['REQUEST_METHOD'] === 'POST' && $username && $expired && $pr
 copy($configPath, $configPath . '.bak-' . date('YmdHis'));
 
 function insertIntoTag($configPath, $tag, $commentLine, $jsonLine) {
+    if (!file_exists($configPath)) return false;
     $lines = file($configPath);
     $inserted = false;
 
