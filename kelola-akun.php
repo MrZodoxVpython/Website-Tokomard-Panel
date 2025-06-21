@@ -199,11 +199,6 @@ $tags = $tagMap[$protokol] ?? [];
 $commentPrefix = '';
 $jsonEntry = '';
 // Set prefix & json entry sesuai protokol
-$username = trim($_POST['username'] ?? '');
-$expired = trim($_POST['expired'] ?? '');
-$protokol = trim($_POST['protokol'] ?? '');
-$key = trim($_POST['key'] ?? '');
-
 switch ($protokol) {
     case 'vmess':
         $commentPrefix = '###';
