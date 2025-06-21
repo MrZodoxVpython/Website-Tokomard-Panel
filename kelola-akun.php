@@ -14,124 +14,35 @@ include 'templates/header.php';
 
 // Daftar IP VPS kamu + nama VPS + user SSH
 $vpsList = [
-    'rw-mard' => ['ip' => '203.194.113.140', 'user' => 'root'],
-    'sgdo-mard1' => ['ip' => '143.198.202.86', 'user' => 'root'],
-    'sgdo-2dev' => ['ip' => '178.128.60.185', 'user' => 'root'],
+    'rw-mard'     => ['ip' => '203.194.113.140', 'user' => 'root'],
+    'sgdo-mard1'  => ['ip' => '143.198.202.86', 'user' => 'root'],
+    'sgdo-2dev'   => ['ip' => '178.128.60.185', 'user' => 'root'],
 ];
 
+// Daftar path config VPS
+$vpsMap = [
+    'rw-mard'     => '/etc/xray/config.json',
+    'sgdo-mard1'  => '/etc/xray/config.json',
+    'sgdo-2dev'   => '/etc/xray/config.json'
+];
 
+// Ambil data dari POST/GET
+$vps      = trim($_POST['vps'] ?? $_GET['vps'] ?? '');
+$username = trim($_POST['username'] ?? '');
+$expired  = trim($_POST['expired'] ?? '');
+$protokol = trim($_POST['protokol'] ?? '');
+$key      = trim($_POST['key'] ?? '');
 
-if (isset($_GET['action']) && isset($_GET['user']) && isset($_GET['proto'])) {
-    $action = $_GET['action'];
-    $user = $_GET['user'];
-    $proto = $_GET['proto'];
+$configPath = $vpsMap[$vps] ?? '/etc/xray/config.json';
+$proses     = ($_SERVER['REQUEST_METHOD'] === 'POST' && $username && $expired && $protokol);
 
-if (!file_exists($configPath)) {
-    die("❌ Config file tidak ditemukan: $configPath");
-}
-$lines = file($configPath);
-$updated = false;
-
-for ($i = 0; $i < count($lines); $i++) {
-    $line = trim($lines[$i]);
-
-    if (preg_match('/^\s*(###|#&|#!|#\$)\s+(\S+)\s+(\d{4}-\d{2}-\d{2})/', $line, $match)) {
-        $prefix = $match[1];
-        $foundUser = $match[2];
-
-        $protoMap = [
-            '###' => 'vmess',
-            '#&'  => 'vless',
-            '#!'  => 'trojan',
-            '#$'  => 'shadowsocks'
-        ];
-        $prefixProto = $protoMap[$prefix] ?? '';
-
-        if ($foundUser === $user && $prefixProto === $proto) {
-            for ($j = $i + 1; $j < count($lines); $j++) {
-                $jsonLine = trim($lines[$j]);
-
-                // Berhenti jika menemukan akun berikutnya
-                if (preg_match('/^\s*(###|#&|#!|#\$)\s+/', $jsonLine)) break;
-
-                // Proses VMess & VLESS
-                if (in_array($proto, ['vmess', 'vless']) && preg_match('/"id"\s*:\s*"(.*?)"/', $jsonLine)) {
-                    if ($action === 'stop') {
-                        if (!preg_match('/^##LOCK##/', trim($lines[$j - 1]))) {
-                            $uuid = preg_replace('/.*"id"\s*:\s*"(.*?)".*/', '$1', $jsonLine);
-                            $lines[$j] = preg_replace('/"id"\s*:\s*"(.*?)"/', '"id": "locked"', $jsonLine);
-                            array_splice($lines, $j, 0, ["##LOCK##$uuid"]);
-                            $updated = true;
-                        }
-                    } elseif ($action === 'start') {
-                        for ($k = $j - 1; $k >= 0; $k--) {
-                            $lockLine = trim($lines[$k]);
-                            if (preg_match('/^##LOCK##(.+)$/', $lockLine, $m)) {
-                                $realId = $m[1];
-                                if (strpos($jsonLine, '"id": "locked"') !== false) {
-                                    $lines[$j] = preg_replace('/"id"\s*:\s*"locked"/', '"id": "' . $realId . '"', $jsonLine);
-                                    array_splice($lines, $k, 1);
-                                    $updated = true;
-                                }
-                                break;
-                            }
-                            if (preg_match('/^\s*(###|#&|#!|#\$)\s+/', $lockLine)) break;
-                        }
-                    }
-                }
-
-                // Proses Trojan & Shadowsocks
-                if (in_array($proto, ['trojan', 'shadowsocks']) && preg_match('/"password"\s*:\s*"(.*?)"/', $jsonLine)) {
-                    if ($action === 'stop') {
-                        if (!preg_match('/^##LOCK##/', trim($lines[$j - 1]))) {
-                            $password = preg_replace('/.*"password"\s*:\s*"(.*?)".*/', '$1', $jsonLine);
-                            $lines[$j] = preg_replace('/"password"\s*:\s*"(.*?)"/', '"password": "locked"', $jsonLine);
-
-                            // ❗❗❗ Tambahkan baris kunci secara terpisah (baris baru)
-                            array_splice($lines, $j, 0, ["##LOCK##$password"]);
-                            $updated = true;
-                        }
-                    } elseif ($action === 'start') {
-                        for ($k = $j - 1; $k >= 0; $k--) {
-                            $lockLine = trim($lines[$k]);
-                            if (preg_match('/^##LOCK##(.+)$/', $lockLine, $m)) {
-                                $realPass = $m[1];
-                                if (strpos($jsonLine, '"password": "locked"') !== false) {
-                                    $lines[$j] = preg_replace('/"password"\s*:\s*"locked"/', '"password": "' . $realPass . '"', $jsonLine);
-                                    array_splice($lines, $k, 1); // Hapus ##LOCK## baris
-                                    $updated = true;
-                                }
-                                break;
-                            }
-                            if (preg_match('/^\s*(###|#&|#!|#\$)\s+/', $lockLine)) break;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-            if ($updated) {
-        file_put_contents($configPath, implode("\n", array_map('rtrim', $lines)) . "\n");
-        shell_exec('sudo /usr/local/bin/restart-xray.sh');
-    }
-
-    header("Location: kelola-akun.php");
-    exit;
-}
-
-
+// Fungsi-fungsi penting
 function generateUUID() {
     return trim(shell_exec('cat /proc/sys/kernel/random/uuid'));
 }
 
 function calculateExpiredDate($input) {
-    if (preg_match('/^\d+$/', $input)) {
-        return date('Y-m-d', strtotime("+$input days"));
-    }
-    return $input;
+    return preg_match('/^\d+$/', $input) ? date('Y-m-d', strtotime("+$input days")) : $input;
 }
 
 function akunSudahAda($username, $expired, $configPath) {
@@ -144,56 +55,6 @@ function akunSudahAda($username, $expired, $configPath) {
     }
     return false;
 }
-
-$username = trim($_POST['username'] ?? '');
-$expired = trim($_POST['expired'] ?? '');
-$protokol = trim($_POST['protokol'] ?? '');
-$key = trim($_POST['key'] ?? '');
-$vps = trim($_POST['vps'] ?? '');
-
-$proses = ($_SERVER['REQUEST_METHOD'] === 'POST' && $username && $expired && $protokol);
-
-$vpsMap = [
-    'rw-mard' => '/etc/xray/config.json',
-    'sgdo-mard1' => '/etc/xray/config.json',
-    'sgdo-2dev' => '/etc/xray/config.json'
-];
-
-$configPath = $vpsMap[$vps] ?? '/etc/xray/config.json';
-
-    // 🔽 Langkah No. 2: Eksekusi via SSH
-    if ($proses && isset($vpsList[$vps])) {
-        $vpsData = $vpsList[$vps];
-        $vpsIp = $vpsData['ip'];
-        $vpsUser = $vpsData['user'];
-
-        $usernameSafe = escapeshellarg($username);
-        $expiredSafe  = escapeshellarg($expired);
-        $protokolSafe = escapeshellarg($protokol);
-        $keySafe      = escapeshellarg($key);
-
-        $sshCmd = "ssh -o StrictHostKeyChecking=no $vpsUser@$vpsIp 'php /root/tambah-akun.php $usernameSafe $expiredSafe $protokolSafe $keySafe'";
-        $output = shell_exec($sshCmd);
-
-        echo "<pre class='bg-gray-900 text-green-300 p-4 rounded'>$output</pre>";
-        echo "<a href='kelola-akun.php' class='mt-4 inline-block bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded'>➕ Tambah Akun Lagi</a>";
-        exit;
-    } else {
-        echo "<p class='text-red-400'>❌ VPS tidak dikenali.</p>";
-        return;
-    }
-}
-
-if (!$key) {
-    $key = generateUUID();
-}
-$expired = calculateExpiredDate($expired);
-
-
-
-
-// Backup config sebelum edit
-copy($configPath, $configPath . '.bak-' . date('YmdHis'));
 
 function insertIntoTag($configPath, $tag, $commentLine, $jsonLine) {
     if (!file_exists($configPath)) return false;
@@ -211,48 +72,126 @@ function insertIntoTag($configPath, $tag, $commentLine, $jsonLine) {
 
     return $inserted;
 }
-?>
 
-<div class="max-w-5xl mx-auto mt-10 bg-gray-800 p-6 rounded-xl shadow-md text-white">
-<?php if ($proses): ?>
-    <?php
+// Jalankan aksi aktif/nonaktif akun
+if (isset($_GET['action']) && isset($_GET['user']) && isset($_GET['proto'])) {
+    $action = $_GET['action'];
+    $user   = $_GET['user'];
+    $proto  = $_GET['proto'];
 
+    if (!file_exists($configPath)) {
+        die("❌ Config file tidak ditemukan: $configPath");
+    }
 
-    if (akunSudahAda($username, $expired, $configPath)) {
-        echo "<p class='text-yellow-400'>⚠ Akun sudah ada. Tidak ditambahkan ulang.</p>";
-    } else {
-        $tagMap = [
-            'vmess' => ['vmess', 'vmessgrpc'],
-            'vless' => ['vless', 'vlessgrpc'],
-            'trojan' => ['trojanws', 'trojangrpc'],
-            'shadowsocks' => ['ssws', 'ssgrpc']
-        ];
+    $lines = file($configPath);
+    $updated = false;
 
-        $commentPrefix = '';
-        $jsonEntry = '';
-        $tags = $tagMap[$protokol] ?? [];
+    for ($i = 0; $i < count($lines); $i++) {
+        $line = trim($lines[$i]);
 
-        switch ($protokol) {
-            case 'vmess':
-                $commentPrefix = '###';
-                $jsonEntry = "},{\"id\": \"$key\", \"alterId\": 0, \"email\": \"$username\"";
-                break;
-            case 'vless':
-                $commentPrefix = '#&';
-                $jsonEntry = "},{\"id\": \"$key\", \"email\": \"$username\"";
-                break;
-            case 'trojan':
-                $commentPrefix = '#!';
-                $jsonEntry = "},{\"password\": \"$key\", \"email\": \"$username\"";
-                break;
-            case 'shadowsocks':
-                $commentPrefix = '#$';
-                $jsonEntry = "},{\"password\": \"$key\", \"method\": \"aes-128-gcm\", \"email\": \"$username\"";
-                break;
-            default:
-                echo "<p class='text-red-400'>❌ Protokol tidak dikenali.</p>";
-                exit;
+        if (preg_match('/^\s*(###|#&|#!|#\$)\s+(\S+)\s+(\d{4}-\d{2}-\d{2})/', $line, $match)) {
+            $prefix = $match[1];
+            $foundUser = $match[2];
+
+            $protoMap = [
+                '###' => 'vmess',
+                '#&'  => 'vless',
+                '#!'  => 'trojan',
+                '#$'  => 'shadowsocks'
+            ];
+            $prefixProto = $protoMap[$prefix] ?? '';
+
+            if ($foundUser === $user && $prefixProto === $proto) {
+                for ($j = $i + 1; $j < count($lines); $j++) {
+                    $jsonLine = trim($lines[$j]);
+
+                    if (preg_match('/^\s*(###|#&|#!|#\$)\s+/', $jsonLine)) break;
+
+                    // Lock/unlock ID
+                    if (in_array($proto, ['vmess', 'vless']) && preg_match('/"id"\s*:\s*"(.*?)"/', $jsonLine)) {
+                        if ($action === 'stop' && !preg_match('/^##LOCK##/', trim($lines[$j - 1]))) {
+                            $uuid = preg_replace('/.*"id"\s*:\s*"(.*?)".*/', '$1', $jsonLine);
+                            $lines[$j] = preg_replace('/"id"\s*:\s*"(.*?)"/', '"id": "locked"', $jsonLine);
+                            array_splice($lines, $j, 0, ["##LOCK##$uuid"]);
+                            $updated = true;
+                        } elseif ($action === 'start') {
+                            for ($k = $j - 1; $k >= 0; $k--) {
+                                $lockLine = trim($lines[$k]);
+                                if (preg_match('/^##LOCK##(.+)$/', $lockLine, $m)) {
+                                    $realId = $m[1];
+                                    if (strpos($jsonLine, '"id": "locked"') !== false) {
+                                        $lines[$j] = preg_replace('/"id"\s*:\s*"locked"/', '"id": "' . $realId . '"', $jsonLine);
+                                        array_splice($lines, $k, 1);
+                                        $updated = true;
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    // Lock/unlock password
+                    if (in_array($proto, ['trojan', 'shadowsocks']) && preg_match('/"password"\s*:\s*"(.*?)"/', $jsonLine)) {
+                        if ($action === 'stop' && !preg_match('/^##LOCK##/', trim($lines[$j - 1]))) {
+                            $password = preg_replace('/.*"password"\s*:\s*"(.*?)".*/', '$1', $jsonLine);
+                            $lines[$j] = preg_replace('/"password"\s*:\s*"(.*?)"/', '"password": "locked"', $jsonLine);
+                            array_splice($lines, $j, 0, ["##LOCK##$password"]);
+                            $updated = true;
+                        } elseif ($action === 'start') {
+                            for ($k = $j - 1; $k >= 0; $k--) {
+                                $lockLine = trim($lines[$k]);
+                                if (preg_match('/^##LOCK##(.+)$/', $lockLine, $m)) {
+                                    $realPass = $m[1];
+                                    if (strpos($jsonLine, '"password": "locked"') !== false) {
+                                        $lines[$j] = preg_replace('/"password"\s*:\s*"locked"/', '"password": "' . $realPass . '"', $jsonLine);
+                                        array_splice($lines, $k, 1);
+                                        $updated = true;
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
+    }
+
+    // Simpan dan restart jika ada perubahan
+    if ($updated) {
+        file_put_contents($configPath, implode("\n", array_map('rtrim', $lines)) . "\n");
+        shell_exec('sudo /usr/local/bin/restart-xray.sh');
+    }
+
+    header("Location: kelola-akun.php");
+    exit;
+}
+
+// Generate key jika kosong
+if (!$key) $key = generateUUID();
+$expired = calculateExpiredDate($expired);
+
+// Jalankan SSH untuk menambahkan akun
+if ($proses && isset($vpsList[$vps])) {
+    $vpsData = $vpsList[$vps];
+    $vpsIp   = $vpsData['ip'];
+    $vpsUser = $vpsData['user'];
+
+    $usernameSafe = escapeshellarg($username);
+    $expiredSafe  = escapeshellarg($expired);
+    $protokolSafe = escapeshellarg($protokol);
+    $keySafe      = escapeshellarg($key);
+
+    $sshCmd = "ssh -o StrictHostKeyChecking=no $vpsUser@$vpsIp 'php /root/tambah-akun.php $usernameSafe $expiredSafe $protokolSafe $keySafe'";
+    $output = shell_exec($sshCmd);
+
+    echo "<pre class='bg-gray-900 text-green-300 p-4 rounded'>$output</pre>";
+    echo "<a href='kelola-akun.php' class='mt-4 inline-block bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded'>➕ Tambah Akun Lagi</a>";
+    exit;
+} elseif ($proses) {
+    echo "<p class='text-red-400'>❌ VPS tidak dikenali.</p>";
+    return;
+}
         switch ($vps) {
     case 'rw-mard1':
         shell_exec("ssh root@IP_RW_MARD1 'systemctl restart xray'");
