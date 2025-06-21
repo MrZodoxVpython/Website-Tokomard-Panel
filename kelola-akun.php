@@ -1,10 +1,16 @@
 <?php
-include 'templates/header.php';
+
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 echo "✅ Script dijalankan<br>";
 
 session_start();
+
+if (!isset($_SESSION['username'])) {
+    header("Location: index.php");
+    exit;
+}
+include 'templates/header.php';
 
 // Daftar IP VPS kamu + nama VPS + user SSH
 $vpsList = [
@@ -13,10 +19,7 @@ $vpsList = [
     'sgdo-2dev' => ['ip' => '178.128.60.185', 'user' => 'root'],
 ];
 
-if (!isset($_SESSION['username'])) {
-    header("Location: index.php");
-    exit;
-}
+
 
 if (isset($_GET['action']) && isset($_GET['user']) && isset($_GET['proto'])) {
     $action = $_GET['action'];
