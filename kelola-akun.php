@@ -142,6 +142,14 @@ $username = trim($_POST['username'] ?? '');
 $expired = trim($_POST['expired'] ?? '');
 $protokol = trim($_POST['protokol'] ?? '');
 $key = trim($_POST['key'] ?? '');
+$vps = trim($_POST['vps'] ?? '');
+$vpsMap = [
+    'rw-mard' => '/etc/xray/config.json',
+    'sgdo-mard1' => '/etc/xray/config.json',
+    'sgdo-2dev' => '/etc/xray/config.json'
+];
+
+$configPath = $vpsMap[$vps] ?? '/etc/xray/config.json';
 
     // 🔽 Langkah No. 2: Eksekusi via SSH
     if (isset($vpsList[$vps])) {
@@ -172,14 +180,7 @@ if (!$key) {
 $expired = calculateExpiredDate($expired);
 $proses = ($_SERVER['REQUEST_METHOD'] === 'POST' && $username && $expired && $protokol);
 
-$vps = trim($_POST['vps'] ?? '');
-$vpsMap = [
-    'rw-mard' => '/etc/xray/config.json',
-    'sgdo-mard1' => '/etc/xray/config.json',
-    'sgdo-2dev' => '/etc/xray/config.json'
-];
 
-$configPath = $vpsMap[$vps] ?? '/etc/xray/config.json';
 
 // Backup config sebelum edit
 copy($configPath, $configPath . '.bak-' . date('YmdHis'));
