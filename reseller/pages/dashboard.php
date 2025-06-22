@@ -9,7 +9,7 @@ $accountStats = [
 ];
 ?>
 
-<section class="space-y-6">
+<div class="space-y-6">
     <h2 class="text-xl font-semibold">Statistik Akun</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <?php foreach ($accountStats as $key => $val): ?>
@@ -23,6 +23,7 @@ $accountStats = [
     <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
         <h3 class="text-lg font-bold mb-4">Grafik Order Per Bulan</h3>
         <canvas id="orderChart" height="120"></canvas>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
             new Chart(document.getElementById('orderChart'), {
                 type: 'bar',
@@ -48,5 +49,5 @@ $accountStats = [
         <h4 class="font-semibold">📢 Notification Admin</h4>
         <p class="text-sm mt-2">Silakan hubungi admin untuk update layanan atau kendala teknis lainnya.</p>
     </div>
-</section>
+</div>
 
