@@ -61,19 +61,23 @@ $accountStats = [
     </script>
 </head>
 <body class="bg-white text-gray-900 dark:bg-gray-900 dark:text-white min-h-screen transition-colors duration-300">
-<header class="p-4 bg-gray-100 dark:bg-gray-800 shadow-md flex justify-between items-center">
+<header class="p-4 bg-gray-100 dark:bg-gray-800 shadow-md flex items-center justify-between relative">
     <h1 class="text-2xl font-bold">Dashboard Reseller</h1>
+
+    <!-- Profil dan Username di tengah -->
+    <div class="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
+        <img src="<?= $loggedInUser['avatar'] ?>" alt="Avatar" class="w-8 h-8 rounded-full">
+        <span class="font-semibold text-sm">@<?= htmlspecialchars($loggedInUser['username']) ?></span>
+    </div>
+
     <div class="flex items-center gap-3">
-<button id="themeToggleBtn" onclick="toggleTheme()" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-    🌙
-</button>
-
-<a href="logout.php" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500">Logout</a>
-
-</div>
+        <button id="themeToggleBtn" onclick="toggleTheme()" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">🌙</button>
+        <a href="logout.php" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500">Logout</a>
+    </div>
 </header>
 
 <main class="flex flex-col md:flex-row p-4 md:p-6 gap-6">
+
 <!-- Sidebar -->
 <button id="toggleSidebar" class="md:hidden fixed top-4 left-4 z-50 p-2 bg-gray-200 dark:bg-gray-700 rounded-md shadow-md">
 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
