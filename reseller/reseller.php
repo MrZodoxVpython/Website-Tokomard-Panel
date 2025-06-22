@@ -82,9 +82,9 @@ $accountStats = [
 </button>
 
 <aside id="sidebar" class="md:w-1/4 w-64 bg-gray-100 dark:bg-gray-800 p-4 rounded-xl shadow-lg fixed md:relative top-0 left-0 h-full md:h-auto z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
-<div class="flex flex-col items-center md:items-start">
+<div class="flex flex-col items-center text-center w-full">
     <img src="<?= $loggedInUser['avatar'] ?>" alt="Profile" class="w-24 h-24 rounded-full mb-3">
-    <h2 class="text-lg font-semibold text-center md:text-left">@<?= htmlspecialchars($loggedInUser['username']) ?></h2>
+    <h2 class="text-lg font-semibold">@<?= htmlspecialchars($loggedInUser['username']) ?></h2>
 </div>
 
 <nav class="mt-6 w-full space-y-2">
