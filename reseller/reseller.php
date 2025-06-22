@@ -17,7 +17,7 @@ $loggedInUser = [
     'services' => ['Vmess', 'Vless', 'Trojan', 'Shadowsocks']
 ];
 
-$page = $_GET['page'];
+$page = $_GET['pages'];
 $allowedPages = ['dashboard', 'ssh', 'vmess', 'vless', 'trojan', 'shadowsocks', 'topup', 'cek-server', 'grup-vip'];
 if (!in_array($page, $allowedPages)) {
     $page = 'dashboard';
