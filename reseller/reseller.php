@@ -70,7 +70,7 @@ $accountStats = [
 </header>
 
 <main class="flex flex-col md:flex-row p-4 md:p-6 gap-6">
-    <?php include 'sidebar.php'; ?>
+    <?php include '/reseller/sidebar.php'; ?>
 
     <section class="md:w-3/4 space-y-6">
         <h2 class="text-xl font-semibold">Statistik Akun</h2>
