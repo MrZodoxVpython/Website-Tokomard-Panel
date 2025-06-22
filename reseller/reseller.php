@@ -5,6 +5,13 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
+// Dummy user login
+$loggedInUser = [
+    'username' => 'reseller123',
+    'avatar' => 'https://ui-avatars.com/api/?name=Reseller+123&background=4F46E5&color=fff',
+    'services' => ['Vmess', 'Vless', 'Trojan', 'Shadowsocks']
+];
+
 // Data VPS dan akun dummy (ganti dengan database/API)
 $vpsList = [
     [
@@ -41,38 +48,57 @@ $vpsList = [
         </a>
     </header>
 
-    <main class="p-6">
-        <h2 class="text-xl font-semibold mb-6">Daftar VPS & Akun</h2>
-        <div class="grid md:grid-cols-2 gap-6">
-            <?php foreach ($vpsList as $vps): ?>
-                <div class="bg-gray-800 p-5 rounded-xl shadow-lg">
-                    <div class="mb-3">
-                        <h3 class="text-lg font-bold">🖥️ <?= htmlspecialchars($vps['name']) ?></h3>
-                        <p class="text-sm text-gray-400">IP: <?= htmlspecialchars($vps['ip']) ?></p>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full text-sm">
-                            <thead>
-                                <tr class="bg-gray-700">
-                                    <th class="text-left p-2">Username</th>
-                                    <th class="text-left p-2">Tipe</th>
-                                    <th class="text-left p-2">Expired</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($vps['accounts'] as $acc): ?>
-                                    <tr class="border-b border-gray-600 hover:bg-gray-700">
-                                        <td class="p-2"><?= htmlspecialchars($acc['username']) ?></td>
-                                        <td class="p-2"><?= strtoupper(htmlspecialchars($acc['type'])) ?></td>
-                                        <td class="p-2 text-red-400"><?= htmlspecialchars($acc['expired']) ?></td>
+    <main class="flex flex-col md:flex-row p-6 gap-6">
+        <!-- Sidebar kiri -->
+        <aside class="md:w-1/4 bg-gray-800 p-4 rounded-xl shadow-lg">
+            <div class="flex flex-col items-center">
+                <img src="<?= $loggedInUser['avatar'] ?>" alt="Profile" class="w-24 h-24 rounded-full mb-3">
+                <h2 class="text-lg font-semibold">@<?= htmlspecialchars($loggedInUser['username']) ?></h2>
+            </div>
+            <div class="mt-6">
+                <h3 class="text-sm font-semibold text-gray-400 mb-2">Service Tersedia</h3>
+                <ul class="list-disc list-inside text-sm text-gray-300">
+                    <?php foreach ($loggedInUser['services'] as $service): ?>
+                        <li><?= htmlspecialchars($service) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Konten utama -->
+        <section class="md:w-3/4">
+            <h2 class="text-xl font-semibold mb-6">Daftar VPS & Akun</h2>
+            <div class="grid grid-cols-1 gap-6">
+                <?php foreach ($vpsList as $vps): ?>
+                    <div class="bg-gray-800 p-5 rounded-xl shadow-lg">
+                        <div class="mb-3">
+                            <h3 class="text-lg font-bold">🖥️ <?= htmlspecialchars($vps['name']) ?></h3>
+                            <p class="text-sm text-gray-400">IP: <?= htmlspecialchars($vps['ip']) ?></p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full text-sm">
+                                <thead>
+                                    <tr class="bg-gray-700">
+                                        <th class="text-left p-2">Username</th>
+                                        <th class="text-left p-2">Tipe</th>
+                                        <th class="text-left p-2">Expired</th>
                                     </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($vps['accounts'] as $acc): ?>
+                                        <tr class="border-b border-gray-600 hover:bg-gray-700">
+                                            <td class="p-2"><?= htmlspecialchars($acc['username']) ?></td>
+                                            <td class="p-2"><?= strtoupper(htmlspecialchars($acc['type'])) ?></td>
+                                            <td class="p-2 text-red-400"><?= htmlspecialchars($acc['expired']) ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
+                <?php endforeach; ?>
+            </div>
+        </section>
     </main>
 
     <footer class="p-4 text-center text-sm text-gray-400">
@@ -80,4 +106,3 @@ $vpsList = [
     </footer>
 </body>
 </html>
-
