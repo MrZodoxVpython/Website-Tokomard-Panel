@@ -165,6 +165,7 @@ if (!$key) {
 $expired = calculateExpiredDate($expired);
 
 // Eksekusi tambah akun via SSH
+// Eksekusi tambah akun (lokal atau remote)
 if ($proses && isset($vpsList[$vps])) {
     $vpsData = $vpsList[$vps];
     $vpsIp   = $vpsData['ip'];
@@ -175,9 +176,17 @@ if ($proses && isset($vpsList[$vps])) {
     $protokolSafe = escapeshellarg($protokol);
     $keySafe      = escapeshellarg($key);
 
-    $sshCmd = "ssh -o StrictHostKeyChecking=no $vpsUser@$vpsIp 'php /root/tambah-akun.php $usernameSafe $expiredSafe $protokolSafe $keySafe'";
-    $output = shell_exec($sshCmd);
-    $hasilTambahAkun = "<pre class='bg-gray-900 text-green-300 p-4 rounded'>$output</pre>";
+    // Deteksi apakah VPS adalah lokal (sgdo-2dev = 178.128.60.185)
+    if ($vpsIp === '178.128.60.185' || $vps === 'sgdo-2dev') {
+        // Jalankan script secara lokal tanpa SSH
+        $cmd = "php /root/tambah-akun.php $usernameSafe $expiredSafe $protokolSafe $keySafe";
+    } else {
+        // Jalankan script di VPS remote melalui SSH
+        $cmd = "ssh -o StrictHostKeyChecking=no $vpsUser@$vpsIp 'php /root/tambah-akun.php $usernameSafe $expiredSafe $protokolSafe $keySafe'";
+    }
+
+    $output = shell_exec($cmd);
+    $hasilTambahAkun = "<pre class='bg-gray-900 text-green-300 p-4 rounded whitespace-pre'>$output</pre>";
 } elseif ($proses) {
     echo "<p class='text-red-400'>❌ VPS tidak dikenali.</p>";
     return;
