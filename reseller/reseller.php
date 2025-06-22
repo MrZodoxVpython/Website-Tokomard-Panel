@@ -10,6 +10,12 @@ $loggedInUser = [
     'avatar' => 'https://ui-avatars.com/api/?name=' . urlencode($_SESSION['username']) . '&background=4F46E5&color=fff',
     'services' => ['Vmess', 'Vless', 'Trojan', 'Shadowsocks']
 ];
+
+$page = $_GET['page'] ?? 'dashboard';
+$allowedPages = ['dashboard', 'ssh', 'vmess', 'vless', 'trojan', 'shadowsocks', 'topup', 'cek-server', 'grup-vip'];
+if (!in_array($page, $allowedPages)) {
+    $page = 'dashboard';
+}
 ?>
 
 <!DOCTYPE html>
@@ -20,14 +26,16 @@ $loggedInUser = [
     <title>Dashboard Reseller - Tokomard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { darkMode: 'class' };
+        tailwind.config = {
+            darkMode: 'class'
+        };
     </script>
 </head>
 <body class="bg-white text-gray-900 dark:bg-gray-900 dark:text-white min-h-screen transition-colors duration-300">
 <header class="p-4 bg-gray-100 dark:bg-gray-800 shadow-md flex justify-between items-center">
     <h1 class="text-2xl font-bold">Dashboard Reseller</h1>
     <div class="flex items-center gap-3">
-        <button id="themeToggleBtn" onclick="toggleTheme()" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+        <button id="themeToggleBtn" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
             🌙
         </button>
         <a href="logout.php" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500">Logout</a>
@@ -67,43 +75,32 @@ $loggedInUser = [
     </aside>
 
     <section class="md:w-3/4 w-full ml-auto">
-        <?php include __DIR__ . "/page-loader.php"; ?>
+        <?php include __DIR__ . '/page-loader.php'; ?>
     </section>
 </main>
+
 <script>
-    function updateThemeIcon() {
+    document.addEventListener('DOMContentLoaded', function () {
         const html = document.documentElement;
-        const isDark = html.classList.contains('dark');
-        const btn = document.getElementById('themeToggleBtn');
-        if (btn) {
-            btn.textContent = isDark ? '🌞' : '🌙';
-        }
-    }
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
 
-    function toggleTheme() {
-        const html = document.documentElement;
-        const isDark = html.classList.toggle('dark');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        updateThemeIcon();
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        // Terapkan tema dari localStorage
+        // Set theme on load
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
-            document.documentElement.classList.add('dark');
+            html.classList.add('dark');
         } else {
-            document.documentElement.classList.remove('dark');
+            html.classList.remove('dark');
         }
 
-        // Update ikon tombol setelah elemen tersedia
-        updateThemeIcon();
+        // Set icon on load
+        themeToggleBtn.textContent = html.classList.contains('dark') ? '🌞' : '🌙';
 
-        // Pastikan tombol diklik pakai event listener (lebih aman)
-        const btn = document.getElementById('themeToggleBtn');
-        if (btn) {
-            btn.addEventListener('click', toggleTheme);
-        }
+        // Toggle theme on click
+        themeToggleBtn.addEventListener('click', function () {
+            const isDark = html.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            themeToggleBtn.textContent = isDark ? '🌞' : '🌙';
+        });
     });
 </script>
 </body>
