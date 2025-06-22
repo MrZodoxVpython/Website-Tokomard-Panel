@@ -179,7 +179,7 @@ if ($proses && isset($vpsList[$vps])) {
     // Deteksi apakah VPS adalah lokal (sgdo-2dev = 178.128.60.185)
     if ($vpsIp === '178.128.60.185' || $vps === 'sgdo-2dev') {
         // Jalankan script secara lokal tanpa SSH
-        $cmd = "php /root/tambah-akun.php $usernameSafe $expiredSafe $protokolSafe $keySafe";
+        $cmd = "php /usr/local/bin/tambah-akun.php $usernameSafe $expiredSafe $protokolSafe $keySafe";
     } else {
         // Jalankan script di VPS remote melalui SSH
         $cmd = "ssh -o StrictHostKeyChecking=no $vpsUser@$vpsIp 'php /root/tambah-akun.php $usernameSafe $expiredSafe $protokolSafe $keySafe'";
