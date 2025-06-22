@@ -32,29 +32,32 @@ $vpsList = [
 ?>
 
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Reseller - Tokomard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Simpan preferensi tema
+        // Cek preferensi tema saat awal muat
+        document.addEventListener('DOMContentLoaded', () => {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+
+        // Toggle tema
         function toggleTheme() {
             const html = document.documentElement;
-            html.classList.toggle('dark');
-            localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
-        }
-
-        // Cek preferensi tema
-        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
+            const isDark = html.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
         }
     </script>
 </head>
-<body class="bg-white text-gray-900 dark:bg-gray-900 dark:text-white min-h-screen">
+<body class="bg-white text-gray-900 dark:bg-gray-900 dark:text-white min-h-screen transition-colors duration-300">
     <header class="p-4 bg-gray-100 dark:bg-gray-800 shadow-md flex justify-between items-center">
         <h1 class="text-2xl font-bold">Dashboard Reseller</h1>
         <div class="flex items-center gap-3">
@@ -123,4 +126,3 @@ $vpsList = [
     </footer>
 </body>
 </html>
-
