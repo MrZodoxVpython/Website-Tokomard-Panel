@@ -4,7 +4,6 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
     header("Location: /index.php");
     exit;
 }
-
 // Dummy user login
 $loggedInUser = [
     'username' => 'reseller123',
@@ -33,31 +32,49 @@ $vpsList = [
 ?>
 
 <!DOCTYPE html>
-<html lang="id" class="dark">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Reseller - Tokomard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Simpan preferensi tema
+        function toggleTheme() {
+            const html = document.documentElement;
+            html.classList.toggle('dark');
+            localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+        }
+
+        // Cek preferensi tema
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 </head>
-<body class="bg-gray-900 text-white min-h-screen">
-    <header class="p-4 bg-gray-800 shadow-md flex justify-between items-center">
+<body class="bg-white text-gray-900 dark:bg-gray-900 dark:text-white min-h-screen">
+    <header class="p-4 bg-gray-100 dark:bg-gray-800 shadow-md flex justify-between items-center">
         <h1 class="text-2xl font-bold">Dashboard Reseller</h1>
-        <a href="logout.php" class="px-4 py-2 bg-red-600 rounded hover:bg-red-500">
-            Logout
-        </a>
+        <div class="flex items-center gap-3">
+            <button onclick="toggleTheme()" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-500 text-sm">Toggle Tema</button>
+            <a href="logout.php" class="px-4 py-2 bg-red-600 rounded hover:bg-red-500">
+                Logout
+            </a>
+        </div>
     </header>
 
     <main class="flex flex-col md:flex-row p-6 gap-6">
         <!-- Sidebar kiri -->
-        <aside class="md:w-1/4 bg-gray-800 p-4 rounded-xl shadow-lg">
+        <aside class="md:w-1/4 bg-gray-100 dark:bg-gray-800 p-4 rounded-xl shadow-lg">
             <div class="flex flex-col items-center">
                 <img src="<?= $loggedInUser['avatar'] ?>" alt="Profile" class="w-24 h-24 rounded-full mb-3">
                 <h2 class="text-lg font-semibold">@<?= htmlspecialchars($loggedInUser['username']) ?></h2>
             </div>
             <div class="mt-6">
-                <h3 class="text-sm font-semibold text-gray-400 mb-2">Service Tersedia</h3>
-                <ul class="list-disc list-inside text-sm text-gray-300">
+                <h3 class="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">Service Tersedia</h3>
+                <ul class="list-disc list-inside text-sm text-gray-800 dark:text-gray-300">
                     <?php foreach ($loggedInUser['services'] as $service): ?>
                         <li><?= htmlspecialchars($service) ?></li>
                     <?php endforeach; ?>
@@ -70,15 +87,15 @@ $vpsList = [
             <h2 class="text-xl font-semibold mb-6">Daftar VPS & Akun</h2>
             <div class="grid grid-cols-1 gap-6">
                 <?php foreach ($vpsList as $vps): ?>
-                    <div class="bg-gray-800 p-5 rounded-xl shadow-lg">
+                    <div class="bg-gray-100 dark:bg-gray-800 p-5 rounded-xl shadow-lg">
                         <div class="mb-3">
                             <h3 class="text-lg font-bold">🖥️ <?= htmlspecialchars($vps['name']) ?></h3>
-                            <p class="text-sm text-gray-400">IP: <?= htmlspecialchars($vps['ip']) ?></p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">IP: <?= htmlspecialchars($vps['ip']) ?></p>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="min-w-full text-sm">
                                 <thead>
-                                    <tr class="bg-gray-700">
+                                    <tr class="bg-gray-200 dark:bg-gray-700">
                                         <th class="text-left p-2">Username</th>
                                         <th class="text-left p-2">Tipe</th>
                                         <th class="text-left p-2">Expired</th>
@@ -86,10 +103,10 @@ $vpsList = [
                                 </thead>
                                 <tbody>
                                     <?php foreach ($vps['accounts'] as $acc): ?>
-                                        <tr class="border-b border-gray-600 hover:bg-gray-700">
+                                        <tr class="border-b border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
                                             <td class="p-2"><?= htmlspecialchars($acc['username']) ?></td>
                                             <td class="p-2"><?= strtoupper(htmlspecialchars($acc['type'])) ?></td>
-                                            <td class="p-2 text-red-400"><?= htmlspecialchars($acc['expired']) ?></td>
+                                            <td class="p-2 text-red-600 dark:text-red-400"><?= htmlspecialchars($acc['expired']) ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -101,8 +118,9 @@ $vpsList = [
         </section>
     </main>
 
-    <footer class="p-4 text-center text-sm text-gray-400">
+    <footer class="p-4 text-center text-sm text-gray-500 dark:text-gray-400">
         &copy; <?= date('Y') ?> Tokomard Xray Panel
     </footer>
 </body>
 </html>
+
