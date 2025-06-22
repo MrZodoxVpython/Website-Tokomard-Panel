@@ -10,12 +10,6 @@ $loggedInUser = [
     'avatar' => 'https://ui-avatars.com/api/?name=' . urlencode($_SESSION['username']) . '&background=4F46E5&color=fff',
     'services' => ['Vmess', 'Vless', 'Trojan', 'Shadowsocks']
 ];
-
-$page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
-$allowedPages = ['dashboard', 'ssh', 'vmess', 'vless', 'trojan', 'shadowsocks', 'topup', 'cek-server', 'grup-vip'];
-if (!in_array($page, $allowedPages)) {
-    $page = 'dashboard';
-}
 ?>
 
 <!DOCTYPE html>
@@ -72,8 +66,8 @@ if (!in_array($page, $allowedPages)) {
         </div>
     </aside>
 
-    <section class="md:w-3/4 w-full">
-        <?php include "page-loader.php"; ?>
+    <section class="md:w-3/4 w-full ml-auto">
+        <?php include __DIR__ . "/page-loader.php"; ?>
     </section>
 </main>
 
