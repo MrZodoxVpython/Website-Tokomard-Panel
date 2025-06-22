@@ -185,6 +185,37 @@ if ($proses && isset($vpsList[$vps])) {
     echo "<p class='text-red-400'>❌ VPS tidak dikenali.</p>";
     return;
 }
+// Tambahkan sebelum $suksesSemua = true;
+$tagMap = [
+    'vmess' => ['vmess', 'vmessgrpc'],
+    'vless' => ['vless', 'vlessgrpc'],
+    'trojan' => ['trojanws', 'trojangrpc'],
+    'shadowsocks' => ['ssws', 'ssgrpc']
+];
+
+$tags = $tagMap[$protokol] ?? [];
+
+switch ($protokol) {
+    case 'vmess':
+        $commentPrefix = '###';
+        $jsonEntry = "},{\"id\": \"$key\", \"alterId\": 0, \"email\": \"$username\"";
+        break;
+    case 'vless':
+        $commentPrefix = '#&';
+        $jsonEntry = "},{\"id\": \"$key\", \"email\": \"$username\"";
+        break;
+    case 'trojan':
+        $commentPrefix = '#!';
+        $jsonEntry = "},{\"password\": \"$key\", \"email\": \"$username\"";
+        break;
+    case 'shadowsocks':
+        $commentPrefix = '#$';
+        $jsonEntry = "},{\"password\": \"$key\", \"method\": \"aes-128-gcm\", \"email\": \"$username\"";
+        break;
+    default:
+        echo "<p class='text-red-400'>❌ Protokol tidak dikenali.</p>";
+        exit;
+}
 
         $suksesSemua = true;
         foreach ($tags as $tag) {
