@@ -198,10 +198,11 @@ $accountStats = [
         tailwind.config = { darkMode: 'class' };
 
     function updateThemeIcon() {
-        const isDark = document.documentElement.classList.contains('dark');
+        const html = document.documentElement;
+        const isDark = html.classList.contains('dark');
         const btn = document.getElementById('themeToggleBtn');
         if (btn) {
-            btn.textContent = isDark ? '🌙' : '🌞';
+            btn.textContent = isDark ? '🌞' : '🌙'; // 🌞 kalau dark, 🌙 kalau light
         }
     }
 
