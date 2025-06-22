@@ -10,11 +10,9 @@ $loggedInUser = [
     'avatar' => 'https://ui-avatars.com/api/?name=' . urlencode($_SESSION['username']) . '&background=4F46E5&color=fff'
 ];
 
-// Cek halaman aktif
 $page = isset($_GET['page']) ? basename($_GET['page']) : 'dashboard';
 $pagePath = "pages/{$page}.php";
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -60,14 +58,13 @@ $pagePath = "pages/{$page}.php";
         </div>
     </header>
 
-    <!-- Toggle sidebar on mobile -->
     <button id="toggleSidebar" class="md:hidden fixed top-4 left-4 z-50 p-2 bg-gray-200 dark:bg-gray-700 rounded-md shadow-md">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
     </button>
 
-    <main class="flex flex-col md:flex-row min-h-screen">
+    <main class="flex flex-col md:flex-row min-h-screen gap-0 md:gap-6 px-4 md:px-8 pb-8">
         <!-- Sidebar -->
         <aside id="sidebar" class="md:w-1/5 w-64 bg-gray-100 dark:bg-gray-800 p-4 shadow-lg fixed md:relative top-0 left-0 h-full md:h-auto z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
             <div class="flex flex-col items-center text-center mb-6">
@@ -92,7 +89,7 @@ $pagePath = "pages/{$page}.php";
         </aside>
 
         <!-- Konten utama -->
-        <section class="flex-1 p-6 md:ml-64">
+        <section class="flex-1 p-6 bg-white dark:bg-gray-900 rounded-xl shadow-md">
             <?php
             if (file_exists($pagePath)) {
                 include $pagePath;
