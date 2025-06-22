@@ -17,7 +17,7 @@ $loggedInUser = [
     'services' => ['Vmess', 'Vless', 'Trojan', 'Shadowsocks']
 ];
 
-$page = basename($_GET['page']); // prevent ../ attack
+$page = basename($_GET['page']); // Aman dari injection
 $allowedPages = ['dashboard', 'ssh', 'vmess', 'vless', 'trojan', 'shadowsocks', 'topup', 'cek-server', 'grup-vip'];
 if (!in_array($page, $allowedPages)) {
     $page = 'dashboard';
@@ -47,7 +47,7 @@ if (!in_array($page, $allowedPages)) {
 </header>
 
 <main class="flex flex-col md:flex-row p-4 md:p-6 gap-6">
-    <aside id="sidebar" class="md:w-1/4 w-64 bg-gray-100 dark:bg-gray-800 p-4 rounded-xl shadow-lg fixed md:relative top-0 left-0 h-full md:h-auto z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
+    <aside class="md:w-1/4 w-64 bg-gray-100 dark:bg-gray-800 p-4 rounded-xl shadow-lg fixed md:relative top-0 left-0 h-full md:h-auto z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
         <div class="flex flex-col items-center text-center w-full">
             <img src="<?= $loggedInUser['avatar'] ?>" alt="Profile" class="w-24 h-24 rounded-full mb-3">
             <h2 class="text-lg font-semibold">@<?= htmlspecialchars($loggedInUser['username']) ?></h2>
@@ -80,9 +80,9 @@ if (!in_array($page, $allowedPages)) {
 
     <section class="md:w-3/4 w-full ml-auto">
         <?php
-        $pageFile = __DIR__ . '/pages/' . $page . '.php';
-        if (file_exists($pageFile)) {
-            include $pageFile;
+        $targetFile = __DIR__ . '/pages/' . $page . '.php';
+        if (file_exists($targetFile)) {
+            include $targetFile;
         } else {
             echo "<div class='p-4 text-red-500 font-bold'>Halaman tidak ditemukan!</div>";
         }
@@ -91,10 +91,10 @@ if (!in_array($page, $allowedPages)) {
 </main>
 
 <script>
+document.addEventListener("DOMContentLoaded", function () {
     const html = document.documentElement;
     const themeToggleBtn = document.getElementById('themeToggleBtn');
 
-    // Inisialisasi tema dari localStorage
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
         html.classList.add('dark');
@@ -106,13 +106,14 @@ if (!in_array($page, $allowedPages)) {
         themeToggleBtn.textContent = html.classList.contains('dark') ? '🌞' : '🌙';
     }
 
-    themeToggleBtn.addEventListener('click', () => {
+    updateThemeIcon();
+
+    themeToggleBtn.addEventListener('click', function () {
         const isDark = html.classList.toggle('dark');
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
         updateThemeIcon();
     });
-
-    document.addEventListener('DOMContentLoaded', updateThemeIcon);
+});
 </script>
 </body>
 </html>
