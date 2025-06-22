@@ -1,10 +1,8 @@
 <?php
 session_start();
-
-// Dummy: cek login
-if (!isset($_SESSION['user'])) {
-    header("Location: /login.php");
-    exit();
+if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
+    header("Location: /index.php");
+    exit;
 }
 
 // Data VPS dan akun dummy (ganti dengan database/API)
