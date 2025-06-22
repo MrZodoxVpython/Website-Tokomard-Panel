@@ -196,19 +196,19 @@ $tagMap = [
 $tags = $tagMap[$protokol] ?? [];
 
 switch ($protokol) {
-    case 'vmess':
+    case 'Vmess':
         $commentPrefix = '###';
         $jsonEntry = "},{\"id\": \"$key\", \"alterId\": 0, \"email\": \"$username\"";
         break;
-    case 'vless':
+    case 'Vless':
         $commentPrefix = '#&';
         $jsonEntry = "},{\"id\": \"$key\", \"email\": \"$username\"";
         break;
-    case 'trojan':
+    case 'Trojan':
         $commentPrefix = '#!';
         $jsonEntry = "},{\"password\": \"$key\", \"email\": \"$username\"";
         break;
-    case 'shadowsocks':
+    case 'Shadowsocks':
         $commentPrefix = '#$';
         $jsonEntry = "},{\"password\": \"$key\", \"method\": \"aes-128-gcm\", \"email\": \"$username\"";
         break;
