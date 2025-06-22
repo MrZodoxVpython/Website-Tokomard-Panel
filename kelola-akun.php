@@ -273,42 +273,48 @@ include 'templates/header.php';
 // Form HTML dan daftar akun lanjutan...
 ?>
     <a href="kelola-akun.php" class="inline-block mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">➕ Tambah Akun Lagi</a>
-<?php if (!$proses): ?>
+<?php if ($proses): ?>
+    <!-- Tampilkan tombol "Tambah Akun Lagi" hanya setelah berhasil tambah akun -->
+    <a href="kelola-akun.php" class="inline-block mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">
+        ➕ Tambah Akun Lagi
+    </a>
+<?php else: ?>
+    <!-- Form tambah akun baru -->
     <h2 class="text-xl font-bold mb-4">Tambah Akun Baru</h2>
     <form action="" method="POST" class="grid gap-4">
-      <div>
-        <label class="block mb-1">Username</label>
-        <input type="text" name="username" class="w-full p-2 bg-gray-700 rounded" required>
-      </div>
-      <div>
-        <label class="block mb-1">Expired (tanggal atau jumlah hari)</label>
-        <input type="text" name="expired" placeholder="2025-07-01 atau 30" class="w-full p-2 bg-gray-700 rounded" required>
-      </div>
-<!-- Dropdown Pilihan VPS -->
-      <div>
-        <label class="block mb-1">Pilih VPS</label>
-          <select name="vps" class="w-full p-2 bg-gray-700 rounded" required>
-           <option value="rw-mard1">RW-MARD</option>
-           <option value="sgdo-mard1">SGDO-MARD1</option>
-           <option value="sgdo-2dev">SGDO-2DEV</option>
-          </select>
-      </div>
-      <div>
-        <label class="block mb-1">Protokol</label>
-        <select name="protokol" class="w-full p-2 bg-gray-700 rounded" required>
-          <option value="trojan">Trojan</option>
-          <option value="vmess">Vmess</option>
-          <option value="vless">Vless</option>
-          <option value="shadowsocks">Shadowsocks</option>
-        </select>
-      </div>
-      <div>
-        <label class="block mb-1">UUID / Password (otomatis jika kosong)</label>
-        <input type="text" name="key" class="w-full p-2 bg-gray-700 rounded">
-      </div>
-      <div>
-        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 py-2 rounded">Simpan Akun</button>
-      </div>
+        <div>
+            <label class="block mb-1">Username</label>
+            <input type="text" name="username" class="w-full p-2 bg-gray-700 rounded" required>
+        </div>
+        <div>
+            <label class="block mb-1">Expired (tanggal atau jumlah hari)</label>
+            <input type="text" name="expired" placeholder="2025-07-01 atau 30" class="w-full p-2 bg-gray-700 rounded" required>
+        </div>
+        <!-- Dropdown Pilihan VPS -->
+        <div>
+            <label class="block mb-1">Pilih VPS</label>
+            <select name="vps" class="w-full p-2 bg-gray-700 rounded" required>
+                <option value="rw-mard">RW-MARD</option>
+                <option value="sgdo-mard1">SGDO-MARD1</option>
+                <option value="sgdo-2dev">SGDO-2DEV</option>
+            </select>
+        </div>
+        <div>
+            <label class="block mb-1">Protokol</label>
+            <select name="protokol" class="w-full p-2 bg-gray-700 rounded" required>
+                <option value="trojan">Trojan</option>
+                <option value="vmess">Vmess</option>
+                <option value="vless">Vless</option>
+                <option value="shadowsocks">Shadowsocks</option>
+            </select>
+        </div>
+        <div>
+            <label class="block mb-1">UUID / Password (otomatis jika kosong)</label>
+            <input type="text" name="key" class="w-full p-2 bg-gray-700 rounded">
+        </div>
+        <div>
+            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 py-2 rounded">Simpan Akun</button>
+        </div>
     </form>
 <?php endif; ?>
 <hr class="my-6 border-gray-600">
