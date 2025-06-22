@@ -1,7 +1,7 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-echo "✅ Script dijalankan<br>";
+#echo "✅ No error found!<br>";
 
 session_start();
 if (!isset($_SESSION['username'])) {
