@@ -1,8 +1,13 @@
 <?php
 session_start();
-$isLoggedIn = isset($_SESSION['user']);
 
-// Dummy data VPS dan akun, ganti dengan real DB/API nanti
+// Dummy: cek login
+if (!isset($_SESSION['user'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// Data VPS dan akun dummy (ganti dengan database/API)
 $vpsList = [
     [
         'name' => 'SGP VPS 1',
@@ -27,23 +32,26 @@ $vpsList = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Reseller Xray - Tokomard</title>
+    <title>Dashboard Reseller - Tokomard</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
     <header class="p-4 bg-gray-800 shadow-md flex justify-between items-center">
-        <h1 class="text-2xl font-bold">Panel Reseller Tokomard</h1>
-        <a href="<?= $isLoggedIn ? 'dashboard.php' : 'login.php' ?>" class="px-4 py-2 bg-indigo-600 rounded hover:bg-indigo-500">
-            <?= $isLoggedIn ? 'Dashboard' : 'Login' ?>
+        <h1 class="text-2xl font-bold">Dashboard Reseller</h1>
+        <a href="logout.php" class="px-4 py-2 bg-red-600 rounded hover:bg-red-500">
+            Logout
         </a>
     </header>
 
     <main class="p-6">
-        <h2 class="text-xl font-semibold mb-4">List VPS dan Akun Reseller</h2>
-        <div class="space-y-6">
+        <h2 class="text-xl font-semibold mb-6">Daftar VPS & Akun</h2>
+        <div class="grid md:grid-cols-2 gap-6">
             <?php foreach ($vpsList as $vps): ?>
-                <div class="bg-gray-800 p-4 rounded-xl shadow-lg">
-                    <h3 class="text-lg font-semibold mb-2">🖥️ <?= htmlspecialchars($vps['name']) ?> - <?= htmlspecialchars($vps['ip']) ?></h3>
+                <div class="bg-gray-800 p-5 rounded-xl shadow-lg">
+                    <div class="mb-3">
+                        <h3 class="text-lg font-bold">🖥️ <?= htmlspecialchars($vps['name']) ?></h3>
+                        <p class="text-sm text-gray-400">IP: <?= htmlspecialchars($vps['ip']) ?></p>
+                    </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-full text-sm">
                             <thead>
