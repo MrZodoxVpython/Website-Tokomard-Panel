@@ -70,14 +70,14 @@ $loggedInUser = [
         <?php include __DIR__ . "/page-loader.php"; ?>
     </section>
 </main>
-
 <script>
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+
     function updateThemeIcon() {
         const html = document.documentElement;
         const isDark = html.classList.contains('dark');
-        const btn = document.getElementById('themeToggleBtn');
-        if (btn) {
-            btn.textContent = isDark ? '🌞' : '🌙';
+        if (themeToggleBtn) {
+            themeToggleBtn.textContent = isDark ? '🌞' : '🌙';
         }
     }
 
@@ -89,11 +89,20 @@ $loggedInUser = [
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        const theme = localStorage.getItem('theme') || 'light';
-        document.documentElement.classList.toggle('dark', theme === 'dark');
+        // Ambil preferensi tema dari localStorage
+        const savedTheme = localStorage.getItem('theme');
+        const html = document.documentElement;
+
+        if (savedTheme === 'dark') {
+            html.classList.add('dark');
+        } else {
+            html.classList.remove('dark');
+        }
+
         updateThemeIcon();
     });
 </script>
+
 </body>
 </html>
 
