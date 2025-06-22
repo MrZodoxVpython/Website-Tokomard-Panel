@@ -27,7 +27,9 @@ $loggedInUser = [
 <header class="p-4 bg-gray-100 dark:bg-gray-800 shadow-md flex justify-between items-center">
     <h1 class="text-2xl font-bold">Dashboard Reseller</h1>
     <div class="flex items-center gap-3">
-        <button onclick="toggleTheme()" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">🌙</button>
+        <button id="themeToggle" onclick="toggleTheme()" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+            🌙
+        </button>
         <a href="logout.php" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500">Logout</a>
     </div>
 </header>
@@ -41,21 +43,18 @@ $loggedInUser = [
         </div>
 
         <nav class="mt-6 w-full space-y-2">
-            <?php
-            $pages = [
-                "dashboard" => "📊 Dashboard",
-                "ssh" => "🔐 SSH",
-                "vmess" => "🌀 Vmess",
-                "vless" => "📡 Vless",
-                "trojan" => "⚔ Trojan",
-                "shadowsocks" => "🕶 Shadowsocks",
-                "topup" => "💳 Top Up",
-                "cek-server" => "🖥 Cek Online Server",
-                "grup-vip" => "👑 Grup Customer VIP"
-            ];
-            foreach ($pages as $key => $label): ?>
-                <a href="?page=<?= $key ?>" data-page="<?= $key ?>" onclick="loadPage(event)" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600"><?= $label ?></a>
-            <?php endforeach; ?>
+            <a href="?page=dashboard" data-page="dashboard" onclick="loadPage(event)" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600">📊 Dashboard</a>
+            <a href="?page=ssh" data-page="ssh" onclick="loadPage(event)" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600">🔐 SSH</a>
+            <a href="?page=vmess" data-page="vmess" onclick="loadPage(event)" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600">🌀 Vmess</a>
+            <a href="?page=vless" data-page="vless" onclick="loadPage(event)" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600">📡 Vless</a>
+            <a href="?page=trojan" data-page="trojan" onclick="loadPage(event)" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600">⚔ Trojan</a>
+            <a href="?page=shadowsocks" data-page="shadowsocks" onclick="loadPage(event)" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600">🕶 Shadowsocks</a>
+
+            <hr class="my-4 border-gray-400 dark:border-gray-600">
+
+            <a href="?page=topup" data-page="topup" onclick="loadPage(event)" class="block px-3 py-2 rounded hover:bg-green-500 hover:text-white dark:hover:bg-green-600">💳 Top Up</a>
+            <a href="?page=cek-server" data-page="cek-server" onclick="loadPage(event)" class="block px-3 py-2 rounded hover:bg-indigo-500 hover:text-white dark:hover:bg-indigo-600">🖥 Cek Online Server</a>
+            <a href="?page=grup-vip" data-page="grup-vip" onclick="loadPage(event)" class="block px-3 py-2 rounded hover:bg-yellow-500 hover:text-white dark:hover:bg-yellow-600">👑 Grup Customer VIP</a>
         </nav>
 
         <div class="mt-6 hidden md:block">
@@ -74,17 +73,21 @@ $loggedInUser = [
     </section>
 </main>
 
-<!-- JavaScript -->
+<!-- Script -->
 <script>
 function toggleTheme() {
     const html = document.documentElement;
     const isDark = html.classList.toggle('dark');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    document.getElementById('themeToggle').textContent = isDark ? '☀️' : '🌙';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     const theme = localStorage.getItem('theme') || 'light';
-    document.documentElement.classList.toggle('dark', theme === 'dark');
+    const html = document.documentElement;
+    const isDark = theme === 'dark';
+    html.classList.toggle('dark', isDark);
+    document.getElementById('themeToggle').textContent = isDark ? '☀️' : '🌙';
 
     const params = new URLSearchParams(window.location.search);
     const page = params.get('page') || 'dashboard';
@@ -104,7 +107,7 @@ function loadPage(event, customPage = null) {
             document.getElementById('content').innerHTML = html;
             history.pushState(null, '', '?page=' + page);
         })
-        .catch(err => {
+        .catch(() => {
             document.getElementById('content').innerHTML = '<div class="text-red-500">Halaman gagal dimuat.</div>';
         });
 }
