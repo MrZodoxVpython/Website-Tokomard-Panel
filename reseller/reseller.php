@@ -64,7 +64,7 @@ $accountStats = [
 <header class="p-4 bg-gray-100 dark:bg-gray-800 shadow-md flex justify-between items-center">
     <h1 class="text-2xl font-bold">Dashboard Reseller</h1>
     <div class="flex items-center gap-3">
-<button id="themeToggleBtn" onclick="toggleTheme()" class="text-xl px-3 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-500 transition">
+<button id="themeToggleBtn" onclick="toggleTheme()" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
     🌙
 </button>
 
