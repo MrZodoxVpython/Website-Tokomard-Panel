@@ -12,7 +12,7 @@ $loggedInUser = [
 
 // Cek halaman aktif
 $page = isset($_GET['page']) ? basename($_GET['page']) : 'dashboard';
-$pagePath = "/reseller/pages/{$page}.php";
+$pagePath = "/pages/{$page}.php";
 ?>
 
 <!DOCTYPE html>
