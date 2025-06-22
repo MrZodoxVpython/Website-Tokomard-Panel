@@ -61,16 +61,20 @@ $accountStats = [
     </script>
 </head>
 <body class="bg-white text-gray-900 dark:bg-gray-900 dark:text-white min-h-screen transition-colors duration-300">
-<header class="p-4 bg-gray-100 dark:bg-gray-800 shadow-md flex items-center justify-between relative">
-    <h1 class="text-2xl font-bold">Dashboard Reseller</h1>
+<header class="relative w-full bg-gray-100 dark:bg-gray-800 shadow-md py-4 px-4 flex items-center justify-between">
+    <!-- Kiri: Judul -->
+    <div class="flex-1">
+        <h1 class="text-2xl font-bold">Dashboard Reseller</h1>
+    </div>
 
-    <!-- Profil dan Username di tengah -->
-    <div class="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
-        <img src="<?= $loggedInUser['avatar'] ?>" alt="Avatar" class="w-8 h-8 rounded-full">
+    <!-- Tengah: Avatar & Username -->
+    <div class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center gap-2">
+        <img src="<?= $loggedInUser['avatar'] ?>" alt="Avatar" class="w-8 h-8 rounded-full border border-gray-300 dark:border-gray-600">
         <span class="font-semibold text-sm">@<?= htmlspecialchars($loggedInUser['username']) ?></span>
     </div>
 
-    <div class="flex items-center gap-3">
+    <!-- Kanan: Toggle dan Logout -->
+    <div class="flex-1 flex justify-end items-center gap-3">
         <button id="themeToggleBtn" onclick="toggleTheme()" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">🌙</button>
         <a href="logout.php" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500">Logout</a>
     </div>
