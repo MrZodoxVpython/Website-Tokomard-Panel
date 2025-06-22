@@ -48,7 +48,8 @@ $pagePath = "pages/{$page}.php";
     </script>
 </head>
 <body class="bg-white text-gray-900 dark:bg-gray-900 dark:text-white min-h-screen transition-colors duration-300">
-    <header class="p-4 bg-gray-100 dark:bg-gray-800 shadow-md flex justify-between items-center">
+    <!-- Header -->
+    <header class="p-4 bg-gray-100 dark:bg-gray-800 shadow-md flex justify-between items-center sticky top-0 z-50">
         <h1 class="text-xl font-bold">Tokomard Reseller Panel</h1>
         <div class="flex items-center gap-4">
             <button id="themeToggleBtn" onclick="toggleTheme()" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
@@ -58,16 +59,18 @@ $pagePath = "pages/{$page}.php";
         </div>
     </header>
 
+    <!-- Mobile Sidebar Toggle Button -->
     <button id="toggleSidebar" class="md:hidden fixed top-4 left-4 z-50 p-2 bg-gray-200 dark:bg-gray-700 rounded-md shadow-md">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
     </button>
 
-    <main class="flex flex-col md:flex-row min-h-screen gap-0 md:gap-6 px-4 md:px-8 pb-8">
-        <!-- Sidebar -->
-	    <aside id="sidebar" class="md:w-1/5 w-64 bg-gray-100 dark:bg-gray-800 pt-[72px] p-4 shadow-lg fixed md:relative top-0 md:top-0 h-full md:h-auto z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
+    <!-- Main Layout -->
+    <main class="flex flex-col md:flex-row min-h-[calc(100vh-64px)] md:min-h-screen gap-0 md:gap-6 px-4 md:px-8 py-6">
 
+        <!-- Sidebar -->
+        <aside id="sidebar" class="md:w-1/5 w-full md:max-w-xs bg-gray-100 dark:bg-gray-800 p-4 shadow-lg rounded-lg md:sticky md:top-20 md:self-start transition-transform duration-300 -translate-x-full md:translate-x-0 z-40">
             <div class="flex flex-col items-center text-center mb-6">
                 <img src="<?= $loggedInUser['avatar'] ?>" alt="Profile" class="w-20 h-20 rounded-full mb-2">
                 <h2 class="text-base font-semibold">@<?= htmlspecialchars($loggedInUser['username']) ?></h2>
@@ -89,7 +92,7 @@ $pagePath = "pages/{$page}.php";
             </nav>
         </aside>
 
-        <!-- Konten utama -->
+        <!-- Konten Utama -->
         <section class="flex-1 p-6 bg-white dark:bg-gray-900 rounded-xl shadow-md">
             <?php
             if (file_exists($pagePath)) {
@@ -101,6 +104,7 @@ $pagePath = "pages/{$page}.php";
         </section>
     </main>
 
+    <!-- Sidebar Toggle Script -->
     <script>
         const toggleBtn = document.getElementById('toggleSidebar');
         const sidebar = document.getElementById('sidebar');
