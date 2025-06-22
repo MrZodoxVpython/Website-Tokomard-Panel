@@ -272,7 +272,6 @@ if ($proses) {
 include 'templates/header.php';
 // Form HTML dan daftar akun lanjutan...
 ?>
-    <a href="kelola-akun.php" class="inline-block mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">➕ Tambah Akun Lagi</a>
 <?php if ($proses): ?>
     <!-- Tampilkan tombol "Tambah Akun Lagi" hanya setelah berhasil tambah akun -->
     <a href="kelola-akun.php" class="inline-block mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">
