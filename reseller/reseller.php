@@ -4,14 +4,15 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
     header("Location: /index.php");
     exit;
 }
-// Dummy user login
+
+// Dummy user login (gunakan dari session/database)
 $loggedInUser = [
-    'username' => 'reseller123',
-    'avatar' => 'https://ui-avatars.com/api/?name=Reseller+123&background=4F46E5&color=fff',
+    'username' => $_SESSION['username'],
+    'avatar' => 'https://ui-avatars.com/api/?name=' . urlencode($_SESSION['username']) . '&background=4F46E5&color=fff',
     'services' => ['Vmess', 'Vless', 'Trojan', 'Shadowsocks']
 ];
 
-// Data VPS dan akun dummy (ganti dengan database/API)
+// Dummy data VPS dan akun
 $vpsList = [
     [
         'name' => 'SGP VPS 1',
@@ -34,19 +35,25 @@ $vpsList = [
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Dashboard Reseller - Tokomard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Setup tema dari localStorage
-        if (localStorage.getItem('theme') === 'dark') {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
+        tailwind.config = {
+            darkMode: 'class',
+        };
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
 
-        // Fungsi toggle tema
         function toggleTheme() {
             const html = document.documentElement;
             const isDark = html.classList.toggle('dark');
@@ -59,7 +66,7 @@ $vpsList = [
         <h1 class="text-2xl font-bold">Dashboard Reseller</h1>
         <div class="flex items-center gap-3">
             <button onclick="toggleTheme()" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-500 text-sm">
-                <span id="themeText">Ganti Tema</span>
+                Ganti Tema
             </button>
             <a href="logout.php" class="px-4 py-2 bg-red-600 rounded hover:bg-red-500">
                 Logout
@@ -125,3 +132,4 @@ $vpsList = [
     </footer>
 </body>
 </html>
+
