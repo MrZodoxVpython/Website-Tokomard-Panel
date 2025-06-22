@@ -150,39 +150,7 @@ $accountStats = [
             <h4 class="font-semibold">📢 Notification Admin</h4>
             <p class="text-sm mt-2">Silakan hubungi admin untuk update layanan atau kendala teknis lainnya.</p>
         </div>
-
-        <div class="space-y-4">
-            <h2 class="text-xl font-semibold">Daftar VPS & Akun</h2>
-            <?php foreach ($vpsList as $vps): ?>
-                <div class="bg-gray-100 dark:bg-gray-800 p-5 rounded-xl shadow-lg">
-                    <div class="mb-3">
-                        <h3 class="text-lg font-bold">🖥 <?= htmlspecialchars($vps['name']) ?></h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">IP: <?= htmlspecialchars($vps['ip']) ?></p>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full text-sm">
-                            <thead>
-                                <tr class="bg-gray-200 dark:bg-gray-700">
-                                    <th class="text-left p-2">Username</th>
-                                    <th class="text-left p-2">Tipe</th>
-                                    <th class="text-left p-2">Expired</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($vps['accounts'] as $acc): ?>
-                                    <tr class="border-b border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        <td class="p-2"><?= htmlspecialchars($acc['username']) ?></td>
-                                        <td class="p-2"><?= strtoupper(htmlspecialchars($acc['type'])) ?></td>
-                                        <td class="p-2 text-red-600 dark:text-red-400"><?= htmlspecialchars($acc['expired']) ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    </section>
+</section>
 </main>
 
 <footer class="p-4 text-center text-sm text-gray-500 dark:text-gray-400">
