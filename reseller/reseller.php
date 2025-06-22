@@ -71,13 +71,12 @@ $loggedInUser = [
     </section>
 </main>
 <script>
-    const themeToggleBtn = document.getElementById('themeToggleBtn');
-
     function updateThemeIcon() {
         const html = document.documentElement;
         const isDark = html.classList.contains('dark');
-        if (themeToggleBtn) {
-            themeToggleBtn.textContent = isDark ? '🌞' : '🌙';
+        const btn = document.getElementById('themeToggleBtn');
+        if (btn) {
+            btn.textContent = isDark ? '🌞' : '🌙';
         }
     }
 
@@ -89,20 +88,24 @@ $loggedInUser = [
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        // Ambil preferensi tema dari localStorage
+        // Terapkan tema dari localStorage
         const savedTheme = localStorage.getItem('theme');
-        const html = document.documentElement;
-
         if (savedTheme === 'dark') {
-            html.classList.add('dark');
+            document.documentElement.classList.add('dark');
         } else {
-            html.classList.remove('dark');
+            document.documentElement.classList.remove('dark');
         }
 
+        // Update ikon tombol setelah elemen tersedia
         updateThemeIcon();
+
+        // Pastikan tombol diklik pakai event listener (lebih aman)
+        const btn = document.getElementById('themeToggleBtn');
+        if (btn) {
+            btn.addEventListener('click', toggleTheme);
+        }
     });
 </script>
-
 </body>
 </html>
 
