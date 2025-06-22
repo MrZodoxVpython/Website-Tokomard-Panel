@@ -5,13 +5,19 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
+// Redirect ke dashboard jika tidak ada parameter page
+if (!isset($_GET['page'])) {
+    header("Location: ?page=dashboard");
+    exit;
+}
+
 $loggedInUser = [
     'username' => $_SESSION['username'],
     'avatar' => 'https://ui-avatars.com/api/?name=' . urlencode($_SESSION['username']) . '&background=4F46E5&color=fff',
     'services' => ['Vmess', 'Vless', 'Trojan', 'Shadowsocks']
 ];
 
-$page = $_GET['page'] ?? 'dashboard';
+$page = $_GET['page'];
 $allowedPages = ['dashboard', 'ssh', 'vmess', 'vless', 'trojan', 'shadowsocks', 'topup', 'cek-server', 'grup-vip'];
 if (!in_array($page, $allowedPages)) {
     $page = 'dashboard';
@@ -26,9 +32,7 @@ if (!in_array($page, $allowedPages)) {
     <title>Dashboard Reseller - Tokomard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class'
-        };
+        tailwind.config = { darkMode: 'class' };
     </script>
 </head>
 <body class="bg-white text-gray-900 dark:bg-gray-900 dark:text-white min-h-screen transition-colors duration-300">
@@ -80,27 +84,28 @@ if (!in_array($page, $allowedPages)) {
 </main>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const html = document.documentElement;
-        const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const html = document.documentElement;
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
 
-        // Set theme on load
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            html.classList.add('dark');
-        } else {
-            html.classList.remove('dark');
-        }
+    // Inisialisasi tema
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        html.classList.add('dark');
+    } else {
+        html.classList.remove('dark');
+    }
 
-        // Set icon on load
+    // Update ikon saat load
+    function updateThemeIcon() {
         themeToggleBtn.textContent = html.classList.contains('dark') ? '🌞' : '🌙';
+    }
+    updateThemeIcon();
 
-        // Toggle theme on click
-        themeToggleBtn.addEventListener('click', function () {
-            const isDark = html.classList.toggle('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            themeToggleBtn.textContent = isDark ? '🌞' : '🌙';
-        });
+    // Toggle tema
+    themeToggleBtn.addEventListener('click', () => {
+        const isDark = html.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        updateThemeIcon();
     });
 </script>
 </body>
