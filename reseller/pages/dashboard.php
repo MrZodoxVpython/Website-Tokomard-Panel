@@ -1,30 +1,4 @@
 <?php
-session_start();
-
-$loggedInUser = [
-    'username' => $_SESSION['username'],
-    'avatar' => 'https://ui-avatars.com/api/?name=' . urlencode($_SESSION['username']) . '&background=4F46E5&color=fff',
-    'services' => ['Vmess', 'Vless', 'Trojan', 'Shadowsocks']
-];
-
-$vpsList = [
-    [
-        'name' => 'SGP VPS 1',
-        'ip' => '192.168.1.101',
-        'accounts' => [
-            ['username' => 'user1', 'type' => 'vmess', 'expired' => '2025-07-01'],
-            ['username' => 'user2', 'type' => 'vless', 'expired' => '2025-06-28'],
-        ]
-    ],
-    [
-        'name' => 'IDN VPS 2',
-        'ip' => '192.168.1.102',
-        'accounts' => [
-            ['username' => 'idnuser1', 'type' => 'trojan', 'expired' => '2025-07-03'],
-        ]
-    ]
-];
-
 $accountStats = [
     'ssh' => 5,
     'trojan' => 1,
@@ -38,10 +12,10 @@ $accountStats = [
 <section class="space-y-6">
     <h2 class="text-xl font-semibold">Statistik Akun</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <?php foreach (\$accountStats as \$key => \$val): ?>
+        <?php foreach ($accountStats as $key => $val): ?>
             <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow-md">
-                <h3 class="text-lg font-bold capitalize">Total <?= ucfirst(\$key) ?> Account</h3>
-                <p class="text-2xl mt-2 font-semibold"><?= \$val ?></p>
+                <h3 class="text-lg font-bold capitalize">Total <?= ucfirst($key) ?> Account</h3>
+                <p class="text-2xl mt-2 font-semibold"><?= $val ?></p>
             </div>
         <?php endforeach; ?>
     </div>
