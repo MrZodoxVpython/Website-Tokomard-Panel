@@ -32,24 +32,21 @@ $vpsList = [
 ?>
 
 <!DOCTYPE html>
-<html lang="id" class="dark">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Reseller - Tokomard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Cek preferensi tema saat awal muat
-        document.addEventListener('DOMContentLoaded', () => {
-            const theme = localStorage.getItem('theme');
-            if (theme === 'dark') {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-        });
+        // Setup tema dari localStorage
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
 
-        // Toggle tema
+        // Fungsi toggle tema
         function toggleTheme() {
             const html = document.documentElement;
             const isDark = html.classList.toggle('dark');
@@ -61,14 +58,16 @@ $vpsList = [
     <header class="p-4 bg-gray-100 dark:bg-gray-800 shadow-md flex justify-between items-center">
         <h1 class="text-2xl font-bold">Dashboard Reseller</h1>
         <div class="flex items-center gap-3">
-            <button onclick="toggleTheme()" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-500 text-sm">Toggle Tema</button>
+            <button onclick="toggleTheme()" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-500 text-sm">
+                <span id="themeText">Ganti Tema</span>
+            </button>
             <a href="logout.php" class="px-4 py-2 bg-red-600 rounded hover:bg-red-500">
                 Logout
             </a>
         </div>
     </header>
 
-    <main class="flex flex-col md:flex-row p-6 gap-6">
+    <main class="flex flex-col md:flex-row p-4 md:p-6 gap-6">
         <!-- Sidebar kiri -->
         <aside class="md:w-1/4 bg-gray-100 dark:bg-gray-800 p-4 rounded-xl shadow-lg">
             <div class="flex flex-col items-center">
