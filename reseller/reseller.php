@@ -76,7 +76,7 @@ $vpsList = [
 
     <main class="flex flex-col md:flex-row p-4 md:p-6 gap-6">
         <!-- Sidebar kiri -->
-        <!-- Tombol toggle sidebar untuk mobile -->
+	<!-- Tombol toggle sidebar untuk mobile -->
 <button id="toggleSidebar" class="md:hidden fixed top-4 left-4 z-50 p-2 bg-gray-200 dark:bg-gray-700 rounded-md shadow-md">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -97,6 +97,12 @@ $vpsList = [
         <a href="vless.php" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600">📡 Vless</a>
         <a href="trojan.php" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600">⚔️ Trojan</a>
         <a href="shadowsocks.php" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600">🕶️ Shadowsocks</a>
+
+        <!-- Menu tambahan -->
+        <hr class="my-4 border-gray-400 dark:border-gray-600">
+        <a href="topup.php" class="block px-3 py-2 rounded hover:bg-green-500 hover:text-white dark:hover:bg-green-600">💳 Top Up</a>
+        <a href="cek-server.php" class="block px-3 py-2 rounded hover:bg-indigo-500 hover:text-white dark:hover:bg-indigo-600">🖥️ Cek Online Server</a>
+        <a href="grup-vip.php" class="block px-3 py-2 rounded hover:bg-yellow-500 hover:text-white dark:hover:bg-yellow-600">👑 Grup Customer VIP</a>
     </nav>
 
     <div class="mt-6 hidden md:block">
@@ -109,7 +115,7 @@ $vpsList = [
     </div>
 </aside>
 
-<!-- Script untuk toggle sidebar -->
+<!-- Script toggle sidebar -->
 <script>
     const toggleBtn = document.getElementById('toggleSidebar');
     const sidebar = document.getElementById('sidebar');
