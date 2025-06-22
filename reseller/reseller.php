@@ -66,7 +66,8 @@ $pagePath = "pages/{$page}.php";
 
     <main class="flex flex-col md:flex-row min-h-screen gap-0 md:gap-6 px-4 md:px-8 pb-8">
         <!-- Sidebar -->
-            <aside id="sidebar" class="md:w-1/5 w-64 bg-gray-100 dark:bg-gray-800 p-4 shadow-lg fixed md:relative top-16 md:top-0 h-full md:h-auto z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
+	    <aside id="sidebar" class="md:w-1/5 w-64 bg-gray-100 dark:bg-gray-800 pt-[72px] p-4 shadow-lg fixed md:relative top-0 md:top-0 h-full md:h-auto z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
+
             <div class="flex flex-col items-center text-center mb-6">
                 <img src="<?= $loggedInUser['avatar'] ?>" alt="Profile" class="w-20 h-20 rounded-full mb-2">
                 <h2 class="text-base font-semibold">@<?= htmlspecialchars($loggedInUser['username']) ?></h2>
