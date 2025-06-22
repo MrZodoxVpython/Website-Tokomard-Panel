@@ -186,44 +186,49 @@ if ($proses && isset($vpsList[$vps])) {
     return;
 }
 // Tambahkan sebelum $suksesSemua = true;
-$tagMap = [
-    'vmess' => ['vmess', 'vmessgrpc'],
-    'vless' => ['vless', 'vlessgrpc'],
-    'trojan' => ['trojanws', 'trojangrpc'],
-    'shadowsocks' => ['ssws', 'ssgrpc']
-];
+if ($proses) {
+    $suksesSemua = true;
+    $tagMap = [
+        'vmess' => ['vmess', 'vmessgrpc'],
+        'vless' => ['vless', 'vlessgrpc'],
+        'trojan' => ['trojanws', 'trojangrpc'],
+        'shadowsocks' => ['ssws', 'ssgrpc']
+    ];
 
-$tags = $tagMap[$protokol] ?? [];
+    $tags = $tagMap[$protokol] ?? [];
 
-switch ($protokol) {
-    case 'Vmess':
-        $commentPrefix = '###';
-        $jsonEntry = "},{\"id\": \"$key\", \"alterId\": 0, \"email\": \"$username\"";
-        break;
-    case 'Vless':
-        $commentPrefix = '#&';
-        $jsonEntry = "},{\"id\": \"$key\", \"email\": \"$username\"";
-        break;
-    case 'Trojan':
-        $commentPrefix = '#!';
-        $jsonEntry = "},{\"password\": \"$key\", \"email\": \"$username\"";
-        break;
-    case 'Shadowsocks':
-        $commentPrefix = '#$';
-        $jsonEntry = "},{\"password\": \"$key\", \"method\": \"aes-128-gcm\", \"email\": \"$username\"";
-        break;
-    default:
-        echo "<p class='text-red-400'>❌ Protokol tidak dikenali.</p>";
-        exit;
-}
+    $commentPrefix = '';
+    $jsonEntry = '';
 
-        $suksesSemua = true;
-        foreach ($tags as $tag) {
-            $commentLine = "$commentPrefix $username $expired";
-            if (!insertIntoTag($configPath, $tag, $commentLine, $jsonEntry)) {
-                $suksesSemua = false;
-            }
+    switch ($protokol) {
+        case 'vmess':
+            $commentPrefix = '###';
+            $jsonEntry = "},{\"id\": \"$key\", \"alterId\": 0, \"email\": \"$username\"";
+            break;
+        case 'vless':
+            $commentPrefix = '#&';
+            $jsonEntry = "},{\"id\": \"$key\", \"email\": \"$username\"";
+            break;
+        case 'trojan':
+            $commentPrefix = '#!';
+            $jsonEntry = "},{\"password\": \"$key\", \"email\": \"$username\"";
+            break;
+        case 'shadowsocks':
+            $commentPrefix = '#$';
+            $jsonEntry = "},{\"password\": \"$key\", \"method\": \"aes-128-gcm\", \"email\": \"$username\"";
+            break;
+        default:
+            echo "<p class='text-red-400'>❌ Protokol tidak dikenali.</p>";
+            exit;
+    }
+
+    foreach ($tags as $tag) {
+        $commentLine = "$commentPrefix $username $expired";
+        if (!insertIntoTag($configPath, $tag, $commentLine, $jsonEntry)) {
+            $suksesSemua = false;
         }
+    }
+
 
         if ($suksesSemua) {
             echo "<h2 class='text-xl font-bold mb-4'>✅ Akun Berhasil Ditambahkan</h2>";
@@ -262,7 +267,7 @@ switch ($protokol) {
         } else {
             echo "<p class='text-yellow-400'>⚠ Akun berhasil ditambahkan.</p>";
         }
-    
+    }
 // Sekarang tinggal tampilkan form HTML...
 include 'templates/header.php';
 // Form HTML dan daftar akun lanjutan...
