@@ -39,8 +39,7 @@ include 'templates/header.php';
   </form>
   <form method="POST" class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
       <a href="auto-install-rclone.php" class="bg-green-600 hover:bg-green-700 px-6 py-4 rounded-xl text-white text-xl shadow text-center"> 🗃 Backup Data Vps</a>
-    <a href=""
-      class="bg-yellow-500 hover:bg-yellow-600 px-6 py-4 rounded-xl text-white text-xl shadow text-center">
+    <a href="" class="bg-yellow-500 hover:bg-yellow-600 px-6 py-4 rounded-xl text-white text-xl shadow text-center">
       ♻️ Restore dari Backup</a>
   </form>
 
