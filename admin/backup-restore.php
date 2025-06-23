@@ -34,7 +34,7 @@ include 'templates/header.php';
   <!-- Menu Form -->
   <form method="POST" class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
   <button type="submit" name="action" value="restore"
-      class="bg-yellow-500 hover:bg-yellow-600 px-6 py-4 rounded-xl text-white text-xl shadow text-center">
+      class="bg-yellw-500 hover:bg-yellow-600 px-6 py-4 rounded-xl text-white text-xl shadow text-center">
     </button>
   </form>
       <a href="auto-install-rclone.php" class="bg-green-600 hover:bg-green-700 px-6 py-4 rounded-xl text-white text-xl shadow text-center"> 🗃 Backup Data Vps</a>
