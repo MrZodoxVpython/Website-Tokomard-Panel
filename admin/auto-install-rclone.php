@@ -223,6 +223,7 @@ rclone config
         <textarea name="token" id="token" rows="6" required class="w-full p-3 rounded bg-gray-800 text-white border border-gray-600"></textarea>
         <button type="submit" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl shadow">🚀 Install & Backup Sekarang</button>
     </form>
+
     <?php if (!empty($output)): ?>
         <div class="terminal-wrapper">
             <div class="terminal-box">
