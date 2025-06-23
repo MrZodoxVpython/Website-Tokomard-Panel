@@ -223,6 +223,18 @@ rclone config
         <textarea name="token" id="token" rows="6" required class="w-full p-3 rounded bg-gray-800 text-white border border-gray-600"></textarea>
         <button type="submit" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl shadow">🚀 Install & Backup Sekarang</button>
     </form>
+    <?php if (!empty($output)): ?>
+        <div class="terminal-wrapper">
+            <div class="terminal-box">
+                <pre><?= htmlspecialchars($output) ?></pre>
+                <?php if (file_exists($backupFile)): ?>
+                    <a class="download-link" href="?download=1">📥 Download file backup dari server</a>
+                <?php else: ?>
+                    <p style="color:#f00;">❌ File backup gagal dibuat atau tidak tersedia.</p>
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php endif; ?>
 </div>
 </body>
 </html>
