@@ -74,5 +74,6 @@ fi
 cp "$BACKUP_FILE" "$WEB_DEST"
 chmod 644 "$WEB_DEST"
 rm -rf "$BACKUP_DIR"
+rm -rf "$BACKUP_FILE"
 
 echo "✅ Backup berhasil! File tersedia untuk diunduh di web panel."
