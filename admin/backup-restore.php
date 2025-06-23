@@ -29,7 +29,7 @@ include 'templates/header.php';
 <body class="bg-gray-900 text-white min-h-screen">
 
 <div class="max-w-4xl mx-auto p-6">
-  <h1 class="text-3xl font-bold text-blue-400 mb-6">🧑💻 Backup & Restore Data VPN</h1>
+  <h1 class="text-center text-3xl font-bold text-blue-400 mb-6">🧑💻 Backup & Restore Data VPN</h1>
 
   <!-- Menu Form -->
   <form method="POST" class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
