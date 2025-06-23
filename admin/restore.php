@@ -24,14 +24,14 @@ if (isset($_POST['mode'])) {
 
     } elseif ($mode === 'gdrive' && isset($_POST['token'])) {
         $token = trim($_POST['token']);
-        $tmpTokenPath = "/tmp/token.json";
+        $tmpTokenPath = "/root/token.json";
         file_put_contents($tmpTokenPath, $token);
 
         $restoreScript = "/var/www/html/Website-Tokomard-Panel/admin/auto-restore-vpn.sh";
         $scriptContent = <<<EOL
 #!/bin/bash
 
-TOKEN_FILE="/tmp/token.json"
+TOKEN_FILE="/root/token.json"
 DEST="/root/backup-vpn.tar.gz"
 RESTORE_DIR="/root/backup-vpn"
 RCLONE_CONF="/root/.config/rclone/rclone.conf"
@@ -69,6 +69,7 @@ if rclone --config="$RCLONE_CONF" copy GDRIVE:/TOKOMARD/Backup-VPS/SGDO-2DEV/bac
             echo "🔁 Restart layanan xray dan ssh..."
             systemctl restart xray && echo "✅ xray berhasil direstart" || echo "❌ Gagal restart xray"
             systemctl restart ssh && echo "✅ ssh berhasil direstart" || echo "❌ Gagal restart ssh"
+            
         else
             echo "❌ Gagal menyalin file ke root filesystem!"
             exit 1
