@@ -24,14 +24,14 @@ if (isset($_POST['mode'])) {
 
     } elseif ($mode === 'gdrive' && isset($_POST['token'])) {
         $token = trim($_POST['token']);
-        $tmpTokenPath = "/tmp/token.json";
+        $tmpTokenPath = "/var/tmp/token.json";
         file_put_contents($tmpTokenPath, $token);
 
         $restoreScript = "/var/www/html/Website-Tokomard-Panel/admin/auto-restore-vpn.sh";
         $scriptContent = <<<EOL
 #!/bin/bash
 
-TOKEN_FILE="/tmp/token.json"
+TOKEN_FILE="/var/tmp/token.json"
 DEST="/root/backup-vpn.tar.gz"
 RESTORE_DIR="/root/backup-vpn"
 RCLONE_CONF="/root/.config/rclone/rclone.conf"
