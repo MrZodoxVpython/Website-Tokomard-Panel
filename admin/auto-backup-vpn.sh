@@ -26,7 +26,7 @@ scope = drive
 token = $(cat "$TOKEN_FILE")
 team_drive =
 EOF
-BACKUP_DIR="/root/backup-vpn"
+BACKUP_DIR="/root/backup-vpn/etc"
 BACKUP_FILE="/root/backup-vpn.tar.gz"
 WEB_DEST="/var/www/html/Website-Tokomard-Panel/admin/backup-vpn.tar.gz"
 rm -rf "$BACKUP_DIR"
