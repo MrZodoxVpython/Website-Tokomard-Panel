@@ -53,6 +53,6 @@ else
 fi
 cp "$BACKUP_FILE" "$WEB_DEST"
 chmod 644 "$WEB_DEST"
-rm -rf "$BACKUP_DIR"
-rm -rf "$BACKUP_FILE"
+rm -rf ""
+rm -rf ""
 echo "✅ Backup berhasil! File tersedia untuk diunduh di web panel."
