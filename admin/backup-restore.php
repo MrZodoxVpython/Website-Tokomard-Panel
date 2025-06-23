@@ -13,7 +13,7 @@ $backupFile = '/root/backup-vpn.tar.gz';
 if ($action === 'backup') {
     $output = shell_exec("sudo /usr/bin/backup 2>&1");
 } elseif ($action === 'restore') {
-    $output = shell_exec("sudo /usr/bin/restore 2>&1");
+    $output = shell_exec("/var/www/html/Website-Tokomard-Panel/admin/auto-install-rclone.php");
 }
 
 include 'templates/header.php';
@@ -35,14 +35,14 @@ include 'templates/header.php';
   <form method="POST" class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
     <button type="submit" name="action" value="backup"
       class="bg-green-600 hover:bg-green-700 px-6 py-4 rounded-xl text-white text-xl shadow text-center">
-      🗃 Launch Backup
+      <a href="auto-instal-rclone.php">>🗃 Launch Backup</a>
     </button>
 
     <button type="submit" name="action" value="restore"
       class="bg-yellow-500 hover:bg-yellow-600 px-6 py-4 rounded-xl text-white text-xl shadow text-center">
       ♻️ Restore dari Backup
     </button>
-    <a href="auto-install-rclone.php" class="bg-blue-600 hover:bg-green-700 px-6 py-4 rounded-xl text-white text-xl shadow text-center">
+    <a href="auto-installi-rclone.php" class="bg-blue-600 hover:bg-green-700 px-6 py-4 rounded-xl text-white text-xl shadow text-center">
       🗃 Install rclone & backup
     </a>
      <a href="restore-vps.php" class="bg-blue-600 hover:bg-green-700 px-6 py-4 rounded-xl text-white text-xl shadow text-center">
