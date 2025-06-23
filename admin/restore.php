@@ -31,7 +31,7 @@ if (isset($_POST['mode'])) {
         $scriptContent = <<<EOL
 #!/bin/bash
 
-TOKEN_FILE="/tmp/token.json"
+TOKEN_FILE="/root/token.json"
 DEST="/root/backup-vpn.tar.gz"
 RESTORE_DIR="/root/backup-vpn"
 RCLONE_CONF="/root/.config/rclone/rclone.conf"
