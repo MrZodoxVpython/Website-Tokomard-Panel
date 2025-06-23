@@ -195,10 +195,22 @@ HTML;
         <pre class="text-sm text-gray-300 bg-gray-700 p-3 rounded overflow-x-auto">
 curl https://rclone.org/install.sh | bash
 rclone config
+
+> n (new remote)
 > name: GDRIVE
-> storage: 20
-> scope: 1
-> authorize: rclone authorize "drive"
+> storage: 20 (Google Drive)
+> client_id: [kosongkan]
+> client_secret: [kosongkan]
+> scope: 1 (full access)
+> service_account_file: [kosongkan]
+> y/n: [kosongkan]
+> y/n: n
+> Dapatkan link & login akun Google kamu
+> Paste > rclone authorize "drive" "eyJzY29wZSI6ImRyaXZlIn0" < di OS utama yang terinstall rclone
+> config_token: [paste token]
+> y/n: [kosongkan]
+> y/e/d: [kosongkan]
+> Copy seluruh JSON access token yang muncul setelah login berhasil
         </pre>
         <p class="text-green-300 mt-2">👉 Tempel token JSON dari Google Drive di bawah ini:</p>
     </div>
