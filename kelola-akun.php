@@ -249,7 +249,7 @@ include 'templates/header.php';
     </form>
 <?php endif; ?>
 <hr class="my-6 border-gray-600">
-<h3 class="text-xl font-semibold mb-4">Daftar Akun Terdaftar</h3>
+<h3 class="text-xl font-semibold mb-4">Daftar Akun Custumer</h3>
 
 <!-- Tambahkan pembungkus scroll horizontal -->
 <div class="overflow-x-auto">
