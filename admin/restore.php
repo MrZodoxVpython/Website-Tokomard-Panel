@@ -30,34 +30,56 @@ if (isset($_POST['mode'])) {
         $restoreScript = "/var/www/html/Website-Tokomard-Panel/admin/auto-restore-vpn.sh";
         $scriptContent = <<<EOL
 #!/bin/bash
+
 TOKEN_FILE="/tmp/token.json"
-if [ ! -f "\$TOKEN_FILE" ]; then
+DEST="/root/backup-vpn.tar.gz"
+RESTORE_DIR="/root/backup-vpn"
+RCLONE_CONF="/root/.config/rclone/rclone.conf"
+
+# Cek token
+if [ ! -f "$TOKEN_FILE" ]; then
     echo "❌ Token file tidak ditemukan!"
     exit 1
 fi
-if ! jq .access_token "\$TOKEN_FILE" &>/dev/null; then
+
+if ! jq .access_token "$TOKEN_FILE" &>/dev/null; then
     echo "❌ Token JSON tidak valid!"
     exit 1
 fi
+
 echo "🔄 Mengatur rclone config..."
-RCLONE_CONF="/root/.config/rclone/rclone.conf"
-mkdir -p "\$(dirname "\$RCLONE_CONF")"
-cat > "\$RCLONE_CONF" <<EOF
+mkdir -p "$(dirname "$RCLONE_CONF")"
+cat > "$RCLONE_CONF" <<EOF
 [GDRIVE]
 type = drive
 scope = drive
-token = $(cat "\$TOKEN_FILE")
+token = $(cat "$TOKEN_FILE")
 team_drive =
 EOF
+
+# Unduh file backup
 echo "☁ Mengunduh file backup dari Google Drive..."
-DEST="/root/backup-vpn.tar.gz"
-if rclone --config="\$RCLONE_CONF" copy GDRIVE:/TOKOMARD/Backup-VPS/SGDO-2DEV/backup-vpn.tar.gz /root/; then
+if rclone --config="$RCLONE_CONF" copy GDRIVE:/TOKOMARD/Backup-VPS/SGDO-2DEV/backup-vpn.tar.gz /root/; then
     echo "🗜 Mengekstrak dan merestore..."
-    tar -xzf "\$DEST" -C /root
-    cp -r /root/backup-vpn/* / --no-preserve=ownership
-    echo "✅ Restore dari GDrive berhasil!"
+    
+    if tar -xzf "$DEST" -C /root; then
+        if cp -r "$RESTORE_DIR"/* / --no-preserve=ownership; then
+            echo "✅ Restore dari GDrive berhasil!"
+            
+            echo "🔁 Restart layanan xray dan ssh..."
+            systemctl restart xray && echo "✅ xray berhasil direstart" || echo "❌ Gagal restart xray"
+            systemctl restart ssh && echo "✅ ssh berhasil direstart" || echo "❌ Gagal restart ssh"
+        else
+            echo "❌ Gagal menyalin file ke root filesystem!"
+            exit 1
+        fi
+    else
+        echo "❌ Gagal mengekstrak file backup!"
+        exit 1
+    fi
 else
     echo "❌ Gagal mengunduh dari Google Drive."
+    exit 1
 fi
 EOL;
 
@@ -160,7 +182,7 @@ HTML;
             <!-- Restore dari Google Drive -->
             <form method="POST" class="bg-gray-800 p-4 rounded-xl shadow">
                 <input type="hidden" name="mode" value="gdrive">
-                <h2 class="text-xl font-semibold mb-2">☁️ Restore dari Google Drive</h2>
+                <h2 class="text-xl font-semibold mb-2">☁ Restore dari Google Drive</h2>
                 <label class="block mb-2 text-sm">Tempelkan Token JSON dari Google Drive</label>
                 <textarea name="token" rows="6" required class="w-full p-3 rounded bg-gray-900 text-white border border-gray-600 mb-4"></textarea>
                 <button type="submit" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-xl">🔄 Restore dari GDrive</button>
