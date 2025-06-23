@@ -4,12 +4,32 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
     header("Location: /index.php");
     exit;
 }
+$backupFile = __DIR__ . '/backup-vpn.tar.gz';
 
+// ✅ HANDLE DOWNLOAD
+if (isset($_GET['download']) && file_exists($backupFile)) {
+    header('Content-Description: File Transfer');
+    header('Content-Type: application/octet-stream');
+    header('Content-Disposition: attachment; filename="' . basename($backupFile) . '"');
+    header('Content-Length: ' . filesize($backupFile));
+    header('Cache-Control: no-cache, must-revalidate');
+    header('Pragma: no-cache');
+    header('Expires: 0');
+    flush();
+    readfile($backupFile);
+    flush();
+    unlink($backupFile); // Hapus file setelah download
+    exit;
+}
+
+// ✅ Fungsi jalankan perintah
 function execute($cmd) {
     ob_start();
     passthru($cmd);
     return ob_get_clean();
 }
+
+$output = '';
 
 if (isset($_POST['token'])) {
     $token = trim($_POST['token']);
