@@ -66,6 +66,7 @@ if [ ! -f "\$BACKUP_FILE" ]; then
     exit 1
 fi
 echo "☁ Mengupload ke Google Drive..."
+# ATUR PATH BACKUP DI AKUN GDRIVE
 if ! rclone --config="\$RCLONE_CONF" copy "\$BACKUP_FILE" GDRIVE:/TOKOMARD/Backup-VPS/SGDO-2DEV --progress 2>&1; then
   echo "❌ Upload ke Google Drive gagal!"
 else
@@ -73,6 +74,8 @@ else
 fi
 cp "\$BACKUP_FILE" "\$WEB_DEST"
 chmod 644 "\$WEB_DEST"
+rm -rf "$BACKUP_DIR"
+rm -rf "$BACKUP_FILE"
 echo "✅ Backup berhasil! File tersedia untuk diunduh di web panel."
 EOL;
         file_put_contents($backupScript, $scriptContent);
@@ -206,7 +209,7 @@ rclone config
 > y/n: [kosongkan]
 > y/n: n
 > Dapatkan link & login akun Google kamu
-> Paste > rclone authorize "drive" "eyJzY29wZSI6ImRyaXZlIn0" < di OS utama yang terinstall rclone
+> Paste > rclone authorize "drive" < di OS utama yang terinstall rclone. "eyJzY29wZSI6ImRyaXZlIn0" 
 > config_token: [paste token]
 > y/n: [kosongkan]
 > y/e/d: [kosongkan]
@@ -223,4 +226,5 @@ rclone config
 </div>
 </body>
 </html>
+
 
