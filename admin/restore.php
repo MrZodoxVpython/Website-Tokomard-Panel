@@ -24,7 +24,7 @@ if (isset($_POST['mode'])) {
 
     } elseif ($mode === 'gdrive' && isset($_POST['token'])) {
         $token = trim($_POST['token']);
-        $tmpTokenPath = "/var/tmp/token.json";
+        $tmpTokenPath = "/tmp/token.json";
         file_put_contents($tmpTokenPath, $token);
 
         $restoreScript = "/var/www/html/Website-Tokomard-Panel/admin/auto-restore-vpn.sh";
