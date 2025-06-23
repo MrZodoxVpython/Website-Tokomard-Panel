@@ -38,13 +38,6 @@ include 'templates/header.php';
       class="bg-yellow-500 hover:bg-yellow-600 px-6 py-4 rounded-xl text-white text-xl shadow text-center">
       ♻️ Restore dari Backup
     </button>
-    <a href="auto-installi-rclone.php" class="bg-blue-600 hover:bg-green-700 px-6 py-4 rounded-xl text-white text-xl shadow text-center">
-      🗃 Install rclone & backup
-    </a>
-     <a href="restore-vps.php" class="bg-blue-600 hover:bg-green-700 px-6 py-4 rounded-xl text-white text-xl shadow text-center">
-      🗃 Restore Data
-    </a>
-
   </form>
 
   <!-- Hasil Eksekusi -->
