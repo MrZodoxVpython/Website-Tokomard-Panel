@@ -323,7 +323,9 @@ if (file_exists($configPath)) {
             $no++;
         }
     }
-// Ambil akun SSH dari file terpisah
+$akunList = [];
+
+// Ambil akun SSH dari file
 $sshFile = '/etc/data/akun-ssh.txt';
 if (file_exists($sshFile)) {
     $sshLines = file($sshFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
@@ -337,7 +339,6 @@ if (file_exists($sshFile)) {
         }
     }
 }
-
     if ($no === 1) {
         echo "<tr><td colspan='5' class='text-center py-4 text-gray-400'>⚠ Tidak ditemukan akun dalam config.json.</td></tr>";
     }
