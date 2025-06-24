@@ -237,6 +237,7 @@ include 'templates/header.php';
                 <option value="vmess">Vmess</option>
                 <option value="vless">Vless</option>
                 <option value="shadowsocks">Shadowsocks</option>
+                <option value="ssh">SSH</option>
             </select>
         </div>
         <div>
