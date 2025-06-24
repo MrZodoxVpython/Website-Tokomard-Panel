@@ -339,6 +339,19 @@ if (file_exists($sshFile)) {
         }
     }
 }
+// Tampilkan akun-akun SSH ke tabel
+foreach ($akunList as $akun) {
+    echo "<tr class='border-t border-gray-600'>";
+    echo "<td class='py-2 px-3'>$no</td>";
+    echo "<td class='py-2 px-3'>{$akun['username']}</td>";
+    echo "<td class='py-2 px-3'>{$akun['protokol']}</td>";
+    echo "<td class='py-2 px-3'>{$akun['expired']}</td>";
+    echo "<td class='py-2 px-3'>";
+    echo "<a href='hapus-akun.php?user={$akun['username']}&proto=ssh' class='text-red-400 hover:underline' onclick=\"return confirm('Yakin hapus akun {$akun['username']}?')\">Hapus</a>";
+    echo "</td></tr>";
+    $no++;
+}
+
     if ($no === 1) {
         echo "<tr><td colspan='5' class='text-center py-4 text-gray-400'>⚠ Tidak ditemukan akun dalam config.json.</td></tr>";
     }
