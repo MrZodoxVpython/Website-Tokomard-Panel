@@ -51,7 +51,7 @@ $require_uuid = in_array($protocol, ['vmess', 'vless']);
 
     <h3 class="text-xl font-semibold text-gray-800 dark:text-white">🧾 Buat Akun <?= strtoupper($protocol) ?></h3>
 
-    <form action="add-ssh.php" method="POST" class="space-y-4">
+    <form action="/reseller/pages/api-akun/add-ssh.php" method="POST" class="space-y-4">
         <input type="hidden" name="server" value="<?= htmlspecialchars($server['name']) ?>">
         <input type="hidden" name="protocol" value="<?= htmlspecialchars($protocol) ?>">
 
