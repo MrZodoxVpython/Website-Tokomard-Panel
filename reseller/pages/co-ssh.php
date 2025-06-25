@@ -17,7 +17,7 @@
 <?php
 // Data server dummy (bisa dinamis dari parameter GET atau DB)
 $server = [
-    'name' => 'DO-3',
+    'name' => 'SGDO-2DEV',
     'country' => 'Singapore',
     'isp' => 'DigitalOcean, LLC',
     'rules' => [
@@ -26,7 +26,7 @@ $server = [
         'SUPPORT ENHANCED HTTP CUSTOM',
         'Max Login 1 device'
     ],
-    'price' => 15000
+    'price' => 20000
 ];
 
 // Ambil protokol dari URL (default: ssh)
