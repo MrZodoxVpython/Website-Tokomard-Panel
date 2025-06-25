@@ -1,15 +1,17 @@
 <?php
 require_once '/lib-akun.php';
 
-if ($argc < 4) {
-    echo "❌ Parameter tidak lengkap!\n";
-    echo "Gunakan: php tambah-trojan.php username expired password\n";
-    exit(1);
+// Ambil data dari POST
+$username = $_POST['username'] ?? null;
+$expired_input = $_POST['expired'] ?? null;
+$password = $_POST['password'] ?? null;
+
+if (!$username || !$expired_input || !$password) {
+    echo "❌ Data tidak lengkap!";
+    exit;
 }
 
-$username = $argv[1];
-$expired  = hitungTanggalExpired($argv[2]);
-$password = $argv[3];
+$expired = hitungTanggalExpired($expired_input);
 
 $commentLine = "#! $username $expired";
 $jsonLine = "},{\"password\": \"$password\", \"email\": \"$username\"";
