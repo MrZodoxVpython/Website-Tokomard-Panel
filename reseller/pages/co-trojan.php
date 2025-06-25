@@ -12,7 +12,7 @@
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white min-h-screen p-6">
 
 <?php
-require_once __DIR__ . '/reseller/pages/api-akun/lib-akun.php';
+require_once __DIR__ . '/../lib-akun.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
