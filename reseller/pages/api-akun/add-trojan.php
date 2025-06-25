@@ -10,12 +10,12 @@ $username = $_POST['username'] ?? null;
 $expiredInput = $_POST['expired'] ?? null;
 $password = $_POST['password'] ?? null;
 
-if (!$username || !$expired_input || !$password) {
+if (!$username || !$expiredInput || !$password) {
     echo "❌ Data tidak lengkap!";
     exit;
 }
 
-$expired = hitungTanggalExpired($expired_input);
+$expired = hitungTanggalExpired($expiredInput);
 
 $commentLine = "#! $username $expired";
 $jsonLine = "},{\"password\": \"$password\", \"email\": \"$username\"";
