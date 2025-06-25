@@ -1,5 +1,5 @@
 <?php
-require_once '/usr/local/bin/lib-akun.php';
+require_once '/lib-akun.php';
 
 if ($argc < 4) {
     echo "❌ Parameter tidak lengkap!\n";
