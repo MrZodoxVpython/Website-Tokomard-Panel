@@ -1,3 +1,19 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Server & Buat Akun</title>
+    <!-- Tailwind CDN (dengan dark mode class) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white min-h-screen p-6">
+
 <?php
 // Data server dummy (bisa dinamis dari parameter GET atau DB)
 $server = [
@@ -13,10 +29,10 @@ $server = [
     'price' => 15000
 ];
 
-// Dapatkan protokol dari URL, default ssh
+// Ambil protokol dari URL (default: ssh)
 $protocol = $_GET['proto'] ?? 'ssh';
-$require_password = in_array($protocol, ['ssh', 'trojan', 'shadowsocks']); // yg perlu password
-$require_uuid = in_array($protocol, ['vmess', 'vless']); // yg perlu UUID
+$require_password = in_array($protocol, ['ssh', 'trojan', 'shadowsocks']);
+$require_uuid = in_array($protocol, ['vmess', 'vless']);
 ?>
 
 <div class="max-w-2xl mx-auto bg-white dark:bg-gray-900 shadow-md rounded-2xl p-6 space-y-6 border border-gray-200 dark:border-gray-700">
@@ -79,4 +95,7 @@ $require_uuid = in_array($protocol, ['vmess', 'vless']); // yg perlu UUID
 
     <div class="text-center text-xs text-gray-500 dark:text-gray-500 mt-6">2025© VPN DAN PAKET DATA XL AXIS</div>
 </div>
+
+</body>
+</html>
 
