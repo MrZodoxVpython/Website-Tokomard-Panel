@@ -36,15 +36,22 @@ function prosesXray($proto, $tagMap, $commentLine, $jsonLine, $username, $expire
     }
 }
 
-function tampilkanSSH($username, $expired, $key) {
+function tampilkanSSH($username, $expired, $password) {
     $domain = trim(@file_get_contents('/etc/xray/domain'));
     $ip = gethostbyname($domain);
+
+    // Ambil username asli tanpa prefix reseller (misalnya reseller1_user1 → user1)
+    $displayUsername = $username;
+    if (preg_match('/^(.+?)_(.+)$/', $username, $match)) {
+        $displayUsername = $match[2];
+    }
+
     $output = <<<EOL
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
             SSH ACCOUNT             
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Username       : $username
-Password       : $key
+Username       : $displayUsername
+Password       : $password
 Host/IP        : $domain ($ip)
 Port OpenSSH   : 22
 Port Dropbear  : 443, 109, 143
