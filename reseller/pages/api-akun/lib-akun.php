@@ -53,15 +53,7 @@ Expired On     : $expired
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOL;
 
-    echo <<<HTML
-<div class="flex justify-center items-center min-h-screen bg-gray-900">
-  <div class="max-w-full w-[95%] md:w-[70%] lg:w-[60%] xl:w-[50%] overflow-auto">
-    <pre class="bg-gray-900 text-green-400 border-2 border-orange-400 rounded-xl p-4 text-sm font-mono whitespace-pre-wrap leading-relaxed shadow-md">
-$output
-    </pre>
-  </div>
-</div>
-HTML;
+    tampilkanHTML($output);
 }
 
 function tampilkanXRAY($proto, $username, $expired, $key) {
@@ -121,14 +113,27 @@ EOL;
             break;
     }
 
+    tampilkanHTML($output);
+}
+
+function tampilkanHTML($content) {
     echo <<<HTML
-<div class="flex justify-center items-center min-h-screen bg-gray-900">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Output</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white flex justify-center items-center min-h-screen">
   <div class="max-w-full w-[95%] md:w-[70%] lg:w-[60%] xl:w-[50%] overflow-auto">
     <pre class="bg-gray-900 text-green-400 border-2 border-orange-400 rounded-xl p-4 text-sm font-mono whitespace-pre-wrap leading-relaxed shadow-md">
-$output
+$content
     </pre>
   </div>
-</div>
+</body>
+</html>
 HTML;
 }
 
