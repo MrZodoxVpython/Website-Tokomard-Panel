@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $error = "Email tidak valid. Gunakan @tokomard.com atau @reseller.com.";
     }
+}
 ?>
 
 <!DOCTYPE html>
