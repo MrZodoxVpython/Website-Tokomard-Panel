@@ -1,39 +1,55 @@
 <?php
-// Contoh data dummy SSH (nanti bisa diganti dengan data real dari database atau API)
-$sshAccounts = [
-    ['username' => 'user1', 'server' => 'sg.tokomard.store', 'expired' => '2025-07-01'],
-    ['username' => 'user2', 'server' => 'us.tokomard.store', 'expired' => '2025-07-05'],
+// Contoh data produk SSH (bisa diganti dari database nanti)
+$sshProducts = [
+    [
+        'name' => 'SSH Singapura Premium',
+        'flag' => '🇸🇬',
+        'price' => 15000,
+        'country' => 'Singapura',
+        'isp' => 'DigitalOcean',
+        'available' => true,
+        'stock' => 12
+    ],
+    [
+        'name' => 'SSH Indonesia Murah',
+        'flag' => '🇮🇩',
+        'price' => 10000,
+        'country' => 'Indonesia',
+        'isp' => 'Biznet',
+        'available' => false,
+        'stock' => 0
+    ],
 ];
 ?>
 
 <div class="mb-6">
-    <h2 class="text-2xl font-semibold mb-2">🔐 Daftar Akun SSH</h2>
-    <p class="text-sm text-gray-600 dark:text-gray-400">Berikut adalah akun SSH aktif yang telah dibuat.</p>
+    <h2 class="text-2xl font-semibold mb-2">🌐 Daftar Produk SSH</h2>
+    <p class="text-sm text-gray-600 dark:text-gray-400">Pilih produk SSH yang tersedia sesuai lokasi dan kebutuhan Anda.</p>
 </div>
 
-<div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
-    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-        <thead class="bg-gray-100 dark:bg-gray-700 text-left text-sm font-medium text-gray-700 dark:text-gray-200">
-            <tr>
-                <th class="px-4 py-3">Username</th>
-                <th class="px-4 py-3">Server</th>
-                <th class="px-4 py-3">Expired</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-100 dark:divide-gray-800 text-sm">
-            <?php foreach ($sshAccounts as $acc): ?>
-                <tr>
-                    <td class="px-4 py-2"><?= htmlspecialchars($acc['username']) ?></td>
-                    <td class="px-4 py-2"><?= htmlspecialchars($acc['server']) ?></td>
-                    <td class="px-4 py-2"><?= htmlspecialchars($acc['expired']) ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <?php foreach ($sshProducts as $product): ?>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-4 border border-gray-200 dark:border-gray-700">
+            <h3 class="text-lg font-semibold mb-1"><?= htmlspecialchars($product['name']) ?></h3>
+            <div class="text-3xl"><?= $product['flag'] ?></div>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">💳 Harga: <strong>Rp<?= number_format($product['price'], 0, ',', '.') ?>/bulan</strong></p>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">🌍 Negara: <?= htmlspecialchars($product['country']) ?></p>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">🏢 ISP: <?= htmlspecialchars($product['isp']) ?></p>
+            <p class="text-sm mb-1 <?= $product['available'] ? 'text-green-600' : 'text-red-500' ?>">
+                <?= $product['available'] ? '✅ Tersedia' : '❌ Tidak Tersedia' ?>
+            </p>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">📦 Stok: <?= $product['stock'] ?></p>
+            
+            <div class="flex gap-2">
+                <a href="#" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded shadow">🔍 Lihat Detail</a>
+                <a href="#" class="px-3 py-1 bg-green-600 hover:bg-green-500 text-white text-xs rounded shadow <?= $product['available'] ? '' : 'opacity-50 pointer-events-none' ?>">🛒 Keranjang</a>
+            </div>
+        </div>
+    <?php endforeach; ?>
 </div>
 
 <div class="mt-6">
-    <a href="#" class="inline-block bg-blue-600 hover:bg-blue-500 text-white text-sm px-4 py-2 rounded shadow transition">
+    <a href="#" class="inline-block bg-indigo-600 hover:bg-indigo-500 text-white text-sm px-4 py-2 rounded shadow transition">
         ➕ Buat Akun SSH Baru
     </a>
 </div>
