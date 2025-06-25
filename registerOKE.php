@@ -12,18 +12,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Password dan konfirmasi tidak cocok.";
     } else {
         $hashed = password_hash($password, PASSWORD_DEFAULT);
-	$role = (strpos($email, '@tokomard.com') !== false) ? 'admin' : 'user';
-        $stmt = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $username, $email, $hashed, $role);
 
-        if ($stmt->execute()) {
-            header("Location: index.php?success=1");
-            exit;
-        } else {
-            $error = "Registrasi gagal: " . $stmt->error;
-        }
+    if (strpos($email, '@tokomard.com') !== false) {
+        $role = 'admin';
+    } elseif (strpos($email, '@reseller.com') !== false) {
+        $role = 'reseller';
+    } else {
+        $error = "Email tidak valid. Gunakan @tokomard.com atau @reseller.com.";
     }
-}
 ?>
 
 <!DOCTYPE html>
