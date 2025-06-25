@@ -93,7 +93,7 @@ $require_uuid = in_array($protocol, ['vmess', 'vless']);
         </div>
     </form>
 
-    <div class="text-center text-xs text-gray-500 dark:text-gray-500 mt-6">2025© VPN DAN PAKET DATA XL AXIS</div>
+    <div class="text-center text-xs text-gray-500 dark:text-gray-500 mt-6">2025© TOKOMARD.CORP</div>
 </div>
 
 </body>
