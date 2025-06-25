@@ -70,16 +70,22 @@ function tampilkanXRAY($proto, $username, $expired, $key) {
     $grpcService = $proto . "-grpc";
     $path = "/$proto-ws";
 
+    // Tampilkan username tanpa prefix reseller (jika ada)
+    $displayUsername = $username;
+    if (preg_match('/^(.+?)_(.+)$/', $username, $match)) {
+        $displayUsername = $match[2]; // hanya ambil bagian setelah underscore
+    }
+
     $output = <<<EOL
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
           ${proto} ACCOUNT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Remarks        : $username
+Remarks        : $displayUsername
 Host/IP        : $domain
 Wildcard       : (bug.com).$domain
 Port TLS       : $tls
 Port none TLS  : $ntls
-Port gRPC      : $tls\n
+Port gRPC      : $tls
 EOL;
 
     $output .= ($proto === 'vmess' || $proto === 'vless') ? "UUID           : $key\n" : "Password       : $key\n";
@@ -89,14 +95,13 @@ Path           : $path
 ServiceName    : $grpcService
 Expired On     : $expired
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-\n
 EOL;
 
     switch ($proto) {
         case 'vmess':
             $vmessLink = "vmess://" . base64_encode(json_encode([
                 "v" => "2",
-                "ps" => $username,
+                "ps" => $displayUsername,
                 "add" => $domain,
                 "port" => $tls,
                 "id" => $key,
@@ -110,20 +115,19 @@ EOL;
             $output .= "Link TLS       : $vmessLink\n";
             break;
         case 'vless':
-            $output .= "Link TLS       : vless://$key@$domain:$tls?path=$path&security=tls&type=ws#$username\n";
+            $output .= "Link TLS       : vless://$key@$domain:$tls?path=$path&security=tls&type=ws#$displayUsername\n";
             break;
         case 'trojan':
-            $output .= "Link TLS       : trojan://$key@$domain:$tls?path=$path&security=tls&type=ws#$username\n";
+            $output .= "Link TLS       : trojan://$key@$domain:$tls?path=$path&security=tls&type=ws#$displayUsername\n";
             break;
         case 'shadowsocks':
             $encoded = base64_encode("aes-128-gcm:$key");
-            $output .= "Link SS (TLS)  : ss://$encoded@$domain:$tls#$username\n";
+            $output .= "Link SS (TLS)  : ss://$encoded@$domain:$tls#$displayUsername\n";
             break;
     }
 
     tampilkanHTML($output);
 }
-
 
 function tampilkanHTML($content) {
     echo <<<HTML
