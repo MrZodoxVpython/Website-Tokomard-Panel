@@ -1,5 +1,5 @@
 <?php
-require_once 'lib-akun.php'; // File yang berisi fungsi hitungTanggalExpired()
+require_once '/reseller/pages/tambah-akun/lib-akun.php'; // File yang berisi fungsi hitungTanggalExpired()
 
 if ($argc < 4) {
     echo "❌ Format: php tambah-akun-ssh.php username expired password\n";
