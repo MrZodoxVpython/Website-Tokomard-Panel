@@ -1,3 +1,11 @@
+<?php
+session_start();
+if (!isset($_SESSION['reseller'])) {
+    echo "❌ Anda belum login sebagai reseller!";
+    exit;
+}
+$reseller = $_SESSION['reseller'];
+?>
 <!DOCTYPE html>
 <html lang="id" class="dark">
 <head>
