@@ -39,8 +39,7 @@ function prosesXray($proto, $tagMap, $commentLine, $jsonLine, $username, $expire
 function tampilkanSSH($username, $expired, $key) {
     $domain = trim(@file_get_contents('/etc/xray/domain'));
     $ip = gethostbyname($domain);
-    echo <<<EOL
-<div style="background-color: #111827; color: #00ff7f; padding: 1em; border-radius: 10px; border: 2px solid #f97316;">
+    $output = <<<EOL
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
             SSH ACCOUNT             
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -52,8 +51,13 @@ Port Dropbear  : 443, 109, 143
 Port SSL/TLS   : 443
 Expired On     : $expired
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</div>
 EOL;
+
+    echo <<<HTML
+<div class="max-w-full overflow-auto p-2">
+    <pre class="bg-gray-900 text-green-400 border-2 border-orange-400 rounded-xl p-4 text-sm leading-relaxed font-mono whitespace-pre-wrap">$output</pre>
+</div>
+HTML;
 }
 
 function tampilkanXRAY($proto, $username, $expired, $key) {
@@ -63,8 +67,7 @@ function tampilkanXRAY($proto, $username, $expired, $key) {
     $grpcService = $proto . "-grpc";
     $path = "/$proto-ws";
 
-    echo <<<EOL
-<div style="background-color: #111827; color: #00ff7f; padding: 1em; border-radius: 10px; border: 2px solid #f97316;">
+    $output = <<<EOL
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
           ${proto} ACCOUNT           
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -76,9 +79,9 @@ Port none TLS  : $ntls
 Port gRPC      : $tls
 EOL;
 
-    echo ($proto === 'vmess' || $proto === 'vless') ? "UUID           : $key\n" : "Password       : $key\n";
+    $output .= ($proto === 'vmess' || $proto === 'vless') ? "UUID           : $key\n" : "Password       : $key\n";
 
-    echo <<<EOL
+    $output .= <<<EOL
 Path           : $path
 ServiceName    : $grpcService
 Expired On     : $expired
@@ -100,20 +103,24 @@ EOL;
                 "path" => $path,
                 "tls" => "tls"
             ]));
-            echo "Link TLS       : $vmessLink\n";
+            $output .= "Link TLS       : $vmessLink\n";
             break;
         case 'vless':
-            echo "Link TLS       : vless://$key@$domain:$tls?path=$path&security=tls&type=ws#$username\n";
+            $output .= "Link TLS       : vless://$key@$domain:$tls?path=$path&security=tls&type=ws#$username\n";
             break;
         case 'trojan':
-            echo "Link TLS       : trojan://$key@$domain:$tls?path=$path&security=tls&type=ws#$username\n";
+            $output .= "Link TLS       : trojan://$key@$domain:$tls?path=$path&security=tls&type=ws#$username\n";
             break;
         case 'shadowsocks':
             $encoded = base64_encode("aes-128-gcm:$key");
-            echo "Link SS (TLS)  : ss://$encoded@$domain:$tls#$username\n";
+            $output .= "Link SS (TLS)  : ss://$encoded@$domain:$tls#$username\n";
             break;
     }
 
-    echo "</div>\n";
+    echo <<<HTML
+<div class="max-w-full overflow-auto p-2">
+    <pre class="bg-gray-900 text-green-400 border-2 border-orange-400 rounded-xl p-4 text-sm leading-relaxed font-mono whitespace-pre-wrap">$output</pre>
+</div>
+HTML;
 }
 
