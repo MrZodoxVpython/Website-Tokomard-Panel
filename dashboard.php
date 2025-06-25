@@ -124,7 +124,7 @@ error_log("⏱ Dashboard load time: {$duration} seconds");
     <a href="statistik.php" class="block bg-gray-700 hover:bg-gray-800 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl text-base sm:text-lg font-semibold transition">
       📊 Lihat Statistik Lengkap
     </a>
-        <a href="statistik.php" class="block bg-gray-700 hover:bg-gray-800 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl text-base sm:text-lg font-semibold transition">
+        <a href="admin.php" class="block bg-gray-700 hover:bg-gray-800 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl text-base sm:text-lg font-semibold transition">
       📊 Administratrol Kontrol
     </a>
 
