@@ -1,5 +1,4 @@
 <?php
-// Contoh data produk SSH (bisa diganti dari database nanti)
 $sshProducts = [
     [
         'name' => 'SGDO-2DEV',
