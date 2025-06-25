@@ -11,18 +11,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($password !== $confirm) {
         $error = "Password dan konfirmasi tidak cocok.";
     } else {
-        $hashed = password_hash($password, PASSWORD_DEFAULT);
+        if (strpos($email, '@tokomard.com') !== false) {
+            $role = 'admin';
+        } elseif (strpos($email, '@reseller.com') !== false) {
+            $role = 'reseller';
+        } else {
+            $error = "Email tidak valid. Gunakan @tokomard.com atau @reseller.com.";
+        }
 
-    if (strpos($email, '@tokomard.com') !== false) {
-        $role = 'admin';
-    } elseif (strpos($email, '@reseller.com') !== false) {
-        $role = 'reseller';
-    } else {
-        $error = "Email tidak valid. Gunakan @tokomard.com atau @reseller.com.";
+        if (!isset($error)) {
+            $hashed = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param("ssss", $username, $email, $hashed, $role);
+
+            if ($stmt->execute()) {
+                header("Location: index.php?success=1");
+                exit;
+            } else {
+                $error = "Registrasi gagal: " . $stmt->error;
+            }
+        }
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -38,7 +49,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h2 class="text-3xl font-bold mb-2 text-center">Buat Akun Baru</h2>
     <p class="text-gray-400 text-center mb-6">Silakan isi data untuk mendaftar</p>
 
-    <form method="POST" action="proses_register.php" class="space-y-5">
+    <?php if (isset($error)): ?>
+      <div class="bg-red-600 text-white p-3 mb-4 rounded-md text-center">
+        <?= htmlspecialchars($error) ?>
+      </div>
+    <?php endif; ?>
+
+    <form method="POST" action="" class="space-y-5">
       <div>
         <label for="username" class="block text-sm mb-1">Username</label>
         <input type="text" id="username" name="username" required
@@ -67,7 +84,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         Daftar
       </button>
     </form>
-      
 
     <!-- Link kembali ke login -->
     <p class="text-sm text-center text-gray-400 mt-6">
