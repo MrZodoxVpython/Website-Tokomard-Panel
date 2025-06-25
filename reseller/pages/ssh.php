@@ -4,7 +4,7 @@ $sshProducts = [
     [
         'name' => 'SGDO-2DEV',
         'flag' => '🇸🇬',
-        'price' => 15000,
+        'price' => 20000,
         'country' => 'Singapura',
         'isp' => 'DigitalOcean',
         'available' => true,
@@ -13,9 +13,18 @@ $sshProducts = [
     [
         'name' => 'RW-MARD',
         'flag' => '🇮🇩',
-        'price' => 10000,
+        'price' => 20000,
         'country' => 'Indonesia',
         'isp' => 'FCCDN',
+        'available' => false,
+        'stock' => 0
+    ],
+    [
+        'name' => 'SGDO-MARD',
+        'flag' => '🇸🇬',
+        'price' => 15000,
+        'country' => 'Indonesia',
+        'isp' => 'DigitalOcean',
         'available' => false,
         'stock' => 0
     ],
