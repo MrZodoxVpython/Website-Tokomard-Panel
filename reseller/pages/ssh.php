@@ -2,7 +2,7 @@
 // Contoh data produk SSH (bisa diganti dari database nanti)
 $sshProducts = [
     [
-        'name' => 'SSH Singapura Premium',
+        'name' => 'SGDO-2DEV',
         'flag' => '🇸🇬',
         'price' => 15000,
         'country' => 'Singapura',
@@ -11,11 +11,11 @@ $sshProducts = [
         'stock' => 12
     ],
     [
-        'name' => 'SSH Indonesia Murah',
+        'name' => 'RW-MARD',
         'flag' => '🇮🇩',
         'price' => 10000,
         'country' => 'Indonesia',
-        'isp' => 'Biznet',
+        'isp' => 'FCCDN',
         'available' => false,
         'stock' => 0
     ],
