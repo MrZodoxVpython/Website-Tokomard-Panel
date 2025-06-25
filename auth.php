@@ -27,10 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['role']     = $user['role']; // tambahkan role ke session
 
             // redirect berdasarkan role
-            if ($user['role'] === 'admin') {
+	    if ($user['role'] === 'admin') {
                 header("Location: admin.php");
+            } elseif ($user['role'] === 'reseller') {
+                header("Location: reseller.php");
             } else {
-                header("Location: dashboard.php");
+                $error = "Role tidak dikenal.";
             }
             exit;
         } else {
