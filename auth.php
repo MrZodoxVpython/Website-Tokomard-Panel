@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	    if ($user['role'] === 'admin') {
                 header("Location: admin.php");
             } elseif ($user['role'] === 'reseller') {
-                header("Location: reseller.php");
+                header("Location: /reseller/reseller.php");
             } else {
                 $error = "Role tidak dikenal.";
             }
