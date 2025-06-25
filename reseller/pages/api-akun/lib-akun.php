@@ -54,8 +54,12 @@ Expired On     : $expired
 EOL;
 
     echo <<<HTML
-<div class="max-w-full overflow-auto p-2">
-    <pre class="bg-gray-900 text-green-400 border-2 border-orange-400 rounded-xl p-4 text-sm leading-relaxed font-mono whitespace-pre-wrap">$output</pre>
+<div class="flex justify-center items-center min-h-screen bg-gray-900">
+  <div class="max-w-full w-[95%] md:w-[70%] lg:w-[60%] xl:w-[50%] overflow-auto">
+    <pre class="bg-gray-900 text-green-400 border-2 border-orange-400 rounded-xl p-4 text-sm font-mono whitespace-pre-wrap leading-relaxed shadow-md">
+$output
+    </pre>
+  </div>
 </div>
 HTML;
 }
@@ -118,8 +122,12 @@ EOL;
     }
 
     echo <<<HTML
-<div class="max-w-full overflow-auto p-2">
-    <pre class="bg-gray-900 text-green-400 border-2 border-orange-400 rounded-xl p-4 text-sm leading-relaxed font-mono whitespace-pre-wrap">$output</pre>
+<div class="flex justify-center items-center min-h-screen bg-gray-900">
+  <div class="max-w-full w-[95%] md:w-[70%] lg:w-[60%] xl:w-[50%] overflow-auto">
+    <pre class="bg-gray-900 text-green-400 border-2 border-orange-400 rounded-xl p-4 text-sm font-mono whitespace-pre-wrap leading-relaxed shadow-md">
+$output
+    </pre>
+  </div>
 </div>
 HTML;
 }
