@@ -1,9 +1,13 @@
 <?php
-require_once '/lib-akun.php';
+require_once __DIR__ . '/lib-akun.php'; // path disesuaikan
 
-// Ambil data dari POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo "❌ Akses tidak valid.";
+    exit;
+}
+
 $username = $_POST['username'] ?? null;
-$expired_input = $_POST['expired'] ?? null;
+$expiredInput = $_POST['expired'] ?? null;
 $password = $_POST['password'] ?? null;
 
 if (!$username || !$expired_input || !$password) {
