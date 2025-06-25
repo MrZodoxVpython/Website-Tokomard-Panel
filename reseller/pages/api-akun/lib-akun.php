@@ -65,14 +65,14 @@ function tampilkanXRAY($proto, $username, $expired, $key) {
 
     $output = <<<EOL
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          ${proto} ACCOUNT           
+          ${proto} ACCOUNT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Remarks        : $username
 Host/IP        : $domain
 Wildcard       : (bug.com).$domain
 Port TLS       : $tls
 Port none TLS  : $ntls
-Port gRPC      : $tls
+Port gRPC      : $tls\n
 EOL;
 
     $output .= ($proto === 'vmess' || $proto === 'vless') ? "UUID           : $key\n" : "Password       : $key\n";
@@ -82,6 +82,7 @@ Path           : $path
 ServiceName    : $grpcService
 Expired On     : $expired
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+\n
 EOL;
 
     switch ($proto) {
@@ -115,6 +116,7 @@ EOL;
 
     tampilkanHTML($output);
 }
+
 
 function tampilkanHTML($content) {
     echo <<<HTML
