@@ -50,7 +50,7 @@ $sshProducts = [
 
 <div class="mt-6">
     <a href="index.php" class="inline-block bg-indigo-600 hover:bg-indigo-500 text-white text-sm px-4 py-2 rounded shadow transition">
-        ➕ Register
+        ➕  Register
     </a>
 </div>
 
