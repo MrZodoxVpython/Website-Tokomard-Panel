@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Link kembali ke login -->
     <p class="text-sm text-center text-gray-400 mt-6">
       Sudah punya akun?
-      <a href="indox.php" class="text-blue-400 hover:underline font-semibold">Login di sini</a>
+      <a href="login.php" class="text-blue-400 hover:underline font-semibold">Login di sini</a>
     </p>
   </div>
 
