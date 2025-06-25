@@ -49,7 +49,7 @@ $sshProducts = [
 </div>
 
 <div class="mt-6">
-    <a href="#" class="inline-block bg-indigo-600 hover:bg-indigo-500 text-white text-sm px-4 py-2 rounded shadow transition">
+    <a href="co-ssh.php" class="inline-block bg-indigo-600 hover:bg-indigo-500 text-white text-sm px-4 py-2 rounded shadow transition">
         ➕ Buat Akun SSH Baru
     </a>
 </div>
