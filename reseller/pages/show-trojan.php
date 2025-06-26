@@ -20,6 +20,12 @@ if (isset($_GET['hapus'])) {
     }
     file_put_contents($configPath, implode('', $newLines));
     shell_exec('sudo /usr/local/bin/restart-xray.sh');
+    // Hapus file txt yang sesuai username pembeli
+    $pattern = "$logDir/akun-$reseller-$userToDelete.txt";
+    foreach (glob($pattern) as $file) {
+         unlink($file);
+    }
+
     header("Location: show-trojan.php");
     exit;
 }
