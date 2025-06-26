@@ -159,6 +159,9 @@ EOL;
     catatLogReseller($reseller, $username, $expired, $output);
     tampilkanHTML($output);
 }
+function generateUUID() {
+    return trim(shell_exec('cat /proc/sys/kernel/random/uuid'));
+}
 
 
 function tampilkanHTML($content) {
