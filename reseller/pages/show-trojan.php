@@ -25,7 +25,6 @@ if (isset($_GET['hapus'])) {
     foreach (glob($pattern) as $file) {
          unlink($file);
     }
-
     header("Location: show-trojan.php");
     exit;
 }
