@@ -171,7 +171,7 @@ include '../templates/header.php';
                             echo '<span class="inline-block px-2 py-1 text-green-400 bg-green-900 rounded-full text-xs">Aktif</span>';
                             break;
                         case 'expiring':
-                            echo '<span class="inline-block px-2 py-1 text-yellow-400 bg-yellow-900 rounded-full text-xs">Segera Expired</span>';
+                            echo '<span class="text-center inline-block px-2 py-1 text-yellow-400 bg-yellow-900 rounded-full text-xs">Segera Expired</span>';
                             break;
                         case 'expired':
                             echo '<span class="inline-block px-2 py-1 text-red-400 bg-red-900 rounded-full text-xs">Expired</span>';
