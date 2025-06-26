@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     unlink('/tmp/tmp-token.json');
 
                     // Jalankan backup di VPS remote
-                    $cmd = "ssh -o StrictHostKeyChecking=no root@$vpsIp 'bash /usr/bin/backup.sh'";
+                    $cmd = "ssh -o StrictHostKeyChecking=no root@$vpsIp 'bash /etc/xray/backup.sh'";
                 } else {
                     $output = "❌ Token Google Drive belum dimasukkan!";
                 }
