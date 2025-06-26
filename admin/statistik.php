@@ -19,15 +19,29 @@ $selectedVps = $_GET['vps'] ?? 'sgdo-2dev';
 $configPath = $vpsList[$selectedVps]['config'] ?? '';
 $vpsIp = $vpsList[$selectedVps]['ip'] ?? '';
 
-if (!file_exists($configPath)) {
-    echo "<p style='color:red;'>❌ File config.json tidak ditemukan di VPS $selectedVps!</p>";
-    exit;
-}
+// Ambil config.json tergantung VPS lokal atau remote
+if ($selectedVps === 'sgdo-2dev') {
+    // VPS lokal, baca langsung
+    if (!file_exists($configPath)) {
+        echo "<p style='color:red;'>❌ File config.json tidak ditemukan di VPS $selectedVps!</p>";
+        exit;
+    }
+    $data = file_get_contents($configPath);
+    if ($data === false) {
+        echo "<p style='color:red;'>❌ Gagal membaca file config.json di VPS $selectedVps!</p>";
+        exit;
+    }
+} else {
+    // VPS remote, ambil via SSH
+    $sshUser = 'root';
+    $sshKeyPath = '/root/.ssh/id_rsa'; // pastikan key ini cocok
+    $sshCmd = "ssh -i $sshKeyPath -o StrictHostKeyChecking=no $sshUser@$vpsIp 'cat $configPath' 2>/dev/null";
+    $data = shell_exec($sshCmd);
 
-$data = file_get_contents($configPath);
-if ($data === false) {
-    echo "<p style='color:red;'>❌ Gagal membaca file config.json di VPS $selectedVps!</p>";
-    exit;
+    if (empty($data)) {
+        echo "<p style='color:red;'>❌ Gagal mengambil config.json dari VPS $selectedVps ($vpsIp)!</p>";
+        exit;
+    }
 }
 
 $lines = preg_grep('/^\s*#/', explode("\n", $data));
