@@ -40,13 +40,14 @@ foreach ($lines as $line) {
         if (isset($seenUsers[$username])) continue;
         $seenUsers[$username] = true;
 
-        $protocol = match ($prefix) {
-            '###' => 'vmess',
-            '#&'  => 'vless',
-            '#!'  => 'trojan',
-            '#$'  => 'ss',
-            default => 'unknown',
-        };
+
+        switch ($prefix) {
+    case '###': $protocol = 'vmess'; break;
+    case '#&':  $protocol = 'vless'; break;
+    case '#!':  $protocol = 'trojan'; break;
+    case '#$':  $protocol = 'ss'; break;
+    default:    $protocol = 'unknown';
+}
 
         $protocolCounts[$protocol]++;
         $usersByProtocol[$protocol][] = [
