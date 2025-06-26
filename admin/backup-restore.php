@@ -113,7 +113,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   <?php endif; ?>
 </div>
+<script>
+function setFormAction(ip, action) {
+  const form = document.getElementById('form-' + ip);
+  const localIp = '178.128.60.185';
 
+  if (ip === localIp) {
+    form.action = action === 'backup' ? 'backup.php' : 'restore.php';
+  } else {
+    form.action = 'backup-restore.php';
+  }
+
+  return true; // biar form tetap submit
+}
+</script>
 </body>
 </html>
 
