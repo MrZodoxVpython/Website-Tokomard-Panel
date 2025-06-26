@@ -62,7 +62,7 @@ $password = $_SESSION['vps_pass'] ?? null;
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="p-6 min-h-screen">
-    <h1 class="text-3xl font-bold text-green-400 mb-6 text-center">✅ Monitoring 3 VPS</h1>
+    <h1 class="text-3xl font-bold text-green-400 mb-6 text-center">✅ Monitoring VPS</h1>
 
     <?php if (!$password): ?>
         <form method="post" class="max-w-md mx-auto bg-gray-800 p-6 rounded-lg shadow-lg">
