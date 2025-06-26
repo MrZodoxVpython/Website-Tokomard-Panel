@@ -106,8 +106,8 @@ include '../templates/header.php';
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12">
     <?php
     $icons = [
-        'vmess' => ['emoji' => '🌀', 'color' => 'from-blue-400 to-purple-500'],
-        'vless' => ['emoji' => '🔮', 'color' => 'from-purple-300 to-blue-400'],
+        'vmess' => ['emoji' => '🌀', 'color' => 'from-blue-400 to-blue-700'],
+        'vless' => ['emoji' => '🔮', 'color' => 'from-purple-300 to-purple-400'],
         'trojan' => ['emoji' => '⚔',  'color' => 'from-yellow-400 to-orange-500'],
         'shadowsocks' => ['emoji' => '🕶', 'color' => 'from-green-300 to-teal-400'],
     ];
