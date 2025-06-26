@@ -98,7 +98,31 @@ include 'templates/header.php';
     </form>
   </td>
 </tr>
-<?php endforeach; ?>
+      <?php endforeach; ?>
+
+      <?php foreach ($vpsList as $vps): ?>
+        <tr class="border-t border-gray-700">
+          <form method="POST" action="<?= $vps['ip'] === '178.128.60.185' ? 'backup.php' ? 'restore.php' : '' ?>">
+            <td class="px-4 py-3 font-mono"><?= $vps['ip'] ?></td>
+            <td class="px-4 py-3"><?= $vps['country'] ?></td>
+            <td class="px-4 py-3">
+              <input type="password" name="password" placeholder="Password VPS (jika perlu)"
+                     class="bg-gray-800 border border-gray-600 rounded px-3 py-1 w-full text-sm">
+            </td>
+            <td class="px-4 py-3 flex gap-2 justify-center">
+              <input type="hidden" name="vps_ip" value="<?= $vps['ip'] ?>">
+              <button type="submit" name="action" value="backup"
+                      class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow">
+                🗃 Backup
+              </button>
+              <button type="submit" name="action" value="restore"
+                      class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded shadow">
+                ♻ Restore
+              </button>
+            </td>
+          </form>
+        </tr>
+      <?php endforeach; ?>
     </tbody>
   </table>
 
