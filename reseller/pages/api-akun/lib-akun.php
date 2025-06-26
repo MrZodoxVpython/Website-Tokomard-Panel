@@ -30,13 +30,12 @@ function prosesXray($proto, $tagMap, $commentLine, $jsonLine, $username, $expire
 
     if ($success) {
         shell_exec('sudo systemctl restart xray');
-        ob_start();
-        tampilkanXRAY($proto, $username, $expired, $key);
-        $output = ob_get_clean();
+        $outputText = generateXRAYTextOutput($proto, $username, $expired, $key);
+	tampilkanHTML($outputText);
 
-        echo $output;
-
-        catatLogReseller($_SESSION['username'] ?? 'unknown', $username, $expired, strip_tags($output));
+	$reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? 'unknown';
+	catatLogReseller($reseller, $username, $expired, $outputText);
+ 
     } else {
          echo "❌ Gagal menambahkan akun ke salah satu tag.\n";
     }
@@ -165,6 +164,19 @@ EOL;
     catatLogReseller($reseller, $username, $expired, $output);
     tampilkanHTML($output);
 }
+function generateXRAYTextOutput($proto, $username, $expired, $key) {
+    ob_start();
+    tampilkanXRAY($proto, $username, $expired, $key);
+    $html = ob_get_clean();
+
+    // Ambil isi <pre> dan bersihkan tag HTML
+    if (preg_match('/<pre[^>]*>(.*?)<\/pre>/s', $html, $match)) {
+        return html_entity_decode(strip_tags($match[1]));
+    }
+
+    return "❌ Gagal menangkap output akun.";
+}
+
 function generateUUID() {
     return trim(shell_exec('cat /proc/sys/kernel/random/uuid'));
 }
