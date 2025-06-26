@@ -91,7 +91,7 @@ foreach ($logLines as $logLine) {
 }
 
 // Mulai tampilan
-include 'templates/header.php';
+include '../templates/header.php';
 ?>
 
 <div class="p-4">
@@ -108,5 +108,5 @@ include 'templates/header.php';
 </div>
 
 <?php
-include 'templates/footer.php';
+include '../templates/footer.php';
 ?>
