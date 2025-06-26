@@ -51,7 +51,7 @@ if (session_status() === PHP_SESSION_NONE) {
       <!-- Menu Desktop -->
       <nav class="hidden md:flex items-center space-x-6">
         <a href="/dashboard.php" class="text-gray-300 hover:text-white transition">Beranda</a>
-        <a href="/adm.php" class="text-gray-300 hover:text-white transition">xXx</a>
+        <a href="/#.php" class="text-gray-300 hover:text-white transition">xXx</a>
         <a href="/reseller/reseller.php" class="text-gray-300 hover:text-white transition">Reseller</a>
         <span class="text-sm text-gray-400">👤 <?php echo htmlspecialchars($_SESSION['username']); ?></span>
         <a href="/logout.php" class="text-red-400 hover:underline font-semibold">🔓 Logout</a>
@@ -73,7 +73,7 @@ if (session_status() === PHP_SESSION_NONE) {
   <!-- Menu Mobile -->
   <div id="mobile-menu" class="md:hidden hidden px-4 pb-4 space-y-2">
     <a href="/dashboard.php" class="block text-gray-300 hover:text-white">Beranda</a>
-    <a href="/admin.php" class="block text-gray-300 hover:text-white">Admin</a>
+    <a href="/#.php" class="block text-gray-300 hover:text-white">xXx</a>
     <a href="/reseller.php" class="block text-gray-300 hover:text-white">Reseller</a>
     <a href="/logout.php" class="block text-red-400 hover:text-red-600">Logout</a>
   </div>
