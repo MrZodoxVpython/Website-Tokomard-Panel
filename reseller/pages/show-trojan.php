@@ -108,20 +108,21 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
             }
  
 
-            if ($action === 'start' && strpos($jsonLine, '"password": "locked"') !== false) {
-                // Cari baris lock
-                for ($j = $jsonIndex + 1; $j < count($lines); $j++) {
-                    if (preg_match('/\/\/\s*##LOCK##' . preg_quote($user, '/') . ':(.+)/', trim($lines[$j]), $match)) {
+            // START
+	    if ($action === 'start' && strpos($jsonLine, '"password": "locked"') !== false) {
+ 	        for ($k = $jsonIndex - 1; $k >= 0; $k--) {
+         	    if (preg_match('/^##LOCK##(.+)$/', trim($lines[$k]), $match)) {
                         $realPassword = $match[1];
-                        $jsonLine = str_replace('"password": "locked"', '"password": "' . $realPassword . '"', $jsonLine);
-                        $lines[$jsonIndex] = $jsonLine . "\n";
-                        unset($lines[$j]);
-                        $lines = array_values($lines);
-                        $updated = true;
-                        break;
-                    }
+            		$jsonLine = str_replace('"password": "locked"', '"password": "' . $realPassword . '"', $jsonLine);
+            		$lines[$jsonIndex] = $jsonLine . "\n";
+            		unset($lines[$k]); // hapus ##LOCK##
+            		$lines = array_values($lines); // reset index
+            		$updated = true;
+            		break;
+        	    }
                 }
             }
+ 
         }
     }
 }
