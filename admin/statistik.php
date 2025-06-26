@@ -1,12 +1,15 @@
 <?php
 session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 $__start_time = microtime(true);
 if (!isset($_SESSION['username'])) {
     header("Location: index.php");
     exit;
 }
 
-// Langsung definisikan daftar VPS di sini
+// Langsung definisikan daftar VPS
 $listVPS = [
     'SGDO-2DEV' => '127.0.0.1',
     'SGDO-MARD1' => '178.128.60.185',
@@ -87,7 +90,24 @@ foreach ($logLines as $logLine) {
     }
 }
 
+// Mulai tampilan
 include 'templates/header.php';
+?>
+
+<div class="p-4">
+    <form method="get" class="mb-4">
+        <label for="vps" class="text-white">Pilih VPS:</label>
+        <select name="vps" id="vps" onchange="this.form.submit()" class="bg-gray-800 text-white p-2 rounded border border-gray-600">
+            <?php foreach ($listVPS as $name => $ip): ?>
+                <option value="<?= $name ?>" <?= $selectedVps === $name ? 'selected' : '' ?>>
+                    <?= $name ?> (<?= $ip ?>)
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </form>
+</div>
+
+<?php
 include 'templates/statistik-tampilan.php';
 include 'templates/footer.php';
 
