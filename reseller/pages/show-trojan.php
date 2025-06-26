@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 var_dump($_SESSION['reseller']); // sementara
 
 $reseller = $_SESSION['reseller'] ?? 'unknown';
