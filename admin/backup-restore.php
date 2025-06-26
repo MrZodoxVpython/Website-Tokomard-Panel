@@ -74,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     // ⛔ Redirect agar reload tidak mengulang backup/restore
+    $_SESSION['last_output'] = $output;
     header("Location: backup-restore.php");
     exit;
 }
