@@ -53,7 +53,7 @@ include 'templates/header.php';
       📋 Registered Users
     </a>
     <a href="admin/vps-monitoring.php" class="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-xl text-center shadow">
-      🖥️ VPS Monitoring
+      🖥️ VPS Monitoring M
     </a>
     <a href="admin/backup-restore.php" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl text-center shadow">
       🧑‍💻 Backup & Restore
