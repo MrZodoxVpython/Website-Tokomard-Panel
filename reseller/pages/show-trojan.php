@@ -84,72 +84,74 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // START / STOP
-    if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
-        $user = $_POST['toggle_user'];
-        $action = $_POST['action']; // start or stop
-        $lines = file($configPath);
-        $currentTag = '';
-        $updated = false;
+// START / STOP
+if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
+    $user = $_POST['toggle_user'];
+    $action = $_POST['action']; // start or stop
+    $lines = file($configPath);
+    $currentTag = '';
+    $updated = false;
 
-        for ($i = 0; $i < count($lines); $i++) {
-            $line = trim($lines[$i]);
+    for ($i = 0; $i < count($lines); $i++) {
+        $line = trim($lines[$i]);
 
-            if (preg_match('/^#trojan(ws|grpc)?$/i', $line)) {
-                $currentTag = strtolower($line);
-            }
-
-            if (in_array($currentTag, ['#trojanws', '#trojangrpc'])) {
-                if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($user, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line)) {
-                    $jsonIndex = $i + 1;
-                    if (!isset($lines[$jsonIndex])) continue;
-
-                    $jsonLine = trim($lines[$jsonIndex]);
-
-                    // STOP
-if ($action === 'stop') {
-    if (preg_match('/"password"\s*:\s*"(.*?)"/', $jsonLine, $m)) {
-        $originalPassword = $m[1];
-        if ($originalPassword !== 'locked') {
-            // Ganti ke locked
-            $jsonLineLocked = preg_replace('/"password"\s*:\s*"(.*?)"/', '"password": "locked"', $jsonLine);
-
-            // Pastikan baris LOCK dan JSON masing-masing berdiri sendiri dan ada newline
-            $lines[$jsonIndex] = $jsonLineLocked . "\n"; // JSON line dengan newline
-            array_splice($lines, $jsonIndex, 0, ["##LOCK##$originalPassword\n"]); // LOCK line
-            $updated = true;
+        // Deteksi blok protokol
+        if (preg_match('/^#trojan(ws|grpc)?$/i', $line)) {
+            $currentTag = strtolower($line);
         }
-    }
-}
-                    // START
-                    if ($action === 'start') {
-                        for ($k = $jsonIndex - 1; $k >= max(0, $jsonIndex - 5); $k--) {
-    if (preg_match('/^##LOCK##(.+)\s*$/', trim($lines[$k]), $match)) {
-        $realPassword = trim($match[1]);
 
-        // Kembalikan password asli
-        $lines[$jsonIndex] = preg_replace('/"password"\s*:\s*"locked"/', '"password": "' . $realPassword . '"', $lines[$jsonIndex]);
+        // Proses hanya jika sedang dalam blok trojan
+        if (in_array($currentTag, ['#trojanws', '#trojangrpc'])) {
+            if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($user, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line)) {
+                $jsonIndex = $i + 1;
+                if (!isset($lines[$jsonIndex])) continue;
 
-        // Hapus baris ##LOCK## tanpa menghilangkan newline dari baris lain
-        array_splice($lines, $k, 1);
-        $updated = true;
-        break;
-    }
-}
+                $jsonLine = trim($lines[$jsonIndex]);
+
+                // STOP: lock akun
+                if ($action === 'stop') {
+                    if (preg_match('/"password"\s*:\s*"([^"]+)"/', $jsonLine, $m)) {
+                        $originalPassword = $m[1];
+                        if ($originalPassword !== 'locked') {
+                            $lines[$jsonIndex] = preg_replace('/"password"\s*:\s*"[^"]+"/', '"password": "locked"', $jsonLine) . "\n";
+                            array_splice($lines, $jsonIndex, 0, ["##LOCK##$originalPassword\n"]);
+                            $updated = true;
+                        }
+                    }
+                }
+
+                // START: unlock akun
+                if ($action === 'start') {
+                    if (preg_match('/"password"\s*:\s*"locked"/', $jsonLine)) {
+                        // Cari baris LOCK di atasnya, max 10 baris ke atas
+                        for ($k = $jsonIndex - 1; $k >= max(0, $jsonIndex - 10); $k--) {
+                            if (preg_match('/^##LOCK##(.+)/', trim($lines[$k]), $match)) {
+                                $realPassword = trim($match[1]);
+
+                                // Kembalikan password asli
+                                $lines[$jsonIndex] = preg_replace('/"password"\s*:\s*"locked"/', '"password": "' . $realPassword . '"', $lines[$jsonIndex]);
+
+                                // Hapus baris ##LOCK##
+                                array_splice($lines, $k, 1);
+                                $updated = true;
+                                break;
+                            }
+                        }
                     }
                 }
             }
         }
-
-        if ($updated) {
-            file_put_contents($configPath, implode('', $lines));
-            shell_exec('sudo /usr/local/bin/restart-xray.sh');
-        }
-
-        header("Location: show-trojan.php");
-        exit;
     }
+
+    if ($updated) {
+        file_put_contents($configPath, implode('', $lines));
+        shell_exec('sudo /usr/local/bin/restart-xray.sh');
+    }
+
+    header("Location: show-trojan.php");
+    exit;
 }
+
 ?>
 
 <!DOCTYPE html>
