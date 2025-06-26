@@ -110,18 +110,19 @@ include '../templates/header.php';
   $icons = [
     'vmess' => ['emoji' => '🌀', 'color' => 'from-blue-500 to-blue-700'],
     'vless' => ['emoji' => '🔮', 'color' => 'from-purple-400 to-purple-600'],
-    'trojan' => ['emoji' => '⚔️', 'color' => 'from-orange-400 to-red-500'],
-    'shadowsocks' => ['emoji' => '🕶️', 'color' => 'from-emerald-400 to-teal-500'],
+    'trojan' => ['emoji' => '⚔️', 'color' => 'from-yellow-400 to-orange-500'],
+    'shadowsocks' => ['emoji' => '🕶️', 'color' => 'from-green-300 to-teal-400'],
   ];
+
   foreach ($statistik as $proto => $akun):
-    $icon = $icons[$proto]['emoji'] ?? '❔';
+    $icon     = $icons[$proto]['emoji'] ?? '❔';
     $gradient = $icons[$proto]['color'] ?? 'from-gray-700 to-gray-900';
-    $total = count($akun);
-    $active = countStatus($akun, 'active');
+    $total    = count($akun);
+    $active   = countStatus($akun, 'active');
     $expiring = countStatus($akun, 'expiring');
-    $expired = countStatus($akun, 'expired');
+    $expired  = countStatus($akun, 'expired');
   ?>
-    <div class="flex flex-col justify-between rounded-xl p-6 shadow-lg text-white bg-gradient-to-br <?= $gradient ?> hover:scale-[1.02] transition-transform duration-200 min-h-[240px]">
+    <div class="flex flex-col justify-between h-full min-h-[240px] rounded-xl p-6 shadow-lg text-white bg-gradient-to-br <?= $gradient ?> hover:scale-[1.02] transition-transform duration-200">
       <div class="text-center">
         <div class="text-4xl"><?= $icon ?></div>
         <h2 class="text-lg font-semibold tracking-widest mt-2"><?= strtoupper($proto) ?></h2>
