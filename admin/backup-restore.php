@@ -120,14 +120,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   <?php endif; ?>
 
-  <?php if (file_exists($backupFile)): ?>
-    <div class="bg-gray-800 rounded p-4">
-      <p class="text-green-300 mb-2">✅ File backup tersedia untuk diunduh:</p>
+<?php
+// Deteksi semua file backup dari remote (jika ada)
+$remoteDir = __DIR__ . '/backup-from-remote';
+$remoteFiles = glob("$remoteDir/*.tar.gz");
+?>
+
+<?php if (file_exists($backupFile) || !empty($remoteFiles)): ?>
+  <div class="bg-gray-800 rounded p-4 space-y-2">
+    <?php if (file_exists($backupFile)): ?>
+      <p class="text-green-300">✅ Backup lokal tersedia:</p>
       <a href="download-backup.php" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow">
         ⬇ Download backup-vpn.tar.gz
       </a>
-    </div>
-  <?php endif; ?>
+    <?php endif; ?>
+
+    <?php foreach ($remoteFiles as $filePath):
+      $fileName = basename($filePath);
+      $fileUrl = "backup-from-remote/$fileName";
+    ?>
+      <p class="text-green-300">✅ Backup remote tersedia: <?= htmlspecialchars($fileName) ?></p>
+      <a href="<?= $fileUrl ?>" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded shadow inline-block">
+        ⬇ Download <?= htmlspecialchars($fileName) ?>
+      </a>
+    <?php endforeach; ?>
+  </div>
+<?php endif; ?>
+
 </div>
 
 <script>
