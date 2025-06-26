@@ -18,7 +18,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
         }
     </script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white min-h-screen p-6">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white min-h-screen flex items-center justify-center p-4">
 
 <?php
 $server = [
@@ -39,7 +39,7 @@ $require_password = in_array($protocol, ['ssh', 'trojan', 'shadowsocks']);
 $require_uuid = in_array($protocol, ['vmess', 'vless']);
 ?>
 
-<div class="max-w-2xl mx-auto bg-white dark:bg-gray-900 shadow-md rounded-2xl p-6 space-y-6 border border-gray-200 dark:border-gray-700">
+<div class="w-full max-w-2xl bg-white dark:bg-gray-900 shadow-md rounded-2xl p-6 space-y-6 border border-gray-200 dark:border-gray-700">
     <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">🛒 Detail Server</h2>
 
     <div class="text-sm text-gray-700 dark:text-gray-300 space-y-1">
