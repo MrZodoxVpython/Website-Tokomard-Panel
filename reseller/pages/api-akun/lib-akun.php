@@ -158,7 +158,7 @@ EOL;
             break;
     }
 
-    $output .= "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    $output .= "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━";
     // Simpan log akun ke file akun-reseller-username.txt
     $reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? 'unknown';
     catatLogReseller($reseller, $username, $expired, $output);
