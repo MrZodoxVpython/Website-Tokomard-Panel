@@ -74,7 +74,7 @@ include 'templates/header.php';
     <tbody>
       <?php foreach ($vpsList as $vps): ?>
         <tr class="border-t border-gray-700">
-          <form method="POST">
+          <form method="POST" action="<?= $vps['ip'] === '178.128.60.185' ? 'backup.php' : '' ?>">
             <td class="px-4 py-3 font-mono"><?= $vps['ip'] ?></td>
             <td class="px-4 py-3"><?= $vps['country'] ?></td>
             <td class="px-4 py-3">
