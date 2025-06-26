@@ -179,19 +179,20 @@ $content
 </html>
 HTML;
 }
-function catatLogReseller($reseller, $username, $expired) {
+function catatLogReseller($reseller, $usernamePembeli, $expired, $detailAkun) {
     $logDir = "/etc/xray/data-panel/reseller";
     if (!is_dir($logDir)) {
         mkdir($logDir, 0755, true);
     }
 
-    // Ganti nama file log sesuai username reseller
-    $logFile = "$logDir/akun-{$reseller}.txt";
-    $tanggal = date("Y-m-d H:i:s");
-    $logData = "[$tanggal] Reseller: $reseller menambahkan akun: $username (Expired: $expired)\n";
+    // Nama file: akun-usernameReseller-usernamePembeli.txt
+    $safeReseller = preg_replace('/[^a-zA-Z0-9_\-]/', '', $reseller);
+    $safeUsername = preg_replace('/[^a-zA-Z0-9_\-]/', '', $usernamePembeli);
+    $logFile = "$logDir/akun-{$safeReseller}-{$safeUsername}.txt";
 
+    // Simpan isi detail akun ke file
     if (is_writable($logDir)) {
-        file_put_contents($logFile, $logData, FILE_APPEND);
+        file_put_contents($logFile, $detailAkun);
     } else {
         error_log("❌ Tidak bisa menulis ke $logFile");
     }
