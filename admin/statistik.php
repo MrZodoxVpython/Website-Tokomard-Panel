@@ -62,7 +62,7 @@ foreach ($lines as $line) {
     }
 }
 
-include 'templates/header.php';
+include '../templates/header.php';
 ?>
 
 <div class="container mx-auto px-4 py-6">
@@ -153,5 +153,5 @@ include 'templates/header.php';
   </div>
 </div>
 
-<?php include 'templates/footer.php'; ?>
+<?php include '../templates/footer.php'; ?>
 
