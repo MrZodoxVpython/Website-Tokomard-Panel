@@ -2,6 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 session_start();
+
 $reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? 'unknown';
 
 $configPath = '/etc/xray/config.json';
@@ -13,24 +14,32 @@ if (isset($_GET['hapus'])) {
     $userToDelete = $_GET['hapus'];
     $lines = file($configPath);
     $newLines = [];
+
     for ($i = 0; $i < count($lines); $i++) {
         if (preg_match('/^\s*(###|#&|#!|#\$)\s+' . preg_quote($userToDelete) . '\s+\d{4}-\d{2}-\d{2}/', $lines[$i])) {
-            $i++; // skip next line JSON
+            $i++; // skip JSON line
             continue;
+        }
+        if (preg_match('/^##LOCK##/', trim($lines[$i]))) {
+            continue; // skip LOCK lines if any
         }
         $newLines[] = $lines[$i];
     }
+
     file_put_contents($configPath, implode('', $newLines));
     shell_exec('sudo /usr/local/bin/restart-xray.sh');
+
     foreach (glob("$logDir/akun-$reseller-$userToDelete.txt") as $file) {
         unlink($file);
     }
+
     header("Location: show-trojan.php");
     exit;
 }
 
-// Handle POST (Edit dan Start/Stop)
+// Handle POST (Edit & Start/Stop)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
     // Edit Expired
     if (isset($_POST['edit_user'])) {
         $userEdit = $_POST['edit_user'];
@@ -46,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($expiredBaru) {
             $lines = file($configPath);
             $currentTag = '';
+
             foreach ($lines as $i => $line) {
                 if (preg_match('/^\s*#(trojan)(grpc|ws)?$/i', trim($line), $m)) {
                     $currentTag = '#' . strtolower($m[1] . ($m[2] ?? ''));
@@ -58,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 }
             }
+
             file_put_contents($configPath, implode('', $lines));
 
             foreach (glob("$logDir/akun-$reseller-$userEdit.txt") as $file) {
@@ -73,10 +84,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Start / Stop
+    // START / STOP
     if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
         $user = $_POST['toggle_user'];
-        $action = $_POST['action']; // 'start' or 'stop'
+        $action = $_POST['action']; // start or stop
         $lines = file($configPath);
         $currentTag = '';
         $updated = false;
@@ -91,46 +102,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (in_array($currentTag, ['#trojanws', '#trojangrpc'])) {
                 if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($user, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line)) {
                     $jsonIndex = $i + 1;
-
                     if (!isset($lines[$jsonIndex])) continue;
 
                     $jsonLine = trim($lines[$jsonIndex]);
 
-		    // STOP
-if ($action === 'stop') {
-    if (preg_match('/"password"\s*:\s*"(.*?)"/', $jsonLine, $m)) {
-        $originalPassword = $m[1];
-        if ($originalPassword !== 'locked') {
-            // Ganti ke locked
-            $jsonLineLocked = preg_replace('/"password"\s*:\s*"(.*?)"/', '"password": "locked"', $jsonLine);
-            $lines[$jsonIndex] = $jsonLineLocked;
+                    // STOP
+                    if ($action === 'stop') {
+                        if (preg_match('/"password"\s*:\s*"(.*?)"/', $jsonLine, $m)) {
+                            $originalPassword = $m[1];
+                            if ($originalPassword !== 'locked') {
+                                $jsonLineLocked = preg_replace('/"password"\s*:\s*"(.*?)"/', '"password": "locked"', $jsonLine);
+                                $lines[$jsonIndex] = $jsonLineLocked;
 
-            // Tambahkan ##LOCK## sebelum baris JSON
-            array_splice($lines, $jsonIndex, 0, "##LOCK##$originalPassword\n");
-            $updated = true;
-        }
-    }
-}
+                                array_splice($lines, $jsonIndex, 0, "##LOCK##$originalPassword\n");
+                                $updated = true;
+                            }
+                        }
+                    }
 
-// START
-if ($action === 'start') {
-    for ($k = $jsonIndex - 1; $k >= max(0, $jsonIndex - 5); $k--) {
-        if (preg_match('/^##LOCK##(.+)$/', trim($lines[$k]), $match)) {
-            $realPassword = $match[1];
+                    // START
+                    if ($action === 'start') {
+                        for ($k = $jsonIndex - 1; $k >= max(0, $jsonIndex - 5); $k--) {
+                            if (preg_match('/^##LOCK##(.+)$/', trim($lines[$k]), $match)) {
+                                $realPassword = $match[1];
+                                $lines[$jsonIndex] = str_replace('"password": "locked"', '"password": "' . $realPassword . '"', $lines[$jsonIndex]);
 
-            // Ganti password locked ke real
-            $lines[$jsonIndex] = str_replace('"password": "locked"', '"password": "' . $realPassword . '"', $lines[$jsonIndex]);
-
-            // Hapus baris ##LOCK##
-            unset($lines[$k]);
-            $lines = array_values($lines); // ini perlu agar tidak ada gap index
-            $updated = true;
-            break;
-        }
-    }
-}
-
-               }
+                                unset($lines[$k]);
+                                $lines = array_values($lines);
+                                $updated = true;
+                                break;
+                            }
+                        }
+                    }
+                }
             }
         }
 
