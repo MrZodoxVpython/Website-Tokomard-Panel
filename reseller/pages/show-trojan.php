@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
                     </div>
                 </div>
 
-                <!-- Detail akun -->
+                <!-- Box detail akun -->
                 <div id="detail-<?= $username ?>" class="detail-box mt-3 bg-gray-700 rounded hidden">
                     <div class="overflow-x-auto">
                         <pre class="text-green-300 font-mono text-sm whitespace-pre p-3 min-w-full">
@@ -139,21 +139,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
 
     <script>
         function toggleDetail(id) {
-            // Tutup semua panel & reset tombol
-            document.querySelectorAll('.detail-box').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.btn-show').forEach(btn => btn.innerText = 'Show');
+            const targetBox = document.getElementById('detail-' + id);
+            const targetBtn = document.getElementById('btn-' + id);
 
-            const detailBox = document.getElementById('detail-' + id);
-            const button = document.getElementById('btn-' + id);
+            const allBoxes = document.querySelectorAll('.detail-box');
+            const allButtons = document.querySelectorAll('.btn-show');
 
-            // Jika panel ini sedang tersembunyi, buka & ganti tombol jadi Hide
-            if (detailBox.classList.contains('hidden')) {
-                detailBox.classList.remove('hidden');
-                button.innerText = 'Hide';
-            } else {
-                detailBox.classList.add('hidden');
-                button.innerText = 'Show';
+            // Jika box yang diklik sedang terbuka, maka tutup saja (toggle normal)
+            if (!targetBox.classList.contains('hidden')) {
+                targetBox.classList.add('hidden');
+                targetBtn.innerText = 'Show';
+                return;
             }
+
+            // Tutup semua lainnya
+            allBoxes.forEach(box => box.classList.add('hidden'));
+            allButtons.forEach(btn => btn.innerText = 'Show');
+
+            // Buka yang diklik
+            targetBox.classList.remove('hidden');
+            targetBtn.innerText = 'Hide';
         }
     </script>
 </body>
