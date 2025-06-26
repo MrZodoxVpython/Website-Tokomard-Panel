@@ -48,7 +48,7 @@ include 'templates/header.php';
       📊 Statistik Bandwith M
     </a>
     <a href="admin/statistik.php" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-3 rounded-xl text-center shadow">
-      📈 Cek User Xray Lengkap M
+      📈 Full Cek User Xray  M
     </a>
       <a href="admin/log-akses.php" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-3 rounded-xl text-center shadow">
       🧾 Log Akses User
