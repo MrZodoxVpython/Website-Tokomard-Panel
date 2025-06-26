@@ -96,14 +96,17 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
             $jsonLine = trim($lines[$jsonIndex]);
 
             if ($action === 'stop' && strpos($jsonLine, '"password": "locked"') === false) {
-                if (preg_match('/"password"\s*:\s*"(.*?)"/', $jsonLine, $m)) {
-                    $originalPassword = $m[1];
-                    $jsonLine = preg_replace('/"password"\s*:\s*"(.*?)"/', '"password": "locked"', $jsonLine);
-                    $lines[$jsonIndex] = $jsonLine . "\n";
-                    $lines[$jsonIndex + 1] = "// ##LOCK##$user:$originalPassword\n";
-                    $updated = true;
-                }
-            }
+    if (preg_match('/"password"\s*:\s*"(.*?)"/', $jsonLine, $m)) {
+        $originalPassword = $m[1];
+        $jsonLine = preg_replace('/"password"\s*:\s*"(.*?)"/', '"password": "locked"', $jsonLine);
+        // Update JSON line
+        $lines[$jsonIndex] = $jsonLine . "\n";
+        // Simpan LOCK di atas JSON line, bukan di bawah
+        array_splice($lines, $jsonIndex, 0, "##LOCK##$originalPassword\n");
+        $updated = true;
+    }
+}
+ 
 
             if ($action === 'start' && strpos($jsonLine, '"password": "locked"') !== false) {
                 // Cari baris lock
