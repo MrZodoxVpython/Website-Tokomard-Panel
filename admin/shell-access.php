@@ -18,7 +18,7 @@ $servers = [
         'ssh_port' => 22
     ],
     'SGDO-MARD1' => [
-        'ip' => '143.198.202.86',
+        'ip' => '152.42.182.187',
         'ssh_user' => 'root',
         'ssh_port' => 22
     ],
