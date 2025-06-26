@@ -19,7 +19,7 @@ $backupFile = '/root/backup-vpn.tar.gz';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? null;
     $vpsIp = $_POST['vps_ip'] ?? null;
-    $password = $_POST['password'] ?? '';
+    $token = $_POST['token'] ?? '';
 
     if ($action && $vpsIp) {
         $isLocal = ($vpsIp === $localIp);
@@ -27,22 +27,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($action === 'backup') {
             if ($isLocal) {
                 $cmd = "sudo /usr/bin/php /var/www/html/Website-Tokomard-Panel/admin/backup.php";
-            } elseif (!empty($password)) {
-                $cmd = "sshpass -p '$password' ssh -o StrictHostKeyChecking=no root@$vpsIp 'sudo /usr/bin/backup'";
             } else {
-                $cmd = "ssh -o StrictHostKeyChecking=no root@$vpsIp 'sudo /usr/bin/backup'";
+                if (!empty($token)) {
+                    // Simpan token sementara
+                    file_put_contents('/tmp/tmp-token.json', $token);
+
+                    // Kirim token ke VPS remote
+                    $scpCmd = "scp -o StrictHostKeyChecking=no /tmp/tmp-token.json root@$vpsIp:/tmp/token.json";
+                    shell_exec($scpCmd);
+                    unlink('/tmp/tmp-token.json');
+
+                    // Jalankan backup di VPS remote
+                    $cmd = "ssh -o StrictHostKeyChecking=no root@$vpsIp 'bash /usr/bin/backup.sh'";
+                } else {
+                    $output = "❌ Token Google Drive belum dimasukkan!";
+                }
             }
         } elseif ($action === 'restore') {
             if ($isLocal) {
                 $cmd = "php /var/www/html/Website-Tokomard-Panel/admin/restore.php";
-            } elseif (!empty($password)) {
-                $cmd = "sshpass -p '$password' ssh -o StrictHostKeyChecking=no root@$vpsIp 'php /var/www/html/Website-Tokomard-Panel/admin/auto-install-rclone.php'";
             } else {
                 $cmd = "ssh -o StrictHostKeyChecking=no root@$vpsIp 'php /var/www/html/Website-Tokomard-Panel/admin/auto-install-rclone.php'";
             }
         }
 
-        $output = shell_exec($cmd . " 2>&1");
+        if (!empty($cmd)) {
+            $output = shell_exec($cmd . " 2>&1");
+        }
     }
 }
 ?>
@@ -64,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <tr>
         <th class="px-4 py-3">IP VPS</th>
         <th class="px-4 py-3">Country</th>
-        <th class="px-4 py-3">Password (opsional)</th>
+        <th class="px-4 py-3">Token Google Drive</th>
         <th class="px-4 py-3 text-center">Aksi</th>
       </tr>
     </thead>
@@ -75,8 +86,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <td class="px-4 py-3 font-mono"><?= $vps['ip'] ?></td>
     <td class="px-4 py-3"><?= $vps['country'] ?></td>
     <td class="px-4 py-3">
-      <input type="password" name="password" placeholder="Password VPS (jika perlu)"
+      <?php if ($vps['ip'] !== $localIp): ?>
+      <input type="text" name="token" placeholder="Token Google Drive untuk VPS remote"
              class="bg-gray-800 border border-gray-600 rounded px-3 py-1 w-full text-sm">
+      <?php else: ?>
+      <input type="text" disabled value="Tidak diperlukan"
+             class="bg-gray-700 border border-gray-600 rounded px-3 py-1 w-full text-sm text-gray-400">
+      <?php endif; ?>
     </td>
     <td class="px-4 py-3 flex gap-2 justify-center">
       <input type="hidden" name="vps_ip" value="<?= $vps['ip'] ?>">
@@ -113,6 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   <?php endif; ?>
 </div>
+
 <script>
 function setFormAction(ip, action) {
   const form = document.getElementById('form-' + ip);
@@ -124,7 +141,7 @@ function setFormAction(ip, action) {
     form.action = 'backup-restore.php';
   }
 
-  return true; // biar form tetap submit
+  return true;
 }
 </script>
 </body>
