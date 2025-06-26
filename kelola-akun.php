@@ -12,7 +12,7 @@ if (!isset($_SESSION['username'])) {
 // Daftar IP VPS + user SSH
 $vpsList = [
     'rw-mard'     => ['ip' => '203.194.113.140', 'user' => 'root'],
-    'sgdo-mard1'  => ['ip' => '143.198.202.86', 'user' => 'root'],
+    'sgdo-mard1'  => ['ip' => '152.42.182.187', 'user' => 'root'],
     'sgdo-2dev'   => ['ip' => '178.128.60.185', 'user' => 'root'],
 ];
 
