@@ -18,7 +18,7 @@ $server = [
     'price' => 20000
 ];
 
-$protocol = $_GET['proto'] ?? 'ssh';
+$protocol = $_GET['proto'] ?? 'trojan';
 $require_password = in_array($protocol, ['ssh', 'trojan', 'shadowsocks']);
 $require_uuid = in_array($protocol, ['vmess', 'vless']);
 ?>
