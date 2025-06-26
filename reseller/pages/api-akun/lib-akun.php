@@ -181,7 +181,7 @@ HTML;
 }
 
 function catatLogReseller($reseller, $username, $expired) {
-    $logDir = "/etc/xray/data-panel";
+    $logDir = "/etc/xray/data-panel/reseller";
     if (!is_dir($logDir)) {
         mkdir($logDir, 0755, true);
     }
