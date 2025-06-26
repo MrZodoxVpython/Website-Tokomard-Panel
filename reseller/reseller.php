@@ -9,7 +9,6 @@ $loggedInUser = [
     'username' => $_SESSION['username'],
     'avatar' => 'https://ui-avatars.com/api/?name=' . urlencode($_SESSION['username']) . '&background=4F46E5&color=fff'
 ];
-$_SESSION['username'] = $username;
 
 $page = isset($_GET['page']) ? basename($_GET['page']) : 'dashboard';
 $pagePath = "pages/{$page}.php";
