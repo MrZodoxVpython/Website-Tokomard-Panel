@@ -22,22 +22,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
 
     if ($action && $vpsIp) {
-        if ($action === 'backup') {
-            if (!empty($password)) {
-                $cmd = "sshpass -p '$password' ssh -o StrictHostKeyChecking=no root@$vpsIp 'sudo /usr/bin/backup'";
-            } else {
-                $cmd = "ssh -o StrictHostKeyChecking=no root@$vpsIp 'sudo /usr/bin/backup'";
-            }
-        } elseif ($action === 'restore') {
-            if (!empty($password)) {
-                $cmd = "sshpass -p '$password' ssh -o StrictHostKeyChecking=no root@$vpsIp 'php /var/www/html/Website-Tokomard-Panel/admin/auto-install-rclone.php'";
-            } else {
-                $cmd = "ssh -o StrictHostKeyChecking=no root@$vpsIp 'php /var/www/html/Website-Tokomard-Panel/admin/auto-install-rclone.php'";
-            }
-        }
+    $isLocal = ($vpsIp === '178.128.60.185');
 
-        $output = shell_exec($cmd . " 2>&1");
+    if ($action === 'backup') {
+        if ($isLocal) {
+            $cmd = "sudo /usr/bin/backup";
+        } elseif (!empty($password)) {
+            $cmd = "sshpass -p '$password' ssh -o StrictHostKeyChecking=no root@$vpsIp 'sudo /usr/bin/backup'";
+        } else {
+            $cmd = "ssh -o StrictHostKeyChecking=no root@$vpsIp 'sudo /usr/bin/backup'";
+        }
+    } elseif ($action === 'restore') {
+        if ($isLocal) {
+            $cmd = "php /var/www/html/Website-Tokomard-Panel/admin/auto-install-rclone.php";
+        } elseif (!empty($password)) {
+            $cmd = "sshpass -p '$password' ssh -o StrictHostKeyChecking=no root@$vpsIp 'php /var/www/html/Website-Tokomard-Panel/admin/auto-install-rclone.php'";
+        } else {
+            $cmd = "ssh -o StrictHostKeyChecking=no root@$vpsIp 'php /var/www/html/Website-Tokomard-Panel/admin/auto-install-rclone.php'";
+        }
     }
+
+    $output = shell_exec($cmd . " 2>&1");
+    }
+
 }
 
 include 'templates/header.php';
