@@ -7,19 +7,33 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$username = $_POST['username'] ?? null;
-$expiredInput = $_POST['expired'] ?? null;
-$password = $_POST['password'] ?? generateUUID(); // ✅ tambahkan fallback UUID
+// Ambil data dari form
+$username = trim($_POST['username'] ?? '');
+$expiredInput = trim($_POST['expired'] ?? '');
+$password = trim($_POST['password'] ?? '');
 
-if (!$username || !$expiredInput || !$password) {
+// Validasi input
+if (empty($username) || empty($expiredInput)) {
     echo "❌ Data tidak lengkap!";
     exit;
 }
 
+// Generate password jika kosong
+if (empty($password)) {
+    $password = generateUUID();
+}
+
+// Hitung tanggal expired
 $expired = hitungTanggalExpired($expiredInput);
+
+// Siapkan format untuk config Xray
 $commentLine = "#! $username $expired";
 $jsonLine = "},{\"password\": \"$password\", \"email\": \"$username\"";
 $tags = ['trojanws', 'trojangrpc'];
 
-prosesXray('trojan', $tags, $commentLine, $jsonLine, $username, $expired, $password);
+// Proses penambahan akun Xray Trojan
+$hasil = prosesXray('trojan', $tags, $commentLine, $jsonLine, $username, $expired, $password);
+
+// Tampilkan hasil (jika ingin untuk remote SSH)
+echo $hasil;
 
