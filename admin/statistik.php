@@ -43,7 +43,6 @@ $sevenDaysLater = date('Y-m-d', strtotime('+7 days'));
 
 foreach ($lines as $line) {
     $line = trim($line);
-
     if (preg_match('/^(###|#&|#!|#\$)\s+(\S+)\s+(\d{4}-\d{2}-\d{2})$/', $line, $match)) {
         $prefix = $match[1];
         $username = $match[2];
@@ -87,14 +86,12 @@ $startTime = date('Y/m/d H:i:s', strtotime('-1 minute'));
 $usernames = array_keys($seenUsers);
 
 if (file_exists($logPath)) {
-    $logContent = explode("\n", shell_exec("tail -n 500 /var/log/xray/access.log"));
-    $uniqueUsers = [];
+    $logContent = explode("\n", shell_exec("tail -n 500 $logPath"));
     foreach ($logContent as $logLine) {
         if (preg_match('/^(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}).*email: (\S+)/', $logLine, $matches)) {
             $logTime = $matches[1];
             $logUser = $matches[2];
             if ($logTime > $startTime && in_array($logUser, $usernames)) {
-                $uniqueUsers[$logUser] = true;
                 $activeUsers[$logUser] = true;
             }
         }
@@ -102,22 +99,29 @@ if (file_exists($logPath)) {
 }
 
 include 'templates/header.php';
-error_log("⏱ Setelah include header.php: " . round(microtime(true) - $__start_time, 3) . "s");
 ?>
 
-<!-- Tailwind dark mode version -->
 <div class="container mx-auto px-4 py-6">
   <div class="text-center mb-10">
     <h1 class="text-4xl font-extrabold text-white dark:text-gray-100">Statistik Akun VPN</h1>
     <p class="text-gray-400 dark:text-gray-300 mt-2 text-base">Menampilkan jumlah akun yang terdaftar berdasarkan jenis protokol.</p>
   </div>
 
+  <div class="mb-6 text-center">
+    <label for="protocolFilter" class="text-white dark:text-gray-100 font-semibold mr-2">Filter Protokol:</label>
+    <select id="protocolFilter" class="p-2 rounded text-black">
+      <option value="all">Semua</option>
+      <option value="vmess">VMESS</option>
+      <option value="vless">VLESS</option>
+      <option value="trojan">TROJAN</option>
+      <option value="ss">Shadowsocks</option>
+    </select>
+  </div>
+
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
     <?php foreach ($protocolCounts as $key => $val): ?>
-    <div class="bg-<?php echo $key === 'vmess' ? 'blue' : ($key === 'vless' ? 'purple' : ($key === 'trojan' ? 'pink' : 'yellow')); ?>-600 dark:bg-<?php echo $key === 'vmess' ? 'blue' : ($key === 'vless' ? 'purple' : ($key === 'trojan' ? 'pink' : 'yellow')); ?>-800 rounded-xl p-5 shadow text-white text-center">
-      <h3 class="text-xl font-semibold">
-         Akun <?php echo $key === 'ss' ? 'Shadowsocks' : strtoupper($key); ?>
-      </h3>
+    <div data-protocol="<?php echo $key; ?>" class="proto-card bg-<?php echo $key === 'vmess' ? 'blue' : ($key === 'vless' ? 'purple' : ($key === 'trojan' ? 'pink' : 'yellow')); ?>-600 dark:bg-<?php echo $key === 'vmess' ? 'blue' : ($key === 'vless' ? 'purple' : ($key === 'trojan' ? 'pink' : 'yellow')); ?>-800 rounded-xl p-5 shadow text-white text-center">
+      <h3 class="text-xl font-semibold">Akun <?php echo $key === 'ss' ? 'Shadowsocks' : strtoupper($key); ?></h3>
       <p class="text-3xl mt-2"><?php echo $val; ?></p>
     </div>
     <?php endforeach; ?>
@@ -147,7 +151,7 @@ error_log("⏱ Setelah include header.php: " . round(microtime(true) - $__start_
   </div>
 
   <?php foreach ($usersByProtocol as $proto => $entries): ?>
-  <div class="bg-gray-800 dark:bg-gray-900 rounded-xl p-6 shadow mb-10">
+  <div data-protocol="<?php echo $proto; ?>" class="proto-card bg-gray-800 dark:bg-gray-900 rounded-xl p-6 shadow mb-10">
     <h2 class="text-xl font-bold text-white dark:text-gray-100 mb-4">Daftar Akun <?php echo $proto === 'ss' ? 'Shadowsocks' : strtoupper($proto); ?></h2>
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-gray-700 dark:divide-gray-800">
@@ -227,6 +231,19 @@ error_log("⏱ Setelah include header.php: " . round(microtime(true) - $__start_
     <a href="dashboard.php" class="inline-block bg-gray-700 dark:bg-gray-800 hover:bg-gray-800 dark:hover:bg-gray-900 text-white py-3 px-6 rounded-xl text-lg font-semibold transition">⬅ Kembali ke Dashboard</a>
   </div>
 </div>
+
+<script>
+  document.getElementById('protocolFilter').addEventListener('change', function () {
+    let selected = this.value;
+    document.querySelectorAll('.proto-card').forEach(el => {
+      if (selected === 'all' || el.dataset.protocol === selected) {
+        el.style.display = '';
+      } else {
+        el.style.display = 'none';
+      }
+    });
+  });
+</script>
 
 <?php include 'templates/footer.php'; ?>
 
