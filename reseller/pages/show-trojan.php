@@ -124,16 +124,18 @@ if ($action === 'stop') {
                     // START
                     if ($action === 'start') {
                         for ($k = $jsonIndex - 1; $k >= max(0, $jsonIndex - 5); $k--) {
-                            if (preg_match('/^##LOCK##(.+)$/', trim($lines[$k]), $match)) {
-                                $realPassword = $match[1];
-                                $lines[$jsonIndex] = str_replace('"password": "locked"', '"password": "' . $realPassword . '"', $lines[$jsonIndex]);
+    if (preg_match('/^##LOCK##(.+)\s*$/', trim($lines[$k]), $match)) {
+        $realPassword = trim($match[1]);
 
-                                unset($lines[$k]);
-                                $lines = array_values($lines);
-                                $updated = true;
-                                break;
-                            }
-                        }
+        // Kembalikan password asli
+        $lines[$jsonIndex] = preg_replace('/"password"\s*:\s*"locked"/', '"password": "' . $realPassword . '"', $lines[$jsonIndex]);
+
+        // Hapus baris ##LOCK## tanpa menghilangkan newline dari baris lain
+        array_splice($lines, $k, 1);
+        $updated = true;
+        break;
+    }
+}
                     }
                 }
             }
