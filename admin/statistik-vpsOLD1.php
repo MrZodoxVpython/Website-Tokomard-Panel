@@ -85,7 +85,7 @@ function isActive($menuId) {
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
       <?php for ($i = 1; $i <= 10; $i++): ?>
         <a href="?vps=<?= urlencode($selectedVps) ?>&menu=<?= $i ?>" class="<?= isActive((string)$i) ?> hover:bg-green-600 text-center p-3 rounded border border-green-400 transition">
-          <?= $i ?> <?= ["Total", "5 Menit", "Jam", "Harian", "Bulanan", "Tahunan", "Tertinggi", "Grafik", "Live", "Live Trafik"][$i-1] ?>
+          <?= $i ?> <?= ["Total Bandwith Tersisa", "Setiap 5 Menit", "Setiap Jam", "Setiap Hari", "Setiap Bulan", "Setiap Tahun", "Penggunaan Tertinggi", "Grafik Per Jam", "Live", "Live Trafik"][$i-1] ?>
         </a>
       <?php endfor; ?>
     </div>
