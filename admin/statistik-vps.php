@@ -81,15 +81,20 @@ function isActive($menuId) {
         <?php endforeach; ?>
       </select>
     </form>
-
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-      <?php for ($i = 1; $i <= 10; $i++): ?>
-        <a href="?vps=<?= urlencode($selectedVps) ?>&menu=<?= $i ?>" class="<?= isActive((string)$i) ?> hover:bg-green-600 text-center p-3 rounded border border-green-400 transition">
-          <?= $i ?> <?= ["Total Bandwith Tersisa", "Setiap 5 Menit", "Setiap Jam", "Setiap Hari", "Setiap Bulan", "Setiap Tahun", "Penggunaan Tertinggi", "Grafik Per Jam", "Live", "Live Trafik"][$i-1] ?>
-        </a>
-      <?php endfor; ?>
-    </div>
-
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+  <?php
+    $menuTitles = [
+      "Total Bandwidth Tersisa", "Setiap 5 Menit", "Setiap Jam", "Setiap Hari",
+      "Setiap Bulan", "Setiap Tahun", "Penggunaan Tertinggi", "Grafik Per Jam",
+      "Live Sekarang", "Live Trafik"
+    ];
+    for ($i = 1; $i <= 10; $i++): 
+  ?>
+    <a href="?vps=<?= urlencode($selectedVps) ?>&menu=<?= $i ?>" class="<?= isActive((string)$i) ?> hover:bg-green-600 text-center p-3 rounded border border-green-400 transition">
+      [ <?= $i ?> ] <?= $menuTitles[$i - 1] ?>
+    </a>
+  <?php endfor; ?>
+</div>
     <div class="bg-gray-900 p-4 rounded-lg whitespace-pre overflow-x-auto border border-green-500">
       <?php
         if ($menu === '9') {
