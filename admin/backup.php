@@ -5,7 +5,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 $backupFile = __DIR__ . '/backup-vpn.tar.gz';
-header("Location: backup-result.php");
+header("Location: /admin/backup-restore.php");
 exit;
 
 // ✅ HANDLE DOWNLOAD
