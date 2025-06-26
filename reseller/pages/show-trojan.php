@@ -74,43 +74,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
 // Handle START/STOP (Lock/Unlock Password)
-if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
+    if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
     $user = $_POST['toggle_user'];
-    $action = $_POST['action']; // 'start' or 'stop'
+    $action = $_POST['action'];
     $lines = file($configPath);
     $updated = false;
 
-    for ($i = 0; $i < count($lines); $i++) {
+    for ($i = 0; $i < count($lines) - 1; $i++) {
         if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($user) . '\s+\d{4}-\d{2}-\d{2}/', $lines[$i])) {
-            for ($j = $i + 1; $j < count($lines); $j++) {
-                $jsonLine = trim($lines[$j]);
-                if (preg_match('/^\s*(###|#!|#&|#\$)\s+/', $jsonLine)) break;
+            $jsonIndex = $i + 1;
+            $jsonLine = trim($lines[$jsonIndex]);
 
-                // Lock/unlock password (Trojan)
-                if (preg_match('/"password"\s*:\s*"(.*?)"/', $jsonLine)) {
-                    if ($action === 'stop' && !preg_match('/^##LOCK##/', trim($lines[$j - 1]))) {
-                        $password = preg_replace('/.*"password"\s*:\s*"(.*?)".*/', '$1', $jsonLine);
-                        $lines[$j] = preg_replace('/"password"\s*:\s*"(.*?)"/', '"password": "locked"', $jsonLine);
-                        array_splice($lines, $j, 0, ["##LOCK##$password"]);
+            if (!empty($jsonLine) && strpos($jsonLine, '"password"') !== false) {
+                if ($action === 'stop' && !preg_match('/^##LOCK##/', trim($lines[$i + 0]))) {
+                    if (preg_match('/"password"\s*:\s*"(.*?)"/', $jsonLine, $m)) {
+                        $originalPassword = $m[1];
+                        $lines[$jsonIndex] = preg_replace('/"password"\s*:\s*"(.*?)"/', '"password": "locked"', $jsonLine) . "\n";
+                        array_splice($lines, $jsonIndex, 0, "##LOCK##$originalPassword\n");
                         $updated = true;
-                    } elseif ($action === 'start') {
-                        for ($k = $j - 1; $k >= 0; $k--) {
-                            $lockLine = trim($lines[$k]);
-                            if (preg_match('/^##LOCK##(.+)$/', $lockLine, $m)) {
-                                $realPass = $m[1];
-                                if (strpos($jsonLine, '"password": "locked"') !== false) {
-                                    $lines[$j] = preg_replace('/"password"\s*:\s*"locked"/', '"password": "' . $realPass . '"', $jsonLine);
-                                    array_splice($lines, $k, 1); // hapus baris ##LOCK##
-                                    $updated = true;
-                                }
-                                break;
+                    }
+                } elseif ($action === 'start') {
+                    for ($k = $jsonIndex - 1; $k >= 0; $k--) {
+                        if (preg_match('/^##LOCK##(.+)$/', trim($lines[$k]), $match)) {
+                            $realPassword = $match[1];
+                            if (strpos($jsonLine, '"password": "locked"') !== false) {
+                                $lines[$jsonIndex] = str_replace('"password": "locked"', '"password": "' . $realPassword . '"', $jsonLine) . "\n";
+                                array_splice($lines, $k, 1); // hapus ##LOCK##
+                                $updated = true;
                             }
+                            break;
                         }
                     }
                 }
             }
+            break;
         }
     }
+
+    if ($updated) {
+        file_put_contents($configPath, implode('', $lines));
+        shell_exec('sudo /usr/local/bin/restart-xray.sh');
+    }
+
+    header("Location: show-trojan.php");
+    exit;
+}
 
     if ($updated) {
         file_put_contents($configPath, implode('', $lines));
