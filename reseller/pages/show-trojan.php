@@ -107,20 +107,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $jsonLine = trim($lines[$jsonIndex]);
 
                     // STOP
-		    if ($action === 'stop') {
-   		        if (preg_match('/"password"\s*:\s*"(.*?)"/', $jsonLine, $m)) {
-        	            $originalPassword = $m[1];
-        		    if ($originalPassword !== 'locked') {
-            			$jsonLineLocked = preg_replace('/"password"\s*:\s*"(.*?)"/', '"password": "locked"', $jsonLine);
-            			$lines[$jsonIndex] = $jsonLineLocked;
+if ($action === 'stop') {
+    if (preg_match('/"password"\s*:\s*"(.*?)"/', $jsonLine, $m)) {
+        $originalPassword = $m[1];
+        if ($originalPassword !== 'locked') {
+            // Ganti ke locked
+            $jsonLineLocked = preg_replace('/"password"\s*:\s*"(.*?)"/', '"password": "locked"', $jsonLine);
 
-           	         	// ✅ Tambahkan LOCK sebagai satu baris terpisah
-               			array_splice($lines, $jsonIndex, 0, ["##LOCK##$originalPassword\n"]);
-            			$updated = true;
-       			     }
-                        }
-                    }
- 
+            // Pastikan baris LOCK dan JSON masing-masing berdiri sendiri dan ada newline
+            $lines[$jsonIndex] = $jsonLineLocked . "\n"; // JSON line dengan newline
+            array_splice($lines, $jsonIndex, 0, ["##LOCK##$originalPassword\n"]); // LOCK line
+            $updated = true;
+        }
+    }
+}
                     // START
                     if ($action === 'start') {
                         for ($k = $jsonIndex - 1; $k >= max(0, $jsonIndex - 5); $k--) {
