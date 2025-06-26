@@ -134,11 +134,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </tbody>
   </table>
 
-<?php if ($output): ?>
+<?php if (isset($_SESSION['last_output'])): ?>
   <div class="bg-gray-800 rounded p-4 mb-4">
     <h2 class="text-lg font-semibold text-green-400 mb-2">📄 Output dari VPS:</h2>
-    <pre class="whitespace-pre-wrap text-sm text-gray-200"><?= htmlspecialchars($output) ?></pre>
+    <pre class="whitespace-pre-wrap text-sm text-gray-200"><?= htmlspecialchars($_SESSION['last_output']) ?></pre>
   </div>
+  <?php unset($_SESSION['last_output']); ?>
 <?php endif; ?>
 
 <?php
