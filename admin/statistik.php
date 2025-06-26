@@ -69,7 +69,7 @@ foreach ($lines as $line) {
     case '#!':  $protocol = 'trojan'; break;
     case '#$':  $protocol = 'ss'; break;
     default:    $protocol = 'unknown'; break;
-};
+}
 
         $protocolCounts[$protocol]++;
         $usersByProtocol[$protocol][] = ['username' => $username, 'expired' => $expDate];
