@@ -1,56 +1,48 @@
 <?php
 session_start();
-$__start_time = microtime(true);
-
 if (!isset($_SESSION['username'])) {
     header("Location: index.php");
     exit;
 }
 
-$configPath = '/etc/xray/config.json';
-$configRaw = file_get_contents($configPath);
-$config = json_decode($configRaw, true);
+// VPS List
+$vpsList = [
+    "sgdo-2dev" => ["ip" => "178.128.60.185", "config" => "/etc/xray/config.json"],
+    "sgdo-mard1" => ["ip" => "178.128.60.101", "config" => "/etc/xray/config.json"],
+    "tokopedia1" => ["ip" => "10.10.10.10", "config" => "/etc/xray/config.json"]
+];
 
-$vpsList = $config['vpsList'] ?? ['local' => '127.0.0.1'];
-$selectedVps = $_GET['vps'] ?? array_key_first($vpsList);
-$serverIP = $vpsList[$selectedVps] ?? '127.0.0.1';
+$selectedVps = $_GET['vps'] ?? 'sgdo-2dev';
+$configPath = $vpsList[$selectedVps]['config'] ?? '';
+$vpsIp = $vpsList[$selectedVps]['ip'] ?? '';
 
-$configFile = ($serverIP === '127.0.0.1') ? '/etc/xray/config.json' : "/tmp/config-$selectedVps.json";
-$logPath    = ($serverIP === '127.0.0.1') ? '/var/log/xray/access.log' : "/tmp/access-$selectedVps.log";
-
-if ($serverIP !== '127.0.0.1') {
-    shell_exec("ssh -o StrictHostKeyChecking=no root@$serverIP 'cat /etc/xray/config.json' > $configFile");
-    shell_exec("ssh -o StrictHostKeyChecking=no root@$serverIP 'tail -n 500 /var/log/xray/access.log' > $logPath");
-}
-
-if (!file_exists($configFile)) {
-    echo "<p class='text-red-500'>❌ File config.json tidak ditemukan di VPS $selectedVps!</p>";
+if (!file_exists($configPath)) {
+    echo "<p style='color:red;'>❌ File config.json tidak ditemukan di VPS $selectedVps!</p>";
     exit;
 }
 
-$data = file_get_contents($configFile);
+$data = file_get_contents($configPath);
 if ($data === false) {
-    echo "<p class='text-red-500'>❌ Gagal membaca file config.json!</p>";
+    echo "<p style='color:red;'>❌ Gagal membaca file config.json di VPS $selectedVps!</p>";
     exit;
 }
 
 $lines = preg_grep('/^\s*#/', explode("\n", $data));
 $protocolCounts = ['vmess' => 0, 'vless' => 0, 'trojan' => 0, 'ss' => 0];
-
+$usersByProtocol = ['vmess' => [], 'vless' => [], 'trojan' => [], 'ss' => []];
 $expiredUsers = [];
 $expiringSoonUsers = [];
 $seenUsers = [];
-$usersByProtocol = ['vmess' => [], 'vless' => [], 'trojan' => [], 'ss' => []];
-
 $today = date('Y-m-d');
 $sevenDaysLater = date('Y-m-d', strtotime('+7 days'));
 
 foreach ($lines as $line) {
     $line = trim($line);
     if (preg_match('/^(###|#&|#!|#\$)\s+(\S+)\s+(\d{4}-\d{2}-\d{2})$/', $line, $match)) {
-        [$_, $prefix, $username, $expDate] = $match;
+        [$all, $prefix, $username, $expDate] = $match;
         if (isset($seenUsers[$username])) continue;
         $seenUsers[$username] = true;
+
         $protocol = match($prefix) {
             '###' => 'vmess',
             '#&'  => 'vless',
@@ -58,6 +50,7 @@ foreach ($lines as $line) {
             '#$'  => 'ss',
             default => 'unknown'
         };
+
         $protocolCounts[$protocol]++;
         $usersByProtocol[$protocol][] = ['username' => $username, 'expired' => $expDate];
 
@@ -69,151 +62,84 @@ foreach ($lines as $line) {
     }
 }
 
-$activeUsers = [];
-$startTime = date('Y/m/d H:i:s', strtotime('-1 minute'));
-$usernames = array_keys($seenUsers);
-
-if (file_exists($logPath)) {
-    $logContent = explode("\n", file_get_contents($logPath));
-    foreach ($logContent as $logLine) {
-        if (preg_match('/^(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}).*email: (\S+)/', $logLine, $matches)) {
-            [$_, $logTime, $logUser] = $matches;
-            if ($logTime > $startTime && in_array($logUser, $usernames)) {
-                $activeUsers[$logUser] = true;
-            }
-        }
-    }
-}
-
 include 'templates/header.php';
 ?>
 
 <div class="container mx-auto px-4 py-6">
-  <div class="text-center mb-10">
-    <h1 class="text-3xl md:text-4xl font-extrabold text-white">Statistik Akun VPN</h1>
-    <p class="text-gray-400 mt-2">Menampilkan jumlah akun yang terdaftar berdasarkan jenis protokol.</p>
+  <div class="text-center mb-6">
+    <h1 class="text-3xl font-extrabold text-white">Statistik Akun VPN</h1>
+    <p class="text-gray-400 mt-2 text-base">Menampilkan statistik akun berdasarkan VPS dan protokol.</p>
   </div>
 
   <!-- VPS Dropdown -->
-  <div class="text-center mb-8">
-    <form method="get" class="inline-flex items-center gap-3">
-      <label for="vps" class="text-white text-lg">Pilih VPS:</label>
-      <select name="vps" id="vps" onchange="this.form.submit()" class="bg-gray-900 border border-gray-700 text-white px-4 py-2 rounded-lg">
-        <?php foreach ($vpsList as $vpsName => $vpsIP): ?>
-        <option value="<?= $vpsName ?>" <?= $vpsName === $selectedVps ? 'selected' : '' ?>>
-          <?= htmlspecialchars($vpsName) ?> (<?= $vpsIP ?>)
-        </option>
+  <div class="mb-6 text-center">
+    <form method="GET">
+      <label for="vpsSelect" class="text-white mr-2">Pilih VPS:</label>
+      <select name="vps" id="vpsSelect" class="bg-gray-800 text-white px-4 py-2 rounded-lg" onchange="this.form.submit()">
+        <?php foreach ($vpsList as $name => $info): ?>
+          <option value="<?= $name ?>" <?= $name === $selectedVps ? 'selected' : '' ?>>
+            <?= strtoupper($name) ?> (<?= $info['ip'] ?>)
+          </option>
         <?php endforeach; ?>
       </select>
     </form>
+    <p class="text-sm text-gray-400 mt-2">IP VPS Terpilih: <?= htmlspecialchars($vpsIp) ?></p>
   </div>
 
-  <!-- Kotak Statistik -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-    <?php foreach ($protocolCounts as $key => $val): ?>
-    <div class="bg-<?php echo $key === 'vmess' ? 'blue' : ($key === 'vless' ? 'purple' : ($key === 'trojan' ? 'pink' : 'yellow'); ?>-600 rounded-xl p-4 shadow text-white text-center">
-      <h3 class="text-xl font-semibold">
-         Akun <?= $key === 'ss' ? 'Shadowsocks' : strtoupper($key); ?>
-      </h3>
-      <p class="text-3xl mt-2"><?= $val; ?></p>
-    </div>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+    <?php foreach ($protocolCounts as $proto => $count): ?>
+      <div class="bg-gray-800 p-4 rounded-xl shadow text-white text-center">
+        <h2 class="text-xl font-bold"><?= strtoupper($proto) ?></h2>
+        <p class="text-3xl mt-2"><?= $count ?></p>
+      </div>
     <?php endforeach; ?>
   </div>
 
-  <!-- Tabel Akun Aktif -->
-  <div class="bg-green-800 rounded-xl p-6 shadow mb-10">
-    <h2 class="text-xl font-bold text-white mb-4">Akun Aktif (&lt; 1 Menit)</h2>
+  <div class="bg-yellow-800 rounded-xl p-6 shadow mb-10">
+    <h2 class="text-xl font-bold text-white mb-4">Akan Expired (≤ 7 Hari)</h2>
     <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-green-700">
-        <thead class="bg-green-700">
+      <table class="min-w-full divide-y divide-yellow-700">
+        <thead class="bg-yellow-700 text-white">
           <tr>
-            <th class="px-4 py-2 text-left text-sm font-semibold text-white">Username</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold">Username</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold">Protokol</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold">Expired</th>
           </tr>
         </thead>
-        <tbody class="bg-green-600 divide-y divide-green-700">
-          <?php foreach (array_keys($activeUsers) as $username): ?>
-          <tr><td class="px-4 py-2 text-sm text-white"><?= htmlspecialchars($username); ?></td></tr>
-          <?php endforeach; ?>
-          <?php if (empty($activeUsers)): ?>
-          <tr><td class="px-4 py-2 text-sm text-white text-center">Tidak ada akun aktif saat ini.</td></tr>
-          <?php endif; ?>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Tabel Per Protokol -->
-  <?php foreach ($usersByProtocol as $proto => $entries): ?>
-  <div class="bg-gray-800 rounded-xl p-6 shadow mb-10">
-    <h2 class="text-xl font-bold text-white mb-4">Akun <?= $proto === 'ss' ? 'Shadowsocks' : strtoupper($proto); ?></h2>
-    <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-700">
-        <thead class="bg-gray-700">
+        <tbody class="bg-yellow-600 divide-y divide-yellow-700 text-white">
+          <?php foreach ($expiringSoonUsers as $u): ?>
           <tr>
-            <th class="px-4 py-2 text-left text-sm font-semibold text-white">Username</th>
-            <th class="px-4 py-2 text-left text-sm font-semibold text-white">Expired</th>
-          </tr>
-        </thead>
-        <tbody class="bg-gray-600 divide-y divide-gray-700">
-          <?php foreach ($entries as $entry): ?>
-          <tr>
-            <td class="px-4 py-2 text-sm text-white"><?= htmlspecialchars($entry['username']); ?></td>
-            <td class="px-4 py-2 text-sm text-white"><?= htmlspecialchars($entry['expired']); ?></td>
-          </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <?php endforeach; ?>
-
-  <!-- Akan Expired -->
-  <div class="bg-yellow-700 rounded-xl p-6 shadow mb-10">
-    <h2 class="text-xl font-bold text-white mb-4">Akun Akan Expired (≤ 7 Hari)</h2>
-    <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-yellow-800">
-        <thead class="bg-yellow-800">
-          <tr>
-            <th class="px-4 py-2 text-left text-sm font-semibold text-white">Username</th>
-            <th class="px-4 py-2 text-left text-sm font-semibold text-white">Protokol</th>
-            <th class="px-4 py-2 text-left text-sm font-semibold text-white">Expired</th>
-          </tr>
-        </thead>
-        <tbody class="bg-yellow-600 divide-y divide-yellow-800">
-          <?php foreach ($expiringSoonUsers as $user): ?>
-          <tr>
-            <td class="px-4 py-2 text-sm text-white"><?= htmlspecialchars($user['username']); ?></td>
-            <td class="px-4 py-2 text-sm text-white"><?= htmlspecialchars($user['protocol']); ?></td>
-            <td class="px-4 py-2 text-sm text-white"><?= htmlspecialchars($user['expired']); ?></td>
+            <td class="px-4 py-2"><?= htmlspecialchars($u['username']) ?></td>
+            <td class="px-4 py-2"><?= $u['protocol'] ?></td>
+            <td class="px-4 py-2"><?= $u['expired'] ?></td>
           </tr>
           <?php endforeach; ?>
           <?php if (empty($expiringSoonUsers)): ?>
-          <tr><td colspan="3" class="px-4 py-2 text-sm text-white text-center">Tidak ada akun akan expired.</td></tr>
+          <tr><td colspan="3" class="text-center py-3">Tidak ada akun akan expired.</td></tr>
           <?php endif; ?>
         </tbody>
       </table>
     </div>
   </div>
 
-  <!-- Expired -->
   <?php if (!empty($expiredUsers)): ?>
   <div class="bg-red-800 rounded-xl p-6 shadow mb-10">
     <h2 class="text-xl font-bold text-white mb-4">Akun Expired</h2>
     <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-red-800">
-        <thead class="bg-red-900">
+      <table class="min-w-full divide-y divide-red-700">
+        <thead class="bg-red-700 text-white">
           <tr>
-            <th class="px-4 py-2 text-left text-sm font-semibold text-white">Username</th>
-            <th class="px-4 py-2 text-left text-sm font-semibold text-white">Protokol</th>
-            <th class="px-4 py-2 text-left text-sm font-semibold text-white">Expired</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold">Username</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold">Protokol</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold">Expired</th>
           </tr>
         </thead>
-        <tbody class="bg-red-700 divide-y divide-red-800">
-          <?php foreach ($expiredUsers as $user): ?>
+        <tbody class="bg-red-600 divide-y divide-red-700 text-white">
+          <?php foreach ($expiredUsers as $u): ?>
           <tr>
-            <td class="px-4 py-2 text-sm text-white"><?= htmlspecialchars($user['username']); ?></td>
-            <td class="px-4 py-2 text-sm text-white"><?= htmlspecialchars($user['protocol']); ?></td>
-            <td class="px-4 py-2 text-sm text-white"><?= htmlspecialchars($user['expired']); ?></td>
+            <td class="px-4 py-2"><?= htmlspecialchars($u['username']) ?></td>
+            <td class="px-4 py-2"><?= $u['protocol'] ?></td>
+            <td class="px-4 py-2"><?= $u['expired'] ?></td>
           </tr>
           <?php endforeach; ?>
         </tbody>
