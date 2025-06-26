@@ -33,7 +33,10 @@ $files = glob($pattern);
                         <div>
                             <span class="font-semibold">Akun:</span> <?= htmlspecialchars($username) ?>
                         </div>
-                        <button onclick="toggleContent('detail-<?= $index ?>')" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-1 rounded text-sm">
+                        <button 
+                            onclick="toggleContent('detail-<?= $index ?>', this)" 
+                            class="bg-indigo-600 hover:bg-indigo-700 px-4 py-1 rounded text-sm toggle-button"
+                        >
                             Show
                         </button>
                     </div>
@@ -45,9 +48,30 @@ $files = glob($pattern);
     </div>
 
     <script>
-        function toggleContent(id) {
-            const el = document.getElementById(id);
-            el.classList.toggle("hidden");
+        let lastOpened = null;
+
+        function toggleContent(id, button) {
+            const current = document.getElementById(id);
+
+            // Jika ada yang terbuka sebelumnya, tutup
+            if (lastOpened && lastOpened !== current) {
+                lastOpened.classList.add("hidden");
+                const previousButton = document.querySelector(`button[data-target="${lastOpened.id}"]`);
+                if (previousButton) previousButton.innerText = "Show";
+            }
+
+            // Toggle current
+            const isHidden = current.classList.contains("hidden");
+            current.classList.toggle("hidden");
+
+            // Ganti label tombol
+            button.innerText = isHidden ? "Hide" : "Show";
+
+            // Tandai tombol dengan data-target untuk membantu switch
+            button.setAttribute("data-target", id);
+
+            // Update referensi yang sedang terbuka
+            lastOpened = isHidden ? current : null;
         }
     </script>
 </body>
