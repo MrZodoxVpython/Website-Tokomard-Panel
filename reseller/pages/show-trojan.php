@@ -96,16 +96,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $jsonLine = trim($lines[$jsonIndex]);
 
-                    // STOP
+		    // STOP
 if ($action === 'stop') {
     if (preg_match('/"password"\s*:\s*"(.*?)"/', $jsonLine, $m)) {
         $originalPassword = $m[1];
         if ($originalPassword !== 'locked') {
             // Ganti ke locked
             $jsonLineLocked = preg_replace('/"password"\s*:\s*"(.*?)"/', '"password": "locked"', $jsonLine);
-            $lines[$jsonIndex] = $jsonLineLocked . "\n";
+            $lines[$jsonIndex] = $jsonLineLocked;
 
-            // Tambahkan ##LOCK## sebelum baris JSON, bukan sebelum komentar
+            // Tambahkan ##LOCK## sebelum baris JSON
             array_splice($lines, $jsonIndex, 0, "##LOCK##$originalPassword\n");
             $updated = true;
         }
@@ -114,7 +114,6 @@ if ($action === 'stop') {
 
 // START
 if ($action === 'start') {
-    // Cari di atas baris JSON, bukan di atas komentar
     for ($k = $jsonIndex - 1; $k >= max(0, $jsonIndex - 5); $k--) {
         if (preg_match('/^##LOCK##(.+)$/', trim($lines[$k]), $match)) {
             $realPassword = $match[1];
@@ -124,14 +123,14 @@ if ($action === 'start') {
 
             // Hapus baris ##LOCK##
             unset($lines[$k]);
-            $lines = array_values($lines);
-
+            $lines = array_values($lines); // ini perlu agar tidak ada gap index
             $updated = true;
             break;
         }
     }
 }
-                }
+
+               }
             }
         }
 
