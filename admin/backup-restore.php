@@ -5,49 +5,46 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
-// Daftar VPS (contoh, bisa diambil dari database juga)
 $vpsList = [
     ['ip' => '178.128.60.185', 'country' => 'Singapore-SGDO-2DEV'],
     ['ip' => '152.42.182.187', 'country' => 'Singapore-SGDO-MARD1'],
-    ['ip' => '203.194.113.140',  'country' => 'Indonesia-RW-MARD']
+    ['ip' => '203.194.113.140', 'country' => 'Indonesia-RW-MARD']
 ];
 
+$localIp = '178.128.60.185';
 $output = '';
 $backupFile = '/root/backup-vpn.tar.gz';
 
-// Cek jika ada form yang disubmit
+// Eksekusi backup atau restore
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? null;
     $vpsIp = $_POST['vps_ip'] ?? null;
     $password = $_POST['password'] ?? '';
 
     if ($action && $vpsIp) {
-    $isLocal = ($vpsIp === '178.128.60.185');
+        $isLocal = ($vpsIp === $localIp);
 
-    if ($action === 'backup') {
-        if ($isLocal) {
-	    $cmd = "sudo /usr/bin/php /var/www/html/Website-Tokomard-Panel/admin/backup.php";
-        } elseif (!empty($password)) {
-            $cmd = "sshpass -p '$password' ssh -o StrictHostKeyChecking=no root@$vpsIp 'sudo /usr/bin/backup'";
-        } else {
-            $cmd = "ssh -o StrictHostKeyChecking=no root@$vpsIp 'sudo /usr/bin/backup'";
+        if ($action === 'backup') {
+            if ($isLocal) {
+                $cmd = "sudo /usr/bin/php /var/www/html/Website-Tokomard-Panel/admin/backup.php";
+            } elseif (!empty($password)) {
+                $cmd = "sshpass -p '$password' ssh -o StrictHostKeyChecking=no root@$vpsIp 'sudo /usr/bin/backup'";
+            } else {
+                $cmd = "ssh -o StrictHostKeyChecking=no root@$vpsIp 'sudo /usr/bin/backup'";
+            }
+        } elseif ($action === 'restore') {
+            if ($isLocal) {
+                $cmd = "php /var/www/html/Website-Tokomard-Panel/admin/restore.php";
+            } elseif (!empty($password)) {
+                $cmd = "sshpass -p '$password' ssh -o StrictHostKeyChecking=no root@$vpsIp 'php /var/www/html/Website-Tokomard-Panel/admin/auto-install-rclone.php'";
+            } else {
+                $cmd = "ssh -o StrictHostKeyChecking=no root@$vpsIp 'php /var/www/html/Website-Tokomard-Panel/admin/auto-install-rclone.php'";
+            }
         }
-    } elseif ($action === 'restore') {
-        if ($isLocal) {
-            $cmd = "php /var/www/html/Website-Tokomard-Panel/admin/restore.php";
-        } elseif (!empty($password)) {
-            $cmd = "sshpass -p '$password' ssh -o StrictHostKeyChecking=no root@$vpsIp 'php /var/www/html/Website-Tokomard-Panel/admin/auto-install-rclone.php'";
-        } else {
-            $cmd = "ssh -o StrictHostKeyChecking=no root@$vpsIp 'php /var/www/html/Website-Tokomard-Panel/admin/auto-install-rclone.php'";
-        }
-    }
 
-    $output = shell_exec($cmd . " 2>&1");
+        $output = shell_exec($cmd . " 2>&1");
     }
-
 }
-
-include 'templates/header.php';
 ?>
 
 <!DOCTYPE html>
@@ -60,7 +57,7 @@ include 'templates/header.php';
 <body class="bg-gray-900 text-white min-h-screen">
 
 <div class="max-w-6xl mx-auto p-6">
-  <h1 class="text-center text-3xl font-bold text-blue-400 mb-6">🧑‍💻 Backup & Restore Tiap VPS</h1>
+  <h1 class="text-center text-3xl font-bold text-blue-400 mb-6">🧑💻 Backup & Restore Tiap VPS</h1>
 
   <table class="min-w-full text-sm text-left text-white border border-gray-700 mb-8">
     <thead class="bg-gray-800 text-gray-300">
@@ -72,31 +69,29 @@ include 'templates/header.php';
       </tr>
     </thead>
     <tbody>
-<?php foreach ($vpsList as $vps): ?>
-<tr class="border-t border-gray-700">
-  <form method="POST" id="form-<?= $vps['ip'] ?>">
-    <td class="px-4 py-3 font-mono"><?= $vps['ip'] ?></td>
-    <td class="px-4 py-3"><?= $vps['country'] ?></td>
-    <td class="px-4 py-3">
-      <input type="password" name="password" placeholder="Password VPS (jika perlu)"
-             class="bg-gray-800 border border-gray-600 rounded px-3 py-1 w-full text-sm">
-    </td>
-    <td class="px-4 py-3 flex gap-2 justify-center">
-      <input type="hidden" name="vps_ip" value="<?= $vps['ip'] ?>">
-      <button type="submit" name="action" value="backup"
-              onclick="setFormAction('<?= $vps['ip'] ?>', 'backup')"
-              class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow">
-        🗃 Backup
-      </button>
-      <button type="submit" name="action" value="restore"
-              onclick="setFormAction('<?= $vps['ip'] ?>', 'restore')"
-              class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded shadow">
-        ♻ Restore
-      </button>
-    </td>
-  </form>
-</tr>
-<?php endforeach; ?>
+    <?php foreach ($vpsList as $vps): ?>
+    <tr class="border-t border-gray-700">
+      <form method="POST">
+        <td class="px-4 py-3 font-mono"><?= $vps['ip'] ?></td>
+        <td class="px-4 py-3"><?= $vps['country'] ?></td>
+        <td class="px-4 py-3">
+          <input type="password" name="password" placeholder="Password VPS (jika perlu)"
+                 class="bg-gray-800 border border-gray-600 rounded px-3 py-1 w-full text-sm">
+        </td>
+        <td class="px-4 py-3 flex gap-2 justify-center">
+          <input type="hidden" name="vps_ip" value="<?= $vps['ip'] ?>">
+          <button type="submit" name="action" value="backup"
+                  class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow">
+            🗃 Backup
+          </button>
+          <button type="submit" name="action" value="restore"
+                  class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded shadow">
+            ♻ Restore
+          </button>
+        </td>
+      </form>
+    </tr>
+    <?php endforeach; ?>
     </tbody>
   </table>
 
@@ -117,17 +112,6 @@ include 'templates/header.php';
   <?php endif; ?>
 </div>
 
-<?php include 'templates/footer.php'; ?>
-<script>
-function setFormAction(ip, action) {
-  const form = document.getElementById('form-' + ip);
-  if (ip === '178.128.60.185') {
-    form.action = action === 'backup' ? 'backup.php' : 'restore.php';
-  } else {
-    form.action = 'backup-restore.php';
-  }
-}
-</script>
 </body>
 </html>
 
