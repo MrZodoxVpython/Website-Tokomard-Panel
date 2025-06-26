@@ -5,15 +5,39 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
-// Jalankan backup/restore jika ada aksi
-$action = $_POST['action'] ?? null;
+// Daftar VPS (contoh, bisa diambil dari database juga)
+$vpsList = [
+    ['ip' => '178.128.60.185', 'country' => 'Singapore'],
+    ['ip' => '139.59.101.123', 'country' => 'Germany'],
+    ['ip' => '192.241.200.50',  'country' => 'USA']
+];
+
 $output = '';
 $backupFile = '/root/backup-vpn.tar.gz';
 
-if ($action === 'backup') {
-    $output = shell_exec("sudo /usr/bin/backup 2>&1");
-} elseif ($action === 'restore') {
-    $output = shell_exec("/var/www/html/Website-Tokomard-Panel/admin/auto-install-rclone.php");
+// Cek jika ada form yang disubmit
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = $_POST['action'] ?? null;
+    $vpsIp = $_POST['vps_ip'] ?? null;
+    $password = $_POST['password'] ?? '';
+
+    if ($action && $vpsIp) {
+        if ($action === 'backup') {
+            if (!empty($password)) {
+                $cmd = "sshpass -p '$password' ssh -o StrictHostKeyChecking=no root@$vpsIp 'sudo /usr/bin/backup'";
+            } else {
+                $cmd = "ssh -o StrictHostKeyChecking=no root@$vpsIp 'sudo /usr/bin/backup'";
+            }
+        } elseif ($action === 'restore') {
+            if (!empty($password)) {
+                $cmd = "sshpass -p '$password' ssh -o StrictHostKeyChecking=no root@$vpsIp 'php /var/www/html/Website-Tokomard-Panel/admin/auto-install-rclone.php'";
+            } else {
+                $cmd = "ssh -o StrictHostKeyChecking=no root@$vpsIp 'php /var/www/html/Website-Tokomard-Panel/admin/auto-install-rclone.php'";
+            }
+        }
+
+        $output = shell_exec($cmd . " 2>&1");
+    }
 }
 
 include 'templates/header.php';
@@ -28,35 +52,57 @@ include 'templates/header.php';
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
 
-<div class="max-w-4xl mx-auto p-6">
-  <h1 class="text-center text-3xl font-bold text-blue-400 mb-6">🧑💻 Backup & Restore Data VPN</h1>
+<div class="max-w-6xl mx-auto p-6">
+  <h1 class="text-center text-3xl font-bold text-blue-400 mb-6">🧑‍💻 Backup & Restore Tiap VPS</h1>
 
-  <!-- Menu Form -->
-  <form method="POST" class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
-  <button type="submit" name="action" value="restore"
-      class="bg-yellw-500 hover:bg-yellow-600 px-6 py-4 rounded-xl text-white text-xl shadow text-center">
-    </button>
-  </form>
-  <form method="POST" class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
-      <a href="backup.php" class="bg-green-600 hover:bg-green-700 px-6 py-4 rounded-xl text-white text-xl shadow text-center"> 🗃 Backup Data Vps</a>
-    <a href="restore.php" class="bg-yellow-500 hover:bg-yellow-600 px-6 py-4 rounded-xl text-white text-xl shadow text-center">
-      ♻️ Restore dari Backup</a>
-  </form>
+  <table class="min-w-full text-sm text-left text-white border border-gray-700 mb-8">
+    <thead class="bg-gray-800 text-gray-300">
+      <tr>
+        <th class="px-4 py-3">IP VPS</th>
+        <th class="px-4 py-3">Country</th>
+        <th class="px-4 py-3">Password (opsional)</th>
+        <th class="px-4 py-3 text-center">Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php foreach ($vpsList as $vps): ?>
+        <tr class="border-t border-gray-700">
+          <form method="POST">
+            <td class="px-4 py-3 font-mono"><?= $vps['ip'] ?></td>
+            <td class="px-4 py-3"><?= $vps['country'] ?></td>
+            <td class="px-4 py-3">
+              <input type="password" name="password" placeholder="Password VPS (jika perlu)"
+                     class="bg-gray-800 border border-gray-600 rounded px-3 py-1 w-full text-sm">
+            </td>
+            <td class="px-4 py-3 flex gap-2 justify-center">
+              <input type="hidden" name="vps_ip" value="<?= $vps['ip'] ?>">
+              <button type="submit" name="action" value="backup"
+                      class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow">
+                🗃 Backup
+              </button>
+              <button type="submit" name="action" value="restore"
+                      class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded shadow">
+                ♻ Restore
+              </button>
+            </td>
+          </form>
+        </tr>
+      <?php endforeach; ?>
+    </tbody>
+  </table>
 
-  <!-- Hasil Eksekusi -->
   <?php if ($output): ?>
     <div class="bg-gray-800 rounded p-4 mb-4">
-      <h2 class="text-lg font-semibold text-green-400 mb-2">📄 Output Terminal:</h2>
+      <h2 class="text-lg font-semibold text-green-400 mb-2">📄 Output dari VPS:</h2>
       <pre class="whitespace-pre-wrap text-sm text-gray-200"><?= htmlspecialchars($output) ?></pre>
     </div>
   <?php endif; ?>
 
-  <!-- Link Download jika backup tersedia -->
   <?php if (file_exists($backupFile)): ?>
     <div class="bg-gray-800 rounded p-4">
       <p class="text-green-300 mb-2">✅ File backup tersedia untuk diunduh:</p>
       <a href="download-backup.php" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow">
-        ⬇️ Download backup-vpn.tar.gz
+        ⬇ Download backup-vpn.tar.gz
       </a>
     </div>
   <?php endif; ?>
