@@ -5,11 +5,6 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
     exit;
 }
 
-// Fungsi generate UUID jika password kosong
-function generateUUID() {
-    return trim(shell_exec('cat /proc/sys/kernel/random/uuid'));
-}
-
 // Tangani nilai default
 $passwordGenerated = false;
 $passwordValue = $_POST['password'] ?? '';
