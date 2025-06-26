@@ -4,24 +4,22 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
     header("Location: ../index.php");
     exit;
 }
-?>
-<!DOCTYPE html>
-<html lang="id" class="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Server & Buat Akun</title>
-    <!-- Tailwind CDN (dengan dark mode class) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-        }
-    </script>
-</head>
-<body class="h-screen m-0 flex items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white">
 
-<?php
+// Fungsi generate UUID jika password kosong
+function generateUUID() {
+    return trim(shell_exec('cat /proc/sys/kernel/random/uuid'));
+}
+
+// Tangani nilai default
+$passwordGenerated = false;
+$passwordValue = $_POST['password'] ?? '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['protocol']) && $_POST['protocol'] === 'trojan') {
+    if (empty($passwordValue)) {
+        $passwordValue = generateUUID();
+        $passwordGenerated = true;
+    }
+}
+
 $server = [
     'name' => 'SGDO-2DEV',
     'country' => 'Singapore',
@@ -39,6 +37,16 @@ $protocol = $_GET['proto'] ?? 'ssh';
 $require_password = in_array($protocol, ['ssh', 'trojan', 'shadowsocks']);
 $require_uuid = in_array($protocol, ['vmess', 'vless']);
 ?>
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Server & Buat Akun</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class' }</script>
+</head>
+<body class="h-screen m-0 flex items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white">
 
 <div class="w-full max-w-2xl bg-white dark:bg-gray-900 shadow-md rounded-2xl p-6 space-y-6 border border-gray-200 dark:border-gray-700">
     <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">🛒 Detail Server</h2>
@@ -56,7 +64,7 @@ $require_uuid = in_array($protocol, ['vmess', 'vless']);
 
     <h3 class="text-xl font-semibold text-gray-800 dark:text-white">🧾 Buat Akun <?= strtoupper($protocol) ?></h3>
 
-    <form action="/reseller/pages/api-akun/add-trojan.php" method="POST" class="space-y-4">
+    <form action="" method="POST" class="space-y-4">
         <input type="hidden" name="server" value="<?= htmlspecialchars($server['name']) ?>">
         <input type="hidden" name="protocol" value="<?= htmlspecialchars($protocol) ?>">
 
@@ -77,7 +85,10 @@ $require_uuid = in_array($protocol, ['vmess', 'vless']);
         <?php if ($require_password): ?>
         <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">🔒 Password</label>
-            <input type="text" name="password" required placeholder="Masukkan password" class="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white">
+            <input type="text" name="password" placeholder="(Kosongkan jika ingin auto)" value="<?= htmlspecialchars($passwordValue) ?>" class="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white">
+            <?php if ($passwordGenerated): ?>
+                <p class="text-sm text-green-400 mt-1">Password digenerate otomatis sebagai UUID.</p>
+            <?php endif; ?>
         </div>
         <?php elseif ($require_uuid): ?>
         <div>
