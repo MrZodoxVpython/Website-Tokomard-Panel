@@ -30,11 +30,17 @@ function prosesXray($proto, $tagMap, $commentLine, $jsonLine, $username, $expire
 
     if ($success) {
         shell_exec('sudo systemctl restart xray');
+        ob_start();
         tampilkanXRAY($proto, $username, $expired, $key);
-        catatLogReseller($_SESSION['username'] ?? 'unknown', $username, $expired);
+        $output = ob_get_clean();
+
+        echo $output;
+
+        catatLogReseller($_SESSION['username'] ?? 'unknown', $username, $expired, strip_tags($output));
     } else {
-        echo "❌ Gagal menambahkan akun ke salah satu tag.\n";
+         echo "❌ Gagal menambahkan akun ke salah satu tag.\n";
     }
+ 
 }
 
 function tampilkanSSH($username, $expired, $password) {
