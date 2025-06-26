@@ -97,7 +97,6 @@ include 'templates/header.php';
   </form>
 </tr>
 <?php endforeach; ?>
-
     </tbody>
   </table>
 
