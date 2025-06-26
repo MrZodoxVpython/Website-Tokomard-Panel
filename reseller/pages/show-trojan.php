@@ -142,14 +142,17 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
         
         // Cek status akun aktif/tidak (dari config)
         $isDisabled = false;
-        $configLines = file($configPath);
-        for ($i = 0; $i < count($configLines); $i++) {
-            if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($username) . '\s+\d{4}-\d{2}-\d{2}/', $configLines[$i])) {
-                $jsonData = json_decode(trim($configLines[$i + 1]), true);
-                $isDisabled = isset($jsonData['enable']) && $jsonData['enable'] === false;
-                break;
-            }
+$configLines = file($configPath);
+for ($i = 0; $i < count($configLines); $i++) {
+    if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($username) . '\s+\d{4}-\d{2}-\d{2}/', $configLines[$i])) {
+        $jsonLine = trim($configLines[$i + 1]);
+        if (strpos($jsonLine, '"password": "locked"') !== false) {
+            $isDisabled = true;
         }
+        break;
+    }
+}
+ 
     ?>
         <div class="bg-gray-800 p-4 rounded mb-4 shadow">
             <div class="flex justify-between items-center">
