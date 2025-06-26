@@ -7,8 +7,8 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
 
 // Daftar VPS (contoh, bisa diambil dari database juga)
 $vpsList = [
-    ['ip' => '178.128.60.18', 'country' => 'Singapore'],
-    ['ip' => '152.42.182.187', 'country' => 'Singapura-SGDO-MARD1'],
+    ['ip' => '178.128.60.185', 'country' => 'Singapore-SGDO-2DEV'],
+    ['ip' => '152.42.182.187', 'country' => 'Singapore-SGDO-MARD1'],
     ['ip' => '203.194.113.140',  'country' => 'Indonesia-RW-MARD']
 ];
 
