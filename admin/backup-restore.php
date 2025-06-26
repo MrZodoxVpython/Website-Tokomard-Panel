@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
 <div class="max-w-6xl mx-auto p-6">
-  <h1 class="text-center text-3xl font-bold text-blue-400 mb-6">🧑💻 Backup & Restore Tiap VPS</h1>
+  <h1 class="text-center text-3xl font-bold text-blue-400 mb-6">🧑💻 Backup & Restore VPS</h1>
 
   <table class="min-w-full text-sm text-left text-white border border-gray-700 mb-8">
     <thead class="bg-gray-800 text-gray-300">
