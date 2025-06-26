@@ -78,7 +78,7 @@ function tampilkanXRAY($proto, $username, $expired, $key) {
     }
 
     $output = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-    $output .= str_pad(" " . strtoupper($proto) . " ACCOUNT", 25, " ", STR_PAD_BOTH) . "\n";
+    $output .= str_pad(" " . strtoupper($proto) . " ACCOUNT", 35, " ", STR_PAD_BOTH) . "\n";
     $output .= "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
     $output .= "Remarks        : $displayUsername\n";
     $output .= "Host/IP        : $domain\n";
