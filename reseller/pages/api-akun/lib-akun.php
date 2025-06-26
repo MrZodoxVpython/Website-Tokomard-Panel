@@ -81,7 +81,6 @@ function tampilkanXRAY($proto, $username, $expired, $key) {
     if (preg_match('/^(.+?)_(.+)$/', $username, $match)) {
         $displayUsername = $match[2];
     }
-
     $output = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
     $output .= str_pad(" " . strtoupper($proto) . " ACCOUNT", 35, " ", STR_PAD_BOTH) . "\n";
     $output .= "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
