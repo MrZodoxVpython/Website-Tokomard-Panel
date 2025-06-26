@@ -162,9 +162,10 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
 $configLines = file($configPath);
 for ($i = 0; $i < count($configLines); $i++) {
     if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($username) . '\s+\d{4}-\d{2}-\d{2}/', $configLines[$i])) {
-        $jsonLine = trim($configLines[$i + 1]);
+        $jsonLine = trim($configLines[$i + 1] ?? '');
         if (strpos($jsonLine, '"password": "locked"') !== false) {
             $isDisabled = true;
+            break; // ✅ break saat ditemukan satu yang terkunci
         }
     }
 }
