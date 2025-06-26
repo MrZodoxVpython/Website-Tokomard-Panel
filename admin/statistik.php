@@ -125,7 +125,7 @@ include '../templates/header.php';
     <div class="flex flex-col justify-between h-full min-h-[240px] rounded-xl p-6 shadow-lg text-white bg-gradient-to-br <?= $gradient ?> hover:scale-[1.02] transition-transform duration-200">
       <div class="text-center">
         <div class="text-4xl"><?= $icon ?></div>
-        <h2 class="text-lg font-semibold tracking-widest mt-2"><?= strtoupper($proto) ?></h2>
+        <h2 class="text-lg text-center font-semibold tracking-widest mt-2"><?= strtoupper($proto) ?></h2>
       </div>
       <div class="mt-4 space-y-1 text-sm">
         <div class="flex justify-between border-b border-white/20 pb-1">
