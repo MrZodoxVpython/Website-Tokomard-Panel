@@ -7,7 +7,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
 
 $vpsList = [
     'SGDO-2DEV' => '127.0.0.1', // local VPS
-    'SGDO-MARD1' => '178.128.60.185',
+    'SGDO-MARD1' => '152.42.182.187',
     'RW-MARD1'   => '203.194.113.140'
 ];
 
