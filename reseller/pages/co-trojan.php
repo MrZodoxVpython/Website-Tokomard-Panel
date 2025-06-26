@@ -5,16 +5,6 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
     exit;
 }
 
-// Tangani nilai default
-$passwordGenerated = false;
-$passwordValue = $_POST['password'] ?? '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['protocol']) && $_POST['protocol'] === 'trojan') {
-    if (empty($passwordValue)) {
-        $passwordValue = generateUUID();
-        $passwordGenerated = true;
-    }
-}
-
 $server = [
     'name' => 'SGDO-2DEV',
     'country' => 'Singapore',
