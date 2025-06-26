@@ -42,7 +42,7 @@ function getPingMs($host) {
 
 $servers = [
     'RW-MARD'     => ['ip' => '203.194.113.140', 'ssh_user' => 'root', 'ssh_port' => 22],
-    'SGDO-MARD1'   => ['ip' => '143.198.202.86',  'ssh_user' => 'root', 'ssh_port' => 22],
+    'SGDO-MARD1'   => ['ip' => '152.42.182.187',  'ssh_user' => 'root', 'ssh_port' => 22],
     'SGDO-2DEV'    => ['ip' => '178.128.60.185',  'ssh_user' => 'root', 'ssh_port' => 22]
 ];
 
