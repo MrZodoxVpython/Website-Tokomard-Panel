@@ -116,8 +116,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
                         <button onclick="document.getElementById('form-<?= $username ?>').classList.toggle('hidden')" class="bg-yellow-500 px-3 py-1 rounded hover:bg-yellow-600">Edit</button>
                     </div>
                 </div>
-                <div id="detail-<?= $username ?>" class="detail-box mt-3 p-3 bg-gray-700 rounded hidden whitespace-pre text-green-300 font-mono text-sm"><?= htmlspecialchars($content) ?></div>
-
+                <div id="detail-<?= $username ?>" class="detail-box mt-3 bg-gray-700 rounded hidden">
+                <div class="overflow-x-auto">
+        <pre class="text-green-300 font-mono text-sm whitespace-pre p-3 min-w-full">
+<?= htmlspecialchars($content) ?>
+        </pre>
                 <form method="POST" id="form-<?= $username ?>" class="mt-3 hidden bg-gray-700 p-4 rounded">
                     <input type="hidden" name="edit_user" value="<?= htmlspecialchars($username) ?>">
                     <label class="block mb-1">Perbarui Expired (tgl atau jumlah hari)</label>
