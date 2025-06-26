@@ -49,7 +49,7 @@ $sshProducts = [
             <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">📦 Stok: <?= $product['stock'] ?></p>
             
             <div class="flex gap-2">
-                <a href="#" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded shadow">🔍 Lihat Detail</a>
+                <a href="/reseller/pages/show-trojan.php" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded shadow">🔍 Lihat Detail</a>
                 <a href="/reseller/pages/co-trojan.php" class="px-3 py-1 bg-green-600 hover:bg-green-500 text-white text-xs rounded shadow <?= $product['available'] ? '' : 'opacity-50 pointer-events-none' ?>">🛒 Keranjang</a>
             </div>
         </div>
