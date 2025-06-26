@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
                     </div>
                 </div>
 
-                <!-- RINCIAN AKUN - Scroll Horizontal -->
+                <!-- Detail akun -->
                 <div id="detail-<?= $username ?>" class="detail-box mt-3 bg-gray-700 rounded hidden">
                     <div class="overflow-x-auto">
                         <pre class="text-green-300 font-mono text-sm whitespace-pre p-3 min-w-full">
@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
                     </div>
                 </div>
 
-                <!-- FORM EDIT -->
+                <!-- Form edit -->
                 <form method="POST" id="form-<?= $username ?>" class="mt-3 hidden bg-gray-700 p-4 rounded">
                     <input type="hidden" name="edit_user" value="<?= htmlspecialchars($username) ?>">
                     <label class="block mb-1">Perbarui Expired (tgl atau jumlah hari)</label>
@@ -139,15 +139,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
 
     <script>
         function toggleDetail(id) {
-            const box = document.getElementById('detail-' + id);
-            const btn = document.getElementById('btn-' + id);
+            // Tutup semua panel & reset tombol
+            document.querySelectorAll('.detail-box').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.btn-show').forEach(btn => btn.innerText = 'Show');
 
-            if (box.classList.contains('hidden')) {
-                box.classList.remove('hidden');
-                btn.innerText = 'Hide';
+            const detailBox = document.getElementById('detail-' + id);
+            const button = document.getElementById('btn-' + id);
+
+            // Jika panel ini sedang tersembunyi, buka & ganti tombol jadi Hide
+            if (detailBox.classList.contains('hidden')) {
+                detailBox.classList.remove('hidden');
+                button.innerText = 'Hide';
             } else {
-                box.classList.add('hidden');
-                btn.innerText = 'Show';
+                detailBox.classList.add('hidden');
+                button.innerText = 'Show';
             }
         }
     </script>
