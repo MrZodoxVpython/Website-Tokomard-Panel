@@ -113,17 +113,17 @@ EOL;
                 "path" => $path,
                 "tls" => "tls"
             ]));
-            $output .= "Link TLS       : $vmessLink\n";
+            $output .= "\nLink TLS       : $vmessLink\n";
             break;
         case 'vless':
-            $output .= "Link TLS       : vless://$key@$domain:$tls?path=$path&security=tls&type=ws#$displayUsername\n";
+            $output .= "\nLink TLS       : vless://$key@$domain:$tls?path=$path&security=tls&type=ws#$displayUsername\n";
             break;
         case 'trojan':
-            $output .= "Link TLS       : trojan://$key@$domain:$tls?path=$path&security=tls&type=ws#$displayUsername\n";
+            $output .= "\nLink TLS       : trojan://$key@$domain:$tls?path=$path&security=tls&type=ws#$displayUsername\n";
             break;
         case 'shadowsocks':
             $encoded = base64_encode("aes-128-gcm:$key");
-            $output .= "Link SS (TLS)  : ss://$encoded@$domain:$tls#$displayUsername\n";
+            $output .= "\nLink SS (TLS)  : ss://$encoded@$domain:$tls#$displayUsername\n";
             break;
     }
 
