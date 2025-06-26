@@ -44,6 +44,9 @@ include 'templates/header.php';
     <a href="admin/backup-restore.php" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl text-center shadow">
       🧑‍💻 Backup & Restore M
     </a>
+    <a href="admin/statistik-vps.php" class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-3 rounded-xl text-center shadow">
+      📊 Statistik Bandwith M
+    </a>
       <a href="admin/log-akses.php" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-3 rounded-xl text-center shadow">
       🧾 Log Akses User
     </a>
@@ -60,9 +63,6 @@ include 'templates/header.php';
     </a>
     <a href="statistik.php" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-3 rounded-xl text-center shadow">
       📈 Cek User Xray Lengkap
-    </a>
-    <a href="admin/statistik-vps.php" class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-3 rounded-xl text-center shadow">
-      📊 Statistik Bandwith
     </a>
   </div>
 
