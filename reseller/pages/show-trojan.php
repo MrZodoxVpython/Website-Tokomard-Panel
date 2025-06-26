@@ -165,7 +165,6 @@ for ($i = 0; $i < count($configLines); $i++) {
         $jsonLine = trim($configLines[$i + 1]);
         if (strpos($jsonLine, '"password": "locked"') !== false) {
             $isDisabled = true;
-            break; // langsung berhenti begitu ada yang locked
         }
     }
 }
