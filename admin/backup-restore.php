@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'backup') {
         if ($isLocal) {
-            $cmd = "/admin/backup.php";
+            $cmd = "admin/backup.php";
         } elseif (!empty($password)) {
             $cmd = "sshpass -p '$password' ssh -o StrictHostKeyChecking=no root@$vpsIp 'sudo /usr/bin/backup'";
         } else {
