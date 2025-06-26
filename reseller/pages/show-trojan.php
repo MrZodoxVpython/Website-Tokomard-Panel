@@ -3,7 +3,7 @@ session_start();
 $reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? 'unknown';
 
 $configPath = '/etc/xray/config.json';
-$logDir = "/etc/xray/data-panel/akun-reseller";
+$logDir = "/etc/xray/data-panel/reseller";
 $akunFiles = glob("$logDir/akun-$reseller-*.txt");
 
 // Proses DELETE
