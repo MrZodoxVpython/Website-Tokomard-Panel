@@ -12,7 +12,7 @@ if (!isset($_SESSION['username'])) {
 $vpsList = [
     "sgdo-2dev" => ["ip" => "178.128.60.185", "config" => "/etc/xray/config.json"],
     "sgdo-mard1" => ["ip" => "152.42.182.187", "config" => "/etc/xray/config.json"],
-    "tokopedia1" => ["ip" => "203.194.113.140", "config" => "/etc/xray/config.json"]
+    "rw-mard" => ["ip" => "203.194.113.140", "config" => "/etc/xray/config.json"]
 ];
 
 $selectedVps = $_GET['vps'] ?? 'sgdo-2dev';
