@@ -30,7 +30,7 @@ $server = [
 ];
 
 // Ambil protokol dari URL (default: ssh)
-$protocol = $_GET['proto'] ?? 'ssh';
+$protocol = $_GET['proto'] ?? 'vless';
 $require_password = in_array($protocol, ['ssh', 'trojan', 'shadowsocks']);
 $require_uuid = in_array($protocol, ['vmess', 'vless']);
 ?>
