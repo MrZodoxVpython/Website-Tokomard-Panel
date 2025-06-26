@@ -41,7 +41,9 @@ include 'templates/header.php';
     <a href="/cek-status-server-tokomard.php" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-3 rounded-xl text-center shadow">
       🧠 Cek Server M
     </a>
-
+    <a href="admin/backup-restore.php" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl text-center shadow">
+      🧑‍💻 Backup & Restore M
+    </a>
       <a href="admin/log-akses.php" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-3 rounded-xl text-center shadow">
       🧾 Log Akses User
     </a>
@@ -55,9 +57,6 @@ include 'templates/header.php';
       🔧 Pengaturan Sistem
     <a href="admin/list-user.php" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-xl text-center shadow">
       📋 Registered Users
-    </a>
-    <a href="admin/backup-restore.php" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl text-center shadow">
-      🧑‍💻 Backup & Restore
     </a>
     <a href="statistik.php" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-3 rounded-xl text-center shadow">
       📈 Cek User Xray Lengkap
