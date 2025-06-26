@@ -93,7 +93,7 @@ function tampilkanXRAY($proto, $username, $expired, $key) {
 Path           : $path
 ServiceName    : $grpcService
 Expired On     : $expired
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n
 EOL;
 
     switch ($proto) {
