@@ -1,6 +1,6 @@
 <?php
 $reseller = $_SESSION['reseller'] ?? 'unknown';
-$logFile = __DIR__ . "/../../data/akun-reseller/$reseller.txt";
+$logFile = "/etc/xray/data/akun-reseller/$reseller.txt";
 
 if (!file_exists($logFile)) {
     echo "Belum ada akun.";
