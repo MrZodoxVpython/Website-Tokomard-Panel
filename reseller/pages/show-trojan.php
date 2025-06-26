@@ -80,50 +80,48 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
     $updated = false;
 
     for ($i = 0; $i < count($lines); $i++) {
-        $line = trim($lines[$i]);
+    $line = trim($lines[$i]);
 
-        // Deteksi tag
-        if (preg_match('/^#trojan(ws|grpc)?$/i', $line)) {
-            $currentTag = strtolower($line);
-        }
+    // Update current section
+    if (preg_match('/^#trojan(ws|grpc)?$/i', $line)) {
+        $currentTag = strtolower($line);
+    }
 
-        // Proses hanya jika sedang dalam trojanws atau trojangrpc
-        if (in_array($currentTag, ['#trojanws', '#trojangrpc'])) {
-            if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($user, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line)) {
-                $jsonIndex = $i + 1;
+    if (in_array($currentTag, ['#trojanws', '#trojangrpc'])) {
+        if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($user, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line)) {
+            $jsonIndex = $i + 1;
 
-                if (isset($lines[$jsonIndex])) {
-                    $jsonLine = trim($lines[$jsonIndex]);
+            if (!isset($lines[$jsonIndex])) continue;
 
-                    // STOP
-                    if ($action === 'stop' && strpos($jsonLine, '"password": "locked"') === false) {
-                        if (preg_match('/"password"\s*:\s*"(.*?)"/', $jsonLine, $m)) {
-                            $originalPassword = $m[1];
-                            $jsonLine = preg_replace('/"password"\s*:\s*"(.*?)"/', '"password": "locked"', $jsonLine);
-                            $lines[$jsonIndex] = $jsonLine . "\n";
-                            array_splice($lines, $jsonIndex, 0, "##LOCK##$originalPassword\n");
-                            $updated = true;
-                        }
-                    }
+            $jsonLine = trim($lines[$jsonIndex]);
 
-                    // START
-                    if ($action === 'start' && strpos($jsonLine, '"password": "locked"') !== false) {
-                        for ($k = $jsonIndex - 1; $k >= 0; $k--) {
-                            if (preg_match('/^##LOCK##(.+)$/', trim($lines[$k]), $match)) {
-                                $realPassword = $match[1];
-                                $jsonLine = str_replace('"password": "locked"', '"password": "' . $realPassword . '"', $jsonLine);
-                                $lines[$jsonIndex] = $jsonLine . "\n";
-                                unset($lines[$k]); // hapus ##LOCK##
-                                $lines = array_values($lines); // reset index
-                                $updated = true;
-                                break;
-                            }
-                        }
+            if ($action === 'stop' && strpos($jsonLine, '"password": "locked"') === false) {
+                if (preg_match('/"password"\s*:\s*"(.*?)"/', $jsonLine, $m)) {
+                    $originalPassword = $m[1];
+                    $jsonLine = preg_replace('/"password"\s*:\s*"(.*?)"/', '"password": "locked"', $jsonLine);
+                    $lines[$jsonIndex] = $jsonLine . "\n";
+                    $lines[$jsonIndex + 1] = "// ##LOCK##$user:$originalPassword\n";
+                    $updated = true;
+                }
+            }
+
+            if ($action === 'start' && strpos($jsonLine, '"password": "locked"') !== false) {
+                // Cari baris lock
+                for ($j = $jsonIndex + 1; $j < count($lines); $j++) {
+                    if (preg_match('/\/\/\s*##LOCK##' . preg_quote($user, '/') . ':(.+)/', trim($lines[$j]), $match)) {
+                        $realPassword = $match[1];
+                        $jsonLine = str_replace('"password": "locked"', '"password": "' . $realPassword . '"', $jsonLine);
+                        $lines[$jsonIndex] = $jsonLine . "\n";
+                        unset($lines[$j]);
+                        $lines = array_values($lines);
+                        $updated = true;
+                        break;
                     }
                 }
             }
         }
     }
+}
 
     if ($updated) {
         file_put_contents($configPath, implode('', $lines));
@@ -165,7 +163,6 @@ for ($i = 0; $i < count($configLines); $i++) {
         $jsonLine = trim($configLines[$i + 1] ?? '');
         if (strpos($jsonLine, '"password": "locked"') !== false) {
             $isDisabled = true;
-            break; // ✅ break saat ditemukan satu yang terkunci
         }
     }
 }
