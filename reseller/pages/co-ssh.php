@@ -12,7 +12,7 @@
         }
     </script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white min-h-screen p-6 flex justify-item-centers">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white min-h-screen p-6 flex justify-item-centers justify-center">
 
 <?php
 // Data server dummy (bisa dinamis dari parameter GET atau DB)
