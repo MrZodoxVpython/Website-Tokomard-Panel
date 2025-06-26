@@ -32,36 +32,47 @@ if (isset($_GET['hapus'])) {
 // Proses EDIT
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
     $userEdit = $_POST['edit_user'];
-    $expiredBaru = trim($_POST['expired']);
-    if (preg_match('/^\d+$/', $expiredBaru)) {
-        $expiredBaru = date('Y-m-d', strtotime("+$expiredBaru days"));
+    $expiredInput = trim($_POST['expired']);
+
+    if (preg_match('/^\d+$/', $expiredInput)) {
+        $expiredBaru = date('Y-m-d', strtotime("+$expiredInput days"));
+    } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $expiredInput)) {
+        $expiredBaru = $expiredInput;
+    } else {
+        $expiredBaru = null;
     }
 
-    $tagMap = [
-        'trojan' => ['#trojanws', '#trojangrpc']
-    ];
+    if ($expiredBaru) {
+        // Update config.json
+        $lines = file($configPath);
+        $updated = false;
+        $currentTag = '';
+        foreach ($lines as $i => $line) {
+            if (preg_match('/^\s*#(trojan)(grpc|ws)?$/i', trim($line), $m)) {
+                $currentTag = '#' . strtolower($m[1] . ($m[2] ?? ''));
+            }
 
-    $lines = file($configPath);
-    $updated = false;
-    $currentTag = '';
-
-    for ($i = 0; $i < count($lines); $i++) {
-        $line = $lines[$i];
-        if (preg_match('/^\s*#(trojan)(grpc|ws)?$/i', trim($line), $m)) {
-            $currentTag = '#' . strtolower($m[1] . ($m[2] ?? ''));
-        }
-
-        if (in_array($currentTag, $tagMap['trojan'])) {
-            if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($userEdit, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line, $matches)) {
-                $prefix = $matches[1];
-                $lines[$i] = "$prefix $userEdit $expiredBaru\n";
-                $updated = true;
+            if (in_array($currentTag, ['#trojanws', '#trojangrpc'])) {
+                if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($userEdit, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line, $matches)) {
+                    $prefix = $matches[1];
+                    $lines[$i] = "$prefix $userEdit $expiredBaru\n";
+                    $updated = true;
+                }
             }
         }
-    }
 
-    if ($updated) {
-        file_put_contents($configPath, implode('', $lines));
+        if ($updated) {
+            file_put_contents($configPath, implode('', $lines));
+        }
+
+        // Update file .txt
+        $pattern = "$logDir/akun-$reseller-$userEdit.txt";
+        foreach (glob($pattern) as $file) {
+            $content = file_get_contents($file);
+            $content = preg_replace('/(Expired On\s*:\s*)(\d{4}-\d{2}-\d{2})/', '${1}' . $expiredBaru, $content);
+            file_put_contents($file, $content);
+        }
+
         shell_exec('sudo /usr/local/bin/restart-xray.sh');
     }
 
