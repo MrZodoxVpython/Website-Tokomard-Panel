@@ -5,6 +5,10 @@ if (!isset($_SESSION['reseller'])) {
     exit;
 }
 $reseller = $_SESSION['reseller'];
+echo "<pre>";
+print_r($_SESSION);
+echo "</pre>";
+
 ?>
 <!DOCTYPE html>
 <html lang="id" class="dark">
