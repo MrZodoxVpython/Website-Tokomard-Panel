@@ -34,6 +34,3 @@ $tags = ['trojanws', 'trojangrpc'];
 // Proses penambahan akun Xray Trojan
 $hasil = prosesXray('trojan', $tags, $commentLine, $jsonLine, $username, $expired, $password);
 
-// Tampilkan hasil (jika ingin untuk remote SSH)
-echo $hasil;
-
