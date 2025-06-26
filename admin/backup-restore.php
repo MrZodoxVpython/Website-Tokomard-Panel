@@ -73,6 +73,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             unset($_SESSION['downloaded'][$basename]);
         }
     }
+    // ⛔ Redirect agar reload tidak mengulang backup/restore
+    header("Location: backup-restore.php");
+    exit;
 }
 ?>
 
