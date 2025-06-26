@@ -179,14 +179,14 @@ $content
 </html>
 HTML;
 }
-
 function catatLogReseller($reseller, $username, $expired) {
     $logDir = "/etc/xray/data-panel/reseller";
     if (!is_dir($logDir)) {
         mkdir($logDir, 0755, true);
     }
 
-    $logFile = "$logDir/akun-reseller.txt";
+    // Ganti nama file log sesuai username reseller
+    $logFile = "$logDir/akun-{$reseller}.txt";
     $tanggal = date("Y-m-d H:i:s");
     $logData = "[$tanggal] Reseller: $reseller menambahkan akun: $username (Expired: $expired)\n";
 
