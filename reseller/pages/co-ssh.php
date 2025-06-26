@@ -25,7 +25,6 @@ $server = [
     'name' => 'SGDO-2DEV',
     'country' => 'Singapore',
     'isp' => 'DigitalOcean, LLC',
-    '✅'
     'rules' => [
         'NO TORRENT',
         'NO MULTY LOGIN',
