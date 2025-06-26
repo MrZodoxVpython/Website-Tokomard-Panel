@@ -108,6 +108,5 @@ include 'templates/header.php';
 </div>
 
 <?php
-include 'templates/statistik-tampilan.php';
 include 'templates/footer.php';
-
+?>
