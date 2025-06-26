@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'backup') {
         if ($isLocal) {
-            $cmd = "sudo /usr/bin/backup";
+            $cmd = "sudo /var/www/html/Website-Tokokmard-Panel/admin/backup.php";
         } elseif (!empty($password)) {
             $cmd = "sshpass -p '$password' ssh -o StrictHostKeyChecking=no root@$vpsIp 'sudo /usr/bin/backup'";
         } else {
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } elseif ($action === 'restore') {
         if ($isLocal) {
-            $cmd = "php /var/www/html/Website-Tokomard-Panel/admin/auto-install-rclone.php";
+            $cmd = "php /var/www/html/Website-Tokomard-Panel/admin/restore.php";
         } elseif (!empty($password)) {
             $cmd = "sshpass -p '$password' ssh -o StrictHostKeyChecking=no root@$vpsIp 'php /var/www/html/Website-Tokomard-Panel/admin/auto-install-rclone.php'";
         } else {
