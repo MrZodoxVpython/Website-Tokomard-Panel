@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
                         <button onclick="document.getElementById('form-<?= $username ?>').classList.toggle('hidden')" class="bg-yellow-500 px-3 py-1 rounded hover:bg-yellow-600">Edit</button>
                     </div>
                 </div>
-                <div id="detail-<?= $username ?>" class="detail-box mt-3 p-3 bg-gray-700 rounded hidden whitespace-pre-wrap text-green-300"><?= htmlspecialchars($content) ?></div>
+                <div id="detail-<?= $username ?>" class="detail-box mt-3 p-3 bg-gray-700 rounded hidden whitespace-pre text-green-300 font-mono text-sm"><?= htmlspecialchars($content) ?></div>
 
                 <form method="POST" id="form-<?= $username ?>" class="mt-3 hidden bg-gray-700 p-4 rounded">
                     <input type="hidden" name="edit_user" value="<?= htmlspecialchars($username) ?>">
