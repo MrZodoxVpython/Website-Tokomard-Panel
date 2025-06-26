@@ -139,18 +139,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
 
     <script>
         function toggleDetail(id) {
-            // Sembunyikan semua detail & reset tombol
-            document.querySelectorAll('.detail-box').forEach(el => el.style.display = 'none');
-            document.querySelectorAll('.btn-show').forEach(btn => btn.innerText = 'Show');
-
             const box = document.getElementById('detail-' + id);
             const btn = document.getElementById('btn-' + id);
 
-            if (box.style.display === 'none' || box.style.display === '') {
-                box.style.display = 'block';
+            if (box.classList.contains('hidden')) {
+                box.classList.remove('hidden');
                 btn.innerText = 'Hide';
             } else {
-                box.style.display = 'none';
+                box.classList.add('hidden');
                 btn.innerText = 'Show';
             }
         }
