@@ -16,8 +16,8 @@ $vpsList = [
 ];
 
 $selectedVps = isset($_GET['vps']) ? $_GET['vps'] : 'sgdo-2dev';
-$configPath = isset($vpsList[$selectedVps]) ? $vpsList[$selectedVps]['config'] : '';
-$vpsIp = isset($vpsList[$selectedVps]) ? $vpsList[$selectedVps]['ip'] : '';
+$configPath = $vpsList[$selectedVps]['config'] ?? '';
+$vpsIp = $vpsList[$selectedVps]['ip'] ?? '';
 
 if ($selectedVps === 'sgdo-2dev') {
     if (!file_exists($configPath)) die("<p style='color:red;'>❌ File config.json tidak ditemukan!</p>");
@@ -74,9 +74,7 @@ foreach ($matches as $match) {
 function countStatus($data, $status) {
     $count = 0;
     foreach ($data as $x) {
-        if ($x['status'] === $status) {
-            $count++;
-        }
+        if ($x['status'] === $status) $count++;
     }
     return $count;
 }
@@ -105,80 +103,80 @@ include '../templates/header.php';
     </form>
   </div>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-  <?php
-  $icons = [
-    'vmess' => ['emoji' => '🌀', 'color' => 'from-blue-500 to-blue-700'],
-    'vless' => ['emoji' => '🔮', 'color' => 'from-purple-400 to-purple-600'],
-    'trojan' => ['emoji' => '⚔️', 'color' => 'from-yellow-400 to-orange-500'],
-    'shadowsocks' => ['emoji' => '🕶️', 'color' => 'from-green-300 to-teal-400'],
-  ];
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+    <?php
+    $icons = [
+        'vmess' => ['emoji' => '🌀', 'color' => 'from-blue-500 to-blue-700'],
+        'vless' => ['emoji' => '🔮', 'color' => 'from-purple-400 to-purple-600'],
+        'trojan' => ['emoji' => '⚔',  'color' => 'from-yellow-400 to-orange-500'],
+        'shadowsocks' => ['emoji' => '🕶', 'color' => 'from-green-300 to-teal-400'],
+    ];
 
-  foreach ($statistik as $proto => $akun):
-    $icon     = $icons[$proto]['emoji'] ?? '❔';
-    $gradient = $icons[$proto]['color'] ?? 'from-gray-700 to-gray-900';
-    $total    = count($akun);
-    $active   = countStatus($akun, 'active');
-    $expiring = countStatus($akun, 'expiring');
-    $expired  = countStatus($akun, 'expired');
-  ?>
-    <div class="flex flex-col justify-between h-full min-h-[240px] rounded-xl p-6 shadow-lg text-white bg-gradient-to-br <?= $gradient ?> hover:scale-[1.02] transition-transform duration-200">
-      <div class="text-center">
-        <div class="text-4xl"><?= $icon ?></div>
-        <h2 class="text-lg font-semibold tracking-widest mt-2 truncate text-ellipsis overflow-hidden text-center w-full break-words">
-  <?= strtoupper($proto) ?>
-</h2>
+    foreach ($statistik as $proto => $akun):
+        $icon = $icons[$proto]['emoji'];
+        $gradient = $icons[$proto]['color'];
+        $total = count($akun);
+        $active = countStatus($akun, 'active');
+        $expiring = countStatus($akun, 'expiring');
+        $expired = countStatus($akun, 'expired');
+    ?>
+      <div class="flex flex-col justify-between h-full min-h-[240px] rounded-xl p-6 shadow-lg text-white bg-gradient-to-br <?= $gradient ?> hover:scale-[1.02] transition-transform duration-200">
+        <div class="text-center">
+          <div class="text-4xl"><?= $icon ?></div>
+          <h2 class="text-lg font-semibold tracking-widest mt-2 truncate w-full break-words"><?= strtoupper($proto) ?></h2>
+        </div>
+        <div class="mt-4 space-y-1 text-sm">
+          <div class="flex justify-between border-b border-white/20 pb-1">
+            <span>Total</span><span class="font-bold"><?= $total ?></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-green-300">Aktif</span><span><?= $active ?></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-yellow-300">Mau Expired</span><span><?= $expiring ?></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-red-400">Expired</span><span><?= $expired ?></span>
+          </div>
+        </div>
       </div>
-      <div class="mt-4 space-y-1 text-sm">
-        <div class="flex justify-between border-b border-white/20 pb-1">
-          <span>Total</span><span class="font-bold"><?= $total ?></span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-green-300">Aktif</span><span><?= $active ?></span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-yellow-300">Mau Expired</span><span><?= $expiring ?></span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-red-400">Expired</span><span><?= $expired ?></span>
-        </div>
-      </div>
-    </div>
-  <?php endforeach; ?>
-</div>
+    <?php endforeach; ?>
+  </div>
 
   <?php foreach ($statistik as $proto => $akun): ?>
     <?php if (empty($akun)) continue; ?>
     <div class="bg-gray-900 rounded-2xl p-6 shadow-xl mb-10">
       <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-700 pb-2"><?= strtoupper($proto) ?> - Detail Akun</h2>
       <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-800 text-sm">
+        <table class="min-w-full divide-y divide-gray-800 text-sm table-fixed">
           <thead class="bg-gray-800 text-gray-300">
             <tr>
-              <th class="px-4 py-3 text-left">👤 Username</th>
-              <th class="px-4 py-3 text-left">📅 Expired</th>
-              <th class="px-4 py-3 text-left">📌 Status</th>
-              <th class="px-4 py-3 text-left">🌐 Online</th>
+              <th class="px-4 py-3 text-left w-1/12">#</th>
+              <th class="px-4 py-3 text-left w-4/12">👤 Username</th>
+              <th class="px-4 py-3 text-left w-3/12">📅 Expired</th>
+              <th class="px-4 py-3 text-left w-2/12">📌 Status</th>
+              <th class="px-4 py-3 text-left w-2/12">🌐 Online</th>
             </tr>
           </thead>
           <tbody class="bg-gray-700 divide-y divide-gray-800 text-white">
-            <?php foreach ($akun as $u): ?>
+            <?php $no = 1; foreach ($akun as $u): ?>
               <tr class="hover:bg-gray-600 transition">
-                <td class="px-4 py-2"><?= htmlspecialchars($u['username']) ?></td>
+                <td class="px-4 py-2"><?= $no++ ?></td>
+                <td class="px-4 py-2 break-all"><?= htmlspecialchars($u['username']) ?></td>
                 <td class="px-4 py-2"><?= $u['expired'] ?></td>
                 <td class="px-4 py-2">
                   <?php
-                  switch ($u['status']) {
-                      case 'active':
-                          echo '<span class="inline-block px-2 py-1 text-green-400 bg-green-900 rounded-full text-xs">Aktif</span>';
-                          break;
-                      case 'expiring':
-                          echo '<span class="inline-block px-2 py-1 text-yellow-400 bg-yellow-900 rounded-full text-xs">Segera Expired</span>';
-                          break;
-                      case 'expired':
-                          echo '<span class="inline-block px-2 py-1 text-red-400 bg-red-900 rounded-full text-xs">Expired</span>';
-                          break;
-                  }
+                    switch ($u['status']) {
+                        case 'active':
+                            echo '<span class="inline-block px-2 py-1 text-green-400 bg-green-900 rounded-full text-xs">Aktif</span>';
+                            break;
+                        case 'expiring':
+                            echo '<span class="inline-block px-2 py-1 text-yellow-400 bg-yellow-900 rounded-full text-xs">Segera Expired</span>';
+                            break;
+                        case 'expired':
+                            echo '<span class="inline-block px-2 py-1 text-red-400 bg-red-900 rounded-full text-xs">Expired</span>';
+                            break;
+                    }
                   ?>
                 </td>
                 <td class="px-4 py-2">
