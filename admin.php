@@ -47,6 +47,9 @@ include 'templates/header.php';
     <a href="admin/statistik-vps.php" class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-3 rounded-xl text-center shadow">
       📊 Statistik Bandwith M
     </a>
+    <a href="admin/statistik.php" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-3 rounded-xl text-center shadow">
+      📈 Cek User Xray Lengkap M
+    </a>
       <a href="admin/log-akses.php" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-3 rounded-xl text-center shadow">
       🧾 Log Akses User
     </a>
@@ -60,9 +63,6 @@ include 'templates/header.php';
       🔧 Pengaturan Sistem
     <a href="admin/list-user.php" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-xl text-center shadow">
       📋 Registered Users
-    </a>
-    <a href="admin/statistik.php" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-3 rounded-xl text-center shadow">
-      📈 Cek User Xray Lengkap
     </a>
   </div>
 
