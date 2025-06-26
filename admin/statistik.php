@@ -111,7 +111,7 @@ include '../templates/header.php';
         'vmess' => ['emoji' => '🌀', 'color' => 'from-blue-500 to-blue-800'],
         'vless' => ['emoji' => '🔮', 'color' => 'from-purple-500 to-purple-800'],
         'trojan' => ['emoji' => '⚔', 'color' => 'from-blue-500 to-blue-800'],
-        'shadowsocks' => ['emoji' => '🕶', 'color' => 'from-emerald-500 to-blue-800']
+        'shadowsocks' => ['emoji' => '🕶', 'color' => 'from-purple-500 to-blue-800']
     ];
     ?>
 
