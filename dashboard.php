@@ -128,7 +128,7 @@ error_log("⏱ Dashboard load time: {$duration} seconds");
       📊 Administratrol Tools
     </a>
     <a href="statis.php" class="block bg-blue-700 hover:bg-blue-800 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl text-base sm:text-lg font-semibold transition">
-      📊 Lihat Lengkap XxX
+      ✮ Lihat Lengkap XxX
     </a>
   </div>
 
