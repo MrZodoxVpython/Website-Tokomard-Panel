@@ -67,7 +67,7 @@ EOL;
 
 function tampilkanXRAY($proto, $username, $expired, $key) {
     $domain = trim(@file_get_contents('/etc/xray/domain'));
-    $tls = "443\n";
+    $tls = "443";
     $ntls = "80";
     $grpcService = $proto . "-grpc";
     $path = "/$proto-ws";
@@ -77,17 +77,15 @@ function tampilkanXRAY($proto, $username, $expired, $key) {
         $displayUsername = $match[2];
     }
 
-    $output = <<<EOL
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          ${proto} ACCOUNT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Remarks        : $displayUsername
-Host/IP        : $domain
-Wildcard       : (bug.com).$domain
-Port TLS       : $tls
-Port none TLS  : $ntls
-Port gRPC      : $tls
-EOL;
+    $output = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    $output .= str_pad("          " . strtoupper($proto) . " ACCOUNT", 43, " ", STR_PAD_BOTH) . "\n";
+    $output .= "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    $output .= "Remarks        : $displayUsername\n";
+    $output .= "Host/IP        : $domain\n";
+    $output .= "Wildcard       : (bug.com).$domain\n";
+    $output .= "Port TLS       : $tls\n";
+    $output .= "Port none TLS  : $ntls\n";
+    $output .= "Port gRPC      : $tls\n";
 
     $output .= ($proto === 'vmess' || $proto === 'vless') ? "UUID           : $key\n" : "Password       : $key\n";
 
@@ -100,7 +98,7 @@ EOL;
 
     switch ($proto) {
         case 'vmess':
-            $vmessLink = "vmess://" . base64_encode(json_encode([
+            $vmessConf = [
                 "v" => "2",
                 "ps" => $displayUsername,
                 "add" => $domain,
@@ -112,23 +110,54 @@ EOL;
                 "host" => "",
                 "path" => $path,
                 "tls" => "tls"
+            ];
+            $vmessLink = "vmess://" . base64_encode(json_encode($vmessConf));
+            $output .= "Link TLS       : $vmessLink\n";
+            $vmessConf['port'] = $ntls;
+            $vmessConf['tls'] = "none";
+            $vmessLinkNonTLS = "vmess://" . base64_encode(json_encode($vmessConf));
+            $output .= "Link non-TLS   : $vmessLinkNonTLS\n";
+            $grpcLink = "vmess://".base64_encode(json_encode([
+                "v" => "2",
+                "ps" => $displayUsername,
+                "add" => $domain,
+                "port" => $tls,
+                "id" => $key,
+                "aid" => "0",
+                "net" => "grpc",
+                "type" => "none",
+                "host" => "",
+                "path" => "",
+                "tls" => "tls",
+                "serviceName" => $grpcService
             ]));
-            $output .= "\nLink TLS       : $vmessLink\n";
+            $output .= "Link gRPC      : $grpcLink\n";
             break;
+
         case 'vless':
-            $output .= "\nLink TLS       : vless://$key@$domain:$tls?path=$path&security=tls&type=ws#$displayUsername\n";
+            $output .= "Link TLS       : vless://$key@$domain:$tls?path=$path&security=tls&type=ws#$displayUsername\n";
+            $output .= "Link non-TLS   : vless://$key@$domain:$ntls?path=$path&security=none&type=ws#$displayUsername\n";
+            $output .= "Link gRPC      : vless://$key@$domain:$tls?mode=gun&security=tls&type=grpc&serviceName=$grpcService#$displayUsername\n";
             break;
+
         case 'trojan':
-            $output .= "\nLink TLS       : trojan://$key@$domain:$tls?path=$path&security=tls&type=ws#$displayUsername\n";
+            $output .= "Link TLS       : trojan://$key@$domain:$tls?path=$path&security=tls&type=ws#$displayUsername\n";
+            $output .= "Link non-TLS   : trojan://$key@$domain:$ntls?path=$path&security=none&type=ws#$displayUsername\n";
+            $output .= "Link gRPC      : trojan://$key@$domain:$tls?mode=gun&security=tls&type=grpc&serviceName=$grpcService#$displayUsername\n";
             break;
+
         case 'shadowsocks':
             $encoded = base64_encode("aes-128-gcm:$key");
-            $output .= "\nLink SS (TLS)  : ss://$encoded@$domain:$tls#$displayUsername\n";
+            $output .= "Link SS (TLS)  : ss://$encoded@$domain:$tls#$displayUsername\n";
+            $output .= "Link SS (non)  : ss://$encoded@$domain:$ntls#$displayUsername\n";
             break;
     }
 
+    $output .= "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+
     tampilkanHTML($output);
 }
+
 
 function tampilkanHTML($content) {
     echo <<<HTML
