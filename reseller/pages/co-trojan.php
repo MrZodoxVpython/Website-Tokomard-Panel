@@ -1,14 +1,13 @@
 <?php
 session_start();
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
-    echo "❌ Anda belum login sebagai reseller!";
     header("Location: ../index.php");
     exit;
 }
-$reseller = $_SESSION['reseller'];
-echo "<pre>";
-print_r($_SESSION);
-echo "</pre>";
+#$reseller = $_SESSION['reseller'];
+#echo "<pre>";
+#print_r($_SESSION);
+#echo "</pre>";
 
 ?>
 <!DOCTYPE html>
