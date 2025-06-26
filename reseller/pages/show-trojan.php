@@ -1,4 +1,6 @@
 <?php
+var_dump($_SESSION['reseller']); // sementara
+
 $reseller = $_SESSION['reseller'] ?? 'unknown';
 $logFile = "/etc/xray/data-panel/akun-reseller/$reseller.txt";
 
