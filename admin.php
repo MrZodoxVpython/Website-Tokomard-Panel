@@ -61,7 +61,7 @@ include 'templates/header.php';
     <a href="admin/list-user.php" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-xl text-center shadow">
       📋 Registered Users
     </a>
-    <a href="statistik.php" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-3 rounded-xl text-center shadow">
+    <a href="admin/statistik.php" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-3 rounded-xl text-center shadow">
       📈 Cek User Xray Lengkap
     </a>
   </div>
