@@ -214,7 +214,7 @@ function catatLogReseller($reseller, $usernamePembeli, $expired, $detailAkun) {
 
     // Simpan isi detail akun ke file
     if (is_writable($logDir)) {
-        file_put_contents($logFile, $detailAkun);
+        file_put_contents($logFile, trim($detailAkun));
     } else {
         error_log("❌ Tidak bisa menulis ke $logFile");
     }
