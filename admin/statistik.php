@@ -108,25 +108,19 @@ include '../templates/header.php';
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12">
   <?php
   $icons = [
-    'vmess'       => ['emoji' => '🌀', 'color' => 'from-blue-500 to-blue-700'],
-    'vless'       => ['emoji' => '🔮', 'color' => 'from-purple-400 to-purple-600'],
-    'trojan'      => ['emoji' => '⚔️', 'color' => 'from-yellow-400 to-orange-500'],
+    'vmess' => ['emoji' => '🌀', 'color' => 'from-blue-500 to-blue-700'],
+    'vless' => ['emoji' => '🔮', 'color' => 'from-purple-400 to-purple-600'],
+    'trojan' => ['emoji' => '⚔️', 'color' => 'from-yellow-400 to-orange-500'],
     'shadowsocks' => ['emoji' => '🕶️', 'color' => 'from-green-300 to-teal-400'],
   ];
 
   foreach ($statistik as $proto => $akun):
-    // Hitung status akun
+    $icon     = $icons[$proto]['emoji'] ?? '❔';
+    $gradient = $icons[$proto]['color'] ?? 'from-gray-700 to-gray-900';
     $total    = count($akun);
     $active   = countStatus($akun, 'active');
     $expiring = countStatus($akun, 'expiring');
     $expired  = countStatus($akun, 'expired');
-
-    // Kalau semua status 0, skip render
-    if ($total == 0 && $active == 0 && $expiring == 0 && $expired == 0) continue;
-
-    // Data ikon dan warna
-    $icon     = $icons[$proto]['emoji'] ?? '❔';
-    $gradient = $icons[$proto]['color'] ?? 'from-gray-700 to-gray-900';
   ?>
     <div class="flex flex-col justify-between h-full min-h-[240px] rounded-xl p-6 shadow-lg text-white bg-gradient-to-br <?= $gradient ?> hover:scale-[1.02] transition-transform duration-200">
       <div class="text-center">
