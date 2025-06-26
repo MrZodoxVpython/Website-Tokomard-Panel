@@ -41,6 +41,14 @@ $statistik = [
     'shadowsocks' => []
 ];
 
+// Simpan daftar username unik per protokol
+$uniqueUsernames = [
+    'vmess' => [],
+    'vless' => [],
+    'trojan' => [],
+    'shadowsocks' => []
+];
+
 foreach ($matches as $match) {
     [$full, $tag, $username, $expired] = $match;
     switch ($tag) {
@@ -51,12 +59,19 @@ foreach ($matches as $match) {
         default:    continue 2;
     }
 
+    // Skip jika username sudah pernah dimasukkan sebelumnya (anti duplikat)
+    if (in_array($username, $uniqueUsernames[$proto])) {
+        continue;
+    }
+
+    $uniqueUsernames[$proto][] = $username;
+
     $status = ($expired < $today) ? 'expired' : (($expired <= $sevenDaysLater) ? 'expiring' : 'active');
     $statistik[$proto][] = [
         'username' => $username,
         'expired' => $expired,
         'status' => $status,
-        'online' => false // placeholder
+        'online' => false
     ];
 }
 
