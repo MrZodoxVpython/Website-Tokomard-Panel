@@ -118,6 +118,16 @@ include 'templates/header.php';
 </div>
 
 <?php include 'templates/footer.php'; ?>
+<script>
+function setFormAction(ip, action) {
+  const form = document.getElementById('form-' + ip);
+  if (ip === '178.128.60.185') {
+    form.action = action === 'backup' ? 'backup.php' : 'restore.php';
+  } else {
+    form.action = 'backup-restore.php';
+  }
+}
+</script>
 </body>
 </html>
 
