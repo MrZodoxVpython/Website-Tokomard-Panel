@@ -60,19 +60,24 @@ foreach ($lines as $line) {
     $line = trim($line);
     if (preg_match('/^(###|#&|#!|#\$)\s+(\S+)\s+(\d{4}-\d{2}-\d{2})$/', $line, $match)) {
         [$all, $prefix, $username, $expDate] = $match;
+
         if (isset($seenUsers[$username])) continue;
         $seenUsers[$username] = true;
 
+        // Ganti match() dengan switch agar aman untuk PHP 7
         switch ($prefix) {
-    case '###': $protocol = 'vmess'; break;
-    case '#&':  $protocol = 'vless'; break;
-    case '#!':  $protocol = 'trojan'; break;
-    case '#$':  $protocol = 'ss'; break;
-    default:    $protocol = 'unknown'; break;
-}
+            case '###': $protocol = 'vmess'; break;
+            case '#&':  $protocol = 'vless'; break;
+            case '#!':  $protocol = 'trojan'; break;
+            case '#$':  $protocol = 'ss'; break;
+            default:    $protocol = 'unknown'; break;
+        }
 
         $protocolCounts[$protocol]++;
-        $usersByProtocol[$protocol][] = ['username' => $username, 'expired' => $expDate];
+        $usersByProtocol[$protocol][] = [
+            'username' => $username,
+            'expired' => $expDate
+        ];
 
         if ($expDate < $today) {
             $expiredUsers[] = ['username' => $username, 'protocol' => strtoupper($protocol), 'expired' => $expDate];
