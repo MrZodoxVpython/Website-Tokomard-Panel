@@ -150,6 +150,7 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
 
     header("Location: show-trojan.php");
     exit;
+    }
 }
 
 ?>
