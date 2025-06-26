@@ -110,7 +110,7 @@ include '../templates/header.php';
     $icons = [
         'vmess' => ['emoji' => '🌀', 'color' => 'from-blue-500 to-blue-800'],
         'vless' => ['emoji' => '🔮', 'color' => 'from-purple-500 to-purple-800'],
-        'trojan' => ['emoji' => '⚔', 'color' => 'from-orange-500 to-red-700'],
+        'trojan' => ['emoji' => '⚔', 'color' => 'from-orange-300 to-red-500'],
         'shadowsocks' => ['emoji' => '🕶', 'color' => 'from-emerald-500 to-teal-800']
     ];
     ?>
