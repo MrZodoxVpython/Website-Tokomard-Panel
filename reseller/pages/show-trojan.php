@@ -1,5 +1,9 @@
 <?php
 session_start();
+if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
+    header("Location: ../index.php");
+    exit;
+}
 
 $reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? 'unknown';
 
