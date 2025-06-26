@@ -39,7 +39,7 @@ include 'templates/header.php';
       ⚙️ Aktivitas Admin
     </a>
     <a href="/cek-status-server-tokomard.php" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-3 rounded-xl text-center shadow">
-      🧠 Cek Server
+      🧠 Cek Server M
     </a>
     <a href="admin/error-report.php" class="bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-xl text-center shadow">
       ❗ Laporan Error
