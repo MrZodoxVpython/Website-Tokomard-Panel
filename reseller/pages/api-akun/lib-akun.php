@@ -67,7 +67,7 @@ EOL;
 
 function tampilkanXRAY($proto, $username, $expired, $key) {
     $domain = trim(@file_get_contents('/etc/xray/domain'));
-    $tls = "443";
+    $tls = "443\n";
     $ntls = "80";
     $grpcService = $proto . "-grpc";
     $path = "/$proto-ws";
