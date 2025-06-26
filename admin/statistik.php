@@ -108,29 +108,26 @@ include '../templates/header.php';
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12">
   <?php
   $icons = [
-      'vmess' => ['emoji' => '🌀', 'color' => 'from-blue-500 to-blue-800'],
-      'vless' => ['emoji' => '🔮', 'color' => 'from-purple-400 to-purple-700'],
-      'trojan' => ['emoji' => '⚔', 'color' => 'from-orange-400 to-red-600'],
-      'shadowsocks' => ['emoji' => '🕶', 'color' => 'from-emerald-400 to-teal-600']
+    'vmess' => ['emoji' => '🌀', 'color' => 'from-blue-500 to-blue-700'],
+    'vless' => ['emoji' => '🔮', 'color' => 'from-purple-400 to-purple-600'],
+    'trojan' => ['emoji' => '⚔️', 'color' => 'from-orange-400 to-red-500'],
+    'shadowsocks' => ['emoji' => '🕶️', 'color' => 'from-emerald-400 to-teal-500'],
   ];
+  foreach ($statistik as $proto => $akun):
+    $icon = $icons[$proto]['emoji'] ?? '❔';
+    $gradient = $icons[$proto]['color'] ?? 'from-gray-700 to-gray-900';
+    $total = count($akun);
+    $active = countStatus($akun, 'active');
+    $expiring = countStatus($akun, 'expiring');
+    $expired = countStatus($akun, 'expired');
   ?>
-
-  <?php foreach ($statistik as $proto => $akun): ?>
-    <?php
-      $icon = $icons[$proto]['emoji'] ?? '❔';
-      $gradient = $icons[$proto]['color'] ?? 'from-gray-700 to-gray-900';
-      $total = count($akun);
-      $active = countStatus($akun, 'active');
-      $expiring = countStatus($akun, 'expiring');
-      $expired = countStatus($akun, 'expired');
-    ?>
-    <div class="flex flex-col justify-between rounded-2xl p-6 text-white shadow-lg bg-gradient-to-br <?= $gradient ?> hover:scale-[1.02] transition-transform duration-200 min-h-[220px]">
-      <div class="text-center mb-4">
+    <div class="flex flex-col justify-between rounded-xl p-6 shadow-lg text-white bg-gradient-to-br <?= $gradient ?> hover:scale-[1.02] transition-transform duration-200 min-h-[240px]">
+      <div class="text-center">
         <div class="text-4xl"><?= $icon ?></div>
-        <h2 class="text-xl font-bold tracking-widest mt-2"><?= strtoupper($proto) ?></h2>
+        <h2 class="text-lg font-semibold tracking-widest mt-2"><?= strtoupper($proto) ?></h2>
       </div>
-      <div class="space-y-1 text-sm font-medium text-gray-100">
-        <div class="flex justify-between border-b border-white/10 pb-1">
+      <div class="mt-4 space-y-1 text-sm">
+        <div class="flex justify-between border-b border-white/20 pb-1">
           <span>Total</span><span class="font-bold"><?= $total ?></span>
         </div>
         <div class="flex justify-between">
