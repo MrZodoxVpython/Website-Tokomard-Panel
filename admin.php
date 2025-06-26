@@ -45,7 +45,7 @@ include 'templates/header.php';
       ❗ Laporan Error
     </a>
     <a href="admin/shell-access.php" class="bg-fuchsia-600 hover:bg-fuchsia-700 text-white px-4 py-3 rounded-xl text-center shadow">
-      ⏳ Shell Access
+      ⏳ Shell Access M
     </a>
     <a href="admin/pengaturan.php" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-3 rounded-xl text-center shadow">
       🔧 Pengaturan Sistem
