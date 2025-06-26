@@ -107,18 +107,48 @@ include '../templates/header.php';
     </form>
   </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-    <?php foreach ($statistik as $proto => $akun): ?>
-      <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-6 rounded-2xl text-white text-center shadow hover:shadow-xl transition-shadow duration-300">
-        <h2 class="text-2xl font-semibold tracking-wide"><?= strtoupper($proto) ?></h2>
-        <p class="mt-2">Total: <span class="font-bold"><?= count($akun) ?></span></p>
-        <p class="text-green-400">Aktif: <?= countStatus($akun, 'active') ?></p>
-        <p class="text-yellow-400">Mau Expired: <?= countStatus($akun, 'expiring') ?></p>
-        <p class="text-red-400">Expired: <?= countStatus($akun, 'expired') ?></p>
-      </div>
-    <?php endforeach; ?>
-  </div>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+  <?php
+  $icons = [
+      'vmess' => ['emoji' => '🌀', 'color' => 'from-blue-500 to-blue-800'],
+      'vless' => ['emoji' => '🔮', 'color' => 'from-purple-500 to-purple-800'],
+      'trojan' => ['emoji' => '⚔️', 'color' => 'from-amber-500 to-orange-800'],
+      'shadowsocks' => ['emoji' => '🕶️', 'color' => 'from-emerald-500 to-teal-800']
+  ];
+  ?>
 
+  <?php foreach ($statistik as $proto => $akun): ?>
+    <?php
+      $icon = isset($icons[$proto]) ? $icons[$proto]['emoji'] : '❔';
+      $gradient = isset($icons[$proto]) ? $icons[$proto]['color'] : 'from-gray-700 to-gray-900';
+      $total = count($akun);
+      $active = countStatus($akun, 'active');
+      $expiring = countStatus($akun, 'expiring');
+      $expired = countStatus($akun, 'expired');
+    ?>
+    <div class="rounded-2xl p-6 text-white shadow-lg bg-gradient-to-br <?= $gradient ?> hover:scale-[1.02] transition-transform duration-200">
+      <div class="text-center mb-4">
+        <div class="text-4xl"><?= $icon ?></div>
+        <h2 class="text-xl font-bold tracking-widest mt-2"><?= strtoupper($proto) ?></h2>
+      </div>
+      <div class="space-y-1 text-sm font-medium text-gray-100">
+        <div class="flex justify-between border-b border-white/10 pb-1">
+          <span>Total</span><span class="font-bold"><?= $total ?></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-green-300">Aktif</span><span><?= $active ?></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-yellow-300">Mau Expired</span><span><?= $expiring ?></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-red-400">Expired</span><span><?= $expired ?></span>
+        </div>
+      </div>
+    </div>
+  <?php endforeach; ?>
+</div>
+ 
   <?php foreach ($statistik as $proto => $akun): ?>
     <?php if (empty($akun)) continue; ?>
     <div class="bg-gray-900 rounded-2xl p-6 shadow-xl mb-10">
