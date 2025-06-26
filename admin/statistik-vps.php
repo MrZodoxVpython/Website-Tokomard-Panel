@@ -91,7 +91,7 @@ function isActive($menuId) {
     for ($i = 1; $i <= 10; $i++): 
   ?>
     <a href="?vps=<?= urlencode($selectedVps) ?>&menu=<?= $i ?>" class="<?= isActive((string)$i) ?> hover:bg-green-600 text-center p-3 rounded border border-green-400 transition">
-      [ <?= $i ?> ] <?= $menuTitles[$i - 1] ?>
+      [<?= $i ?>] <?= $menuTitles[$i - 1] ?>
     </a>
   <?php endfor; ?>
 </div>
