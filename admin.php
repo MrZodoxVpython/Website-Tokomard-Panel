@@ -59,7 +59,7 @@ include 'templates/header.php';
     <a href="admin/error-report.php" class="bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-xl text-center shadow">
       ❗ Laporan Error
     </a>
-    <a href="admin/statistik-vps.php" class="bg-indigo-700 hover:bg-gray-800 text-white px-4 py-3 rounded-xl text-center shadow">
+    <a href="admin/statistik-vps.php" class="bg-lime-700 hover:bg-gray-800 text-white px-4 py-3 rounded-xl text-center shadow">
       📊 Statistik Bandwith M
     </a>
     <a href="admin/pengaturan.php" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-3 rounded-xl text-center shadow">
