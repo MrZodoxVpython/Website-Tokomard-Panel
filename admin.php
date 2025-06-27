@@ -60,7 +60,7 @@ include 'templates/header.php';
       ❗ Laporan Error
     </a>
     <a href="admin/statistik-vps.php" class="bg-lime-700 hover:bg-gray-800 text-white px-4 py-3 rounded-xl text-center shadow">
-      📊 Statistik Bandwith M
+      📊 StaTs All Round 
     </a>
     <a href="admin/pengaturan.php" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-3 rounded-xl text-center shadow">
       🔧 Pengaturan Sistem
