@@ -3,7 +3,11 @@ session_start();
 require 'koneksi.php';
 $resNotif = $conn->query("SELECT COUNT(*) as jumlah FROM notifikasi_admin");
 $jumlahNotif = $resNotif->fetch_assoc()['jumlah'];
-
+$username = $_SESSION['username'] ?? '';
+$notifQuery = $conn->prepare("SELECT pesan, waktu FROM notifikasi_reseller WHERE username = ? ORDER BY waktu DESC");
+$notifQuery->bind_param("s", $username);
+$notifQuery->execute();
+$notifResult = $notifQuery->get_result();
 
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
     header("Location: ../index.php");
