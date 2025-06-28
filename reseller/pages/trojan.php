@@ -48,7 +48,7 @@ function getShowFile($serverName) {
 function getCheckoutFile($serverName) {
     switch ($serverName) {
         case 'RW-MARD': return 'co-trojan-rw-mard.php';
-        case 'SGDO-MARD': return 'co-trojan-sgdomard.php';
+        case 'SGDO-MARD': return 'co-trojan-sgdo-mard.php';
         case 'SGDO-2DEV': return 'co-trojan-sgdo-2dev.php';
         default: return 'co-trojan.php';
     }
