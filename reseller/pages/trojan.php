@@ -21,7 +21,7 @@ $sshProducts = [
         'price' => 20000,
         'country' => 'Indonesia',
         'isp' => 'FCCDN',
-        'available' => true,
+        'available' => false,
         'stock' => 11
     ],
     [
@@ -34,6 +34,25 @@ $sshProducts = [
         'stock' => 0
     ],
 ];
+
+// Fungsi mapping file sesuai nama server
+function getShowFile($serverName) {
+    switch ($serverName) {
+        case 'RW-MARD': return 'show-trojan-rw.php';
+        case 'SGDO-MARD': return 'show-trojan-sgdomard.php';
+        case 'SGDO-2DEV': return 'show-trojan.php';
+        default: return 'show-trojan.php';
+    }
+}
+
+function getCheckoutFile($serverName) {
+    switch ($serverName) {
+        case 'RW-MARD': return 'co-trojan-rw.php';
+        case 'SGDO-MARD': return 'co-trojan-sgdomard.php';
+        case 'SGDO-2DEV': return 'co-trojan.php';
+        default: return 'co-trojan.php';
+    }
+}
 ?>
 
 <div class="mb-6">
@@ -46,6 +65,8 @@ $sshProducts = [
         <?php
             $canBuy = $product['available'] && $product['stock'] > 0;
             $buttonClass = $canBuy ? 'bg-green-600 hover:bg-green-500' : 'bg-gray-500 opacity-50 pointer-events-none';
+            $showFile = getShowFile($product['name']);
+            $checkoutFile = getCheckoutFile($product['name']);
         ?>
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-4 border border-gray-200 dark:border-gray-700">
             <h3 class="text-lg font-semibold mb-1"><?= htmlspecialchars($product['name']) ?></h3>
@@ -59,8 +80,8 @@ $sshProducts = [
             <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">📦 Stok: <?= $product['stock'] ?></p>
             
             <div class="flex gap-2">
-                <a href="/reseller/pages/show-trojan.php" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded shadow">🔍 Lihat Detail</a>
-                <a href="/reseller/pages/co-trojan.php?server=<?= urlencode($product['name']) ?>" class="px-3 py-1 <?= $buttonClass ?> text-white text-xs rounded shadow">🛒 Keranjang</a>
+                <a href="/reseller/pages/<?= $showFile ?>" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded shadow">🔍 Lihat Detail</a>
+                <a href="/reseller/pages/<?= $checkoutFile ?>" class="px-3 py-1 <?= $buttonClass ?> text-white text-xs rounded shadow">🛒 Keranjang</a>
             </div>
         </div>
     <?php endforeach; ?>
