@@ -94,8 +94,10 @@ foreach ($menu as $p => $label) {
 
     // Tambah garis setelah Shadowsocks
     if ($p === 'shadowsocks') {
-        echo "<div class='my-3 border-t border-blue-500 dark:border-blue-400'></div>";
+	    echo "<div class='my-3 border-t border-blue-500 dark:border-blue-400 bg-yellow-200 h-[2px]'></div>";
+
     }
+
 }
 ?>
 </nav>
