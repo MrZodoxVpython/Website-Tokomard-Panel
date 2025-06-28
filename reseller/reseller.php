@@ -4,6 +4,15 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
     header("Location: ../index.php");
     exit;
 }
+
+// Cek toggle tema
+if (isset($_GET['toggle_theme'])) {
+    $_SESSION['theme'] = ($_SESSION['theme'] ?? 'light') === 'dark' ? 'light' : 'dark';
+    header("Location: reseller.php?page=" . ($_GET['page'] ?? 'dashboard'));
+    exit;
+}
+
+$darkMode = ($_SESSION['theme'] ?? 'light') === 'dark';
 $reseller = $_SESSION['username'];
 $loggedInUser = [
     'username' => $reseller,
@@ -20,11 +29,11 @@ $page = $_GET['page'] ?? 'dashboard';
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class' };</script>
 </head>
-<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300 min-h-screen">
+<body class="<?= $darkMode ? 'dark' : '' ?> bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300 min-h-screen">
 <header class="p-4 bg-gray-100 dark:bg-gray-800 shadow-md flex justify-between items-center sticky top-0 z-50">
     <h1 class="text-xl font-bold">Tokomard Reseller Panel</h1>
     <div class="flex items-center gap-4">
-        <button id="themeToggleBtn" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">🌙</button>
+        <a href="?toggle_theme=1&page=<?= htmlspecialchars($page) ?>" id="themeToggleBtn" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"><?= $darkMode ? '🌞' : '🌙' ?></a>
         <a href="../logout.php" class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-500 text-sm">Logout</a>
     </div>
 </header>
@@ -40,15 +49,28 @@ $page = $_GET['page'] ?? 'dashboard';
             <h2 class="text-base font-semibold">@<?= htmlspecialchars($reseller) ?></h2>
         </div>
         <nav class="space-y-2 text-sm">
-          <?php foreach (['dashboard'=>'📊 Dashboard','ssh'=>'🔐 SSH','vmess'=>'🌀 Vmess','vless'=>'📡 Vless','trojan'=>'⚔ Trojan','shadowsocks'=>'🕶 Shadowsocks','topup'=>'💳 Top Up','cek-server'=>'🖥 Cek Server','vip'=>'👑 Grup VIP'] as $p => $label): ?>
-            <a href="?page=<?= $p ?>" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600"><?= $label ?></a>
-          <?php endforeach; ?>
+        <?php
+            $menus = [
+                'dashboard'=>'📊 Dashboard',
+                'ssh'=>'🔐 SSH',
+                'vmess'=>'🌀 Vmess',
+                'vless'=>'📡 Vless',
+                'trojan'=>'⚔ Trojan',
+                'shadowsocks'=>'🕶 Shadowsocks',
+                'topup'=>'💳 Top Up',
+                'cek-server'=>'🖥 Cek Server',
+                'vip'=>'👑 Grup VIP'
+            ];
+            foreach ($menus as $p => $label) {
+                echo "<a href='?page=$p' class='block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600'>$label</a>";
+                if ($p === 'shadowsocks') echo "<hr class='my-2 border-t border-gray-400 dark:border-gray-600'>";
+            }
+        ?>
         </nav>
     </aside>
     <section class="flex-1 p-5 bg-white dark:bg-gray-900 rounded-xl shadow-md">
         <?php
         if ($page === 'dashboard') {
-            // Hitung statistik
             $stats = ['total'=>0,'vmess'=>0,'vless'=>0,'trojan'=>0,'shadowsocks'=>0];
             $dir = "/etc/xray/data-panel/";
             $no = 1;
@@ -72,12 +94,9 @@ $page = $_GET['page'] ?? 'dashboard';
                     ];
                 }
             }
-            // Output dashboard
             echo '<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">';
             foreach (['total'=>'Total Akun','vmess'=>'VMess','vless'=>'VLess','trojan'=>'Trojan','shadowsocks'=>'Shadowsocks'] as $k=>$label) {
-                $color = [
-                    'total'=>'blue','vmess'=>'purple','vless'=>'blue','trojan'=>'red','shadowsocks'=>'green'
-                ][$k];
+                $color = ['total'=>'blue','vmess'=>'purple','vless'=>'blue','trojan'=>'red','shadowsocks'=>'green'][$k];
                 echo "
                 <div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-{$color}-200 p-5 rounded-lg shadow'>
                     <p class='text-lg font-semibold'>{$label}</p>
@@ -85,7 +104,6 @@ $page = $_GET['page'] ?? 'dashboard';
                 </div>";
             }
             echo "</div>";
-            // Output tabel akun
             echo '<div class="overflow-x-auto"><table class="w-full table-auto border border-gray-300 dark:border-gray-700 rounded text-sm"><thead class="bg-gray-200 dark:bg-gray-700"><tr><th class="p-2">#</th><th class="p-2">User</th><th class="p-2">Proto</th><th class="p-2">Expired</th><th class="p-2">Buyer</th></tr></thead><tbody>';
             if (empty($rows)) {
                 echo '<tr><td colspan="5" class="p-4 text-center text-gray-500 dark:text-gray-400">Belum ada akun Xray</td></tr>';
@@ -104,10 +122,7 @@ $page = $_GET['page'] ?? 'dashboard';
     </section>
 </main>
 <script>
-document.getElementById('themeToggleBtn').onclick = ()=>{
-    document.documentElement.classList.toggle('dark');
-};
-document.getElementById('toggleSidebar').onclick = ()=>{
+document.getElementById('toggleSidebar').onclick = () => {
     document.getElementById('sidebar').classList.toggle('-translate-x-full');
 };
 </script>
