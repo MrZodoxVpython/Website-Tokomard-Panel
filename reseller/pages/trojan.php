@@ -12,7 +12,7 @@ $sshProducts = [
         'price' => 20000,
         'country' => 'Singapura',
         'isp' => 'DigitalOcean',
-        'available' => true,
+        'available' => false,
         'stock' => 33
     ],
     [
@@ -21,7 +21,7 @@ $sshProducts = [
         'price' => 20000,
         'country' => 'Indonesia',
         'isp' => 'FCCDN',
-        'available' => true,
+        'available' => false,
         'stock' => 11
     ],
     [
