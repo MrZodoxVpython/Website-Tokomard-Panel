@@ -27,7 +27,7 @@ if (!in_array($ext, $allowedExts)) {
 // Validasi ukuran
 $maxSize = 5 * 1024 * 1024;
 if ($size > $maxSize) {
-    tampilkanCyberpunkError("❌ Ukuran gambar melebihi 5MB. Maksimum hanya 5MB.");
+    tampilkanCyberpunkError("❌ Ukuran gambar melebihi 5MB. Maksimum 5MB!");
 }
 
 // Validasi benar-benar gambar
