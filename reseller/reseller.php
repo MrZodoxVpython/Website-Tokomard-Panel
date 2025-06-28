@@ -1,6 +1,8 @@
 <?php
 $reseller = $_SESSION['username'];
-$dataDir = "/etc/xray/data-panel/";
+$dataDir = '/etc/xray/data-panel/';
+$pattern = $dataDir . 'akun-' . $reseller . '-*.txt';
+
 $statistik = [
     'total' => 0,
     'aktif' => 0,
@@ -12,46 +14,33 @@ $statistik = [
     'trojan' => 0,
     'shadowsocks' => 0
 ];
-$daftarAkun = [];
 
-$akunFiles = glob($dataDir . "akun-{$reseller}-*.txt");
 $now = time();
-
-foreach ($akunFiles as $file) {
+foreach (glob($pattern) as $file) {
     $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($lines as $line) {
-        $line = trim($line);
-        if (strpos($line, '{') !== false) {
-            $akun = json_decode($line, true);
-            if (!$akun || !is_array($akun)) continue;
+        if (strpos($line, '{') === false) continue;
+        $akun = json_decode($line, true);
+        if (!is_array($akun)) continue;
 
-            $protokol = strtolower($akun['protokol'] ?? '');
-            $username = $akun['username'] ?? '';
-            $expired = $akun['expired'] ?? '';
+        $protokol = strtolower(trim($akun['protokol'] ?? ''));
+        $expired = trim($akun['expired'] ?? '');
+        if (!$protokol || !$expired) continue;
 
-            if (!$protokol || !$username || !$expired) continue;
+        $statistik['total']++;
+        if (isset($statistik[$protokol])) {
+            $statistik[$protokol]++;
+        }
 
-            $statistik['total']++;
-            if (isset($statistik[$protokol])) $statistik[$protokol]++;
-
-            $expUnix = strtotime($expired);
-            $selisihHari = floor(($expUnix - $now) / (60 * 60 * 24));
-
-            if ($selisihHari < 0) {
-                $statistik['expired']++;
-            } elseif ($selisihHari <= 7) {
-                $statistik['akan_expired']++;
-                $statistik['aktif']++;
-            } else {
-                $statistik['aktif']++;
-            }
-
-            $daftarAkun[] = [
-                'username' => $username,
-                'protokol' => strtoupper($protokol),
-                'expired' => $expired,
-                'days_left' => $selisihHari
-            ];
+        $expTime = strtotime($expired);
+        $sisa = floor(($expTime - $now) / 86400);
+        if ($sisa < 0) {
+            $statistik['expired']++;
+        } elseif ($sisa <= 7) {
+            $statistik['akan_expired']++;
+            $statistik['aktif']++;
+        } else {
+            $statistik['aktif']++;
         }
     }
 }
@@ -96,29 +85,5 @@ foreach ($akunFiles as $file) {
         <p class="text-lg font-semibold">Shadowsocks</p>
         <p class="text-3xl font-bold"><?= $statistik['shadowsocks'] ?></p>
     </div>
-</div>
-
-<h2 class="text-lg font-semibold mb-2">📋 Daftar Akun Terdaftar</h2>
-<div class="overflow-auto rounded border dark:border-gray-700">
-    <table class="min-w-full text-sm">
-        <thead class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
-            <tr>
-                <th class="p-2 text-left">Username</th>
-                <th class="p-2 text-left">Protokol</th>
-                <th class="p-2 text-left">Expired</th>
-                <th class="p-2 text-left">Sisa Hari</th>
-            </tr>
-        </thead>
-        <tbody class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">
-            <?php foreach ($daftarAkun as $akun): ?>
-                <tr class="border-b dark:border-gray-700">
-                    <td class="p-2"><?= htmlspecialchars($akun['username']) ?></td>
-                    <td class="p-2"><?= htmlspecialchars($akun['protokol']) ?></td>
-                    <td class="p-2"><?= htmlspecialchars($akun['expired']) ?></td>
-                    <td class="p-2"><?= $akun['days_left'] >= 0 ? $akun['days_left'] . ' hari' : 'Expired' ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
 </div>
 
