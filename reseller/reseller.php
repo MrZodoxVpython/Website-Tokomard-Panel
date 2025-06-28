@@ -77,10 +77,14 @@ $loggedInUser = [
   </form>
 
   <!-- Klik gambar untuk trigger file input -->
-  <img src="<?= $loggedInUser['avatar'] ?>" 
-       class="w-20 h-20 rounded-full mb-2 cursor-pointer hover:opacity-80 transition"
-       onclick="document.getElementById('avatarInput').click()" 
-       alt="Avatar" />
+<form action="upload-avatar.php" method="POST" enctype="multipart/form-data">
+  <label for="avatarUpload" class="cursor-pointer">
+    <img src="<?= $_SESSION['avatar'] ?? 'uploads/avatars/default.png' ?>?v=<?= time() ?>" class="w-20 h-20 rounded-full mb-2 hover:opacity-80 transition" />
+  </label>
+  <input type="file" name="avatar" id="avatarUpload" accept="image/*" class="hidden" onchange="this.form.submit()">
+</form>
+<h2 class="text-base font-semibold">@<?= htmlspecialchars($reseller) ?></h2>
+
 
   <h2 class="text-base font-semibold">@<?= htmlspecialchars($reseller) ?></h2>
 </div>
