@@ -41,9 +41,25 @@ $page = $_GET['page'] ?? 'dashboard';
             <h2 class="text-base font-semibold text-gray-800 dark:text-white">@<?= htmlspecialchars($reseller) ?></h2>
         </div>
         <nav class="space-y-2 text-sm">
-          <?php foreach (['dashboard'=>'📊 Dashboard','ssh'=>'🔐 SSH','vmess'=>'🌀 Vmess','vless'=>'📡 Vless','trojan'=>'⚔ Trojan','shadowsocks'=>'🕶 Shadowsocks','topup'=>'💳 Top Up','cek-server'=>'🖥 Cek Server','vip'=>'👑 Grup VIP'] as $p => $label): ?>
-            <a href="?page=<?= $p ?>" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600 text-gray-800 dark:text-white"><?= $label ?></a>
-          <?php endforeach; ?>
+          <?php
+$menus = [
+    'dashboard' => '📊 Dashboard',
+    'ssh' => '🔐 SSH',
+    'vmess' => '🌀 Vmess',
+    'vless' => '📡 Vless',
+    'trojan' => '⚔ Trojan',
+    'shadowsocks' => '🕶 Shadowsocks',
+    'topup' => '💳 Top Up',
+    'cek-server' => '🖥 Cek Server',
+    'vip' => '👑 Grup VIP'
+];
+foreach ($menus as $p => $label) {
+    echo "<a href='?page={$p}' class='block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600 text-gray-800 dark:text-white'>{$label}</a>";
+    if ($p === 'shadowsocks') {
+        echo "<hr class='my-2 border-t border-gray-300 dark:border-gray-600'>";
+    }
+}
+?>
         </nav>
     </aside>
     <section class="flex-1 p-5 bg-white dark:bg-gray-900 rounded-xl shadow-md">
