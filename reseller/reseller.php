@@ -85,7 +85,7 @@ $loggedInUser = [
             }
         }
 
-	        // Statistik kartu
+	// Statistik kartu
         echo '<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">';
         foreach (['total' => 'Total Akun', 'vmess' => 'VMess', 'vless' => 'VLess', 'trojan' => 'Trojan', 'shadowsocks' => 'Shadowsocks'] as $k => $label) {
             $color = ['total' => 'blue', 'vmess' => 'purple', 'vless' => 'blue', 'trojan' => 'red', 'shadowsocks' => 'green'][$k];
