@@ -1,6 +1,9 @@
 <?php
 session_start();
 require 'koneksi.php';
+$resNotif = $conn->query("SELECT COUNT(*) as jumlah FROM notifikasi_admin");
+$jumlahNotif = $resNotif->fetch_assoc()['jumlah'];
+
 
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
     header("Location: ../index.php");
