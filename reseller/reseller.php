@@ -6,7 +6,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
 }
 $reseller = $_SESSION['username'];
 
-// Handle theme toggle jika ada request POST toggle
+// Toggle theme jika diklik
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_theme'])) {
     $_SESSION['theme'] = ($_SESSION['theme'] ?? 'light') === 'dark' ? 'light' : 'dark';
     exit;
@@ -27,6 +27,7 @@ $loggedInUser = [
     <title>Panel Reseller - Tokomard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class' };</script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300 min-h-screen">
 <header class="p-4 bg-gray-100 dark:bg-gray-800 shadow-md flex justify-between items-center sticky top-0 z-50">
@@ -98,7 +99,7 @@ $loggedInUser = [
                 }
             }
 
-            // Output statistik
+            // Statistik cards
             echo '<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">';
             foreach (['total'=>'Total Akun','vmess'=>'VMess','vless'=>'VLess','trojan'=>'Trojan','shadowsocks'=>'Shadowsocks'] as $k=>$label) {
                 $color = [
@@ -112,63 +113,12 @@ $loggedInUser = [
             }
             echo '</div>';
 
-                        // Grafik statistik akun
-            echo "
-            <div class='bg-white dark:bg-gray-800 p-5 rounded-lg shadow-lg mb-10'>
-                <h2 class='text-lg font-semibold mb-4 text-gray-900 dark:text-white'>📈 Grafik Jumlah Akun per Protokol</h2>
-                <div class='w-full h-72'><canvas id='chartAkun'></canvas></div>
-            </div>
-            <script>
-            const ctx = document.getElementById('chartAkun').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['VMess', 'VLess', 'Trojan', 'Shadowsocks'],
-                    datasets: [{
-                        label: 'Jumlah Akun',
-                        data: [{$stats['vmess']}, {$stats['vless']}, {$stats['trojan']}, {$stats['shadowsocks']}],
-                        backgroundColor: [
-                            'rgba(139, 92, 246, 0.7)',
-                            'rgba(59, 130, 246, 0.7)',
-                            'rgba(239, 68, 68, 0.7)',
-                            'rgba(34, 197, 94, 0.7)'
-                        ],
-                        borderColor: [
-                            'rgba(139, 92, 246, 1)',
-                            'rgba(59, 130, 246, 1)',
-                            'rgba(239, 68, 68, 1)',
-                            'rgba(34, 197, 94, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                color: document.documentElement.classList.contains('dark') ? '#fff' : '#000'
-                            }
-                        },
-                        x: {
-                            ticks: {
-                                color: document.documentElement.classList.contains('dark') ? '#fff' : '#000'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: document.documentElement.classList.contains('dark') ? '#fff' : '#000'
-                            }
-                        }
-                    }
-                }
-            });
-            </script>";
-
+            // Grafik
+            echo '
+            <div class="bg-gray-100 dark:bg-gray-800 p-5 rounded-lg shadow mb-8">
+                <h2 class="text-lg font-semibold mb-4">Grafik Pembelian Akun</h2>
+                <canvas id="chartAkun" height="120"></canvas>
+            </div>';
 
             // Tabel akun
             echo '<div class="overflow-x-auto"><table class="w-full table-auto border border-gray-300 dark:border-gray-700 rounded text-sm"><thead class="bg-gray-200 dark:bg-gray-700"><tr><th class="p-2">#</th><th class="p-2">User</th><th class="p-2">Proto</th><th class="p-2">Expired</th><th class="p-2">Buyer</th></tr></thead><tbody>';
@@ -197,10 +147,39 @@ document.getElementById('themeToggleBtn').onclick = () => {
         body: "toggle_theme=1"
     }).then(() => location.reload());
 };
-
 document.getElementById('toggleSidebar').onclick = () => {
     document.getElementById('sidebar').classList.toggle('-translate-x-full');
 };
+
+// Grafik
+const ctx = document.getElementById('chartAkun').getContext('2d');
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['VMess', 'VLess', 'Trojan', 'Shadowsocks'],
+        datasets: [{
+            label: 'Jumlah Akun',
+            data: [<?= $stats['vmess'] ?>, <?= $stats['vless'] ?>, <?= $stats['trojan'] ?>, <?= $stats['shadowsocks'] ?>],
+            backgroundColor: ['#8b5cf6','#3b82f6','#ef4444','#10b981'],
+            borderRadius: 8
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: { color: document.documentElement.classList.contains('dark') ? '#fff' : '#000' }
+            },
+            x: {
+                ticks: { color: document.documentElement.classList.contains('dark') ? '#fff' : '#000' }
+            }
+        }
+    }
+});
 </script>
 </body>
 </html>
