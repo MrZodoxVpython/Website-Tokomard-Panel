@@ -15,6 +15,46 @@ $loggedInUser = [
     'username' => $reseller,
     'avatar' => 'https://ui-avatars.com/api/?name=' . urlencode($reseller) . '&background=4F46E5&color=fff'
 ];
+
+
+// Jumlah notifikasi admin (untuk ikon bel)
+$resNotif = $conn->query("SELECT COUNT(*) as jumlah FROM notifikasi_admin");
+$jumlahNotif = $resNotif ? ($resNotif->fetch_assoc()['jumlah'] ?? 0) : 0;
+
+// Ambil notifikasi untuk dropdown
+$notifications = [];
+$notifCount = 0;
+$stmt = $conn->prepare("SELECT id, pesan, sudah_dibaca, dibuat_pada FROM notifikasi_reseller WHERE username IS NULL OR username = ? ORDER BY dibuat_pada DESC LIMIT 10");
+if ($stmt) {
+    $stmt->bind_param("s", $reseller);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        if (!$row['sudah_dibaca']) {
+            $notifCount++;
+        }
+        $notifications[] = $row;
+    }
+    $stmt->close();
+} else {
+    // Tambahkan logging atau debug error jika perlu
+    $notifCount = 0;
+    $notifications = [];
+}
+
+// Ambil notifikasi untuk bagian atas (jika berbeda)
+$notifResult = $conn->prepare("SELECT pesan, waktu FROM notifikasi_reseller WHERE username = ? ORDER BY waktu DESC");
+if ($notifResult) {
+    $notifResult->bind_param("s", $reseller);
+    $notifResult->execute();
+    $notifResult = $notifResult->get_result();
+} else {
+    // fallback jika prepare gagal
+    $notifResult = new stdClass();
+    $notifResult->num_rows = 0;
+    $notifResult->fetch_assoc = function () { return null; };
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="id" class="<?= $theme === 'dark' ? 'dark' : '' ?>">
