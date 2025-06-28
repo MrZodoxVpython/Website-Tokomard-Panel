@@ -58,6 +58,7 @@ if (file_exists($destPath)) {
 }
 
 // 🔄 Convert ke PNG jika bukan PNG
+// 🧠 Convert ke PNG jika bukan PNG
 switch ($ext) {
     case 'jpeg':
     case 'jpg':
@@ -73,13 +74,32 @@ switch ($ext) {
         $srcImage = imagecreatefromwebp($tmpName);
         break;
     default:
-        tampilkanCyberpunkError("❌ Format gambar tidak dikenali.");
+        tampilkanCyberpunkError("❌ Format gambar tidak didukung. Hanya JPG, JPEG, PNG, GIF, WEBP.");
 }
 
-if ($srcImage && imagepng($srcImage, $destPath)) {
+// ✔️ Buat gambar truecolor dengan transparansi
+$width = imagesx($srcImage);
+$height = imagesy($srcImage);
+$finalImage = imagecreatetruecolor($width, $height);
+
+// Aktifkan transparansi
+imagealphablending($finalImage, false);
+imagesavealpha($finalImage, true);
+
+// Isi latar belakang dengan transparan
+$transparent = imagecolorallocatealpha($finalImage, 0, 0, 0, 127);
+imagefilledrectangle($finalImage, 0, 0, $width, $height, $transparent);
+
+// Salin gambar asli ke gambar final
+imagecopy($finalImage, $srcImage, 0, 0, 0, 0, $width, $height);
+
+// Simpan sebagai PNG, menimpa file lama
+if (imagepng($finalImage, $destPath)) {
     imagedestroy($srcImage);
+    imagedestroy($finalImage);
     $_SESSION['avatar'] = $webPath;
-    tampilkanCyberpunkSukses($webPath);
+    header("Location: reseller.php");
+    exit;
 } else {
     tampilkanCyberpunkError("❌ Gagal menyimpan gambar avatar.");
 }
