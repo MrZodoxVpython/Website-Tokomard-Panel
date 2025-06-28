@@ -1,5 +1,5 @@
 <?php
-require '../koneksi.php'; // Pastikan koneksi $conn sudah benar
+require '../koneksi.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pesan'])) {
     $pesan = trim($_POST['pesan']);
@@ -8,9 +8,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pesan'])) {
         $stmt->bind_param("s", $pesan);
         $stmt->execute();
         $stmt->close();
+        header("Location: pesan.php?sukses=1");
+        exit;
     }
 }
 
-header("Location: pesan.php?sukses=1");
+header("Location: pesan.php?error=1");
 exit;
 
