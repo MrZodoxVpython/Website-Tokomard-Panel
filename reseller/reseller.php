@@ -62,7 +62,6 @@ $loggedInUser = [
     <?php
     $pagePath = __DIR__ . "/pages/{$page}.php";
     if ($page === 'dashboard') {
-        // Hitung statistik
         $stats = ['total' => 0, 'vmess' => 0, 'vless' => 0, 'trojan' => 0, 'shadowsocks' => 0];
         $rows = [];
         $dir = "/etc/xray/data-panel/reseller/";
@@ -73,6 +72,7 @@ $loggedInUser = [
             $lines = file($file);
             $proto = null;
             $expired = "-";
+            $uuidOrPass = "-";
             foreach ($lines as $line) {
                 if (stripos($line, 'TROJAN ACCOUNT') !== false) $proto = 'trojan';
                 elseif (stripos($line, 'VMESS ACCOUNT') !== false) $proto = 'vmess';
@@ -82,18 +82,24 @@ $loggedInUser = [
                     $expParts = explode(':', $line, 2);
                     $expired = trim($expParts[1] ?? '-');
                 }
+                // Ambil UUID atau Password
+                if (stripos($line, 'Password') !== false && $proto === 'trojan') {
+                    $uuidOrPass = trim(explode(':', $line, 2)[1] ?? '-');
+                } elseif (stripos($line, 'Password') !== false && in_array($proto, ['vmess', 'vless', 'shadowsocks'])) {
+                    $uuidOrPass = trim(explode(':', $line, 2)[1] ?? '-');
+                }
             }
             if ($proto) {
                 $stats[$proto]++;
                 $stats['total']++;
                 $rows[] = [
                     'no' => $no++, 'user' => $buyer,
-                    'proto' => strtoupper($proto), 'exp' => $expired, 'buyer' => $buyer
+                    'proto' => strtoupper($proto), 'exp' => $expired, 'buyer' => $uuidOrPass
                 ];
             }
         }
 
-        // Statistik kartu
+        // Statistik
         echo '<div class="text-center grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">';
         foreach (['total' => 'Total Akun', 'vmess' => 'VMess', 'vless' => 'VLess', 'trojan' => 'Trojan', 'shadowsocks' => 'Shadowsocks'] as $k => $label) {
             $color = ['total' => 'green', 'vmess' => 'blue', 'vless' => 'purple', 'trojan' => 'red', 'shadowsocks' => 'yellow'][$k];
@@ -104,7 +110,7 @@ $loggedInUser = [
         }
         echo "</div>";
 
-        // Grafik modern
+        // Grafik
         echo '<div class="mb-8 max-w-full bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
         <canvas id="myChart" class="h-[450px]"></canvas>
         </div>
@@ -149,7 +155,7 @@ $loggedInUser = [
                     <th class="w-3/12 px-3 py-2">User</th>
                     <th class="w-2/12 px-3 py-2">Proto</th>
                     <th class="w-3/12 px-3 py-2">Expired</th>
-                    <th class="w-3/12 px-3 py-2">Buyer</th>
+                    <th class="w-3/12 px-3 py-2">UUID/PASS</th>
                 </tr>
             </thead>
             <tbody>';
@@ -162,7 +168,7 @@ $loggedInUser = [
                         <td class='px-3 py-2'>{$r['user']}</td>
                         <td class='px-3 py-2'>{$r['proto']}</td>
                         <td class='px-3 py-2'>{$r['exp']}</td>
-                        <td class='px-3 py-2'>{$r['buyer']}</td>
+                        <td class='px-3 py-2 font-mono'>{$r['buyer']}</td>
                       </tr>";
             }
         }
