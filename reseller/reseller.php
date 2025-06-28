@@ -70,11 +70,21 @@ $loggedInUser = [
 
 <main class="flex flex-col md:flex-row w-full px-4 md:px-8 py-6 gap-6">
   <aside id="sidebar" class="md:w-1/5 w-full md:max-w-xs bg-gray-100 dark:bg-gray-800 p-5 shadow-lg rounded-lg transition-transform duration-300 -translate-x-full md:translate-x-0 z-40 md:mr-1">
-    <div class="flex flex-col items-center text-center mb-6">
-      <img src="<?= $loggedInUser['avatar'] ?>" class="w-20 h-20 rounded-full mb-2" />
-      <h2 class="text-base font-semibold">@<?= htmlspecialchars($reseller) ?></h2>
-    </div>
-    <nav class="space-y-2 text-sm">
+<div class="flex flex-col items-center text-center mb-6">
+  <!-- Hidden file input -->
+  <form id="avatarForm" action="upload-avatar.php" method="POST" enctype="multipart/form-data">
+    <input type="file" name="avatar" id="avatarInput" accept="image/*" class="hidden" onchange="document.getElementById('avatarForm').submit()">
+  </form>
+
+  <!-- Klik gambar untuk trigger file input -->
+  <img src="<?= $loggedInUser['avatar'] ?>" 
+       class="w-20 h-20 rounded-full mb-2 cursor-pointer hover:opacity-80 transition"
+       onclick="document.getElementById('avatarInput').click()" 
+       alt="Avatar" />
+
+  <h2 class="text-base font-semibold">@<?= htmlspecialchars($reseller) ?></h2>
+</div>
+        <nav class="space-y-2 text-sm">
       <?php
       $menus = [
         'dashboard' => '📊 Dashboard', 'ssh' => '🔐 SSH', 'vmess' => '🌀 Vmess',
