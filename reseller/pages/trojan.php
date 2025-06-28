@@ -13,7 +13,7 @@ $sshProducts = [
         'country' => 'Singapura',
         'isp' => 'DigitalOcean',
         'available' => true,
-        'stock' => 2
+        'stock' => 0
     ],
     [
         'name' => 'RW-MARD',
