@@ -62,22 +62,6 @@ if ($notifResult) {
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
 
-<!-- Notifikasi Panel -->
-<div class="bg-white dark:bg-gray-800 p-4 rounded shadow mb-4">
-    <h2 class="text-xl font-bold mb-2">📢 Notifikasi</h2>
-    <?php if ($notifResult && $notifResult->num_rows > 0): ?>
-        <ul class="list-disc pl-6 space-y-2 text-sm">
-            <?php while ($row = $notifResult->fetch_assoc()): ?>
-                <li><?= htmlspecialchars($row['pesan']) ?>
-                    <span class="text-xs text-gray-400 ml-2">(<?= $row['waktu'] ?>)</span>
-                </li>
-            <?php endwhile; ?>
-        </ul>
-    <?php else: ?>
-        <p class="text-gray-500">Belum ada notifikasi.</p>
-    <?php endif; ?>
-</div>
-
 <!-- Header -->
 <header class="px-3 py-2 bg-gray-100 dark:bg-gray-800 shadow-md flex justify-between items-center sticky top-0 z-10">
   <div class="flex items-center space-x-3">
