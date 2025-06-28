@@ -72,6 +72,27 @@ $loggedInUser = [
     <a href="../logout.php" class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-500 text-sm">Logout</a>
   </div>
 </header>
+<!-- Dropdown Notifikasi -->
+<div class="relative">
+  <div id="notifDropdown" class="hidden absolute top-16 left-4 w-80 bg-gray-50 dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden z-20">
+    <div class="px-4 py-2 font-semibold border-b dark:border-gray-700">Notifikasi Kamu</div>
+    <?php if (count($notifications) > 0): ?>
+      <?php foreach ($notifications as $n): ?>
+        <div class="px-4 py-2 flex justify-between items-center <?= $n['sudah_dibaca'] ? 'bg-gray-100 dark:bg-gray-700' : 'bg-blue-100 dark:bg-blue-700' ?>">
+          <span class="text-sm"><?= htmlspecialchars($n['pesan']) ?></span>
+          <span class="text-xs text-gray-500"><?= date('d M H:i', strtotime($n['dibuat_pada'])) ?></span>
+        </div>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <div class="px-4 py-2 text-gray-500 italic">Belum ada notifikasi.</div>
+    <?php endif; ?>
+    <div class="px-4 py-2 text-center border-t dark:border-gray-700">
+      <form action="tandai-notif-dibaca.php" method="POST">
+        <button type="submit" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">Tandai sudah dibaca</button>
+      </form>
+    </div>
+  </div>
+</div>
 
 <button id="toggleSidebar" class="md:hidden fixed top-4 left-4 z-50 p-2 bg-gray-200 dark:bg-gray-700 rounded-md shadow-md">
   <svg class="h-6 w-6 text-gray-800 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
