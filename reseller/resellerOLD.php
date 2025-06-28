@@ -114,6 +114,7 @@ if ($notifResult) {
     <a href="../logout.php" class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-500 text-sm">Logout</a>
   </div>
 </header>
+
 <!-- Dropdown Notifikasi -->
 <div class="relative">
   <div id="notifDropdown" class="hidden absolute top-16 left-4 w-80 bg-gray-50 dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden z-50">
