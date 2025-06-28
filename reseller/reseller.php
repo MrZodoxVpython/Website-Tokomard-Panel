@@ -20,7 +20,7 @@ $themeClass = $isDark ? 'dark' : '';
 $stats = ['total'=>0,'vmess'=>0,'vless'=>0,'trojan'=>0,'shadowsocks'=>0];
 $timeline = ['daily'=>[], 'weekly'=>[], 'monthly'=>[], 'yearly'=>[]];
 $rows = [];
-$dir = "/etc/xray/data-panel/reseller";
+$dir = "/etc/xray/data-panel/reseller/";
 foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
     foreach (file($file, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES) as $line) {
         if (strpos($line, '{')===false) continue;
