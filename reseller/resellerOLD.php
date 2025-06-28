@@ -98,21 +98,25 @@ if ($notifResult) {
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-all duration-300">
 <header class="px-4 py-3 bg-gray-100 dark:bg-gray-800 shadow-md flex justify-between items-center sticky top-0 z-10">
-  <!-- Logo + Judul Panel -->
+  <!-- Logo + Judul -->
   <div class="flex items-center gap-3 cursor-pointer relative" onclick="document.getElementById('notifDropdown').classList.toggle('hidden')">
-    <img src="https://i.imgur.com/q3DzxiB.png" class="w-10 h-10" alt="Logo Imgur" />
-    
+
+    <!-- Logo dengan badge -->
+    <div class="relative">
+      <img src="https://i.imgur.com/q3DzxiB.png" class="w-10 h-10" alt="Logo Imgur" />
+      <?php if ($notifCount > 0): ?>
+      <span
+        class="absolute top-0 right-0 transform translate-x-1/4 -translate-y-1/4 w-4 h-4 text-[10px] flex items-center justify-center font-bold text-white bg-red-600 border-2 border-white dark:border-gray-800 rounded-full animate-pulse"
+      >
+        <?= $notifCount > 9 ? '9+' : $notifCount ?>
+      </span>
+      <?php endif; ?>
+    </div>
+
+    <!-- Judul Panel -->
     <h1 class="text-lg md:text-xl font-bold text-gray-800 dark:text-white whitespace-nowrap select-none">
       Panel Reseller Tokomard
     </h1>
-
-    <?php if ($notifCount > 0): ?>
-    <span
-      class="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-[11px] font-semibold text-white bg-red-600 border-2 border-white rounded-full dark:border-gray-900 select-none animate-pulse"
-    >
-      <?= $notifCount > 9 ? '9+' : $notifCount ?>
-    </span>
-    <?php endif; ?>
   </div>
 
   <!-- Tombol Aksi -->
