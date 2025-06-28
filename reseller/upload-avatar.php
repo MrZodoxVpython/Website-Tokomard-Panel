@@ -8,7 +8,7 @@ if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0755, true);
 }
 
-// Validasi file
+// Cek file
 if (!isset($_FILES['avatar']) || $_FILES['avatar']['error'] !== UPLOAD_ERR_OK) {
     tampilkanCyberpunkError("❌ Tidak ada file yang diunggah atau terjadi kesalahan upload.");
 }
@@ -18,34 +18,48 @@ $originalName = $_FILES['avatar']['name'];
 $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
 $size = $_FILES['avatar']['size'];
 
-// Validasi ekstensi
+// Ekstensi & ukuran
 $allowedExts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 if (!in_array($ext, $allowedExts)) {
-    tampilkanCyberpunkError("❌ Format gambar tidak didukung!");
+    tampilkanCyberpunkError("❌ Format gambar tidak didukung. Hanya JPG, JPEG, PNG, GIF, WEBP.");
 }
 
-// Validasi ukuran
 $maxSize = 5 * 1024 * 1024;
 if ($size > $maxSize) {
-    tampilkanCyberpunkError("❌ Ukuran gambar melebihi 5MB. Maksimum 5MB!");
+    tampilkanCyberpunkError("❌ Ukuran gambar melebihi 5MB. Maksimum hanya 5MB.");
 }
 
-// Validasi benar-benar gambar
-$imageCheck = @getimagesize($tmpName);
-if ($imageCheck === false) {
-    tampilkanCyberpunkError("❌ File bukan gambar valid.");
+// ✅ Cek benar-benar gambar dengan getimagesize
+if (!@getimagesize($tmpName)) {
+    tampilkanCyberpunkError("❌ File bukan gambar valid (terdeteksi fake).");
 }
 
-// Username
+// ✅ Cek MIME type (anti shell disguised as image)
+$finfo = finfo_open(FILEINFO_MIME_TYPE);
+$mimeType = finfo_file($finfo, $tmpName);
+finfo_close($finfo);
+
+$allowedMimes = [
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+    'image/webp'
+];
+
+if (!in_array($mimeType, $allowedMimes)) {
+    tampilkanCyberpunkError("❌ File mencurigakan. MIME tidak cocok dengan format gambar.");
+}
+
+// Bersihkan nama username
 $username = $_SESSION['username'] ?? 'guest';
 $safeUsername = preg_replace('/[^a-zA-Z0-9_\-]/', '', $username);
 
-// Path final
+// Path avatar
 $destFilename = "avatar-" . $safeUsername . ".png";
 $destPath = $uploadDir . $destFilename;
 $webPath = $relativePath . $destFilename;
 
-// Hapus file lama jika ada
+// Hapus avatar lama
 if (file_exists($destPath)) {
     unlink($destPath);
 }
@@ -79,7 +93,7 @@ if ($srcImage && imagepng($srcImage, $destPath)) {
     tampilkanCyberpunkError("❌ Gagal menyimpan gambar avatar.");
 }
 
-// Fungsi tampilan error cyberpunk
+// ⚠ Fungsi error bergaya Cyberpunk
 function tampilkanCyberpunkError($pesan) {
     echo <<<HTML
 <!DOCTYPE html>
@@ -87,7 +101,7 @@ function tampilkanCyberpunkError($pesan) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Error - Cyberpunk Panel</title>
+  <title>🚨 ERROR - CYBERPANEL</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
@@ -98,7 +112,7 @@ function tampilkanCyberpunkError($pesan) {
     }
     @keyframes flicker {
       from { opacity: 1; }
-      to { opacity: 0.8; }
+      to { opacity: 0.85; }
     }
     .neon-border {
       border: 2px solid #ff00ff;
