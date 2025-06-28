@@ -43,6 +43,10 @@ $sshProducts = [
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     <?php foreach ($sshProducts as $product): ?>
+        <?php
+            $canBuy = $product['available'] && $product['stock'] > 0;
+            $buttonClass = $canBuy ? 'bg-green-600 hover:bg-green-500' : 'bg-gray-500 opacity-50 pointer-events-none';
+        ?>
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-4 border border-gray-200 dark:border-gray-700">
             <h3 class="text-lg font-semibold mb-1"><?= htmlspecialchars($product['name']) ?></h3>
             <div class="text-3xl"><?= $product['flag'] ?></div>
@@ -56,7 +60,7 @@ $sshProducts = [
             
             <div class="flex gap-2">
                 <a href="/reseller/pages/show-trojan.php" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded shadow">🔍 Lihat Detail</a>
-                <a href="/reseller/pages/co-trojan.php" class="px-3 py-1 bg-green-600 hover:bg-green-500 text-white text-xs rounded shadow <?= $product['available'] ? '' : 'opacity-50 pointer-events-none' ?>">🛒 Keranjang</a>
+                <a href="/reseller/pages/co-trojan.php?server=<?= urlencode($product['name']) ?>" class="px-3 py-1 <?= $buttonClass ?> text-white text-xs rounded shadow">🛒 Keranjang</a>
             </div>
         </div>
     <?php endforeach; ?>
@@ -67,3 +71,4 @@ $sshProducts = [
         ➕  Register
     </a>
 </div>
+
