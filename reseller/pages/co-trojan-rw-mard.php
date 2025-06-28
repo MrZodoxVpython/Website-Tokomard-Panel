@@ -38,9 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $remoteIp = $server['ip'];
-        $phpCmd = "php /etc/xray/api-akun/add-trojan.php '$username' '$expiredInput' '$password'";
-        $sshCmd = "ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no root@$remoteIp \"$phpCmd\"";
-
+	$reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? 'unknown';
+	$phpCmd = "php /etc/xray/api-akun/add-trojan.php '$username' '$expiredInput' '$password' '$reseller'";
+	$sshCmd = "ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no root@$remoteIp \"$phpCmd\"";
         $output = shell_exec($sshCmd);
         if (empty(trim($output))) {
             $output = "❌ Tidak ada output dari VPS RW-MARD. Cek file add-trojan.php di VPS atau pastikan script mencetak hasil.";
