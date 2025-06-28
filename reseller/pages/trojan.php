@@ -22,7 +22,7 @@ $sshProducts = [
         'country' => 'Indonesia',
         'isp' => 'FCCDN',
         'available' => false,
-        'stock' => 22
+        'stock' => 11
     ],
     [
         'name' => 'SGDO-MARD',
