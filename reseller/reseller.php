@@ -82,22 +82,24 @@ if (isset($_GET['theme'])) {
       <p class="font-semibold">@<?= htmlspecialchars($reseller) ?></p>
     </div>
     <nav class="space-y-2 text-sm">
-      <?php
+<nav class="space-y-2 text-sm">
+<?php
 $menu = [
   'dashboard'=>'📊 Dashboard','ssh'=>'🔐 SSH','vmess'=>'🌀 Vmess',
   'vless'=>'📡 Vless','trojan'=>'⚔ Trojan','shadowsocks'=>'🕶 Shadowsocks',
   'topup'=>'💳 Top Up','cek-server'=>'🖥 Cek Server','vip'=>'👑 Grup VIP'
 ];
-
 foreach ($menu as $p => $label) {
     echo "<a href='?page={$p}' class='block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600'>$label</a>";
 
-    // Tambahkan garis pembatas hanya setelah shadowsocks
+    // Tambah garis setelah Shadowsocks
     if ($p === 'shadowsocks') {
-        echo "<div class='border-t-2 border-dashed border-gray-400 dark:border-gray-500 my-3'></div>";
+        echo "<div class='my-3 border-t border-blue-500 dark:border-blue-400'></div>";
     }
 }
 ?>
+</nav>
+
     </nav>
   </aside>
 
