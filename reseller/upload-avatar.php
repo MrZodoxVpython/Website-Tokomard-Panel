@@ -21,15 +21,17 @@ if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
 
     // Simpan file
     if (move_uploaded_file($tmpName, $destPath)) {
-        // Simpan ke session atau DB (tergantung implementasimu)
-        $_SESSION['avatar'] = $destPath;
-
-        // Redirect kembali
-        header("Location: reseller.php");
-        exit;
-    } else {
-        die('❌ Gagal mengunggah file.');
-    }
+    $_SESSION['avatar'] = $destPath;
+    header("Location: reseller.php");
+    exit;
+} else {
+    echo "❌ Gagal mengunggah file.<br>";
+    echo "Tmp Name: $tmpName<br>";
+    echo "Dest Path: $destPath<br>";
+    echo "is_uploaded_file: " . (is_uploaded_file($tmpName) ? 'YES' : 'NO') . "<br>";
+    echo "Upload Dir Writable: " . (is_writable($uploadDir) ? 'YES' : 'NO') . "<br>";
+    error_log(print_r($_FILES, true));
+}
 } else {
     die('❌ Tidak ada file yang diunggah.');
 }
