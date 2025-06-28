@@ -43,7 +43,7 @@ $sshProducts = [
             <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">💳 Harga: <strong>Rp<?= number_format($product['price'], 0, ',', '.') ?>/bulan</strong></p>
             <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">🌍 Negara: <?= htmlspecialchars($product['country']) ?></p>
             <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">🏢 ISP: <?= htmlspecialchars($product['isp']) ?></p>
-            <p class="text-sm mb-1 <?= $product['available'] ? 'text-gree-600' : 'text-red-500' ?>">
+            <p class="text-sm mb-1 <?= $product['available'] ? 'text-green-600' : 'text-red-500' ?>">
                 <?= $product['available'] ? '✅ Tersedia' : '❌ Tidak Tersedia' ?>
             </p>
             <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">📦 Stok: <?= $product['stock'] ?></p>
