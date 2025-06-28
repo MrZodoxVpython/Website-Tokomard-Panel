@@ -106,7 +106,7 @@ if ($notifResult) {
       <img src="https://i.imgur.com/q3DzxiB.png" class="w-10 h-10" alt="Logo Imgur" />
       <?php if ($notifCount > 0): ?>
       <span
-        class="absolute top-1 right-0 transform translate-x-1/4 -translate-y-1/4 w-4 h-4 text-[10px] flex items-center justify-center font-bold text-white bg-red-600 border-2 border-white dark:border-gray-800 rounded-full animate-pulse"
+        class="absolute top-1 right-1 transform translate-x-1/4 -translate-y-1/4 w-4 h-4 text-[10px] flex items-center justify-center font-bold text-white bg-red-600 border-2 border-white dark:border-gray-800 rounded-full animate-pulse"
       >
         <?= $notifCount > 9 ? '9+' : $notifCount ?>
       </span>
