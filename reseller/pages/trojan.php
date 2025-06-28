@@ -21,7 +21,7 @@ $sshProducts = [
         'price' => 20000,
         'country' => 'Indonesia',
         'isp' => 'FCCDN',
-        'available' => false,
+        'available' => true,
         'stock' => 11
     ],
     [
