@@ -96,34 +96,38 @@ $loggedInUser = [
         }
         echo "</div>";
 
-        // Grafik
-        echo '<canvas id="myChart" class="mb-8 max-w-full bg-white dark:bg-gray-800 p-4 rounded-lg shadow h-20"></canvas>';
-        echo '<script>
-        const ctx = document.getElementById("myChart").getContext("2d");
-        new Chart(ctx, {
-            type: "bar",
-            data: {
-                labels: ["VMess", "VLess", "Trojan", "Shadowsocks"],
-                datasets: [{
-                    label: "Akun Terjual",
-                    data: [' . $stats['vmess'] . ',' . $stats['vless'] . ',' . $stats['trojan'] . ',' . $stats['shadowsocks'] . '],
-                    backgroundColor: ["#6366f1", "#3b82f6", "#ef4444", "#10b981"],
-                    borderRadius: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: { backgroundColor: "#1f2937", titleColor: "#fff", bodyColor: "#ddd" }
-                },
-                scales: {
-                    y: { beginAtZero: true, ticks: { color: "#94a3b8" } },
-                    x: { ticks: { color: "#94a3b8" } }
-                }
-            }
-        });
-        </script>';
+// Grafik
+echo '
+<div class="mb-8 max-w-full bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+  <canvas id="myChart" style="height:200px;"></canvas>
+</div>
+<script>
+const ctx = document.getElementById("myChart").getContext("2d");
+new Chart(ctx, {
+    type: "bar",
+    data: {
+        labels: ["VMess", "VLess", "Trojan", "Shadowsocks"],
+        datasets: [{
+            label: "Akun Terjual",
+            data: [' . $stats['vmess'] . ',' . $stats['vless'] . ',' . $stats['trojan'] . ',' . $stats['shadowsocks'] . '],
+            backgroundColor: ["#6366f1", "#3b82f6", "#ef4444", "#10b981"],
+            borderRadius: 6
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false, // INI PENTING BIAR TINGGI TIDAK TERPAKSA
+        plugins: {
+            legend: { display: false },
+            tooltip: { backgroundColor: "#1f2937", titleColor: "#fff", bodyColor: "#ddd" }
+        },
+        scales: {
+            y: { beginAtZero: true, ticks: { color: "#94a3b8" } },
+            x: { ticks: { color: "#94a3b8" } }
+        }
+    }
+});
+</script>';
 
         // Tabel
         echo '<div class="overflow-x-auto">
