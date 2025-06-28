@@ -97,7 +97,7 @@ $loggedInUser = [
         echo "</div>";
 
         // Grafik
-        echo '<canvas id="myChart" class="mb-8 max-w-full bg-white dark:bg-gray-800 p-4 rounded-lg shadow"></canvas>';
+        echo '<canvas id="myChart" class="mb-8 max-w-full bg-white dark:bg-gray-800 p-4 rounded-lg shadow h-64"></canvas>';
         echo '<script>
         const ctx = document.getElementById("myChart").getContext("2d");
         new Chart(ctx, {
