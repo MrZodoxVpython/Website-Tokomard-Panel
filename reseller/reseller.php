@@ -106,7 +106,7 @@ $loggedInUser = [
 
         // Grafik modern
         echo '<div class="mb-8 max-w-full bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-        <canvas id="myChart" class="h-48"></canvas>
+        <canvas id="myChart" class="h-200"></canvas>
         </div>
         <script>
         const ctx = document.getElementById("myChart").getContext("2d");
