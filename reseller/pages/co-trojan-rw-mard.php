@@ -23,13 +23,13 @@ $server = [
 $protocol = 'trojan';
 $output = null;
 
-// === Jika form disubmit ===
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once __DIR__ . '/api-akun/lib-akun.php';
 
     $username = trim($_POST['username'] ?? '');
     $expiredInput = trim($_POST['expired'] ?? '');
     $password = trim($_POST['password'] ?? '');
+
     if (!$username || !$expiredInput) {
         $output = "❌ Username dan expired harus diisi.";
     } else {
@@ -37,19 +37,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $password = generateUUID();
         }
 
-        // Data POST yang akan dikirim ke VPS remote
-        $postData = http_build_query([
-            'username' => $username,
-            'expired' => $expiredInput,
-            'password' => $password
-        ]);
-
-        // Build perintah SSH + curl ke VPS RW-MARD
         $remoteIp = $server['ip'];
-        $curlCmd = "curl -s -X POST -d \"$postData\" http://127.0.0.1/etc/xray/api-akun/add-trojan.php";
-        $sshCmd = "ssh -i /root/.ssh/id_rsa root@$remoteIp \"$curlCmd\"";
+        $phpCmd = "php /etc/xray/api-akun/add-trojan.php '$username' '$expiredInput' '$password'";
+        $sshCmd = "ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no root@$remoteIp \"$phpCmd\"";
 
         $output = shell_exec($sshCmd);
+        if (empty(trim($output))) {
+            $output = "❌ Tidak ada output dari VPS RW-MARD. Cek file add-trojan.php di VPS atau pastikan script mencetak hasil.";
+        }
     }
 }
 ?>
