@@ -72,67 +72,78 @@ $loggedInUser = [
             $buyer = str_replace("akun-{$reseller}-", "", $buyer);
             $lines = file($file);
             $proto = null;
+            $expired = "-";
             foreach ($lines as $line) {
                 if (stripos($line, 'TROJAN ACCOUNT') !== false) $proto = 'trojan';
                 elseif (stripos($line, 'VMESS ACCOUNT') !== false) $proto = 'vmess';
                 elseif (stripos($line, 'VLESS ACCOUNT') !== false) $proto = 'vless';
                 elseif (stripos($line, 'SHADOWSOCKS ACCOUNT') !== false) $proto = 'shadowsocks';
+                elseif (stripos($line, 'Expired On') !== false) {
+                    $expParts = explode(':', $line, 2);
+                    $expired = trim($expParts[1] ?? '-');
+                }
             }
             if ($proto) {
                 $stats[$proto]++;
                 $stats['total']++;
-                $rows[] = ['no' => $no++, 'user' => $buyer, 'proto' => strtoupper($proto), 'exp' => '-', 'buyer' => $buyer];
+                $rows[] = [
+                    'no' => $no++, 'user' => $buyer,
+                    'proto' => strtoupper($proto), 'exp' => $expired, 'buyer' => $buyer
+                ];
             }
         }
 
-	// Statistik kartu
+        // Statistik kartu
         echo '<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">';
         foreach (['total' => 'Total Akun', 'vmess' => 'VMess', 'vless' => 'VLess', 'trojan' => 'Trojan', 'shadowsocks' => 'Shadowsocks'] as $k => $label) {
-        $color = ['total' => 'blue', 'vmess' => 'purple', 'vless' => 'blue', 'trojan' => 'red', 'shadowsocks' => 'green'][$k];
-        echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-5 rounded-lg shadow'>
-        <p class='text-lg font-semibold'>{$label}</p>
-        <p class='text-3xl mt-2 font-bold'>{$stats[$k]}</p>
-        </div>";
+            $color = ['total' => 'blue', 'vmess' => 'purple', 'vless' => 'blue', 'trojan' => 'red', 'shadowsocks' => 'green'][$k];
+            echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-5 rounded-lg shadow'>
+            <p class='text-lg font-semibold'>{$label}</p>
+            <p class='text-3xl mt-2 font-bold'>{$stats[$k]}</p>
+            </div>";
         }
         echo "</div>";
 
-// Grafik
-echo '
-<div class="mb-8 max-w-full bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-  <canvas id="myChart" style="height:200px;"></canvas>
-</div>
-<script>
-const ctx = document.getElementById("myChart").getContext("2d");
-new Chart(ctx, {
-    type: "bar",
-    data: {
-        labels: ["VMess", "VLess", "Trojan", "Shadowsocks"],
-        datasets: [{
-            label: "Akun Terjual",
-            data: [' . $stats['vmess'] . ',' . $stats['vless'] . ',' . $stats['trojan'] . ',' . $stats['shadowsocks'] . '],
-            backgroundColor: ["#6366f1", "#3b82f6", "#ef4444", "#10b981"],
-            borderRadius: 6
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false, // INI PENTING BIAR TINGGI TIDAK TERPAKSA
-        plugins: {
-            legend: { display: false },
-            tooltip: { backgroundColor: "#1f2937", titleColor: "#fff", bodyColor: "#ddd" }
-        },
-        scales: {
-            y: { beginAtZero: true, ticks: { color: "#94a3b8" } },
-            x: { ticks: { color: "#94a3b8" } }
-        }
-    }
-});
-</script>';
+        // Grafik modern
+        echo '<div class="mb-8 max-w-full bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+        <canvas id="myChart" class="h-48"></canvas>
+        </div>
+        <script>
+        const ctx = document.getElementById("myChart").getContext("2d");
+        new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: ["VMess", "VLess", "Trojan", "Shadowsocks"],
+                datasets: [{
+                    label: "Akun Terjual",
+                    data: [' . $stats['vmess'] . ',' . $stats['vless'] . ',' . $stats['trojan'] . ',' . $stats['shadowsocks'] . '],
+                    backgroundColor: ["#6366f1", "#3b82f6", "#ef4444", "#10b981"],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: "#1f2937",
+                        titleColor: "#fff",
+                        bodyColor: "#ddd"
+                    }
+                },
+                scales: {
+                    y: { beginAtZero: true, ticks: { color: "#94a3b8" } },
+                    x: { ticks: { color: "#94a3b8" } }
+                }
+            }
+        });
+        </script>';
 
-        // Tabel
+        // Tabel akun
         echo '<div class="overflow-x-auto">
             <table class="table-fixed w-full border border-gray-300 dark:border-gray-700 text-sm text-left">
-            <thead class="bg-gray-200 dark:bg-gray-700">
+            <thead class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white">
                 <tr>
                     <th class="w-1/12 px-3 py-2">No</th>
                     <th class="w-3/12 px-3 py-2">User</th>
@@ -140,7 +151,8 @@ new Chart(ctx, {
                     <th class="w-3/12 px-3 py-2">Expired</th>
                     <th class="w-3/12 px-3 py-2">Buyer</th>
                 </tr>
-            </thead><tbody>';
+            </thead>
+            <tbody>';
         if (empty($rows)) {
             echo '<tr><td colspan="5" class="text-center px-3 py-4 text-gray-500 dark:text-gray-400">Belum ada akun.</td></tr>';
         } else {
@@ -155,7 +167,6 @@ new Chart(ctx, {
             }
         }
         echo '</tbody></table></div>';
-
     } elseif (file_exists($pagePath)) {
         include $pagePath;
     } else {
@@ -176,6 +187,7 @@ document.getElementById("toggleSidebar").onclick = function () {
     document.getElementById("sidebar").classList.toggle("-translate-x-full");
 };
 </script>
+
 <?php
 if (isset($_GET['theme'])) {
     $_SESSION['theme'] = $_GET['theme'] === 'dark' ? 'dark' : 'light';
