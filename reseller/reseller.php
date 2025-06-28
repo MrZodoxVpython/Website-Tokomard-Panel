@@ -10,15 +10,14 @@ $loggedInUser = [
     'avatar' => 'https://ui-avatars.com/api/?name=' . urlencode($_SESSION['username']) . '&background=4F46E5&color=fff'
 ];
 
-$page = isset($_GET['page']) ? basename($_GET['page']) : 'dashboard';
-$pagePath = "pages/{$page}.php";
+$page = $_GET['page'] ?? 'dashboard';
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8">
     <title>Panel Reseller - Tokomard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class' };
@@ -47,14 +46,12 @@ $pagePath = "pages/{$page}.php";
         });
     </script>
 </head>
-<body class="bg-white text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300 min-h-screen">
+<body class="bg-white text-gray-900 dark:bg-gray-900 dark:text-white min-h-screen">
     <!-- Header -->
     <header class="p-4 bg-gray-100 dark:bg-gray-800 shadow-md flex justify-between items-center sticky top-0 z-50">
         <h1 class="text-xl font-bold">Tokomard Reseller Panel</h1>
         <div class="flex items-center gap-4">
-            <button id="themeToggleBtn" onclick="toggleTheme()" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-                🌙
-            </button>
+            <button id="themeToggleBtn" onclick="toggleTheme()" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">🌙</button>
             <a href="../logout.php" class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-500 text-sm">Logout</a>
         </div>
     </header>
@@ -66,7 +63,7 @@ $pagePath = "pages/{$page}.php";
         </svg>
     </button>
 
-    <!-- Main Layout -->
+    <!-- Layout -->
     <main class="flex flex-col md:flex-row w-full px-4 md:px-8 py-6 gap-6">
         <!-- Sidebar -->
         <aside id="sidebar" class="md:w-1/5 w-full md:max-w-xs bg-gray-100 dark:bg-gray-800 p-5 shadow-lg rounded-lg transition-transform duration-300 -translate-x-full md:translate-x-0 z-40 md:mr-1">
@@ -74,7 +71,6 @@ $pagePath = "pages/{$page}.php";
                 <img src="<?= $loggedInUser['avatar'] ?>" alt="Profile" class="w-20 h-20 rounded-full mb-2">
                 <h2 class="text-base font-semibold">@<?= htmlspecialchars($loggedInUser['username']) ?></h2>
             </div>
-
             <nav class="space-y-2 text-sm">
                 <a href="?page=dashboard" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600">📊 Dashboard</a>
                 <a href="?page=ssh" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600">🔐 SSH</a>
@@ -82,22 +78,52 @@ $pagePath = "pages/{$page}.php";
                 <a href="?page=vless" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600">📡 Vless</a>
                 <a href="?page=trojan" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600">⚔ Trojan</a>
                 <a href="?page=shadowsocks" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600">🕶 Shadowsocks</a>
-
                 <hr class="my-4 border-gray-400 dark:border-gray-600">
-
                 <a href="?page=topup" class="block px-3 py-2 rounded hover:bg-green-500 hover:text-white dark:hover:bg-green-600">💳 Top Up</a>
                 <a href="?page=cek-server" class="block px-3 py-2 rounded hover:bg-indigo-500 hover:text-white dark:hover:bg-indigo-600">🖥 Cek Server</a>
                 <a href="?page=vip" class="block px-3 py-2 rounded hover:bg-yellow-500 hover:text-white dark:hover:bg-yellow-600">👑 Grup VIP</a>
             </nav>
         </aside>
 
-        <!-- Konten Utama -->
+        <!-- Konten -->
         <section class="flex-1 p-5 bg-white dark:bg-gray-900 rounded-xl shadow-md">
             <?php
-            if (file_exists($pagePath)) {
-                include $pagePath;
+            if ($page === 'dashboard') {
+                $reseller = $_SESSION['username'];
+                $dataPath = "/etc/xray/data-panel/";
+                $totalAkun = 0;
+                $files = glob("{$dataPath}akun-{$reseller}-*.txt");
+
+                foreach ($files as $file) {
+                    $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                    foreach ($lines as $line) {
+                        $line = trim($line);
+                        if (strpos($line, '{') !== false && json_decode($line)) {
+                            $totalAkun++;
+                        }
+                    }
+                }
+
+                echo '
+                <div class="p-6 bg-white dark:bg-gray-800 shadow rounded-lg">
+                    <h1 class="text-2xl font-bold mb-4">📊 Dashboard</h1>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        <div class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 p-6 rounded-lg shadow">
+                            <p class="text-lg font-semibold">Total Akun</p>
+                            <p class="text-4xl font-bold">' . $totalAkun . '</p>
+                        </div>
+                        <div class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 p-6 rounded-lg shadow">
+                            <p class="text-lg font-semibold">Aktif</p>
+                            <p class="text-4xl font-bold">-</p>
+                        </div>
+                        <div class="bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 p-6 rounded-lg shadow">
+                            <p class="text-lg font-semibold">Expired</p>
+                            <p class="text-4xl font-bold">-</p>
+                        </div>
+                    </div>
+                </div>';
             } else {
-                echo "<div class='text-center text-red-500'>Halaman tidak ditemukan: {$page}.php</div>";
+                echo "<div class='text-center text-yellow-400 text-sm'>🔥 Halaman <b>{$page}</b> belum dibuat di sini. Mau gua tambahin sekalian?</div>";
             }
             ?>
         </section>
