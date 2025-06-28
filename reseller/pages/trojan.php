@@ -40,7 +40,7 @@ function getShowFile($serverName) {
     switch ($serverName) {
         case 'RW-MARD': return 'show-trojan-rw.php';
         case 'SGDO-MARD': return 'show-trojan-sgdomard.php';
-        case 'SGDO-2DEV': return 'show-trojan.php';
+        case 'SGDO-2DEV': return 'show-trojan-sgdo-2dev.php';
         default: return 'show-trojan.php';
     }
 }
