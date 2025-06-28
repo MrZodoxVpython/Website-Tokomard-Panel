@@ -24,12 +24,12 @@ $page = $_GET['page'] ?? 'dashboard';
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Reseller Panel</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>tailwind.config={ darkMode:'class' }</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen transition-colors">
 
-<header class="p-4 bg-gray-100 dark:bg-gray-800 flex justify-between items-center shadow sticky top-0">
+<header class="p-4 bg-gray-100 dark:bg-gray-800 flex justify-between items-center shadow sticky top-0 z-10">
   <h1 class="font-bold text-xl">Tokomard Reseller Panel</h1>
   <div class="flex gap-3">
     <a href="?theme=<?= $theme==='dark'?'light':'dark' ?>" class="p-2 rounded-md bg-gray-200 dark:bg-gray-700"><?= $theme==='dark'?'🌞':'🌙' ?></a>
@@ -53,7 +53,7 @@ $page = $_GET['page'] ?? 'dashboard';
         foreach ($menu as $k=>$lbl) {
           echo "<a href='?page=$k' class='block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600'>$lbl</a>";
           if ($k === 'shadowsocks') {
-            echo "<hr class='my-2 border-gray-300 dark:border-gray-600'>";
+            echo "<hr class='border-gray-300 dark:border-gray-600 my-2'>";
           }
         }
       ?>
@@ -65,24 +65,23 @@ $page = $_GET['page'] ?? 'dashboard';
       <?php
         $dir = "/etc/xray/data-panel/reseller";
         $stats = ['total'=>0,'vmess'=>0,'vless'=>0,'trojan'=>0,'shadowsocks'=>0];
-        $rows = []; $no = 1;
+        $rows=[]; $no=1;
         foreach (glob("$dir/akun-$reseller-*.txt") as $f) {
           $buyer = str_replace("akun-$reseller-","",basename($f,".txt"));
           $c = file_get_contents($f);
           foreach (['vmess','vless','trojan','shadowsocks'] as $p) {
             if (stripos($c, strtoupper($p).' ACCOUNT')!==false) {
               $stats[$p]++; $stats['total']++;
-              $rows[] = ['no'=>$no++,'user'=>$buyer,'proto'=>strtoupper($p),'exp'=>'-','buyer'=>$buyer];
+              $rows[]=['no'=>$no++,'user'=>$buyer,'proto'=>strtoupper($p),'exp'=>'-','buyer'=>$buyer];
               break;
             }
           }
         }
       ?>
 
-      <!-- Cards -->
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
         <?php foreach (['total'=>'Total Akun','vmess'=>'VMess','vless'=>'VLess','trojan'=>'Trojan','shadowsocks'=>'Shadowsocks'] as $k=>$lbl): ?>
-          <?php $c = ['total'=>'blue','vmess'=>'purple','vless'=>'blue','trojan'=>'red','shadowsocks'=>'green'][$k]; ?>
+          <?php $c=['total'=>'blue','vmess'=>'purple','vless'=>'blue','trojan'=>'red','shadowsocks'=>'green'][$k]; ?>
           <div class="bg-<?= $c ?>-100 dark:bg-<?= $c ?>-800 p-4 rounded-lg text-center">
             <p class="font-semibold"><?= $lbl ?></p>
             <p class="text-2xl font-bold"><?= $stats[$k] ?></p>
@@ -90,20 +89,22 @@ $page = $_GET['page'] ?? 'dashboard';
         <?php endforeach; ?>
       </div>
 
-      <!-- Chart -->
       <div class="mb-6 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
         <canvas id="chartStats" height="100"></canvas>
       </div>
       <script>
       const ctx = document.getElementById('chartStats').getContext('2d');
-      new Chart(ctx, {
+      new Chart(ctx,{
         type:'bar',
-        data:{ labels:['VMess','VLess','Trojan','Shadowsocks'], datasets:[{ data:[<?= $stats['vmess'] ?>,<?= $stats['vless'] ?>,<?= $stats['trojan'] ?>,<?= $stats['shadowsocks'] ?>], backgroundColor:['#8B5CF6','#3B82F6','#EF4444','#10B981'], borderRadius:5 }] },
+        data:{
+          labels:['VMess','VLess','Trojan','Shadowsocks'],
+          datasets:[{ data:[<?= $stats['vmess'] ?>,<?= $stats['vless'] ?>,<?= $stats['trojan'] ?>,<?= $stats['shadowsocks'] ?>],
+            backgroundColor:['#8B5CF6','#3B82F6','#EF4444','#10B981'], borderRadius:6 }]
+        },
         options:{ responsive:true, scales:{ y:{ beginAtZero:true } }, plugins:{ legend:{display:false} } }
       });
       </script>
 
-      <!-- Table -->
       <div class="overflow-x-auto">
         <table class="w-full table-fixed border border-gray-300 dark:border-gray-700 text-sm">
           <thead class="bg-gray-200 dark:bg-gray-700">
@@ -134,18 +135,17 @@ $page = $_GET['page'] ?? 'dashboard';
     <?php elseif(file_exists(__DIR__."/pages/{$page}.php")): ?>
       <?php include __DIR__."/pages/{$page}.php"; ?>
     <?php else: ?>
-      <p class="text-center text-red-500">Halaman <?= htmlspecialchars($page) ?> tidak ditemukan.</p>
+      <p class="text-red-500 text-center">Halaman <?= htmlspecialchars($page) ?> tidak ditemukan.</p>
     <?php endif; ?>
   </section>
 </main>
+
 <script>
 document.getElementById('btnSidebar').onclick = () => {
   document.getElementById('sidebar').classList.toggle('-translate-x-full');
 };
-document.getElementById('themeToggleBtn').onclick = () => {
-  window.location ? location.href = '?theme=<?= $theme==='dark'?'light':'dark' ?>' : '';
-};
 </script>
+
 </body>
 </html>
 
