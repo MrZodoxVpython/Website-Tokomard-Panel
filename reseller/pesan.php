@@ -1,3 +1,15 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kirim Notifikasi Reseller</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center p-4">
+
+<div class="w-full max-w-xl">
 <?php if (isset($_GET['sukses'])): ?>
     <div class="flex items-center p-4 mb-6 text-sm text-green-800 bg-green-50 border border-green-300 rounded-lg shadow-sm dark:bg-green-900 dark:text-green-300 dark:border-green-700" role="alert">
         <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -14,7 +26,7 @@
     </div>
 <?php endif; ?>
 
-<div class="max-w-xl mx-auto bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+<div class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
     <h2 class="text-2xl font-semibold mb-6 text-gray-900 dark:text-gray-100 flex items-center gap-2">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A2 2 0 0121 9.618v4.764a2 2 0 01-1.447 1.894L15 14M10 14V9m0 0L6 12m4-3l4 3" />
@@ -40,4 +52,8 @@
         </button>
     </form>
 </div>
+</div>
+
+</body>
+</html>
 
