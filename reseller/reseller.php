@@ -94,41 +94,7 @@ $pagePath = "pages/{$page}.php";
         <!-- Konten Utama -->
         <section class="flex-1 p-5 bg-white dark:bg-gray-900 rounded-xl shadow-md">
             <?php
-            if ($page === 'dashboard') {
-                // Tampilkan total akun di dashboard
-                $reseller = $_SESSION['username'];
-                $folderData = '/etc/xray/data-panel/';
-                $totalAkun = 0;
-
-                $files = glob($folderData . "akun-" . $reseller . "-*.txt");
-                foreach ($files as $file) {
-                    $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-                    foreach ($lines as $line) {
-                        $line = trim($line);
-                        if (strpos($line, '{') !== false && json_decode($line)) {
-                            $totalAkun++;
-                        }
-                    }
-                }
-                echo "
-                <div class='p-6 bg-white dark:bg-gray-800 shadow rounded-lg'>
-                    <h1 class='text-2xl font-bold mb-4'>📊 Dashboard</h1>
-                    <div class='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
-                        <div class='bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 p-6 rounded-lg shadow'>
-                            <p class='text-lg font-semibold'>Total Akun</p>
-                            <p class='text-4xl font-bold'>{$totalAkun}</p>
-                        </div>
-                        <div class='bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 p-6 rounded-lg shadow'>
-                            <p class='text-lg font-semibold'>Aktif</p>
-                            <p class='text-4xl font-bold'>-</p>
-                        </div>
-                        <div class='bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 p-6 rounded-lg shadow'>
-                            <p class='text-lg font-semibold'>Expired</p>
-                            <p class='text-4xl font-bold'>-</p>
-                        </div>
-                    </div>
-                </div>";
-            } elseif (file_exists($pagePath)) {
+            if (file_exists($pagePath)) {
                 include $pagePath;
             } else {
                 echo "<div class='text-center text-red-500'>Halaman tidak ditemukan: {$page}.php</div>";
