@@ -37,6 +37,7 @@ $loggedInUser = [
   <div class="flex items-center space-x-3">
       <img src="https://i.imgur.com/q3DzxiB.png" class="w-10" alt="Logo">
       <h1 class="text-xl font-bold">Tokomard Reseller Panel</h1>
+  </div>
     <button id="themeToggleBtn" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"><?= $theme === 'dark' ? '🌞' : '🌙' ?></button>
     <a href="../logout.php" class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-500 text-sm">Logout</a>
   </div>
