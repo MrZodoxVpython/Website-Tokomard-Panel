@@ -1,11 +1,16 @@
 <?php
 require '../koneksi.php';
 
-// Kirim Notifikasi ke Semua Reseller
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['kirim_pesan'])) {
-        $pesan = trim($_POST['pesan']);
-        if (!empty($pesan)) {
+session_start();
+
+// Handle kirim pesan
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['kirim_pesan'])) {
+    $pesan = trim($_POST['pesan']);
+    $isBroadcast = isset($_POST['broadcast']);
+    $target = $_POST['target_reseller'] ?? '';
+
+    if (!empty($pesan)) {
+        if ($isBroadcast) {
             $result = $conn->query("SELECT username FROM users WHERE role = 'reseller'");
             if ($result && $result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
@@ -20,30 +25,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $error = "Tidak ada reseller ditemukan.";
             }
         } else {
-            $error = "Isi pesan tidak boleh kosong.";
+            if (!empty($target)) {
+                $stmt = $conn->prepare("INSERT INTO notifikasi_reseller (username, pesan) VALUES (?, ?)");
+                $stmt->bind_param("ss", $target, $pesan);
+                $stmt->execute();
+                $stmt->close();
+                $sukses = true;
+            } else {
+                $error = "Pilih reseller yang ingin dikirimi pesan.";
+            }
         }
-    }
-
-    // Hapus Pesan
-    if (isset($_POST['hapus_pesan']) && isset($_POST['pesan_hapus'])) {
-        $pesanHapus = $_POST['pesan_hapus'];
-        $stmt = $conn->prepare("DELETE FROM notifikasi_reseller WHERE pesan = ?");
-        $stmt->bind_param("s", $pesanHapus);
-        $stmt->execute();
-        $stmt->close();
+    } else {
+        $error = "Isi pesan tidak boleh kosong.";
     }
 }
 
-// Ambil daftar pesan terkirim
-$query = "
-    SELECT pesan, MAX(dibuat_pada) AS waktu_kirim, COUNT(*) AS jumlah_reseller 
-    FROM notifikasi_reseller 
-    GROUP BY pesan 
-    ORDER BY waktu_kirim DESC
-";
-$hasil = $conn->query($query);
-$daftarPesan = $hasil->fetch_all(MYSQLI_ASSOC);
+// Handle hapus
+if (isset($_GET['hapus'])) {
+    $id = (int) $_GET['hapus'];
+    $conn->query("DELETE FROM notifikasi_reseller WHERE id = $id");
+    header("Location: pesan.php");
+    exit;
+}
+
+// Ambil semua pesan unik (per user)
+$riwayat = $conn->query("SELECT id, username, pesan, dibuat_pada FROM notifikasi_reseller ORDER BY dibuat_pada DESC");
+
+// Ambil semua reseller
+$resellerList = [];
+$hasil = $conn->query("SELECT username FROM users WHERE role = 'reseller'");
+while ($row = $hasil->fetch_assoc()) {
+    $resellerList[] = $row['username'];
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -52,64 +67,106 @@ $daftarPesan = $hasil->fetch_all(MYSQLI_ASSOC);
     <title>Kirim Notifikasi Reseller</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center p-4">
-<div class="w-full max-w-xl">
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen p-6 text-gray-900 dark:text-gray-100">
 
-    <?php if (!empty($sukses)): ?>
-        <div class="flex items-center p-4 mb-6 text-sm text-green-800 bg-green-50 border border-green-300 rounded-lg shadow-sm dark:bg-green-900 dark:text-green-300 dark:border-green-700" role="alert">
-            ✅ Notifikasi berhasil dikirim ke semua reseller.
+<div class="max-w-3xl mx-auto space-y-8">
+    <!-- Alert -->
+    <?php if (isset($sukses)): ?>
+        <div class="p-4 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100 rounded shadow">
+            ✅ Notifikasi berhasil dikirim.
         </div>
-    <?php elseif (!empty($error)): ?>
-        <div class="flex items-center p-4 mb-6 text-sm text-red-800 bg-red-50 border border-red-300 rounded-lg shadow-sm dark:bg-red-900 dark:text-red-300 dark:border-red-700" role="alert">
+    <?php elseif (isset($error)): ?>
+        <div class="p-4 bg-red-100 dark:bg-red-800 text-red-800 dark:text-red-100 rounded shadow">
             ❌ <?= htmlspecialchars($error) ?>
         </div>
     <?php endif; ?>
 
-    <div class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
-        <h2 class="text-center text-2xl font-semibold mb-6 text-gray-900 dark:text-gray-100 flex items-center gap-2">
-            📨 Kirim Notifikasi ke Semua Reseller
-        </h2>
+    <!-- Form Kirim -->
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow border dark:border-gray-700">
+        <h2 class="text-xl font-bold mb-4">📢 Kirim Notifikasi</h2>
         <form method="POST" class="space-y-5">
             <textarea 
                 name="pesan" 
-                rows="6" 
-                class="w-full p-4 text-base border border-gray-300 rounded-lg shadow-sm focus:ring-3 focus:ring-blue-400 focus:border-blue-600 transition duration-300 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 dark:placeholder-gray-400" 
-                placeholder="Tulis pesan penting kepada semua reseller..." 
+                rows="5" 
                 required
-                autofocus
+                placeholder="Tulis pesan ke reseller..." 
+                class="w-full p-4 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             ></textarea>
+
+            <!-- Toggle Broadcast -->
+            <div class="flex items-center justify-between">
+                <label class="flex items-center gap-3 cursor-pointer">
+                    <span class="text-sm font-semibold">Broadcast ke Semua</span>
+                    <input type="checkbox" id="broadcastToggle" name="broadcast" checked class="sr-only">
+                    <div id="broadcastIndicator" class="w-12 h-6 bg-green-500 rounded-full relative transition-all duration-300">
+                        <div class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-all duration-300"></div>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Pilih Reseller -->
+            <div id="resellerSelect" class="hidden">
+                <label class="block text-sm font-medium mb-1">Pilih Reseller:</label>
+                <select name="target_reseller" class="w-full p-3 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <option value="">-- Pilih --</option>
+                    <?php foreach ($resellerList as $reseller): ?>
+                        <option value="<?= htmlspecialchars($reseller) ?>"><?= htmlspecialchars($reseller) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
             <button 
                 type="submit" 
                 name="kirim_pesan"
-                class="w-full flex justify-center items-center gap-2 px-6 py-3 text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 transition duration-300 font-semibold">
-                🚀 Kirim Notifikasi
+                class="w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700 transition font-semibold"
+            >
+                🚀 Kirim Sekarang
             </button>
         </form>
     </div>
 
-    <div class="w-full bg-white dark:bg-gray-800 p-6 rounded-xl shadow mt-8 border border-gray-200 dark:border-gray-700">
-        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">📋 Daftar Pesan Terkirim</h3>
-        <?php if (count($daftarPesan) > 0): ?>
-            <ul class="divide-y divide-gray-200 dark:divide-gray-700">
-                <?php foreach ($daftarPesan as $pesan): ?>
-                    <li class="py-4 flex justify-between items-start">
+    <!-- Riwayat Pesan -->
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow border dark:border-gray-700">
+        <h2 class="text-xl font-bold mb-4">🕒 Riwayat Pesan Terkirim</h2>
+        <?php if ($riwayat->num_rows > 0): ?>
+            <ul class="space-y-3">
+                <?php while ($row = $riwayat->fetch_assoc()): ?>
+                    <li class="p-4 bg-gray-50 dark:bg-gray-700 rounded flex justify-between items-start">
                         <div>
-                            <div class="text-sm text-gray-800 dark:text-gray-100 mb-1"><?= nl2br(htmlspecialchars($pesan['pesan'])) ?></div>
-                            <div class="text-xs text-gray-500 dark:text-gray-400">📅 <?= date('d M Y, H:i', strtotime($pesan['waktu_kirim'])) ?> • Dikirim ke <?= $pesan['jumlah_reseller'] ?> reseller</div>
+                            <div class="text-sm text-gray-700 dark:text-gray-200 font-semibold"><?= htmlspecialchars($row['username']) ?></div>
+                            <div class="text-sm text-gray-600 dark:text-gray-300 mt-1"><?= htmlspecialchars($row['pesan']) ?></div>
+                            <div class="text-xs text-gray-400 mt-1"><?= date('d M Y H:i', strtotime($row['dibuat_pada'])) ?></div>
                         </div>
-                        <form method="POST" onsubmit="return confirm('Yakin ingin menghapus pesan ini dari semua reseller?')" class="ml-4">
-                            <input type="hidden" name="pesan_hapus" value="<?= htmlspecialchars($pesan['pesan']) ?>">
-                            <button name="hapus_pesan" class="text-red-600 dark:text-red-400 text-sm hover:underline">Hapus</button>
-                        </form>
+                        <a href="?hapus=<?= $row['id'] ?>" onclick="return confirm('Hapus pesan ini?')" class="text-red-600 dark:text-red-400 hover:underline text-sm">🗑 Hapus</a>
                     </li>
-                <?php endforeach; ?>
+                <?php endwhile; ?>
             </ul>
         <?php else: ?>
-            <p class="text-sm italic text-gray-500">Belum ada pesan yang dikirim.</p>
+            <div class="text-gray-500 dark:text-gray-400 italic">Belum ada pesan dikirim.</div>
         <?php endif; ?>
     </div>
-
 </div>
+
+<!-- JS Toggle -->
+<script>
+const toggle = document.getElementById('broadcastToggle');
+const indicator = document.getElementById('broadcastIndicator');
+const resellerSelect = document.getElementById('resellerSelect');
+
+toggle.addEventListener('change', () => {
+    if (toggle.checked) {
+        indicator.classList.remove('bg-red-500');
+        indicator.classList.add('bg-green-500');
+        indicator.firstElementChild.style.transform = 'translateX(0)';
+        resellerSelect.classList.add('hidden');
+    } else {
+        indicator.classList.remove('bg-green-500');
+        indicator.classList.add('bg-red-500');
+        indicator.firstElementChild.style.transform = 'translateX(24px)';
+        resellerSelect.classList.remove('hidden');
+    }
+});
+</script>
 </body>
 </html>
 
