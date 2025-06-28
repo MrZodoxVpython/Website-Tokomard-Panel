@@ -64,10 +64,16 @@ if ($notifResult) {
 
 <!-- Header -->
 <header class="px-3 py-2 bg-gray-100 dark:bg-gray-800 shadow-md flex justify-between items-center sticky top-0 z-10">
-  <div class="flex items-center space-x-3">
-    <img src="https://i.imgur.com/q3DzxiB.png" class="w-10 cursor-pointer" onclick="document.getElementById('notifDropdown').classList.toggle('hidden')" />
-    <h1 class="text-xl font-bold">Panel Reseller Tokomard</h1>
+<div class="flex items-center space-x-3">
+  <div class="relative cursor-pointer" onclick="document.getElementById('notifDropdown').classList.toggle('hidden')">
+    <img src="https://i.imgur.com/q3DzxiB.png" class="w-10" alt="Logo Imgur" />
+    <?php if ($notifCount > 0): ?>
+      <span class="absolute top-0 right-0 inline-block w-4 h-4 bg-red-600 border-2 border-white rounded-full dark:border-gray-900 animate-pulse"></span>
+    <?php endif; ?>
   </div>
+  <h1 class="text-xl font-bold select-none">Panel Reseller Tokomard</h1>
+</div>
+
   <div class="flex items-center gap-4">
     <div class="relative">
       <?php if ($notifCount > 0): ?>
