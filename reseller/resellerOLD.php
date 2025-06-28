@@ -108,6 +108,7 @@ if ($notifResult) {
 </span>
     <?php endif; ?>
   </div>
+  <h1 class="text-xl font-bold select-none">Panel Reseller Tokomard</h1>
 
   <div class="flex items-center gap-4">
     <button id="themeToggleBtn" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"><?= $theme === 'dark' ? '🌞' : '🌙' ?></button>
