@@ -85,8 +85,6 @@ $loggedInUser = [
 </form>
 <h2 class="text-base font-semibold">@<?= htmlspecialchars($reseller) ?></h2>
 
-
-  <h2 class="text-base font-semibold">@<?= htmlspecialchars($reseller) ?></h2>
 </div>
         <nav class="space-y-2 text-sm">
       <?php
