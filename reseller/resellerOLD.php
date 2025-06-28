@@ -307,13 +307,6 @@ document.getElementById("themeToggleBtn").onclick = function () {
 document.getElementById("toggleSidebar").onclick = function () {
     document.getElementById("sidebar").classList.toggle("-translate-x-full");
 };
-</script>
-<script>
-document.getElementById("themeToggleBtn").onclick = function () {
-    const html = document.documentElement;
-    const isDark = html.classList.toggle("dark");
-    fetch("?theme=" + (isDark ? "dark" : "light"));
-};
 
 var notifCount = <?= $notifCount ?>;
 if (notifCount > 0) {
