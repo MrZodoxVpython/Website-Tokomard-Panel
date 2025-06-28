@@ -247,6 +247,22 @@ document.getElementById("toggleSidebar").onclick = function () {
     document.getElementById("sidebar").classList.toggle("-translate-x-full");
 };
 </script>
+<script>
+document.getElementById("themeToggleBtn").onclick = function () {
+    const html = document.documentElement;
+    const isDark = html.classList.toggle("dark");
+    fetch("?theme=" + (isDark ? "dark" : "light"));
+};
+
+var notifCount = <?= $notifCount ?>;
+if (notifCount > 0) {
+    let show = false;
+    setInterval(() => {
+        document.title = (show ? "🔔 " : "") + "<?= ($notifCount > 0 ? "($notifCount) " : "") ?>Tokomard Panel";
+        show = !show;
+    }, 3000);
+}
+</script>
 
 <?php
 if (isset($_GET['theme'])) {
