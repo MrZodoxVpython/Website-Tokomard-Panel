@@ -1,9 +1,17 @@
-<form method="POST" action="kirim-notifikasi.php" class="space-y-3">
-  <textarea name="pesan" placeholder="Tulis pesan notifikasi..." required class="w-full p-2 border rounded"></textarea>
-  <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Kirim</button>
-</form>
+<?php
+require '../koneksi.php'; // atau sesuaikan path-nya
+$result = $conn->query("SELECT * FROM notifikasi_admin ORDER BY waktu DESC");
 
-<?php if (isset($_GET['sukses'])): ?>
-  <p class="text-green-600 mt-3">✅ Notifikasi berhasil dikirim!</p>
-<?php endif; ?>
+echo "<h2 class='text-lg font-bold mt-5 mb-2'>📢 Notifikasi Admin</h2>";
+
+if ($result->num_rows > 0) {
+    echo "<ul class='list-disc ml-5 text-sm'>";
+    while ($row = $result->fetch_assoc()) {
+        echo "<li class='mb-1'>" . htmlspecialchars($row['pesan']) . " <span class='text-xs text-gray-500'>(" . $row['waktu'] . ")</span></li>";
+    }
+    echo "</ul>";
+} else {
+    echo "<p class='text-gray-500'>Belum ada notifikasi.</p>";
+}
+?>
 
