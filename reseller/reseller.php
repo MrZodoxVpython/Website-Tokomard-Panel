@@ -96,7 +96,7 @@ $loggedInUser = [
         // Statistik kartu
         echo '<div class="text-center grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">';
         foreach (['total' => 'Total Akun', 'vmess' => 'VMess', 'vless' => 'VLess', 'trojan' => 'Trojan', 'shadowsocks' => 'Shadowsocks'] as $k => $label) {
-            $color = ['total' => 'green', 'vmess' => 'purple', 'vless' => 'blue', 'trojan' => 'red', 'shadowsocks' => 'orange'][$k];
+            $color = ['total' => 'green', 'vmess' => 'purple', 'vless' => 'blue', 'trojan' => 'red', 'shadowsocks' => 'yellow'][$k];
             echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-5 rounded-lg shadow'>
             <p class='text-lg font-semibold'>{$label}</p>
             <p class='text-3xl mt-2 font-bold'>{$stats[$k]}</p>
