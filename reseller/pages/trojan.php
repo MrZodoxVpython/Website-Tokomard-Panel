@@ -30,7 +30,7 @@ $sshProducts = [
         'price' => 15000,
         'country' => 'Indonesia',
         'isp' => 'DigitalOcean',
-        'available' => true,
+        'available' => false,
         'stock' => 22
     ],
 ];
