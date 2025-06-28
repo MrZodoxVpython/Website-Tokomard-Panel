@@ -66,7 +66,7 @@ $daftarPesan = $hasil->fetch_all(MYSQLI_ASSOC);
     <?php endif; ?>
 
     <div class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
-        <h2 class="text-2xl font-semibold mb-6 text-gray-900 dark:text-gray-100 flex items-center gap-2">
+        <h2 class="text-center text-2xl font-semibold mb-6 text-gray-900 dark:text-gray-100 flex items-center gap-2">
             📨 Kirim Notifikasi ke Semua Reseller
         </h2>
         <form method="POST" class="space-y-5">
