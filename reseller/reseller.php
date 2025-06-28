@@ -58,6 +58,14 @@ while ($row = $result->fetch_assoc()) {
     <a href="pesan.php" class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-500 text-sm">Logout</a>
   </div>
 </header>
+<div class="relative">
+  <a href="pesan.php" title="Notifikasi Admin">
+    <img src="https://i.imgur.com/q3DzxiB.png" class="w-10 cursor-pointer" />
+    <?php if ($jumlahNotif > 0): ?>
+      <span class="absolute top-0 right-0 w-3 h-3 bg-red-600 rounded-full"></span>
+    <?php endif; ?>
+  </a>
+</div>
 
 <!-- Dropdown Notifikasi -->
 <div id="notifDropdown" class="hidden absolute top-16 left-4 w-80 bg-gray-50 dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden z-20">
