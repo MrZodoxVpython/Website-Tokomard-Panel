@@ -73,7 +73,7 @@ if ($notifResult) {
 >
   <?= $notifCount > 9 ? '9+' : $notifCount ?>
 </span> 
-          <?php endif; ?>
+    <?php endif; ?>
   </div>
   <h1 class="text-xl font-bold select-none">Panel Reseller Tokomard</h1>
 </div>
