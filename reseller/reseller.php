@@ -22,16 +22,6 @@ $loggedInUser = [
   <script>tailwind.config = { darkMode: 'class' };</script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-  <header class="flex items-center justify-between p-4 bg-gray-800 shadow-md">
-    <div class="flex items-center space-x-3">
-      <img src="https://i.imgur.com/q3DzxiB.png" class="w-10" alt="Logo">
-      <h1 class="text-xl font-bold">Tokomard VPN Panel</h1>
-    </div>
-    <div>
-      <a href="login.php" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm font-semibold">Login</a>
-    </div>
-  </header>
-
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-all duration-300">
 <header class="px-3 py-2 bg-gray-100 dark:bg-gray-800 shadow-md flex justify-between items-center sticky z-10">
   <div class="flex items-center space-x-3">
