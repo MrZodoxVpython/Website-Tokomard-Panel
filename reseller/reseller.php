@@ -23,7 +23,7 @@ $loggedInUser = [
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-all duration-300">
-<header class="p-2 bg-gray-100 dark:bg-gray-800 shadow-md flex justify-between items-center sticky top-0 z-10">
+<header class="p-2 bg-gray-100 dark:bg-gray-800 shadow-md flex justify-between items-center sticky top-0 m-10 z-10">
   <h1 class="text-xl font-bold">Panel Reseller Tokomard</h1>
   <div class="flex items-center gap-4">
     <button id="themeToggleBtn" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"><?= $theme === 'dark' ? '🌞' : '🌙' ?></button>
