@@ -33,7 +33,7 @@ if ($size > $maxSize) {
 // 🔒 Validasi benar-benar gambar
 $imageCheck = @getimagesize($tmpName);
 if ($imageCheck === false) {
-    die("❌ File bukan gambar yang valid.");
+    tampilkanCyberpunkError("❌ Ukuran gambar melebihi 5MB. Maksimum hanya 5MB.");
 }
 
 // 🔒 Username dari session
@@ -61,7 +61,7 @@ switch ($ext) {
         $srcImage = imagecreatefromwebp($tmpName);
         break;
     default:
-        die("❌ Format gambar tidak didukung.");
+	tampilkanCyberpunkError("❌ Format gambar tidak didukung. Hanya JPG, JPEG, PNG, GIF, WEBP.");
 }
 
 // 🖼️ Simpan sebagai PNG, menimpa file lama
