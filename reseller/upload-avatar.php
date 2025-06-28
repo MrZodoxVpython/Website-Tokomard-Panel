@@ -8,9 +8,9 @@ if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0755, true);
 }
 
-// Validasi apakah ada file diunggah
+// Validasi file
 if (!isset($_FILES['avatar']) || $_FILES['avatar']['error'] !== UPLOAD_ERR_OK) {
-    die("❌ Tidak ada file yang diunggah atau terjadi kesalahan upload.");
+    tampilkanCyberpunkError("❌ Tidak ada file yang diunggah atau terjadi kesalahan upload.");
 }
 
 $tmpName = $_FILES['avatar']['tmp_name'];
@@ -18,34 +18,39 @@ $originalName = $_FILES['avatar']['name'];
 $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
 $size = $_FILES['avatar']['size'];
 
-// 🔒 Validasi ekstensi file gambar
+// Validasi ekstensi
 $allowedExts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 if (!in_array($ext, $allowedExts)) {
-    die("❌ Format gambar tidak didukung. Hanya JPG, JPEG, PNG, GIF, WEBP.");
+    tampilkanCyberpunkError("❌ Format gambar tidak didukung. Hanya JPG, JPEG, PNG, GIF, WEBP.");
 }
 
-// 🔒 Validasi ukuran maksimal 5MB
-$maxSize = 5 * 1024 * 1024; // 5 MB
+// Validasi ukuran
+$maxSize = 5 * 1024 * 1024;
 if ($size > $maxSize) {
-    die("❌ Ukuran gambar melebihi 5MB.");
-}
-
-// 🔒 Validasi benar-benar gambar
-$imageCheck = @getimagesize($tmpName);
-if ($imageCheck === false) {
     tampilkanCyberpunkError("❌ Ukuran gambar melebihi 5MB. Maksimum hanya 5MB.");
 }
 
-// 🔒 Username dari session
+// Validasi benar-benar gambar
+$imageCheck = @getimagesize($tmpName);
+if ($imageCheck === false) {
+    tampilkanCyberpunkError("❌ File bukan gambar valid.");
+}
+
+// Username
 $username = $_SESSION['username'] ?? 'guest';
 $safeUsername = preg_replace('/[^a-zA-Z0-9_\-]/', '', $username);
 
-// Simpan sebagai PNG dengan nama tetap
+// Path final
 $destFilename = "avatar-" . $safeUsername . ".png";
 $destPath = $uploadDir . $destFilename;
 $webPath = $relativePath . $destFilename;
 
-// 🧠 Convert ke PNG jika bukan PNG
+// Hapus file lama jika ada
+if (file_exists($destPath)) {
+    unlink($destPath);
+}
+
+// Convert ke PNG
 switch ($ext) {
     case 'jpeg':
     case 'jpg':
@@ -61,18 +66,20 @@ switch ($ext) {
         $srcImage = imagecreatefromwebp($tmpName);
         break;
     default:
-	tampilkanCyberpunkError("❌ Format gambar tidak didukung. Hanya JPG, JPEG, PNG, GIF, WEBP.");
+        tampilkanCyberpunkError("❌ Format gambar tidak didukung.");
 }
 
-// 🖼️ Simpan sebagai PNG, menimpa file lama
+// Simpan PNG
 if ($srcImage && imagepng($srcImage, $destPath)) {
     imagedestroy($srcImage);
     $_SESSION['avatar'] = $webPath;
     header("Location: reseller.php");
     exit;
 } else {
-    die("❌ Gagal menyimpan gambar avatar.");
+    tampilkanCyberpunkError("❌ Gagal menyimpan gambar avatar.");
 }
+
+// Fungsi tampilan error cyberpunk
 function tampilkanCyberpunkError($pesan) {
     echo <<<HTML
 <!DOCTYPE html>
@@ -105,7 +112,7 @@ function tampilkanCyberpunkError($pesan) {
 </head>
 <body class="flex items-center justify-center min-h-screen">
   <div class="bg-black p-6 rounded-xl neon-border max-w-lg w-[90%] text-center">
-    <h1 class="text-2xl font-bold mb-4 error-text">⚠️ SYSTEM ALERT</h1>
+    <h1 class="text-2xl font-bold mb-4 error-text">⚠ SYSTEM ALERT</h1>
     <pre class="text-green-400 text-sm font-mono whitespace-pre-wrap leading-relaxed animate-pulse">$pesan</pre>
     <a href="reseller.php" class="inline-block mt-6 px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-800 transition">🔙 Kembali ke Dashboard</a>
   </div>
