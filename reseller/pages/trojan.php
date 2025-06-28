@@ -38,8 +38,8 @@ $sshProducts = [
 // Fungsi mapping file sesuai nama server
 function getShowFile($serverName) {
     switch ($serverName) {
-        case 'RW-MARD': return 'show-trojan-rw.php';
-        case 'SGDO-MARD': return 'show-trojan-sgdomard.php';
+        case 'RW-MARD': return 'show-trojan-rw-mard.php';
+        case 'SGDO-MARD': return 'show-trojan-sgdo-mard1.php';
         case 'SGDO-2DEV': return 'show-trojan-sgdo-2dev.php';
         default: return 'show-trojan.php';
     }
