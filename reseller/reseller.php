@@ -152,10 +152,10 @@ $loggedInUser = [
             <thead class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white">
                 <tr>
                     <th class="w-1/12 px-3 py-2">No</th>
-                    <th class="w-3/12 px-3 py-2">User</th>
-                    <th class="w-2/12 px-3 py-2">Proto</th>
+                    <th class="w-3/12 px-3 py-2">Username</th>
+                    <th class="w-2/12 px-3 py-2">Protocol</th>
                     <th class="w-3/12 px-3 py-2">Expired</th>
-                    <th class="w-3/12 px-3 py-2">UUID/PASS</th>
+                    <th class="w-3/12 px-3 py-2">Uuid/Pass</th>
                 </tr>
             </thead>
             <tbody>';
