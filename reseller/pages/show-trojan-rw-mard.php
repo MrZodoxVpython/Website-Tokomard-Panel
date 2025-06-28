@@ -6,7 +6,7 @@ if (!isset($_SESSION['username'])) {
 }
 
 $reseller = $_SESSION['username'];
-$remoteIP = "178.128.60.185"; // IP RW-MARD
+$remoteIP = "203.194.113.140"; // IP RW-MARD
 $sshUser = "root";
 $remoteCmd = "cat /etc/xray/data-panel/reseller/akun-{$reseller}-*.txt | grep -i TROJAN";
 
