@@ -85,6 +85,17 @@ $loggedInUser = [
             }
         }
 
+	        // Statistik kartu
+        echo '<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">';
+        foreach (['total' => 'Total Akun', 'vmess' => 'VMess', 'vless' => 'VLess', 'trojan' => 'Trojan', 'shadowsocks' => 'Shadowsocks'] as $k => $label) {
+            $color = ['total' => 'blue', 'vmess' => 'purple', 'vless' => 'blue', 'trojan' => 'red', 'shadowsocks' => 'green'][$k];
+            echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-5 rounded-lg shadow'>
+                    <p class='text-lg font-semibold'>{$label}</p>
+                    <p class='text-3xl mt-2 font-bold'>{$stats[$k]}</p>
+                  </div>";
+        }
+        echo "</div>";
+
         // Grafik
         echo '<canvas id="myChart" class="mb-8 max-w-full bg-white dark:bg-gray-800 p-4 rounded-lg shadow"></canvas>';
         echo '<script>
@@ -113,17 +124,6 @@ $loggedInUser = [
             }
         });
         </script>';
-
-        // Statistik kartu
-        echo '<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">';
-        foreach (['total' => 'Total Akun', 'vmess' => 'VMess', 'vless' => 'VLess', 'trojan' => 'Trojan', 'shadowsocks' => 'Shadowsocks'] as $k => $label) {
-            $color = ['total' => 'blue', 'vmess' => 'purple', 'vless' => 'blue', 'trojan' => 'red', 'shadowsocks' => 'green'][$k];
-            echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-5 rounded-lg shadow'>
-                    <p class='text-lg font-semibold'>{$label}</p>
-                    <p class='text-3xl mt-2 font-bold'>{$stats[$k]}</p>
-                  </div>";
-        }
-        echo "</div>";
 
         // Tabel
         echo '<div class="overflow-x-auto">
