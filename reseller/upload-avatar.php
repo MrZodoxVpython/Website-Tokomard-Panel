@@ -21,7 +21,7 @@ $size = $_FILES['avatar']['size'];
 // Validasi ekstensi
 $allowedExts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 if (!in_array($ext, $allowedExts)) {
-    tampilkanCyberpunkError("❌ Format gambar tidak didukung. Hanya JPG, JPEG, PNG, GIF, WEBP.");
+    tampilkanCyberpunkError("❌ Format gambar tidak didukung!.");
 }
 
 // Validasi ukuran
