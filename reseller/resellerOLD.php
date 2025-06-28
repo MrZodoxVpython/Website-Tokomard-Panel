@@ -116,7 +116,7 @@ if ($notifResult) {
 </header>
 <!-- Dropdown Notifikasi -->
 <div class="relative">
-  <div id="notifDropdown" class="hidden absolute top-16 left-4 w-80 bg-gray-50 dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden z-20">
+  <div id="notifDropdown" class="hidden absolute top-16 left-4 w-80 bg-gray-50 dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden z-50">
     <div class="px-4 py-2 font-semibold border-b dark:border-gray-700">Notifikasi Kamu</div>
     <?php if (count($notifications) > 0): ?>
       <?php foreach ($notifications as $n): ?>
