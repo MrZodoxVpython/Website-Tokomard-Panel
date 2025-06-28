@@ -5,39 +5,69 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
     exit;
 }
 
+// === Konfigurasi server remote ===
 $server = [
     'name' => 'RW-MARD',
     'country' => 'Indonesia',
     'isp' => 'Biznet Networks',
     'ip' => '203.194.113.140',
+    'price' => 20000,
     'rules' => [
         'NO TORRENT',
         'NO MULTI LOGIN',
         'SUPPORT ENHANCED HTTP CUSTOM',
         'Max Login 1 device'
-    ],
-    'price' => 20000
+    ]
 ];
 
 $protocol = 'trojan';
+$output = null;
+
+// === Jika form disubmit ===
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_once __DIR__ . '/api-akun/lib-akun.php';
+
+    $username = trim($_POST['username'] ?? '');
+    $expiredInput = trim($_POST['expired'] ?? '');
+    $password = trim($_POST['password'] ?? '');
+    if (!$username || !$expiredInput) {
+        $output = "❌ Username dan expired harus diisi.";
+    } else {
+        if (empty($password)) {
+            $password = generateUUID();
+        }
+
+        // Data POST yang akan dikirim ke VPS remote
+        $postData = http_build_query([
+            'username' => $username,
+            'expired' => $expiredInput,
+            'password' => $password
+        ]);
+
+        // Build perintah SSH + curl ke VPS RW-MARD
+        $remoteIp = $server['ip'];
+        $curlCmd = "curl -s -X POST -d \"$postData\" http://127.0.0.1/etc/xray/api-akun/add-trojan.php";
+        $sshCmd = "ssh -i /root/.ssh/id_rsa root@$remoteIp \"$curlCmd\"";
+
+        $output = shell_exec($sshCmd);
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="id" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout Trojan RW-MARD</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class' }</script>
 </head>
 <body class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white">
 
 <div class="w-full max-w-2xl bg-white dark:bg-gray-900 shadow-md rounded-2xl p-6 space-y-6 border border-gray-200 dark:border-gray-700">
-    <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">🛒 Server RW-MARD (Indonesia)</h2>
+    <h2 class="text-2xl font-bold">🛒 Server <?= htmlspecialchars($server['name']) ?> (<?= $server['country'] ?>)</h2>
 
     <div class="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-        <p><strong>Server Name</strong>: <?= htmlspecialchars($server['name']) ?></p>
-        <p><strong>Country</strong>: <?= htmlspecialchars($server['country']) ?></p>
         <p><strong>ISP</strong>: <?= htmlspecialchars($server['isp']) ?></p>
         <?php foreach ($server['rules'] as $rule): ?>
             <p>🚫 <?= htmlspecialchars($rule) ?></p>
@@ -46,16 +76,18 @@ $protocol = 'trojan';
 
     <hr class="border-gray-300 dark:border-gray-600">
 
-    <h3 class="text-xl font-semibold text-gray-800 dark:text-white">🧾 Buat Akun Trojan</h3>
+    <h3 class="text-xl font-semibold">🧾 Buat Akun Trojan</h3>
 
-    <form action="api-akun/add-trojan.php" method="POST" class="space-y-4">
-        <input type="hidden" name="server" value="<?= htmlspecialchars($server['name']) ?>">
-        <input type="hidden" name="ip" value="<?= htmlspecialchars($server['ip']) ?>">
-        <input type="hidden" name="protocol" value="<?= htmlspecialchars($protocol) ?>">
+    <?php if ($output): ?>
+        <div class="bg-gray-800 text-green-400 p-4 rounded text-sm font-mono whitespace-pre-wrap border border-green-500">
+            <?= htmlspecialchars($output) ?>
+        </div>
+    <?php endif; ?>
 
+    <form method="POST" class="space-y-4">
         <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">⏳ Expired (Hari)</label>
-            <select name="expired" class="w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 bg-white dark:bg-gray-800 text-sm text-gray-800 dark:text-white">
+            <label class="block mb-1 text-sm font-medium">⏳ Expired (Hari)</label>
+            <select name="expired" required class="w-full rounded border px-3 py-2 bg-white dark:bg-gray-800 dark:border-gray-600 text-sm">
                 <option value="3">3 Hari - Rp<?= number_format($server['price'] * 3 / 30, 0, ',', '.') ?></option>
                 <option value="7">7 Hari - Rp<?= number_format($server['price'] * 7 / 30, 0, ',', '.') ?></option>
                 <option value="30">30 Hari - Rp<?= number_format($server['price'], 0, ',', '.') ?></option>
@@ -63,23 +95,18 @@ $protocol = 'trojan';
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">👤 Username</label>
-            <input type="text" name="username" required placeholder="Masukkan username" class="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white">
+            <label class="block mb-1 text-sm font-medium">👤 Username</label>
+            <input type="text" name="username" required class="w-full px-3 py-2 rounded border bg-white dark:bg-gray-800 dark:border-gray-600 text-sm">
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">🔒 Password</label>
-            <input type="text" name="password" placeholder="(Kosongkan jika ingin auto)" class="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white">
-            <p class="text-sm text-gray-400 mt-1">Kosongkan jika ingin otomatis (UUID random).</p>
+            <label class="block mb-1 text-sm font-medium">🔒 Password</label>
+            <input type="text" name="password" class="w-full px-3 py-2 rounded border bg-white dark:bg-gray-800 dark:border-gray-600 text-sm">
+            <p class="text-xs text-gray-400 mt-1">Kosongkan jika ingin UUID otomatis.</p>
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">🎟 Coupon</label>
-            <input type="text" name="coupon" placeholder="(Opsional)" class="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white">
-        </div>
-
-        <div>
-            <button type="submit" class="w-full bg-green-600 hover:bg-green-500 text-white py-2 rounded text-sm font-semibold shadow transition">
+            <button type="submit" class="w-full bg-green-600 hover:bg-green-500 text-white py-2 rounded text-sm font-semibold shadow">
                 ✅ Checkout & Buat Akun
             </button>
         </div>
