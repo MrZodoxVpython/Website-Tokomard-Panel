@@ -1,181 +1,115 @@
 <?php
 session_start();
-$reseller = $_SESSION['username'] ?? null;
-if (!$reseller) {
-    echo "<p class='text-red-500'>❌ Tidak ada sesi login reseller!</p>";
+if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
+    header("Location: ../index.php");
     exit;
 }
 
-$dataDir = '/etc/xray/data-panel/reseller';
-$files = glob("$dataDir/akun-$reseller-*.txt");
-
-$statistik = [
-    'vmess' => [],
-    'vless' => [],
-    'trojan' => [],
-    'shadowsocks' => []
+$loggedInUser = [
+    'username' => $_SESSION['username'],
+    'avatar' => 'https://ui-avatars.com/api/?name=' . urlencode($_SESSION['username']) . '&background=4F46E5&color=fff'
 ];
 
-$prefixMap = [
-    '###' => 'vmess',
-    '#&'  => 'vless',
-    '#!'  => 'trojan',
-    '#$'  => 'shadowsocks'
-];
-
-$today = date('Y-m-d');
-$sevenDaysLater = date('Y-m-d', strtotime('+7 days'));
-
-foreach ($files as $file) {
-    $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    $isParsed = false;
-
-    // Cek apakah file ini pakai prefix (#)
-    foreach ($lines as $line) {
-        if (preg_match('/^(###|#&|#!|#\$)\s+(\S+)\s+(\d{4}-\d{2}-\d{2})$/', $line, $m)) {
-            list($_, $prefix, $username, $expired) = $m;
-            $proto = $prefixMap[$prefix] ?? null;
-            if (!$proto) continue;
-
-            $status = ($expired < $today) ? 'expired' : (($expired <= $sevenDaysLater) ? 'expiring' : 'active');
-            $statistik[$proto][] = [
-                'username' => $username,
-                'expired'  => $expired,
-                'status'   => $status,
-                'online'   => false
-            ];
-            $isParsed = true;
-        }
-    }
-
-    // Kalau tidak pakai prefix, deteksi dari isi isi file (X ACCOUNT)
-    if (!$isParsed) {
-        $isi = file_get_contents($file);
-
-        if (preg_match('/\s*([A-Z]+)\s+ACCOUNT/i', $isi, $match)) {
-            $proto = strtolower($match[1]);
-            if (!in_array($proto, ['vmess', 'vless', 'trojan', 'shadowsocks'])) {
-                continue;
-            }
-
-            if (preg_match('/Remarks\s*:\s*(\S+)/i', $isi, $mUser) &&
-                preg_match('/Expired On\s*:\s*(\d{4}-\d{2}-\d{2})/i', $isi, $mExp)) {
-
-                $username = trim($mUser[1]);
-                $expired = trim($mExp[1]);
-
-                $status = ($expired < $today) ? 'expired' : (($expired <= $sevenDaysLater) ? 'expiring' : 'active');
-
-                $statistik[$proto][] = [
-                    'username' => $username,
-                    'expired'  => $expired,
-                    'status'   => $status,
-                    'online'   => false
-                ];
-            }
-        }
-    }
-}
-
-function countStatus($data, $status) {
-    return count(array_filter($data, fn($x) => $x['status'] === $status));
-}
+$page = isset($_GET['page']) ? basename($_GET['page']) : 'dashboard';
+$pagePath = "pages/{$page}.php";
 ?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Panel Reseller - Tokomard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' };
+    </script>
+    <script>
+        function updateThemeIcon() {
+            const html = document.documentElement;
+            const isDark = html.classList.contains('dark');
+            const btn = document.getElementById('themeToggleBtn');
+            if (btn) {
+                btn.textContent = isDark ? '🌞' : '🌙';
+            }
+        }
 
-<!-- TAMPILAN HTML TETAP -->
-<div class="max-w-7xl mx-auto px-4 py-10">
-  <div class="text-center mb-10">
-    <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600">
-      📊 Statistik Akun Anda
-    </h1>
-    <p class="mt-2 text-gray-400">Reseller: <span class="font-semibold text-blue-300">@<?= htmlspecialchars($reseller) ?></span></p>
-  </div>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateThemeIcon();
+        }
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-    <?php
-    $icons = [
-        'vmess' => ['emoji' => '🌀', 'color' => 'from-blue-500 to-blue-700'],
-        'vless' => ['emoji' => '🔮', 'color' => 'from-purple-400 to-purple-600'],
-        'trojan' => ['emoji' => '⚔', 'color' => 'from-yellow-400 to-orange-500'],
-        'shadowsocks' => ['emoji' => '🕶', 'color' => 'from-green-300 to-teal-400'],
-    ];
-
-    foreach ($statistik as $proto => $akun):
-        $icon = $icons[$proto]['emoji'];
-        $gradient = $icons[$proto]['color'];
-        $total = count($akun);
-        $active = countStatus($akun, 'active');
-        $expiring = countStatus($akun, 'expiring');
-        $expired = countStatus($akun, 'expired');
-    ?>
-      <div class="flex flex-col justify-between h-full min-h-[240px] rounded-xl p-6 shadow-lg text-white bg-gradient-to-br <?= $gradient ?> hover:scale-[1.02] transition-transform duration-200">
-        <div class="text-center">
-          <div class="text-4xl"><?= $icon ?></div>
-          <h2 class="text-lg font-semibold mt-2"><?= strtoupper($proto) ?></h2>
+        document.addEventListener('DOMContentLoaded', () => {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.classList.toggle('dark', theme === 'dark');
+            updateThemeIcon();
+        });
+    </script>
+</head>
+<body class="bg-white text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300 min-h-screen">
+    <!-- Header -->
+    <header class="p-4 bg-gray-100 dark:bg-gray-800 shadow-md flex justify-between items-center sticky top-0 z-50">
+        <h1 class="text-xl font-bold">Tokomard Reseller Panel</h1>
+        <div class="flex items-center gap-4">
+            <button id="themeToggleBtn" onclick="toggleTheme()" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+                🌙
+            </button>
+            <a href="../logout.php" class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-500 text-sm">Logout</a>
         </div>
-        <div class="mt-4 space-y-1 text-sm">
-          <div class="flex justify-between border-b border-white/20 pb-1">
-            <span>Total</span><span class="font-bold"><?= $total ?></span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-green-300">Aktif</span><span><?= $active ?></span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-yellow-300">Mau Expired</span><span><?= $expiring ?></span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-red-400">Expired</span><span><?= $expired ?></span>
-          </div>
-        </div>
-      </div>
-    <?php endforeach; ?>
-  </div>
+    </header>
 
-  <?php foreach ($statistik as $proto => $akun): ?>
-    <?php if (empty($akun)) continue; ?>
-    <div class="bg-gray-900 rounded-2xl p-6 shadow-xl mb-10">
-      <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-700 pb-2"><?= strtoupper($proto) ?> - Detail Akun</h2>
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-800 text-sm text-left">
-          <thead class="bg-gray-800 text-gray-300">
-            <tr>
-              <th class="px-4 py-3">#</th>
-              <th class="px-4 py-3">👤 Username</th>
-              <th class="px-4 py-3">📅 Expired</th>
-              <th class="px-4 py-3">📌 Status</th>
-              <th class="px-4 py-3">🌐 Online</th>
-            </tr>
-          </thead>
-          <tbody class="bg-gray-700 divide-y divide-gray-800 text-white">
-            <?php $no = 1; foreach ($akun as $u): ?>
-              <tr class="hover:bg-gray-600 transition">
-                <td class="px-4 py-2"><?= $no++ ?></td>
-                <td class="px-4 py-2"><?= htmlspecialchars($u['username']) ?></td>
-                <td class="px-4 py-2"><?= $u['expired'] ?></td>
-                <td class="px-4 py-2">
-                  <?php
-                  switch ($u['status']) {
-                      case 'active':
-                          echo '<span class="inline-block px-2 py-1 text-green-400 bg-green-900 rounded-full text-xs">Aktif</span>';
-                          break;
-                      case 'expiring':
-                          echo '<span class="inline-block px-2 py-1 text-yellow-400 bg-yellow-900 rounded-full text-xs">Segera Expired</span>';
-                          break;
-                      case 'expired':
-                          echo '<span class="inline-block px-2 py-1 text-red-400 bg-red-900 rounded-full text-xs">Expired</span>';
-                          break;
-                  }
-                  ?>
-                </td>
-                <td class="px-4 py-2">
-                  <?= $u['online'] ? '<span class="text-green-300 font-medium">Online</span>' : '<span class="text-gray-400">Offline</span>' ?>
-                </td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  <?php endforeach; ?>
-</div>
+    <!-- Mobile Sidebar Toggle -->
+    <button id="toggleSidebar" class="md:hidden fixed top-4 left-4 z-50 p-2 bg-gray-200 dark:bg-gray-700 rounded-md shadow-md">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+    </button>
+
+    <!-- Main Layout -->
+    <main class="flex flex-col md:flex-row w-full px-4 md:px-8 py-6 gap-6">
+        <!-- Sidebar -->
+         <aside id="sidebar" class="md:w-1/5 w-full md:max-w-xs bg-gray-100 dark:bg-gray-800 p-5 shadow-lg rounded-lg transition-transform duration-300 -translate-x-full md:translate-x-0 z-40 md:mr-1">
+            <div class="flex flex-col items-center text-center mb-6">
+                <img src="<?= $loggedInUser['avatar'] ?>" alt="Profile" class="w-20 h-20 rounded-full mb-2">
+                <h2 class="text-base font-semibold">@<?= htmlspecialchars($loggedInUser['username']) ?></h2>
+            </div>
+
+            <nav class="space-y-2 text-sm">
+                <a href="?page=dashboard" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600">📊 Dashboard</a>
+                <a href="?page=ssh" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600">🔐 SSH</a>
+                <a href="?page=vmess" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600">🌀 Vmess</a>
+                <a href="?page=vless" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600">📡 Vless</a>
+                <a href="?page=trojan" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600">⚔ Trojan</a>
+                <a href="?page=shadowsocks" class="block px-3 py-2 rounded hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600">🕶 Shadowsocks</a>
+
+                <hr class="my-4 border-gray-400 dark:border-gray-600">
+
+                <a href="?page=topup" class="block px-3 py-2 rounded hover:bg-green-500 hover:text-white dark:hover:bg-green-600">💳 Top Up</a>
+                <a href="?page=cek-server" class="block px-3 py-2 rounded hover:bg-indigo-500 hover:text-white dark:hover:bg-indigo-600">🖥 Cek Server</a>
+                <a href="?page=vip" class="block px-3 py-2 rounded hover:bg-yellow-500 hover:text-white dark:hover:bg-yellow-600">👑 Grup VIP</a>
+            </nav>
+        </aside>
+
+        <!-- Konten Utama -->
+        <section class="flex-1 p-5 bg-white dark:bg-gray-900 rounded-xl shadow-md">
+            <?php
+            if (file_exists($pagePath)) {
+                include $pagePath;
+            } else {
+                echo "<div class='text-center text-red-500'>Halaman tidak ditemukan: {$page}.php</div>";
+            }
+            ?>
+        </section>
+    </main>
+
+    <script>
+        const toggleBtn = document.getElementById('toggleSidebar');
+        const sidebar = document.getElementById('sidebar');
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+        });
+    </script>
+</body>
+</html>
 
