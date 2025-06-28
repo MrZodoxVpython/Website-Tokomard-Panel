@@ -68,11 +68,11 @@ if ($notifResult) {
   <div class="relative cursor-pointer" onclick="document.getElementById('notifDropdown').classList.toggle('hidden')">
     <img src="https://i.imgur.com/q3DzxiB.png" class="w-10" alt="Logo Imgur" />
     <?php if ($notifCount > 0): ?>
-      <span
-    class="absolute top-0 right-0 flex items-center justify-center w-5 h-5 text-xs font-semibold text-white bg-red-600 border-2 border-white rounded-full dark:border-gray-900 text-center animate-pulse select-none"
-  >
-    <?= $notifCount > 9 ? '9+' : $notifCount ?>
-  </span>
+   <span
+  class="absolute top-0 right-0 flex items-center justify-center w-5 h-5 text-xs font-semibold text-white bg-red-600 border-2 border-white rounded-full dark:border-gray-900 select-none leading-none"
+>
+  <?= $notifCount > 9 ? '9+' : $notifCount ?>
+</span> 
           <?php endif; ?>
   </div>
   <h1 class="text-xl font-bold select-none">Panel Reseller Tokomard</h1>
