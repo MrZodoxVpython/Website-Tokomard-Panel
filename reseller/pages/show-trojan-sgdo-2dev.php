@@ -33,7 +33,7 @@ if (isset($_GET['hapus'])) {
         unlink($file);
     }
 
-    header("Location: show-trojan.php");
+    header("Location: show-trojan-sgdo-2dev.php");
     exit;
 }
 
