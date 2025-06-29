@@ -5,39 +5,36 @@ session_start();
 
 $reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? 'unknown';
 
-$remoteIP = '203.194.113.140'; // IP VPS rw-mard
+$remoteIP = '203.194.113.140'; // IP VPS remote (rw-mard)
 $sshUser = 'root';
 $remotePath = "/etc/xray/data-panel/reseller";
 $sshPrefix = "ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no $sshUser@$remoteIP";
 
-// Ambil daftar file akun reseller
 $cmdListFiles = "$sshPrefix 'ls $remotePath/akun-$reseller-*.txt 2>/dev/null'";
 $fileListRaw = shell_exec($cmdListFiles);
-$fileList = array_filter(explode("\n", trim($fileListRaw)));
+$akunFiles = array_filter(explode("\n", trim($fileListRaw)));
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Daftar Akun Trojan - RW-MARD</title>
+    <title>Daftar Akun Trojan RW-MARD</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen p-6">
 <div class="max-w-4xl mx-auto">
     <h1 class="text-center text-2xl font-bold mb-4">Daftar Akun Trojan (RW-MARD) - <?= htmlspecialchars($reseller) ?></h1>
 
-    <?php if (empty($fileList)) : ?>
+    <?php if (empty($akunFiles)) : ?>
         <div class="text-center bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded">
             ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>,
             silakan buat akun terlebih dahulu.
         </div>
     <?php else: ?>
-        <?php foreach ($fileList as $remoteFile):
+        <?php foreach ($akunFiles as $remoteFile):
             $filename = basename($remoteFile);
             preg_match('/akun-' . preg_quote($reseller, '/') . '-(.+)\.txt/', $filename, $m);
             $username = $m[1] ?? 'unknown';
-
-            // Ambil isi file dari server
             $escapedFile = escapeshellarg($remoteFile);
             $sshCatCmd = "$sshPrefix 'cat $escapedFile'";
             $content = trim(shell_exec($sshCatCmd));
@@ -47,9 +44,29 @@ $fileList = array_filter(explode("\n", trim($fileListRaw)));
                 <div class="text-lg font-semibold text-blue-300"><?= htmlspecialchars($username) ?></div>
                 <div class="space-x-2">
                     <button id="btn-<?= $username ?>" onclick="toggleDetail('<?= $username ?>')" class="btn-show bg-blue-600 px-3 py-1 rounded hover:bg-blue-700">Show</button>
-                    <button disabled class="bg-gray-500 px-3 py-1 rounded cursor-not-allowed">Stop</button>
-                    <button disabled class="bg-gray-500 px-3 py-1 rounded cursor-not-allowed">Delete</button>
-                    <button disabled class="bg-gray-500 px-3 py-1 rounded cursor-not-allowed">Edit</button>
+
+                    <form action="aksi-trojan.php" method="POST" class="inline">
+                        <input type="hidden" name="aksi" value="stop">
+                        <input type="hidden" name="username" value="<?= htmlspecialchars($username) ?>">
+                        <input type="hidden" name="reseller" value="<?= htmlspecialchars($reseller) ?>">
+                        <input type="hidden" name="vps" value="rw-mard">
+                        <button type="submit" class="bg-yellow-600 px-3 py-1 rounded hover:bg-yellow-700">Stop</button>
+                    </form>
+
+                    <form action="aksi-trojan.php" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus akun ini?')">
+                        <input type="hidden" name="aksi" value="delete">
+                        <input type="hidden" name="username" value="<?= htmlspecialchars($username) ?>">
+                        <input type="hidden" name="reseller" value="<?= htmlspecialchars($reseller) ?>">
+                        <input type="hidden" name="vps" value="rw-mard">
+                        <button type="submit" class="bg-red-600 px-3 py-1 rounded hover:bg-red-700">Delete</button>
+                    </form>
+
+                    <form action="edit-akun.php" method="GET" class="inline">
+                        <input type="hidden" name="username" value="<?= htmlspecialchars($username) ?>">
+                        <input type="hidden" name="reseller" value="<?= htmlspecialchars($reseller) ?>">
+                        <input type="hidden" name="vps" value="rw-mard">
+                        <button type="submit" class="bg-green-600 px-3 py-1 rounded hover:bg-green-700">Edit</button>
+                    </form>
                 </div>
             </div>
             <div id="detail-<?= $username ?>" class="detail-box mt-3 bg-gray-700 rounded hidden">
