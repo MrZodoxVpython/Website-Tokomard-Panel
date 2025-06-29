@@ -374,6 +374,15 @@ if (notifCount > 0) {
         show = !show;
     }, 3000);
 }
+function toggleTheme() {
+  const isDark = document.documentElement.classList.toggle('dark');
+  const tema = isDark ? 'dark' : 'light';
+  fetch('simpan-tema.php', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ tema })
+  });
+}
 </script>
 <?php
 if (isset($_GET['theme'])) {
