@@ -164,7 +164,7 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
 </head>
 <body class="bg-gray-900 text-white p-6">
 <div class="max-w-4xl mx-auto">
-    <h1 class="text-2xl font-bold mb-4">Daftar Akun Trojan - <?= htmlspecialchars($reseller) ?></h1>
+    <h1 class="text-2xl font-bold mb-4">Daftar Akun Trojan (SGDO-2DEV) - <?= htmlspecialchars($reseller) ?></h1>
 
     <?php if (empty($akunFiles)) : ?>
         <div class="text-yellow-400">Belum ada akun.</div>
