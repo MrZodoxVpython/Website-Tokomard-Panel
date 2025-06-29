@@ -24,7 +24,7 @@ $fileList = array_filter(explode("\n", trim($fileListRaw)));
 </head>
 <body class="bg-gray-900 text-white min-h-screen p-6">
 <div class="max-w-4xl mx-auto">
-    <h1 class="text-2xl font-bold mb-4">Daftar Akun Trojan (SGDO-MARD1) - <?= htmlspecialchars($reseller) ?></h1>
+    <h1 class="text-center text-2xl font-bold mb-4">Daftar Akun Trojan (SGDO-MARD1) - <?= htmlspecialchars($reseller) ?></h1>
 
     <?php if (empty($fileList)) : ?>
         <div class="bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded">
