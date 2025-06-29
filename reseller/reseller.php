@@ -134,7 +134,7 @@ if ($notifResult) {
 
 <!-- Tombol Aksi -->
   <div class="flex items-center gap-4">
-  <button onclick="toggleTheme()" id="themeToggleBtn" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+  <button onclick="toggleTheme()" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
     <span id="themeIcon"><?= $theme === 'dark' ? '🌞' : '🌙' ?></span>
   </button>
     <a href="../logout.php" class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-500 text-sm">
