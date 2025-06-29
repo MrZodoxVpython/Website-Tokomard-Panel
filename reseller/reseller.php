@@ -364,20 +364,6 @@ if (file_exists($avatarJsonPath)) {
 </main>
 
 <script>
-document.getElementById("themeToggleBtn").onclick = function () {
-    const html = document.documentElement;
-    const isDark = html.classList.toggle("dark");
-
-    // Ganti ikon 🌙/🌞
-    const icon = document.getElementById("themeIcon");
-    icon.textContent = isDark ? "🌞" : "🌙";
-
-    // Simpan ke session tanpa reload
-    fetch("?theme=" + (isDark ? "dark" : "light"));
-};
-document.getElementById("toggleSidebar").onclick = function () {
-    document.getElementById("sidebar").classList.toggle("-translate-x-full");
-};
 
 var notifCount = <?= $notifCount ?>;
 if (notifCount > 0) {
@@ -397,7 +383,7 @@ function toggleTheme() {
     const icon = document.getElementById('themeIcon');
     if (icon) icon.textContent = newTheme === 'dark' ? '🌞' : '🌙';
 
-    // Kirim ke PHP via fetch
+    // Simpan ke file permanen
     fetch('simpan-tema.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -405,13 +391,6 @@ function toggleTheme() {
     }).then(r => r.text()).then(console.log).catch(console.error);
 }
 </script>
-<?php
-if (isset($_GET['theme'])) {
-    $_SESSION['theme'] = $_GET['theme'] === 'dark' ? 'dark' : 'light';
-    exit;
-}
-?>
-
 </body>
 </html>
 
