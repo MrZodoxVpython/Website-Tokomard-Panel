@@ -22,7 +22,6 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
     exit;
 }
 $reseller = $_SESSION['username'];
-$theme = $_SESSION['theme'] ?? 'light';
 $page = $_GET['page'] ?? 'dashboard';
 $loggedInUser = [
     'username' => $reseller,
