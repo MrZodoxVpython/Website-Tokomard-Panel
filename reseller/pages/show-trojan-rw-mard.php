@@ -82,15 +82,15 @@ $fileList = array_filter(explode("\n", trim($fileListRaw)));
 <body class="bg-gray-900 text-white p-6">
 <div class="max-w-4xl mx-auto">
     <h1 class="text-center text-2xl font-bold mb-4">Daftar Akun Trojan (RW-MARD) - <?= htmlspecialchars($reseller) ?></h1>
-	    <?php if (empty($fileList)) : ?>
-        <div class="text-center bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded">
-            ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>
-            silahkan buat akun terlebih dahulu.
-        </div>
-    <?php else: ?>
-        <?php foreach ($fileList as $remoteFile):
-            $filename = basename($remoteFile);
-            preg_match('/akun-' . preg_quote($reseller, '/') . '-(.+)\.txt/', $filename, $m);
+
+    <?php if (empty($fileList)) : ?>
+        <div class="text-yellow-400">Belum ada akun.</div>
+    <?php endif; ?>
+
+    <?php foreach ($fileList as $remoteFile):
+        $filename = basename($remoteFile);
+        preg_match('/akun-' . preg_quote($reseller, '/') . '-(.+)\.txt/', $filename, $m);
+        $username = $m[1] ?? 'unknown';
 
         // Ambil isi file
         $escapedFile = escapeshellarg($remoteFile);
