@@ -159,7 +159,7 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Trojan SGDO-2DEV</title>
+    <title>Trojan - SGDO-2DEV</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white p-6">
