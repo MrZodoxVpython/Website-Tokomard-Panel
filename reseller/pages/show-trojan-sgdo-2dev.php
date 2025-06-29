@@ -201,7 +201,7 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
                     <form method="POST" class="inline">
                         <input type="hidden" name="toggle_user" value="<?= htmlspecialchars($username) ?>">
                         <input type="hidden" name="action" value="<?= $isDisabled ? 'start' : 'stop' ?>">
-                        <button type="submit" class="<?= $isDisabled ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-500 hover:bg-gray-600' ?> px-3 py-1 rounded">
+                        <button type="submit" class="<?= $isDisabled ? 'bg-green-600 hover:bg-green-700' : 'bg-yellow-500 hover:bg-yellow-600' ?> px-3 py-1 rounded">
                             <?= $isDisabled ? 'Start' : 'Stop' ?>
                         </button>
                     </form>
