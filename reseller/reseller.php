@@ -388,17 +388,21 @@ if (notifCount > 0) {
     }, 3000);
 }
 function toggleTheme() {
-  const html = document.documentElement;
-  const isDark = html.classList.toggle("dark");
-  const icon = document.getElementById("themeIcon");
-  icon.textContent = isDark ? "🌞" : "🌙";
+    const html = document.documentElement;
+    const isDark = html.classList.contains('dark');
+    const newTheme = isDark ? 'light' : 'dark';
+    html.classList.toggle('dark');
 
-  // Kirim ke server agar disimpan ke file dan session
-  fetch("simpan-tema.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ theme: isDark ? "dark" : "light" })
-  });
+    // Ganti ikon
+    const icon = document.getElementById('themeIcon');
+    if (icon) icon.textContent = newTheme === 'dark' ? '🌞' : '🌙';
+
+    // Kirim ke PHP via fetch
+    fetch('simpan-tema.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'theme=' + encodeURIComponent(newTheme)
+    }).then(r => r.text()).then(console.log).catch(console.error);
 }
 </script>
 <?php
