@@ -379,7 +379,7 @@ function toggleTheme() {
     const icon = document.getElementById('themeIcon');
     if (icon) icon.textContent = newTheme === 'dark' ? '🌞' : '🌙';
 
-    fetch('simpan-tema.php', {
+    fetch('simpan-theme.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'theme=' + encodeURIComponent(newTheme)
