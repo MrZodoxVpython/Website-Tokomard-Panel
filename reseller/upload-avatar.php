@@ -101,7 +101,7 @@ if (imagepng($finalImage, $destPath)) {
 $_SESSION['avatar'] = $webPath;
 
 // ✅ Simpan juga ke file avatar.json agar permanen
-$avatarDataFile = __DIR__ . '/data/avatar.json';
+$avatarDataFile = __DIR__ . '/uploads/avatar.json';
 $avatarData = [];
 
 // Baca file JSON jika sudah ada
