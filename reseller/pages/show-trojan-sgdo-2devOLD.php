@@ -33,7 +33,7 @@ if (isset($_GET['hapus'])) {
         unlink($file);
     }
 
-    header("Location: show-trojan.php");
+    header("Location: show-trojan-sgdo-2dev.php");
     exit;
 }
 
@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             shell_exec('sudo /usr/local/bin/restart-xray.sh');
         }
 
-        header("Location: show-trojan.php");
+        header("Location: show-trojan-sgdo-2dev.php");
         exit;
     }
 
@@ -148,7 +148,7 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
         shell_exec('sudo /usr/local/bin/restart-xray.sh');
     }
 
-    header("Location: show-trojan.php");
+    header("Location: show-trojan-sgdo-2dev.php");
     exit;
     }
 }
