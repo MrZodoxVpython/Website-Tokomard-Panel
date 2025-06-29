@@ -207,7 +207,7 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
                     </form>
 
                     <a href="?hapus=<?= urlencode($username) ?>" onclick="return confirm('Yakin ingin menghapus akun <?= $username ?>?')" class="bg-red-600 px-3 py-1 rounded hover:bg-red-700">Delete</a>
-                    <button onclick="document.getElementById('form-<?= $username ?>').classList.toggle('hidden')" class="bg-yellow-500 px-3 py-1 rounded hover:bg-yellow-600">Edit</button>
+                    <button onclick="document.getElementById('form-<?= $username ?>').classList.toggle('hidden')" class="bg-green-500 px-3 py-1 rounded hover:bg-green-600">Edit</button>
                 </div>
             </div>
 
