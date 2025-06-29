@@ -40,7 +40,7 @@ $require_uuid = in_array($protocol, ['vmess', 'vless']);
         <p><strong>Server Name</strong>: <?= htmlspecialchars($server['name']) ?></p>
         <p><strong>Country</strong>: <?= htmlspecialchars($server['country']) ?></p>
         <p><strong>ISP</strong>: <?= htmlspecialchars($server['isp']) ?></p>
-
+        <br>
         <?php foreach ($server['rules'] as $rule): ?>
             <p>🚫 <?= htmlspecialchars($rule) ?></p>
         <?php endforeach; ?>
