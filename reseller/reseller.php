@@ -72,7 +72,7 @@ if ($notifResult) {
 
 ?>
 <!DOCTYPE html>
-<html lang="id" class="<?= $theme === 'dark' ? 'dark' : '' ?>">
+<html class="<?= $theme === 'dark' ? 'dark' : '' ?>">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
