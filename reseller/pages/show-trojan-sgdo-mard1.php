@@ -6,7 +6,7 @@ session_start();
 
 $reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? 'unknown';
 
-$remoteIP = '203.194.113.140'; // IP VPS rw-mard
+$remoteIP = '152.42.182.187'; // IP VPS sgdo-mard1
 $sshUser = 'root';
 $remotePath = "/etc/xray/data-panel/reseller";
 $sshPrefix = "ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no $sshUser@$remoteIP";
@@ -20,12 +20,12 @@ $fileList = array_filter(explode("\n", trim($fileListRaw)));
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Daftar Akun Trojan - RW-MARD</title>
+    <title>Daftar Akun Trojan - SGDO-MARD1</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen p-6">
 <div class="max-w-4xl mx-auto">
-    <h1 class="text-2xl font-bold mb-4">Daftar Akun Trojan (RW-MARD) - <?= htmlspecialchars($reseller) ?></h1>
+    <h1 class="text-2xl font-bold mb-4">Daftar Akun Trojan (SGDO-MARD1) - <?= htmlspecialchars($reseller) ?></h1>
 
     <?php if (empty($fileList)) : ?>
         <div class="bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded">
