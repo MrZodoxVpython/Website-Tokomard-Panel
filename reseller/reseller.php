@@ -377,11 +377,9 @@ function toggleTheme() {
     const newTheme = isDark ? 'light' : 'dark';
     html.classList.toggle('dark');
 
-    // Ganti ikon
     const icon = document.getElementById('themeIcon');
     if (icon) icon.textContent = newTheme === 'dark' ? '🌞' : '🌙';
 
-    // Simpan ke file permanen
     fetch('simpan-tema.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
