@@ -113,7 +113,9 @@ if (file_exists($avatarDataFile)) {
 $avatarData[$safeUsername] = $webPath;
 
 // Simpan kembali ke file JSON
-file_put_contents($avatarDataFile, json_encode($avatarData, JSON_PRETTY_PRINT));
+if (file_put_contents($avatarDataFile, json_encode($avatarData, JSON_PRETTY_PRINT)) === false) {
+    tampilkanCyberpunkError("❌ Gagal menyimpan ke avatar.json. Cek izin file atau folder.");
+}
 
 // Redirect ke reseller.php
 header("Location: reseller.php");
