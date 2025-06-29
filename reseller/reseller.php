@@ -341,16 +341,11 @@ document.getElementById("themeToggleBtn").onclick = function () {
     const html = document.documentElement;
     const isDark = html.classList.toggle("dark");
 
-    // Ubah ikon tanpa PHP
+    // Ubah ikon langsung
     const icon = document.getElementById("themeIcon");
     icon.textContent = isDark ? "🌞" : "🌙";
 
-    // Simpan ke session via fetch tanpa reload
-    fetch("?theme=" + (isDark ? "dark" : "light"));
-};
-document.getElementById("themeToggleBtn").onclick = function () {
-    const html = document.documentElement;
-    const isDark = html.classList.toggle("dark");
+    // Simpan preferensi ke session
     fetch("?theme=" + (isDark ? "dark" : "light"));
 };
 
