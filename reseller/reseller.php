@@ -341,14 +341,13 @@ document.getElementById("themeToggleBtn").onclick = function () {
     const html = document.documentElement;
     const isDark = html.classList.toggle("dark");
 
-    // Ubah ikon langsung
+    // Ganti ikon 🌙/🌞
     const icon = document.getElementById("themeIcon");
     icon.textContent = isDark ? "🌞" : "🌙";
 
-    // Simpan preferensi ke session
+    // Simpan ke session tanpa reload
     fetch("?theme=" + (isDark ? "dark" : "light"));
 };
-
 document.getElementById("toggleSidebar").onclick = function () {
     document.getElementById("sidebar").classList.toggle("-translate-x-full");
 };
