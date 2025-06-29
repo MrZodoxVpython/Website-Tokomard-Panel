@@ -1,20 +1,28 @@
 <?php
 session_start();
-$data = json_decode(file_get_contents("php://input"), true);
-$theme = ($data['theme'] ?? 'light') === 'dark' ? 'dark' : 'light';
 
-// Simpan ke session
-$_SESSION['theme'] = $theme;
+$theme = $_POST['theme'] ?? null;
+$username = $_SESSION['username'] ?? null;
 
-// Simpan ke file
-$username = $_SESSION['username'] ?? 'guest';
-$themeFile = __DIR__ . '/uploads/theme.json';
-$themes = [];
-
-if (file_exists($themeFile)) {
-    $themes = json_decode(file_get_contents($themeFile), true);
+if (!$theme || !$username) {
+    http_response_code(400);
+    echo "Data tidak lengkap";
+    exit;
 }
 
-$themes[$username] = $theme;
-file_put_contents($themeFile, json_encode($themes, JSON_PRETTY_PRINT));
+$path = __DIR__ . '/uploads/theme.json';
+$data = [];
+
+if (file_exists($path)) {
+    $data = json_decode(file_get_contents($path), true);
+    if (!is_array($data)) $data = [];
+}
+
+$data[$username] = $theme;
+file_put_contents($path, json_encode($data, JSON_PRETTY_PRINT));
+
+// Simpan juga ke session
+$_SESSION['theme'] = $theme;
+
+echo "OK";
 
