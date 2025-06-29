@@ -27,7 +27,7 @@ $fileList = array_filter(explode("\n", trim($fileListRaw)));
     <h1 class="text-center text-2xl font-bold mb-4">Daftar Akun Trojan (SGDO-MARD1) - <?= htmlspecialchars($reseller) ?></h1>
 
     <?php if (empty($fileList)) : ?>
-        <div class="bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded">
+        <div class="text-center bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded">
             ⚠ Belum ada akun yang dibuat untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>
             silahkan buat akan terlebih dahulu.
         </div>
