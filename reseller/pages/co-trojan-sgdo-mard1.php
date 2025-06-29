@@ -9,7 +9,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
 $server = [
     'name' => 'SGDO-MARD1',
     'country' => 'Singapura',
-    'isp' => 'Digital Ocean LLC.',
+    'isp' => 'Digital Ocean, LLC.',
     'ip' => '152.42.182.187',
     'price' => 15000,
     'rules' => [
