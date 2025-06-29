@@ -97,10 +97,29 @@ imagecopy($finalImage, $srcImage, 0, 0, 0, 0, $width, $height);
 if (imagepng($finalImage, $destPath)) {
     imagedestroy($srcImage);
     imagedestroy($finalImage);
-    $_SESSION['avatar'] = $webPath;
-    header("Location: reseller.php");
-    exit;
-} else {
+    // ✅ Simpan path avatar ke session
+$_SESSION['avatar'] = $webPath;
+
+// ✅ Simpan juga ke file avatar.json agar permanen
+$avatarDataFile = __DIR__ . '/data/avatar.json';
+$avatarData = [];
+
+// Baca file JSON jika sudah ada
+if (file_exists($avatarDataFile)) {
+    $avatarData = json_decode(file_get_contents($avatarDataFile), true);
+}
+
+// Perbarui avatar user saat ini
+$avatarData[$safeUsername] = $webPath;
+
+// Simpan kembali ke file JSON
+file_put_contents($avatarDataFile, json_encode($avatarData, JSON_PRETTY_PRINT));
+
+// Redirect ke reseller.php
+header("Location: reseller.php");
+exit;
+
+    } else {
     tampilkanCyberpunkError("❌ Gagal menyimpan gambar avatar.");
 }
 
