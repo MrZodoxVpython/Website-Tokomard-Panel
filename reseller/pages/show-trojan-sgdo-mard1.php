@@ -1,116 +1,81 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 session_start();
-if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
-    header("Location: ../index.php");
-    exit;
-}
 
-// === Konfigurasi server remote ===
-$server = [
-    'name' => 'SGDO-MARD1',
-    'country' => 'Singapura',
-    'isp' => 'Digital Ocean',
-    'ip' => '152.42.182.187',
-    'price' => 15000,
-    'rules' => [
-        'NO TORRENT',
-        'NO MULTI LOGIN',
-        'SUPPORT ENHANCED HTTP CUSTOM',
-        'Max Login 1 device'
-    ]
-];
+$reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? 'unknown';
 
-$protocol = 'trojan';
-$output = null;
+$remoteIP = '152.42.182.187'; // IP VPS sgdo-mard1
+$sshUser = 'root';
+$remotePath = "/etc/xray/data-panel/reseller";
+$sshPrefix = "ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no $sshUser@$remoteIP";
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    require_once __DIR__ . '/api-akun/lib-akun.php';
-
-    $username = trim($_POST['username'] ?? '');
-    $expiredInput = trim($_POST['expired'] ?? '');
-    $password = trim($_POST['password'] ?? '');
-
-    if (!$username || !$expiredInput) {
-        $output = "❌ Username dan expired harus diisi.";
-    } else {
-        if (empty($password)) {
-            $password = generateUUID();
-        }
-
-        $remoteIp = $server['ip'];
-        $reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? 'unknown';
-        $phpCmd = "php /etc/xray/api-akun/add-trojan.php '$username' '$expiredInput' '$password' '$reseller'";
-        $sshCmd = "ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no root@$remoteIp \"$phpCmd\"";
-        $output = shell_exec($sshCmd);
-        if (empty(trim($output))) {
-            $output = "❌ Tidak ada output dari VPS SGDO-MARD1. Cek file add-trojan.php di VPS atau pastikan script mencetak hasil.";
-        }
-    }
-}
+// Ambil daftar file akun reseller
+$cmdListFiles = "$sshPrefix 'ls $remotePath/akun-$reseller-*.txt 2>/dev/null'";
+$fileListRaw = shell_exec($cmdListFiles);
+$fileList = array_filter(explode("\n", trim($fileListRaw)));
 ?>
 <!DOCTYPE html>
-<html lang="id" class="dark">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Checkout Trojan SGDO-MARD1</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trojan - SGDO-MARD1</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config = { darkMode: 'class' }</script>
 </head>
-<body class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white">
+<body class="bg-gray-900 text-white min-h-screen p-6">
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-center text-2xl font-bold mb-4">Daftar Akun Trojan (SGDO-MARD1) - <?= htmlspecialchars($reseller) ?></h1>
 
-<div class="w-full max-w-2xl bg-white dark:bg-gray-900 shadow-md rounded-2xl p-6 space-y-6 border border-gray-200 dark:border-gray-700">
-    <h2 class="text-2xl font-bold">🛒 Server <?= htmlspecialchars($server['name']) ?> (<?= $server['country'] ?>)</h2>
+    <?php if (empty($fileList)) : ?>
+        <div class="text-center bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded">
+            ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>
+            silahkan buat akan terlebih dahulu.
+        </div>
+    <?php else: ?>
+        <?php foreach ($fileList as $remoteFile):
+            $filename = basename($remoteFile);
+            preg_match('/akun-' . preg_quote($reseller, '/') . '-(.+)\.txt/', $filename, $m);
+            $username = $m[1] ?? 'unknown';
 
-    <div class="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-        <p><strong>ISP</strong>: <?= htmlspecialchars($server['isp']) ?></p>
-        <?php foreach ($server['rules'] as $rule): ?>
-            <p>🚫 <?= htmlspecialchars($rule) ?></p>
+            // Ambil isi file dari server
+            $escapedFile = escapeshellarg($remoteFile);
+            $sshCatCmd = "$sshPrefix 'cat $escapedFile'";
+            $content = trim(shell_exec($sshCatCmd));
+        ?>
+        <div class="bg-gray-800 p-4 rounded mb-4 shadow">
+            <div class="flex justify-between items-center">
+                <div class="text-lg font-semibold text-blue-300"><?= htmlspecialchars($username) ?></div>
+                <button id="btn-<?= $username ?>" onclick="toggleDetail('<?= $username ?>')" class="btn-show bg-blue-600 px-3 py-1 rounded hover:bg-blue-700">Show</button>
+            </div>
+            <div id="detail-<?= $username ?>" class="detail-box mt-3 bg-gray-700 rounded hidden">
+                <div class="overflow-x-auto">
+                    <pre class="text-green-300 font-mono text-sm whitespace-pre p-3 min-w-full"><?= htmlspecialchars($content ?: "❌ Gagal membaca isi file atau file kosong.") ?></pre>
+                </div>
+            </div>
+        </div>
         <?php endforeach; ?>
-    </div>
-
-    <hr class="border-gray-300 dark:border-gray-600">
-
-    <h3 class="text-xl font-semibold">🧾 Buat Akun Trojan</h3>
-
-    <?php if ($output): ?>
-        <div class="bg-gray-800 text-green-400 p-4 rounded text-sm font-mono whitespace-pre-wrap border border-green-500">
-            <?= htmlspecialchars($output) ?>
-        </div>
     <?php endif; ?>
-
-    <form method="POST" class="space-y-4">
-        <div>
-            <label class="block mb-1 text-sm font-medium">⏳ Expired (Hari)</label>
-            <select name="expired" required class="w-full rounded border px-3 py-2 bg-white dark:bg-gray-800 dark:border-gray-600 text-sm">
-                <option value="3">3 Hari - Rp<?= number_format($server['price'] * 3 / 30, 0, ',', '.') ?></option>
-                <option value="7">7 Hari - Rp<?= number_format($server['price'] * 7 / 30, 0, ',', '.') ?></option>
-                <option value="30">30 Hari - Rp<?= number_format($server['price'], 0, ',', '.') ?></option>
-            </select>
-        </div>
-
-        <div>
-            <label class="block mb-1 text-sm font-medium">👤 Username</label>
-            <input type="text" name="username" required class="w-full px-3 py-2 rounded border bg-white dark:bg-gray-800 dark:border-gray-600 text-sm">
-        </div>
-
-        <div>
-            <label class="block mb-1 text-sm font-medium">🔒 Password</label>
-            <input type="text" name="password" class="w-full px-3 py-2 rounded border bg-white dark:bg-gray-800 dark:border-gray-600 text-sm">
-            <p class="text-xs text-gray-400 mt-1">Kosongkan jika ingin UUID otomatis.</p>
-        </div>
-
-        <div>
-            <button type="submit" class="w-full bg-green-600 hover:bg-green-500 text-white py-2 rounded text-sm font-semibold shadow">
-                ✅ Checkout & Buat Akun
-            </button>
-        </div>
-    </form>
-
-    <div class="text-center text-xs text-gray-500 dark:text-gray-500 mt-6">2025© TOKOMARD.CORP NETWORKING</div>
 </div>
 
+<script>
+function toggleDetail(id) {
+    const box = document.getElementById('detail-' + id);
+    const btn = document.getElementById('btn-' + id);
+    const allBoxes = document.querySelectorAll('.detail-box');
+    const allBtns = document.querySelectorAll('.btn-show');
+
+    allBoxes.forEach(b => b.classList.add('hidden'));
+    allBtns.forEach(b => b.innerText = 'Show');
+
+    if (box.classList.contains('hidden')) {
+        box.classList.remove('hidden');
+        btn.innerText = 'Hide';
+    } else {
+        box.classList.add('hidden');
+        btn.innerText = 'Show';
+    }
+}
+</script>
 </body>
 </html>
-
 
