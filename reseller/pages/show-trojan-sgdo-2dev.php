@@ -171,6 +171,11 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
             silahkan buat akan terlebih dahulu.
         </div>
     <?php else: ?>
+
+    <?php if (empty($akunFiles)) : ?>
+        <div class="text-yellow-400">Belum ada akun.</div>
+    <?php endif; ?>
+
     <?php foreach ($akunFiles as $file):
         $filename = basename($file);
         preg_match('/akun-' . preg_quote($reseller, '/') . '-(.+)\.txt/', $filename, $m);
