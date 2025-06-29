@@ -1,4 +1,11 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
+    header("Location: ../index.php");
+    exit;
+}
 $sshProducts = [
     [
         'name' => 'SGDO-2DEV',
