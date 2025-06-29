@@ -10,8 +10,8 @@ $server = [
     'name' => 'SGDO-MARD1',
     'country' => 'Singapura',
     'isp' => 'Digital Ocean LLC.',
-    'ip' => '203.194.113.140',
-    'price' => 20000,
+    'ip' => '152.42.182.187',
+    'price' => 15000,
     'rules' => [
         'NO TORRENT',
         'NO MULTI LOGIN',
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sshCmd = "ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no root@$remoteIp \"$phpCmd\"";
         $output = shell_exec($sshCmd);
         if (empty(trim($output))) {
-            $output = "❌ Tidak ada output dari VPS RW-MARD. Cek file add-trojan.php di VPS atau pastikan script mencetak hasil.";
+            $output = "❌ Tidak ada output dari VPS SGDO-MARD1. Cek file add-trojan.php di VPS atau pastikan script mencetak hasil.";
         }
     }
 }
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="id" class="dark">
 <head>
     <meta charset="UTF-8">
-    <title>Checkout Trojan RW-MARD</title>
+    <title>Checkout Trojan SGDO-MARD1</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class' }</script>
