@@ -121,9 +121,10 @@ if ($notifResult) {
 
   <!-- Tombol Aksi -->
   <div class="flex items-center gap-4">
-    <button id="themeToggleBtn" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
-      <?= $theme === 'dark' ? '🌞' : '🌙' ?>
-    </button>
+  <button id="themeToggleBtn" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+    <span id="iconSun" class="<?= $theme === 'dark' ? '' : 'hidden' ?>">🌞</span>
+    <span id="iconMoon" class="<?= $theme === 'light' ? '' : 'hidden' ?>">🌙</span>
+  </button>
     <a href="pesan.php" class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-500 text-sm">
       Logout
     </a>
