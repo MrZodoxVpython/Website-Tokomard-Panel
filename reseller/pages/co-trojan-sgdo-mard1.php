@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sshCmd = "ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no root@$remoteIp \"$phpCmd\"";
         $output = shell_exec($sshCmd);
         if (empty(trim($output))) {
-            $output = "❌ Tidak ada output dari VPS RW-MARD. Cek file add-trojan.php di VPS atau pastikan script mencetak hasil.";
+            $output = "❌ Tidak ada output dari VPS SGDO-MARD1. Cek file add-trojan.php di VPS atau pastikan script mencetak hasil.";
         }
     }
 }
