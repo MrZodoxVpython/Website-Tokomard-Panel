@@ -19,7 +19,7 @@ $fileList = array_filter(explode("\n", trim($fileListRaw)));
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Daftar Akun Trojan - SGDO-MARD1</title>
+    <title>Trojan - SGDO-MARD1</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen p-6">
