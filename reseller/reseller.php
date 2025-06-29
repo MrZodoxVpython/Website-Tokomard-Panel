@@ -5,7 +5,16 @@ error_reporting(E_ALL);
 
 session_start();
 require 'koneksi.php';  
+$themeJson = __DIR__ . '/uploads/theme.json';
+$username = $_SESSION['username'] ?? 'guest';
+$defaultTheme = 'light';
 
+if (file_exists($themeJson)) {
+    $themeData = json_decode(file_get_contents($themeJson), true);
+    if (isset($themeData[$username])) {
+        $defaultTheme = $themeData[$username];
+    }
+}
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
     header("Location: ../index.php");
     exit;
