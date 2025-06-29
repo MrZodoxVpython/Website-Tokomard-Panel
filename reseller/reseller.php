@@ -190,7 +190,21 @@ if ($notifResult) {
   <!-- Klik gambar untuk trigger file input -->
 <form action="upload-avatar.php" method="POST" enctype="multipart/form-data">
   <label for="avatarUpload" class="cursor-pointer">
-    <img src="<?= $_SESSION['avatar'] ?? 'uploads/avatars/default.png' ?>?v=<?= time() ?>" class="w-20 h-20 rounded-full mb-2 hover:opacity-80 transition" />
+<?php
+// Baca avatar dari file JSON berdasarkan username
+$avatarPath = 'uploads/avatars/default.png';
+$username = $_SESSION['username'] ?? 'guest';
+$avatarJsonPath = __DIR__ . '/data/avatar.json';
+
+if (file_exists($avatarJsonPath)) {
+    $avatars = json_decode(file_get_contents($avatarJsonPath), true);
+    if (isset($avatars[$username]) && file_exists(__DIR__ . '/' . $avatars[$username])) {
+        $avatarPath = $avatars[$username];
+    }
+}
+?>
+<img src="<?= $avatarPath ?>?v=<?= time() ?>" class="w-20 h-20 rounded-full mb-2 hover:opacity-80 transition" />
+
   </label>
   <input type="file" name="avatar" id="avatarUpload" accept="image/*" class="hidden" onchange="this.form.submit()">
 </form>
