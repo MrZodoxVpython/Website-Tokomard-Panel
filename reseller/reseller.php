@@ -361,13 +361,13 @@ if (notifCount > 0) {
     }, 3000);
 }
 </script>
-
 <?php
 if (isset($_GET['theme'])) {
     $_SESSION['theme'] = $_GET['theme'] === 'dark' ? 'dark' : 'light';
     exit;
 }
 ?>
+
 </body>
 </html>
 
