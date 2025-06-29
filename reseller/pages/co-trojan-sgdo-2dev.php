@@ -7,7 +7,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
 
 $server = [
     'name' => 'SGDO-2DEV',
-    'country' => 'Singapore',
+    'country' => 'Singapura',
     'isp' => 'DigitalOcean, LLC',
     'rules' => [
         'NO TORRENT',
