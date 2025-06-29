@@ -5,18 +5,16 @@ error_reporting(E_ALL);
 
 session_start();
 require 'koneksi.php';  
-// Load theme dari file jika belum ada di session
-$themeFile = __DIR__ . '/uploads/theme.json';
-$username = $_SESSION['username'] ?? 'guest';
+// Pastikan sebelum HTML dimulai
 $theme = 'light';
-
-if (isset($_SESSION['theme'])) {
-    $theme = $_SESSION['theme'];
-} elseif (file_exists($themeFile)) {
-    $themes = json_decode(file_get_contents($themeFile), true);
-    if (isset($themes[$username])) {
-        $theme = $themes[$username];
-        $_SESSION['theme'] = $theme;
+if (isset($_SESSION['username'])) {
+    $username = $_SESSION['username'];
+    $themeFile = __DIR__ . '/uploads/theme.json';
+    if (file_exists($themeFile)) {
+        $themes = json_decode(file_get_contents($themeFile), true);
+        if (isset($themes[$username])) {
+            $theme = $themes[$username];
+        }
     }
 }
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
