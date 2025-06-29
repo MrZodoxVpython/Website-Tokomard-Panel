@@ -29,7 +29,7 @@ $fileList = array_filter(explode("\n", trim($fileListRaw)));
     <?php if (empty($fileList)) : ?>
         <div class="bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded">
             ⚠️ Belum ada akun yang dibuat untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>
-            atau koneksi SSH ke VPS RW-MARD gagal.
+            silahkan buat akun terlebih dahulu.
         </div>
     <?php else: ?>
         <?php foreach ($fileList as $remoteFile):
