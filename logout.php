@@ -17,7 +17,7 @@ session_destroy();
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>Logout - X-Panel</title>
+  <title>Logout</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
