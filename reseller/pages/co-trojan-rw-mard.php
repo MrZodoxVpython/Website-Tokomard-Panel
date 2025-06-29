@@ -71,13 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endforeach; ?>
     </div>
 
-    <div class="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-        <p><strong>ISP</strong>: <?= htmlspecialchars($server['isp']) ?></p>
-        <?php foreach ($server['rules'] as $rule): ?>
-            <p>🚫 <?= htmlspecialchars($rule) ?></p>
-        <?php endforeach; ?>
-    </div>
-
     <hr class="border-gray-300 dark:border-gray-600">
 
     <h3 class="text-xl font-semibold">🧾 Buat Akun Trojan</h3>
