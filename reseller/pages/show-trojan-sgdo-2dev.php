@@ -225,6 +225,7 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
             </form>
         </div>
     <?php endforeach; ?>
+    <?php endif; ?>
 </div>
 
 <script>
