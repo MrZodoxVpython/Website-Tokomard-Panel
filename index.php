@@ -15,12 +15,8 @@
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <style>
     html, body {
-      background-color: #0f172a !important;
-      color: #e5e7eb !important;
-    }
-    *:focus {
-      outline: none !important;
-      box-shadow: none !important;
+      background-color: #0f172a;
+      color: #e5e7eb;
     }
     ::selection {
       background: #2563eb;
@@ -39,33 +35,36 @@
     img {
       background-color: #0f172a;
     }
-    input::placeholder,
-    textarea::placeholder {
+    input::placeholder, textarea::placeholder {
       color: #6b7280;
       opacity: 1;
     }
-    button, a {
-      outline: none !important;
+    *:focus {
+      outline: none;
     }
   </style>
 </head>
-<body class="bg-gray-950 text-gray-200 font-sans">
+<body class="bg-gray-950 text-gray-200 font-sans antialiased">
 
   <!-- Header -->
-  <header class="flex justify-between items-center px-6 py-4 bg-gray-900 border-b border-gray-800 shadow-md">
-    <div class="flex items-center space-x-4">
-      <img src="https://i.imgur.com/q3DzxiB.png" alt="Logo" class="w-10 h-10 rounded-full bg-gray-900" />
-      <h1 class="text-2xl font-bold tracking-tight text-white">Tokomard VPN Panel</h1>
+  <header class="flex justify-between items-center px-4 md:px-6 py-4 bg-gray-900 shadow-md border-b border-gray-800">
+    <div class="flex items-center space-x-3">
+      <img src="https://i.imgur.com/q3DzxiB.png" alt="Logo" class="w-10 h-10 rounded-full" />
+      <h1 class="text-lg sm:text-xl md:text-2xl font-bold">Tokomard VPN Panel</h1>
     </div>
-    <a href="login.php" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-5 rounded-lg transition duration-200 shadow">Login</a>
+    <a href="login.php" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-4 py-2 rounded shadow-md">Login</a>
   </header>
 
   <!-- Hero -->
-  <section class="text-center px-4 py-16 max-w-4xl mx-auto">
-    <h2 class="text-4xl md:text-5xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Kelola Xray, Trojan & SSH Super Mudah</h2>
-    <p class="text-gray-400 text-lg mb-10">Tokomard VPN Panel memberikan kontrol penuh terhadap akun VMess, VLESS, Trojan, Shadowsocks, dan SSH dalam satu panel elegan.</p>
+  <section class="text-center px-4 py-12 sm:py-16 max-w-4xl mx-auto">
+    <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+      Kelola VPN Xray & Trojan dengan Mudah
+    </h2>
+    <p class="text-gray-400 text-base sm:text-lg mb-8">
+      Panel modern dan responsif untuk mengelola akun VPN berbasis protokol Xray: VMess, VLESS, Trojan, Shadowsocks, hingga SSH.
+    </p>
 
-    <!-- Auto-slider -->
+    <!-- Slider -->
     <div
       x-data="{
         active: 0,
@@ -75,56 +74,58 @@
           'https://i.imgur.com/8IiXQqY.png'
         ],
         init() {
-          setInterval(() => this.active = (this.active + 1) % this.images.length, 4000)
+          setInterval(() => this.active = (this.active + 1) % this.images.length, 5000)
         }
       }"
-      class="relative w-full overflow-hidden rounded-xl shadow-xl max-w-3xl mx-auto bg-gray-900"
+      class="relative w-full max-w-3xl mx-auto overflow-hidden rounded-xl shadow-lg"
     >
-      <div class="flex transition-all duration-700 ease-in-out" :style="`transform: translateX(-${active * 100}%);`">
+      <div class="flex transition-all duration-700" :style="`transform: translateX(-${active * 100}%);`">
         <template x-for="img in images" :key="img">
-          <img :src="img" class="w-full object-cover h-64 md:h-80 bg-gray-900" alt="Slide" />
+          <img :src="img" class="w-full object-cover h-64 sm:h-80 bg-gray-900" alt="Slide" />
         </template>
       </div>
       <div class="absolute inset-0 flex items-center justify-between px-4">
-        <button @click="active = (active - 1 + images.length) % images.length" class="bg-gray-800 bg-opacity-60 hover:bg-opacity-80 text-white text-2xl p-2 rounded-full">&#10094;</button>
-        <button @click="active = (active + 1) % images.length" class="bg-gray-800 bg-opacity-60 hover:bg-opacity-80 text-white text-2xl p-2 rounded-full">&#10095;</button>
+        <button @click="active = (active - 1 + images.length) % images.length"
+          class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full">&#10094;</button>
+        <button @click="active = (active + 1) % images.length"
+          class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full">&#10095;</button>
       </div>
     </div>
   </section>
 
   <!-- Features -->
-  <section class="py-16 px-6 bg-gray-900 border-t border-gray-800">
-    <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-10 text-center">
-      <div class="bg-gray-800 rounded-lg p-6 shadow hover:shadow-lg transition">
-        <h3 class="text-xl font-semibold text-blue-400 mb-2">🔐 Dukungan Lengkap Protokol</h3>
-        <p class="text-gray-400">VMess, VLESS, Trojan, Shadowsocks dan SSH dalam satu panel.</p>
+  <section class="bg-gray-900 py-12 px-4 sm:px-6 border-t border-gray-800">
+    <div class="max-w-6xl mx-auto grid gap-8 md:grid-cols-2 lg:grid-cols-3 text-center">
+      <div class="bg-gray-800 rounded-lg p-6 hover:shadow-lg transition">
+        <h3 class="text-lg font-semibold text-blue-400 mb-2">🔐 Dukungan Protokol Lengkap</h3>
+        <p class="text-gray-400">Kelola VMess, VLESS, Trojan, Shadowsocks & SSH dalam satu dashboard.</p>
       </div>
-      <div class="bg-gray-800 rounded-lg p-6 shadow hover:shadow-lg transition">
-        <h3 class="text-xl font-semibold text-green-400 mb-2">⚡ Kecepatan & Responsif</h3>
-        <p class="text-gray-400">Desain ringan dan mobile-ready. Panel cepat dan efisien.</p>
+      <div class="bg-gray-800 rounded-lg p-6 hover:shadow-lg transition">
+        <h3 class="text-lg font-semibold text-green-400 mb-2">⚡ Ringan & Responsif</h3>
+        <p class="text-gray-400">Akses cepat dari mobile atau desktop, tidak perlu install aplikasi.</p>
       </div>
-      <div class="bg-gray-800 rounded-lg p-6 shadow hover:shadow-lg transition">
-        <h3 class="text-xl font-semibold text-purple-400 mb-2">📊 Statistik Real-time</h3>
-        <p class="text-gray-400">Pantau akun, trafik, masa aktif dan status secara real-time.</p>
+      <div class="bg-gray-800 rounded-lg p-6 hover:shadow-lg transition">
+        <h3 class="text-lg font-semibold text-purple-400 mb-2">📊 Statistik Real-time</h3>
+        <p class="text-gray-400">Pantau akun aktif, expired, trafik harian dan performa server.</p>
       </div>
-      <div class="bg-gray-800 rounded-lg p-6 shadow hover:shadow-lg transition">
-        <h3 class="text-xl font-semibold text-yellow-400 mb-2">🎯 Sistem Reseller Pro</h3>
-        <p class="text-gray-400">Kelola banyak user sekaligus. Fitur saldo & kontrol penuh.</p>
+      <div class="bg-gray-800 rounded-lg p-6 hover:shadow-lg transition">
+        <h3 class="text-lg font-semibold text-yellow-400 mb-2">🎯 Sistem Reseller</h3>
+        <p class="text-gray-400">Sistem saldomatic dan manajemen pelanggan terintegrasi penuh.</p>
       </div>
-      <div class="bg-gray-800 rounded-lg p-6 shadow hover:shadow-lg transition">
-        <h3 class="text-xl font-semibold text-pink-400 mb-2">🛡️ Keamanan Maksimal</h3>
-        <p class="text-gray-400">Autentikasi aman, manajemen akun terenkripsi, tanpa celah.</p>
+      <div class="bg-gray-800 rounded-lg p-6 hover:shadow-lg transition">
+        <h3 class="text-lg font-semibold text-pink-400 mb-2">🛡️ Keamanan Optimal</h3>
+        <p class="text-gray-400">Tidak ada log sembarangan. Konfigurasi aman, terenkripsi dan efisien.</p>
       </div>
-      <div class="bg-gray-800 rounded-lg p-6 shadow hover:shadow-lg transition">
-        <h3 class="text-xl font-semibold text-red-400 mb-2">👨‍💻 Admin & Support 24/7</h3>
-        <p class="text-gray-400">Dukungan siap pakai via WhatsApp, Telegram, dan Email.</p>
+      <div class="bg-gray-800 rounded-lg p-6 hover:shadow-lg transition">
+        <h3 class="text-lg font-semibold text-red-400 mb-2">👨‍💻 Dukungan 24/7</h3>
+        <p class="text-gray-400">Tim support cepat tanggap untuk bantu setup, restore, hingga migrasi.</p>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="text-center text-gray-500 text-sm py-8 border-t border-gray-800 bg-gray-950">
-    &copy; <?= date('Y') ?> Tokomard VPN Panel. Dibuat dengan ❤️ oleh Benjamin Wickman & MrZodoxVpython.
+  <footer class="text-center text-gray-500 py-6 text-sm border-t border-gray-800 bg-gray-950">
+    &copy; <?= date('Y') ?> Tokomard Panel VPN. Dibuat oleh Benjamin Wickman & MrZodoxVpython.
   </footer>
 
 </body>
