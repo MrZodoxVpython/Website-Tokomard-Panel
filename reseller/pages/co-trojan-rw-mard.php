@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white">
 
 <div class="w-full max-w-2xl bg-white dark:bg-gray-900 shadow-md rounded-2xl p-6 space-y-6 border border-gray-200 dark:border-gray-700">
-    <h2 class="text-2xl font-bold">🛒 Server <?= htmlspecialchars($server['name']) ?> (<?= $server['country'] ?>)</h2>
+    <h2 class="text-2xl font-bold">🛒 Detail Server</h2>
 
     <div class="text-sm text-gray-700 dark:text-gray-300 space-y-1">
         <p><strong>ISP</strong>: <?= htmlspecialchars($server['isp']) ?></p>
