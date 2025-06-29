@@ -27,7 +27,7 @@ $sshProducts = [
         'stock' => 22
     ],
     [
-        'name' => 'SGDO-MARD',
+        'name' => 'SGDO-MARD1',
         'flag' => '🇸🇬',
         'price' => 15000,
         'country' => 'Singapura',
