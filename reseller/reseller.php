@@ -194,7 +194,7 @@ if ($notifResult) {
 // Baca avatar dari file JSON berdasarkan username
 $avatarPath = 'uploads/avatars/default.png';
 $username = $_SESSION['username'] ?? 'guest';
-$avatarJsonPath = __DIR__ . '/data/avatar.json';
+$avatarJsonPath = __DIR__ . '/uploads/avatar.json';
 
 if (file_exists($avatarJsonPath)) {
     $avatars = json_decode(file_get_contents($avatarJsonPath), true);
