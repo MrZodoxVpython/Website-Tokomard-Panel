@@ -383,12 +383,16 @@ if (notifCount > 0) {
     }, 3000);
 }
 function toggleTheme() {
-  const isDark = document.documentElement.classList.toggle('dark');
-  const tema = isDark ? 'dark' : 'light';
-  fetch('simpan-tema.php', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ tema })
+  const html = document.documentElement;
+  const isDark = html.classList.toggle("dark");
+  const icon = document.getElementById("themeIcon");
+  icon.textContent = isDark ? "🌞" : "🌙";
+
+  // Kirim ke server agar disimpan ke file dan session
+  fetch("simpan-tema.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ theme: isDark ? "dark" : "light" })
   });
 }
 </script>
