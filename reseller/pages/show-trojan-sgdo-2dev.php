@@ -201,13 +201,13 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
                     <form method="POST" class="inline">
                         <input type="hidden" name="toggle_user" value="<?= htmlspecialchars($username) ?>">
                         <input type="hidden" name="action" value="<?= $isDisabled ? 'start' : 'stop' ?>">
-                        <button type="submit" class="<?= $isDisabled ? 'bg-green-600 hover:bg-green-700' : 'bg-yellow-500 hover:bg-yellow-600' ?> px-3 py-1 rounded">
+                        <button type="submit" class="<?= $isDisabled ? 'bg-green-600 hover:bg-green-700' : 'bg-yellow-600 hover:bg-yellow-700' ?> px-3 py-1 rounded">
                             <?= $isDisabled ? 'Start' : 'Stop' ?>
                         </button>
                     </form>
 
                     <a href="?hapus=<?= urlencode($username) ?>" onclick="return confirm('Yakin ingin menghapus akun <?= $username ?>?')" class="bg-red-600 px-3 py-1 rounded hover:bg-red-700">Delete</a>
-                    <button onclick="document.getElementById('form-<?= $username ?>').classList.toggle('hidden')" class="bg-green-500 px-3 py-1 rounded hover:bg-green-600">Edit</button>
+                    <button onclick="document.getElementById('form-<?= $username ?>').classList.toggle('hidden')" class="bg-green-600 px-3 py-1 rounded hover:bg-green-700">Edit</button>
                 </div>
             </div>
 
