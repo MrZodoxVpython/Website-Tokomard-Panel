@@ -120,7 +120,7 @@ new Chart(ctx, {
 <!-- Tabel Akun -->
 <div class="overflow-x-auto w-full">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-300 dark:border-gray-700 min-w-full">
-        <table class="w-full text-[15px] sm:text-sm text-left text-gray-800 dark:text-white table-auto">
+        <table class="w-full text-[13px] sm:text-sm text-left text-gray-800 dark:text-white table-auto">
         <thead class="bg-gray-100 dark:bg-gray-700">
             <tr>
                 <th class="px-1 py-1 sm:px-3 sm:py-2 whitespace-nowrap">No</th>
