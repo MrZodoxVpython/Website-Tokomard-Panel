@@ -122,8 +122,9 @@ new Chart(ctx, {
 </script>
 
 <!-- Tabel Akun -->
-<div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-300 dark:border-gray-700">
-    <table class="min-w-full text-sm text-left text-gray-800 dark:text-white">
+<div class="overflow-x-auto w-full">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-300 dark:border-gray-700 min-w-full">
+        <table class="w-full text-sm text-left text-gray-800 dark:text-white table-auto">
         <thead class="bg-gray-100 dark:bg-gray-700">
             <tr>
                 <th class="px-3 py-2">No</th>
