@@ -98,7 +98,7 @@ if (isset($_GET['hapus'])) {
     file_put_contents($configPath, implode('', $newLines));
 
     // 🔁 Restart xray
-    shell_exec('sudo /etc/xray/restart-xray.sh');
+    shell_exec('sudo systemctl restart xray');
 
     header("Location: show-trojan-sgdo-mard1.php");
     exit;
