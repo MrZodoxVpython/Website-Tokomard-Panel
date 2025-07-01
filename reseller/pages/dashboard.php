@@ -13,13 +13,6 @@
   </style>
 </head>
 <body class="bg-gray-900 text-white">
-
-  <!-- Header -->
-  <div class="flex justify-between items-center p-4">
-    <h1 class="text-xl font-bold">Panel Reseller</h1>
-    <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">Logout</button>
-  </div>
-
   <!-- Statistik -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 px-4 mb-6">
     <div class="bg-green-500 rounded p-4 text-center">
