@@ -61,6 +61,17 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
     </div>
 </div>
 
+<!-- Grafik -->
+<?php if ($stats['total'] > 0): ?>
+<div class="flex justify-center px-4 mb-8">
+    <div class="w-full sm:w-11/12 md:w-4/5 lg:w-3/5 xl:w-1/2 bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+        <div class="relative h-[300px] w-full">
+            <canvas id="myChart"></canvas>
+        </div>
+        <div class="flex justify-between mt-4 text-sm text-gray-700 dark:text-gray-200 font-semibold">
+        </div>
+    </div>
+</div>
 
 <script>
 const ctx = document.getElementById("myChart").getContext("2d");
