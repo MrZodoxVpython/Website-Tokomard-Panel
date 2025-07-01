@@ -195,28 +195,23 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
                 <div class="flex gap-2 mt-2 sm:mt-0">
                     <button onclick="toggleDetail('<?= $username ?>')" id="btn-<?= $username ?>" class="toggle-btn bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white">Show</button>
 
-                    <form method="POST" action="aksi-trojan.php" class="inline">
-                        <input type="hidden" name="aksi" value="stop">
-                        <input type="hidden" name="username" value="<?= htmlspecialchars($username) ?>">
-                        <input type="hidden" name="reseller" value="<?= htmlspecialchars($reseller) ?>">
-                        <input type="hidden" name="vps" value="rw-mard">
-                        <button class="bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded">Stop</button>
-                    </form>
+<form method="POST" action="" class="inline">
+    <input type="hidden" name="toggle_user" value="<?= htmlspecialchars($username) ?>">
+    <input type="hidden" name="action" value="stop">
+    <button class="bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded">Stop</button>
+</form>
 
-                    <form method="POST" action="aksi-trojan.php" class="inline" onsubmit="return confirm('Yakin ingin menghapus akun ini?')">
-                        <input type="hidden" name="aksi" value="delete">
-                        <input type="hidden" name="username" value="<?= htmlspecialchars($username) ?>">
-                        <input type="hidden" name="reseller" value="<?= htmlspecialchars($reseller) ?>">
-                        <input type="hidden" name="vps" value="rw-mard">
-                        <button class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded">Delete</button>
-                    </form>
+<form method="POST" action="" class="inline" onsubmit="return confirm('Yakin ingin menghapus akun ini?')">
+    <input type="hidden" name="hapus" value="<?= htmlspecialchars($username) ?>">
+    <button class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded">Delete</button>
+</form>
 
-                    <form method="GET" action="edit-akun.php" class="inline">
-                        <input type="hidden" name="username" value="<?= htmlspecialchars($username) ?>">
-                        <input type="hidden" name="reseller" value="<?= htmlspecialchars($reseller) ?>">
-                        <input type="hidden" name="vps" value="rw-mard">
-                        <button class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded">Edit</button>
-                    </form>
+<form method="POST" action="" class="inline">
+    <input type="hidden" name="edit_user" value="<?= htmlspecialchars($username) ?>">
+    <input type="text" name="expired" placeholder="yyyy-mm-dd / hari" class="text-black px-2 py-1 rounded w-32" required>
+    <button class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded">Edit</button>
+</form>
+
                 </div>
             </div>
             <div id="detail-<?= $username ?>" class="hidden mt-4">
