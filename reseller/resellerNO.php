@@ -247,15 +247,6 @@ if ($stmt) {
         echo "<div class='text-red-500 text-center'>Halaman <b>{$page}</b> tidak ditemukan.</div>";
     }
     ?>
-
-      echo "<h2 class='text-lg font-semibold mb-4'>Dashboard</h2>";
-      // ... tambahkan konten dashboard di sini ...
-    } else {
-      $path = __DIR__."/pages/$page.php";
-      if(file_exists($path)) include $path;
-      else echo "<div class='text-red-500'>Halaman tidak ditemukan.</div>";
-    }
-    ?>
   </main>
 </div>
 
