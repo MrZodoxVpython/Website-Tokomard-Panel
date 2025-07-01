@@ -18,46 +18,44 @@ $configPath = '/etc/xray/config.json';
 $logDir = "/etc/xray/data-panel/reseller";
 
 // Handle POST Edit
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['edit_user'])) {
-        $userEdit = $_POST['edit_user'];
-        $expiredInput = trim($_POST['expired']);
-        $expiredBaru = null;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
+    $userEdit = $_POST['edit_user'];
+    $expiredInput = trim($_POST['expired']);
+    $expiredBaru = null;
 
-        if (preg_match('/^\d+$/', $expiredInput)) {
-            $expiredBaru = date('Y-m-d', strtotime("+$expiredInput days"));
-        } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $expiredInput)) {
-            $expiredBaru = $expiredInput;
-        }
-
-        if ($expiredBaru) {
-            $lines = file($configPath);
-            $currentTag = '';
-            foreach ($lines as $i => $line) {
-                if (preg_match('/^\s*#(trojan)(grpc|ws)?$/i', trim($line), $m)) {
-                    $currentTag = '#' . strtolower($m[1] . ($m[2] ?? ''));
-                }
-                if (in_array($currentTag, ['#trojanws', '#trojangrpc'])) {
-                    if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($userEdit, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line, $matches)) {
-                        $prefix = $matches[1];
-                        $lines[$i] = "$prefix $userEdit $expiredBaru\n";
-                    }
-                }
-            }
-            file_put_contents($configPath, implode('', $lines));
-
-            foreach (glob("$logDir/akun-$reseller-$userEdit.txt") as $file) {
-                $content = file_get_contents($file);
-                $content = preg_replace('/(Expired On\s*:\s*)(\d{4}-\d{2}-\d{2})/', '${1}' . $expiredBaru, $content);
-                file_put_contents($file, $content);
-            }
-
-            shell_exec('sudo /usr/local/bin/restart-xray.sh');
-        }
-
-        header("Location: show-trojan-sgdo-mard1.php");
-        exit;
+    if (preg_match('/^\\d+$/', $expiredInput)) {
+        $expiredBaru = date('Y-m-d', strtotime("+$expiredInput days"));
+    } elseif (preg_match('/^\\d{4}-\\d{2}-\\d{2}$/', $expiredInput)) {
+        $expiredBaru = $expiredInput;
     }
+
+    if ($expiredBaru) {
+        $lines = file($configPath);
+        $currentTag = '';
+        foreach ($lines as $i => $line) {
+            if (preg_match('/^\\s*#(trojan)(grpc|ws)?$/i', trim($line), $m)) {
+                $currentTag = '#' . strtolower($m[1] . ($m[2] ?? ''));
+            }
+            if (in_array($currentTag, ['#trojanws', '#trojangrpc'])) {
+                if (preg_match('/^\\s*(###|#!|#&|#\\$)\\s+' . preg_quote($userEdit, '/') . '\\s+\\d{4}-\\d{2}-\\d{2}/', $line, $matches)) {
+                    $prefix = $matches[1];
+                    $lines[$i] = "$prefix $userEdit $expiredBaru\n";
+                }
+            }
+        }
+        file_put_contents($configPath, implode('', $lines));
+
+        foreach (glob("$logDir/akun-$reseller-$userEdit.txt") as $file) {
+            $content = file_get_contents($file);
+            $content = preg_replace('/(Expired On\\s*:\\s*)(\\d{4}-\\d{2}-\\d{2})/', '${1}' . $expiredBaru, $content);
+            file_put_contents($file, $content);
+        }
+
+        shell_exec('sudo /usr/local/bin/restart-xray.sh');
+    }
+
+    header("Location: show-trojan-sgdo-mard1.php");
+    exit;
 }
 ?>
 <!DOCTYPE html>
@@ -88,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="flex justify-between items-center flex-wrap gap-2">
                 <div class="text-blue-400 font-semibold text-lg"><?= htmlspecialchars($username) ?></div>
                 <div class="flex gap-2 flex-wrap">
-                    <button onclick="toggleDetail('<?= $username ?>')" id="btn-<?= $username ?>" class="toggle-btn bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white">Show</button>
+                    <button onclick="toggleDetail('<?= $username ?>')" id="btn-<?= $username ?>" class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white">Show</button>
 
                     <form method="POST" action="aksi-trojan.php" class="inline">
                         <input type="hidden" name="aksi" value="stop">
@@ -111,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <!-- Detail -->
-            <div id="detail-<?= $username ?>" class="hidden mt-4">
+            <div id="detail-<?= $username ?>" class="hidden mt-4 detail-box">
                 <div class="overflow-x-auto bg-gray-700 rounded p-3">
                     <pre class="text-sm text-green-300 whitespace-pre-wrap"><?= htmlspecialchars($content ?: "❌ Gagal membaca isi file.") ?></pre>
                 </div>
@@ -132,22 +130,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <script>
     function toggleDetail(id) {
-        const targetBox = document.getElementById('detail-' + id);
-        const targetBtn = document.getElementById('btn-' + id);
-        const allBoxes = document.querySelectorAll('.detail-box');
-        const allButtons = document.querySelectorAll('.btn-show');
-
-        if (!targetBox.classList.contains('hidden')) {
-            targetBox.classList.add('hidden');
-            targetBtn.innerText = 'Show';
-            return;
+        const detail = document.getElementById('detail-' + id);
+        const btn = document.getElementById('btn-' + id);
+        if (detail.classList.contains('hidden')) {
+            detail.classList.remove('hidden');
+            btn.textContent = 'Hide';
+        } else {
+            detail.classList.add('hidden');
+            btn.textContent = 'Show';
         }
+    }
 
-        allBoxes.forEach(box => box.classList.add('hidden'));
-        allButtons.forEach(btn => btn.innerText = 'Show');
-
-        targetBox.classList.remove('hidden');
-        targetBtn.innerText = 'Hide';
+    function toggleEdit(id) {
+        const editBox = document.getElementById('edit-' + id);
+        editBox.classList.toggle('hidden');
     }
 </script>
 
