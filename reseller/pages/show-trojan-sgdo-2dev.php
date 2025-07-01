@@ -37,7 +37,6 @@ if (isset($_GET['hapus'])) {
 
     header("Location: show-trojan-sgdo-2dev.php");
     exit;
-    }
 }
 
 // Handle POST (Edit & Start/Stop)
@@ -170,7 +169,6 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
 
     header("Location: show-trojan-sgdo-2dev.php");
     exit;
-    }
 }
 
 ?>
