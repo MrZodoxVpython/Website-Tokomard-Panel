@@ -37,25 +37,34 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
 }
 ?>
 
+<style>
+  body {
+    overflow-x: hidden;
+  }
+</style>
+
 <!-- Statistik box -->
-<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6 text-center">
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6 px-4 text-center">
     <?php
     foreach (['total' => 'Total Akun', 'vmess' => 'VMess', 'vless' => 'VLess', 'trojan' => 'Trojan', 'shadowsocks' => 'Shadowsocks'] as $k => $label) {
         $color = ['total' => 'green', 'vmess' => 'blue', 'vless' => 'purple', 'trojan' => 'red', 'shadowsocks' => 'yellow'][$k];
-        echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-5 rounded-lg shadow'>
-                <p class='text-base font-semibold'>{$label}</p>
-                <p class='text-2xl mt-2 font-bold'>{$stats[$k]}</p>
+        echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-4 sm:p-5 rounded-lg shadow'>
+                <p class='text-sm sm:text-base font-semibold'>{$label}</p>
+                <p class='text-xl sm:text-2xl mt-2 font-bold'>{$stats[$k]}</p>
               </div>";
     }
     ?>
 </div>
 
 <!-- Grafik -->
-<div class="mb-8 w-full overflow-x-auto bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-    <div class="relative h-[400px] min-w-[300px]">
-        <canvas id="myChart"></canvas>
+<div class="mb-8 px-4 w-full overflow-x-auto">
+    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow min-w-[320px] sm:min-w-full">
+        <div class="relative h-[300px]">
+            <canvas id="myChart"></canvas>
+        </div>
     </div>
 </div>
+
 <script>
 const ctx = document.getElementById("myChart").getContext("2d");
 new Chart(ctx, {
@@ -89,15 +98,15 @@ new Chart(ctx, {
 </script>
 
 <!-- Tabel Akun -->
-<div class="overflow-x-auto rounded-lg shadow border border-gray-300 dark:border-gray-700">
-    <table class="min-w-full text-sm text-left text-gray-800 dark:text-white">
+<div class="px-4 overflow-x-auto rounded-lg shadow border border-gray-300 dark:border-gray-700">
+    <table class="min-w-[600px] text-sm text-left text-gray-800 dark:text-white">
         <thead class="bg-gray-200 dark:bg-gray-700">
             <tr>
-                <th class="px-4 py-3 w-1/12">No</th>
-                <th class="px-4 py-3 w-3/12">Username</th>
-                <th class="px-4 py-3 w-2/12">Protocol</th>
-                <th class="px-4 py-3 w-3/12">Expired</th>
-                <th class="px-4 py-3 w-3/12">UUID/Pass</th>
+                <th class="px-4 py-3">No</th>
+                <th class="px-4 py-3">Username</th>
+                <th class="px-4 py-3">Protocol</th>
+                <th class="px-4 py-3">Expired</th>
+                <th class="px-4 py-3">UUID/Pass</th>
             </tr>
         </thead>
         <tbody>
