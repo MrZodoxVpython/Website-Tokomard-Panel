@@ -21,7 +21,9 @@
 
   <div class="min-h-screen w-full px-4 py-6 mx-auto overflow-x-hidden">
     <?php
+    if (session_status() === PHP_SESSION_NONE) {
     session_start();
+    }
     $reseller = $_SESSION['reseller'] ?? 'unknown';
     $stats = ['total' => 0, 'vmess' => 0, 'vless' => 0, 'trojan' => 0, 'shadowsocks' => 0];
     $rows = [];
