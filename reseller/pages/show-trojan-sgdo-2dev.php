@@ -37,6 +37,7 @@ if (isset($_GET['hapus'])) {
 
     header("Location: show-trojan-sgdo-2dev.php");
     exit;
+    }
 }
 
 // Handle POST (Edit & Start/Stop)
