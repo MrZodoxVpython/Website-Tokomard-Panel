@@ -42,7 +42,7 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
     <?php
     foreach (['total' => 'Total Akun', 'vmess' => 'VMess', 'vless' => 'VLess', 'trojan' => 'Trojan', 'shadowsocks' => 'Shadowsocks'] as $k => $label) {
         $color = ['total' => 'green', 'vmess' => 'blue', 'vless' => 'purple', 'trojan' => 'red', 'shadowsocks' => 'yellow'][$k];
-        echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-5 rounded-lg shadow'>
+        echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-4 rounded-lg shadow'>
                 <p class='text-base font-semibold'>{$label}</p>
                 <p class='text-2xl mt-2 font-bold'>{$stats[$k]}</p>
               </div>";
@@ -51,9 +51,9 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
 </div>
 
 <!-- Grafik -->
-<div class="mb-8 w-full overflow-x-auto bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-    <div class="relative h-[400px] min-w-[300px]">
-        <canvas id="myChart"></canvas>
+<div class="mb-8 bg-white dark:bg-gray-800 p-4 rounded-lg shadow w-full overflow-hidden">
+    <div class="relative w-full max-w-full h-[350px]">
+        <canvas id="myChart" class="w-full h-full"></canvas>
     </div>
 </div>
 <script>
@@ -66,7 +66,7 @@ new Chart(ctx, {
             label: "Akun Terjual",
             data: [<?= $stats['vmess'] ?>, <?= $stats['vless'] ?>, <?= $stats['trojan'] ?>, <?= $stats['shadowsocks'] ?>],
             backgroundColor: ["#6366f1", "#3b82f6", "#ef4444", "#10b981"],
-            borderRadius: 8
+            borderRadius: 6
         }]
     },
     options: {
@@ -89,15 +89,15 @@ new Chart(ctx, {
 </script>
 
 <!-- Tabel Akun -->
-<div class="overflow-x-auto rounded-lg shadow border border-gray-300 dark:border-gray-700">
-    <table class="min-w-full text-sm text-left text-gray-800 dark:text-white">
+<div class="w-full overflow-x-auto rounded-lg border border-gray-300 dark:border-gray-700 shadow">
+    <table class="w-full text-sm text-left text-gray-800 dark:text-white table-auto">
         <thead class="bg-gray-200 dark:bg-gray-700">
             <tr>
-                <th class="px-4 py-3 w-1/12">No</th>
-                <th class="px-4 py-3 w-3/12">Username</th>
-                <th class="px-4 py-3 w-2/12">Protocol</th>
-                <th class="px-4 py-3 w-3/12">Expired</th>
-                <th class="px-4 py-3 w-3/12">UUID/Pass</th>
+                <th class="px-4 py-3">No</th>
+                <th class="px-4 py-3">Username</th>
+                <th class="px-4 py-3">Protocol</th>
+                <th class="px-4 py-3">Expired</th>
+                <th class="px-4 py-3">UUID/Pass</th>
             </tr>
         </thead>
         <tbody>
@@ -112,7 +112,7 @@ new Chart(ctx, {
                         <td class="px-4 py-2"><?= $r['user'] ?></td>
                         <td class="px-4 py-2"><?= $r['proto'] ?></td>
                         <td class="px-4 py-2"><?= $r['exp'] ?></td>
-                        <td class="px-4 py-2 font-mono"><?= $r['buyer'] ?></td>
+                        <td class="px-4 py-2 font-mono break-all"><?= $r['buyer'] ?></td>
                     </tr>
                 <?php endforeach ?>
             <?php endif ?>
