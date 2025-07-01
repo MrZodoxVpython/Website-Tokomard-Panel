@@ -131,25 +131,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <script>
-function toggleDetail(id) {
-    const detailBox = document.getElementById('detail-' + id);
-    const btn = document.getElementById('btn-' + id);
-    const isHidden = detailBox.classList.contains('hidden');
+    function toggleDetail(id) {
+        const targetBox = document.getElementById('detail-' + id);
+        const targetBtn = document.getElementById('btn-' + id);
+        const allBoxes = document.querySelectorAll('.detail-box');
+        const allButtons = document.querySelectorAll('.btn-show');
 
-    document.querySelectorAll('[id^="detail-"]').forEach(e => e.classList.add('hidden'));
-    document.querySelectorAll('.toggle-btn').forEach(b => b.textContent = 'Show');
+        if (!targetBox.classList.contains('hidden')) {
+            targetBox.classList.add('hidden');
+            targetBtn.innerText = 'Show';
+            return;
+        }
 
-    if (isHidden) {
-        detailBox.classList.remove('hidden');
-        btn.textContent = 'Hide';
+        allBoxes.forEach(box => box.classList.add('hidden'));
+        allButtons.forEach(btn => btn.innerText = 'Show');
+
+        targetBox.classList.remove('hidden');
+        targetBtn.innerText = 'Hide';
     }
-}
-
-function toggleEdit(id) {
-    const editBox = document.getElementById('edit-' + id);
-    editBox.classList.toggle('hidden');
-}
 </script>
+
 </body>
 </html>
 
