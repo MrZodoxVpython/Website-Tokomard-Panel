@@ -110,7 +110,7 @@ new Chart(ctx, {
                 ticks: { color: "#94a3b8", font: { size: 15 } }
             },
             x: {
-                ticks: { color: "#94a3b8", font: { size: 13 } }
+                ticks: { color: "#94a3b8", font: { size: 10 } }
             }
         }
     }
