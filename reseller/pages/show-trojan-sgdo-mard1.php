@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
             file_put_contents($file, $content);
         }
 
-        shell_exec('sudo /usr/local/bin/restart-xray.sh');
+        shell_exec('sudo /etc/xray/restart-xray.sh');
     }
 
     header("Location: show-trojan-sgdo-mard1.php");
