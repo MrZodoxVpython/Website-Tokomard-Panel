@@ -88,21 +88,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
                 <div class="flex gap-2 flex-wrap">
                     <button onclick="toggleDetail('<?= $username ?>')" id="btn-<?= $username ?>" class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white">Show</button>
 
-                    <form method="POST" action="aksi-trojan.php" class="inline">
-                        <input type="hidden" name="aksi" value="stop">
-                        <input type="hidden" name="username" value="<?= htmlspecialchars($username) ?>">
-                        <input type="hidden" name="reseller" value="<?= htmlspecialchars($reseller) ?>">
-                        <input type="hidden" name="vps" value="rw-mard">
-                        <button class="bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded">Stop</button>
+                    <!-- Tombol Start/Stop -->
+                    <form method="POST" class="inline">
+                        <input type="hidden" name="toggle_user" value="<?= htmlspecialchars($username) ?>">
+                        <input type="hidden" name="action" value="<?= $isDisabled ? 'start' : 'stop' ?>">
+                        <button type="submit" class="<?= $isDisabled ? 'bg-green-600 hover:bg-green-700' : 'bg-yellow-600 hover:bg-yellow-700' ?> px-3 py-1 rounded">
+                            <?= $isDisabled ? 'Start' : 'Stop' ?>
+                        </button>
                     </form>
 
-                    <form method="POST" action="aksi-trojan.php" class="inline" onsubmit="return confirm('Yakin ingin menghapus akun ini?')">
-                        <input type="hidden" name="aksi" value="delete">
-                        <input type="hidden" name="username" value="<?= htmlspecialchars($username) ?>">
-                        <input type="hidden" name="reseller" value="<?= htmlspecialchars($reseller) ?>">
-                        <input type="hidden" name="vps" value="rw-mard">
-                        <button class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded">Delete</button>
-                    </form>
+                    <a href="?hapus=<?= urlencode($username) ?>" onclick="return confirm('Yakin ingin menghapus akun <?= $username ?>?')" class="bg-red-600 px-3 py-1 rounded hover:bg-red-700">Delete</a>
+                    <button onclick="document.getElementById('form-<?= $username ?>').classList.toggle('hidden')" class="bg-green-600 px-3 py-1 rounded hover:bg-green-700">Edit</button>
+                </div>
+            </div>
+
+            <div id="detail-<?= $username ?>" class="detail-box mt-3 bg-gray-700 rounded hidden">
+                <div class="overflow-x-auto">
+                    <pre class="text-green-300 font-mono text-sm whitespace-pre p-3 min-w-full"><?= htmlspecialchars($content) ?></pre>
+                </div>
+            </div>
+
+            <form method="POST" id="form-<?= $username ?>" class="mt-3 hidden bg-gray-700 p-4 rounded">
+                <input type="hidden" name="edit_user" value="<?= htmlspecialchars($username) ?>">
+                <label class="block mb-1">Perbarui Expired (tgl atau jumlah hari)</label>
+                <input type="text" name="expired" required class="w-full p-2 rounded bg-gray-600 mb-2 text-white">
+                <button type="submit" class="bg-green-600 px-4 py-2 rounded hover:bg-green-700">Simpan</button>
+            </form>
+        </div>
+    <?php endforeach; ?>
+    <?php endif; ?>
+</div>
+
 
                     <button onclick="document.getElementById('form-<?= $username ?>').classList.toggle('hidden')" class="bg-green-600 px-3 py-1 rounded hover:bg-green-700">Edit</button>
                 </div>
