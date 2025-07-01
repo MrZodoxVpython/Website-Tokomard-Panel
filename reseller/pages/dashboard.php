@@ -38,6 +38,17 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
 }
 ?>
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Akun</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-4">
+
 <!-- Statistik Akun -->
 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6 text-center">
     <?php
@@ -66,7 +77,6 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
     </div>
 </div>
 
-<!-- Chart.js -->
 <script>
 const ctx = document.getElementById("myChart").getContext("2d");
 new Chart(ctx, {
@@ -128,11 +138,14 @@ new Chart(ctx, {
                         <td class="px-3 py-2"><?= $r['user'] ?></td>
                         <td class="px-3 py-2"><?= $r['proto'] ?></td>
                         <td class="px-3 py-2"><?= $r['exp'] ?></td>
-                        <td class="px-3 py-2 font-mono"><?= $r['buyer'] ?></td>
+                        <td class="px-3 py-2 font-mono break-all"><?= $r['buyer'] ?></td>
                     </tr>
                 <?php endforeach ?>
             <?php endif ?>
         </tbody>
     </table>
 </div>
+
+</body>
+</html>
 
