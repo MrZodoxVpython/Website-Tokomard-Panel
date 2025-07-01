@@ -106,17 +106,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <button class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded">Delete</button>
                     </form>
 
-                    <form method="POST" class="inline flex items-center gap-1" onsubmit="return confirm('Yakin ubah masa aktif akun ini?')">
-                        <input type="hidden" name="edit_user" value="<?= htmlspecialchars($username) ?>">
-                        <input type="text" name="expired" placeholder="7 / 2025-07-10" class="text-sm text-black px-2 py-1 rounded w-28" required>
-                        <button class="bg-green-600 hover:bg-green-700 px-2 py-1 rounded text-white text-sm">Save</button>
-                    </form>
+                    <button onclick="toggleEdit('<?= $username ?>')" class="bg-green-700 hover:bg-green-800 px-3 py-1 rounded text-white text-sm">Edit</button>
                 </div>
             </div>
+
+            <!-- Detail -->
             <div id="detail-<?= $username ?>" class="hidden mt-4">
                 <div class="overflow-x-auto bg-gray-700 rounded p-3">
                     <pre class="text-sm text-green-300 whitespace-pre-wrap"><?= htmlspecialchars($content ?: "❌ Gagal membaca isi file.") ?></pre>
                 </div>
+            </div>
+
+            <!-- Form Edit Expired -->
+            <div id="edit-<?= $username ?>" class="hidden mt-3">
+                <form method="POST" class="flex flex-wrap items-center gap-2" onsubmit="return confirm('Yakin ubah masa aktif akun ini?')">
+                    <input type="hidden" name="edit_user" value="<?= htmlspecialchars($username) ?>">
+                    <input type="text" name="expired" placeholder="7 / 2025-07-10" class="text-sm text-black px-2 py-1 rounded w-28" required>
+                    <button class="bg-green-600 hover:bg-green-700 px-2 py-1 rounded text-white text-sm">Save</button>
+                </form>
             </div>
         </div>
         <?php endforeach; ?>
@@ -128,7 +135,7 @@ function toggleDetail(id) {
     const detailBox = document.getElementById('detail-' + id);
     const btn = document.getElementById('btn-' + id);
     const isHidden = detailBox.classList.contains('hidden');
-    
+
     document.querySelectorAll('[id^="detail-"]').forEach(e => e.classList.add('hidden'));
     document.querySelectorAll('.toggle-btn').forEach(b => b.textContent = 'Show');
 
@@ -136,6 +143,11 @@ function toggleDetail(id) {
         detailBox.classList.remove('hidden');
         btn.textContent = 'Hide';
     }
+}
+
+function toggleEdit(id) {
+    const editBox = document.getElementById('edit-' + id);
+    editBox.classList.toggle('hidden');
 }
 </script>
 </body>
