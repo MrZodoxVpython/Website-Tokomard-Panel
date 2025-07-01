@@ -20,7 +20,6 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
             $expParts = explode(':', $line, 2);
             $expired = trim($expParts[1] ?? '-');
         }
-        // Ambil UUID atau Password
         if (stripos($line, 'Password') !== false && $proto === 'trojan') {
             $uuidOrPass = trim(explode(':', $line, 2)[1] ?? '-');
         } elseif (stripos($line, 'Password') !== false && in_array($proto, ['vmess', 'vless', 'shadowsocks'])) {
@@ -36,32 +35,37 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
         ];
     }
 }
+?>
 
-// Statistik
-echo '<div class="text-center grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">';
-foreach (['total' => 'Total Akun', 'vmess' => 'VMess', 'vless' => 'VLess', 'trojan' => 'Trojan', 'shadowsocks' => 'Shadowsocks'] as $k => $label) {
-    $color = ['total' => 'green', 'vmess' => 'blue', 'vless' => 'purple', 'trojan' => 'red', 'shadowsocks' => 'yellow'][$k];
-    echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-5 rounded-lg shadow'>
-    <p class='text-lg font-semibold'>{$label}</p>
-    <p class='text-3xl mt-2 font-bold'>{$stats[$k]}</p>
-    </div>";
-}
-echo "</div>";
+<!-- Statistik box -->
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6 text-center">
+    <?php
+    foreach (['total' => 'Total Akun', 'vmess' => 'VMess', 'vless' => 'VLess', 'trojan' => 'Trojan', 'shadowsocks' => 'Shadowsocks'] as $k => $label) {
+        $color = ['total' => 'green', 'vmess' => 'blue', 'vless' => 'purple', 'trojan' => 'red', 'shadowsocks' => 'yellow'][$k];
+        echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-5 rounded-lg shadow'>
+                <p class='text-base font-semibold'>{$label}</p>
+                <p class='text-2xl mt-2 font-bold'>{$stats[$k]}</p>
+              </div>";
+    }
+    ?>
+</div>
 
-// Grafik
-echo '<div class="mb-8 max-w-full bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-<canvas id="myChart" class="h-[450px]"></canvas>
+<!-- Grafik -->
+<div class="mb-8 w-full overflow-x-auto bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+    <div class="relative h-[400px] min-w-[300px]">
+        <canvas id="myChart"></canvas>
+    </div>
 </div>
 <script>
-const ctx = document.getElementById(\"myChart\").getContext(\"2d\");
+const ctx = document.getElementById("myChart").getContext("2d");
 new Chart(ctx, {
-    type: \"bar\",
+    type: "bar",
     data: {
-        labels: [\"VMess\", \"VLess\", \"Trojan\", \"Shadowsocks\"],
+        labels: ["VMess", "VLess", "Trojan", "Shadowsocks"],
         datasets: [{
-            label: \"Akun Terjual\",
-            data: [' . $stats['vmess'] . ',' . $stats['vless'] . ',' . $stats['trojan'] . ',' . $stats['shadowsocks'] . '],
-            backgroundColor: [\"#6366f1\", \"#3b82f6\", \"#ef4444\", \"#10b981\"],
+            label: "Akun Terjual",
+            data: [<?= $stats['vmess'] ?>, <?= $stats['vless'] ?>, <?= $stats['trojan'] ?>, <?= $stats['shadowsocks'] ?>],
+            backgroundColor: ["#6366f1", "#3b82f6", "#ef4444", "#10b981"],
             borderRadius: 8
         }]
     },
@@ -71,45 +75,48 @@ new Chart(ctx, {
         plugins: {
             legend: { display: false },
             tooltip: {
-                backgroundColor: \"#1f2937\",
-                titleColor: \"#fff\",
-                bodyColor: \"#ddd\"
+                backgroundColor: "#1f2937",
+                titleColor: "#fff",
+                bodyColor: "#ddd"
             }
         },
         scales: {
-            y: { beginAtZero: true, ticks: { color: \"#94a3b8\" } },
-            x: { ticks: { color: \"#94a3b8\" } }
+            y: { beginAtZero: true, ticks: { color: "#94a3b8" } },
+            x: { ticks: { color: "#94a3b8" } }
         }
     }
 });
-</script>';
+</script>
 
-// Tabel akun
-echo '<div class="overflow-x-auto">
-    <table class="table-fixed w-full border border-gray-300 dark:border-gray-700 text-sm text-left">
-    <thead class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white">
-        <tr>
-            <th class="w-1/12 px-3 py-2">No</th>
-            <th class="w-3/12 px-3 py-2">Username</th>
-            <th class="w-2/12 px-3 py-2">Protocol</th>
-            <th class="w-3/12 px-3 py-2">Expired</th>
-            <th class="w-3/12 px-3 py-2">Uuid/Pass</th>
-        </tr>
-    </thead>
-    <tbody>';
-if (empty($rows)) {
-    echo '<tr><td colspan="5" class="text-center px-3 py-4 text-gray-500 dark:text-gray-400">Belum ada akun.</td></tr>';
-} else {
-    foreach ($rows as $r) {
-        echo "<tr class='hover:bg-gray-100 dark:hover:bg-gray-700'>
-                <td class='px-3 py-2'>{$r['no']}</td>
-                <td class='px-3 py-2'>{$r['user']}</td>
-                <td class='px-3 py-2'>{$r['proto']}</td>
-                <td class='px-3 py-2'>{$r['exp']}</td>
-                <td class='px-3 py-2 font-mono'>{$r['buyer']}</td>
-              </tr>";
-    }
-}
-echo '</tbody></table></div>';
-?>
- 
+<!-- Tabel Akun -->
+<div class="overflow-x-auto rounded-lg shadow border border-gray-300 dark:border-gray-700">
+    <table class="min-w-full text-sm text-left text-gray-800 dark:text-white">
+        <thead class="bg-gray-200 dark:bg-gray-700">
+            <tr>
+                <th class="px-4 py-3 w-1/12">No</th>
+                <th class="px-4 py-3 w-3/12">Username</th>
+                <th class="px-4 py-3 w-2/12">Protocol</th>
+                <th class="px-4 py-3 w-3/12">Expired</th>
+                <th class="px-4 py-3 w-3/12">UUID/Pass</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (empty($rows)) : ?>
+                <tr>
+                    <td colspan="5" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Belum ada akun.</td>
+                </tr>
+            <?php else : ?>
+                <?php foreach ($rows as $r) : ?>
+                    <tr class="border-t border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-4 py-2"><?= $r['no'] ?></td>
+                        <td class="px-4 py-2"><?= $r['user'] ?></td>
+                        <td class="px-4 py-2"><?= $r['proto'] ?></td>
+                        <td class="px-4 py-2"><?= $r['exp'] ?></td>
+                        <td class="px-4 py-2 font-mono"><?= $r['buyer'] ?></td>
+                    </tr>
+                <?php endforeach ?>
+            <?php endif ?>
+        </tbody>
+    </table>
+</div>
+
