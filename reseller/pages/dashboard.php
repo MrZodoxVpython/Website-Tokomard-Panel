@@ -46,6 +46,13 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
     <title>Dashboard Akun</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+<style>
+    html, body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+</style>
+
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-4">
 
