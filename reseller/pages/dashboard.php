@@ -1,3 +1,17 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? 'unknown';
+
+$total = 0;
+$vmess = 0;
+$vless = 0;
+$trojan = 0;
+$shadowsocks = 0;
+?>
+
 <div class="w-full px-2 sm:px-4 md:px-6 lg:px-8 py-4 overflow-x-hidden">
     <!-- Grid Statistik -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
