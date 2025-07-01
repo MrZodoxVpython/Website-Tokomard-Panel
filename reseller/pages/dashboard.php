@@ -6,17 +6,11 @@
   <title>Dashboard Akun Xray</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    html, body {
-      max-width: 100%;
-      overflow-x: hidden;
-    }
-  </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white">
-  <div class="overflow-x-hidden w-full">
+  <div class="max-w-screen-xl mx-auto px-4 py-6">
     <?php
-    $reseller = $_SESSION['reseller'] ?? 'unknown'; // pastikan reseller tersedia
+    $reseller = $_SESSION['reseller'] ?? 'unknown';
 
     $stats = ['total' => 0, 'vmess' => 0, 'vless' => 0, 'trojan' => 0, 'shadowsocks' => 0];
     $rows = [];
@@ -68,15 +62,15 @@
     </div>
 
     <!-- Grafik -->
-    <div class="mb-8 bg-white dark:bg-gray-800 p-4 rounded-lg shadow w-full overflow-hidden">
-      <div class="relative w-full h-[300px]">
+    <div class="mb-8 bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+      <div class="w-full h-[300px] sm:h-[400px] relative">
         <canvas id="myChart" class="w-full h-full"></canvas>
       </div>
     </div>
 
     <!-- Tabel -->
-    <div class="overflow-x-auto rounded-lg border border-gray-300 dark:border-gray-700 shadow">
-      <table class="min-w-[640px] w-full text-sm text-left text-gray-700 dark:text-white">
+    <div class="w-full overflow-x-auto rounded-lg border border-gray-300 dark:border-gray-700 shadow">
+      <table class="w-full text-sm text-left text-gray-700 dark:text-white">
         <thead class="bg-gray-100 dark:bg-gray-700">
           <tr>
             <th class="px-4 py-2 whitespace-nowrap">No</th>
