@@ -23,9 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
     $expiredInput = trim($_POST['expired']);
     $expiredBaru = null;
 
-    if (preg_match('/^\\d+$/', $expiredInput)) {
+    if (preg_match('/^\d+$/', $expiredInput)) {
         $expiredBaru = date('Y-m-d', strtotime("+$expiredInput days"));
-    } elseif (preg_match('/^\\d{4}-\\d{2}-\\d{2}$/', $expiredInput)) {
+    } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $expiredInput)) {
         $expiredBaru = $expiredInput;
     }
 
@@ -33,11 +33,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
         $lines = file($configPath);
         $currentTag = '';
         foreach ($lines as $i => $line) {
-            if (preg_match('/^\\s*#(trojan)(grpc|ws)?$/i', trim($line), $m)) {
+            if (preg_match('/^\s*#(trojan)(grpc|ws)?$/i', trim($line), $m)) {
                 $currentTag = '#' . strtolower($m[1] . ($m[2] ?? ''));
             }
             if (in_array($currentTag, ['#trojanws', '#trojangrpc'])) {
-                if (preg_match('/^\\s*(###|#!|#&|#\\$)\\s+' . preg_quote($userEdit, '/') . '\\s+\\d{4}-\\d{2}-\\d{2}/', $line, $matches)) {
+                if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($userEdit, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line, $matches)) {
                     $prefix = $matches[1];
                     $lines[$i] = "$prefix $userEdit $expiredBaru\n";
                 }
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
 
         foreach (glob("$logDir/akun-$reseller-$userEdit.txt") as $file) {
             $content = file_get_contents($file);
-            $content = preg_replace('/(Expired On\\s*:\\s*)(\\d{4}-\\d{2}-\\d{2})/', '${1}' . $expiredBaru, $content);
+            $content = preg_replace('/(Expired On\s*:\s*)(\d{4}-\d{2}-\d{2})/', '${1}' . $expiredBaru, $content);
             file_put_contents($file, $content);
         }
 
@@ -114,14 +114,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
                     <pre class="text-sm text-green-300 whitespace-pre-wrap"><?= htmlspecialchars($content ?: "❌ Gagal membaca isi file.") ?></pre>
                 </div>
             </div>
-        <!-- Form Edit Expired -->
-<div id="edit-<?= $username ?>" class="hidden mt-2">
-    <form method="POST" class="flex items-center gap-2 flex-wrap" onsubmit="return confirm('Yakin ubah masa aktif akun ini?')">
-        <input type="hidden" name="edit_user" value="<?= htmlspecialchars($username) ?>">
-        <input type="text" name="expired" placeholder="tgl / jumlah hari" class="px-2 py-1 text-sm rounded text-black bg-white w-40" required>
-        <button class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-white text-sm">Simpan</button>
-    </form>
-</div>
+
+            <!-- Edit Form -->
+            <div id="edit-<?= $username ?>" class="hidden mt-2">
+                <form method="POST" class="flex items-center gap-2 flex-wrap" onsubmit="return confirm('Yakin ubah masa aktif akun ini?')">
+                    <input type="hidden" name="edit_user" value="<?= htmlspecialchars($username) ?>">
+                    <input type="text" name="expired" placeholder="tgl / jumlah hari" class="px-2 py-1 text-sm rounded text-black bg-white w-40" required>
+                    <button class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-white text-sm">Simpan</button>
+                </form>
+            </div>
+        </div>
         <?php endforeach; ?>
     <?php endif; ?>
 </div>
