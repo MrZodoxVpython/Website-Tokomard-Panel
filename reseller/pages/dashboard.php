@@ -37,10 +37,14 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
 }
 ?>
 
+<!-- Tambahkan Tailwind dan Chart.js jika belum -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
-  body {
-    overflow-x: hidden;
-  }
+    body {
+        overflow-x: hidden;
+    }
 </style>
 
 <!-- Statistik box -->
@@ -56,11 +60,19 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
     ?>
 </div>
 
-<!-- Grafik -->
-<div class="mb-8 px-4 w-full overflow-x-auto">
-    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow min-w-[320px] sm:min-w-full">
+<!-- Grafik: hanya muncul jika ada akun -->
+<?php if ($stats['total'] > 0): ?>
+<div class="flex justify-center px-4 mb-8">
+    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow w-full sm:w-3/4 max-w-3xl">
         <div class="relative h-[300px]">
             <canvas id="myChart"></canvas>
+        </div>
+        <!-- Label protokol di bawah grafik -->
+        <div class="flex justify-between mt-4 text-sm text-gray-700 dark:text-gray-200 font-semibold">
+            <span>VMess</span>
+            <span>VLess</span>
+            <span>Trojan</span>
+            <span>Shadowsocks</span>
         </div>
     </div>
 </div>
@@ -96,6 +108,7 @@ new Chart(ctx, {
     }
 });
 </script>
+<?php endif; ?>
 
 <!-- Tabel Akun -->
 <div class="px-4 overflow-x-auto rounded-lg shadow border border-gray-300 dark:border-gray-700">
