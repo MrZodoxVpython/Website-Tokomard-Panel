@@ -60,7 +60,7 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
     <?php
     foreach (['total' => 'Total Akun', 'vmess' => 'VMess', 'vless' => 'VLess', 'trojan' => 'Trojan', 'shadowsocks' => 'Shadowsocks'] as $k => $label) {
         $color = ['total' => 'green', 'vmess' => 'blue', 'vless' => 'purple', 'trojan' => 'red', 'shadowsocks' => 'yellow'][$k];
-        echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-2 sm:p-4 text-[11px] sm:text-sm rounded-lg shadow'>
+        echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-2 sm:p-4 text-[15px] sm:text-sm rounded-lg shadow'>
                 <p class='font-semibold'>{$label}</p>
                 <p class='text-lg sm:text-xl font-bold'>{$stats[$k]}</p>
               </div>";
@@ -120,7 +120,7 @@ new Chart(ctx, {
 <!-- Tabel Akun -->
 <div class="overflow-x-auto w-full">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-300 dark:border-gray-700 min-w-full">
-        <table class="w-full text-[11px] sm:text-sm text-left text-gray-800 dark:text-white table-auto">
+        <table class="w-full text-[15px] sm:text-sm text-left text-gray-800 dark:text-white table-auto">
         <thead class="bg-gray-100 dark:bg-gray-700">
             <tr>
                 <th class="px-1 py-1 sm:px-3 sm:py-2 whitespace-nowrap">No</th>
