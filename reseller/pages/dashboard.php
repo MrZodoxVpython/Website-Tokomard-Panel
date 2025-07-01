@@ -37,37 +37,37 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
 }
 ?>
 
-<!-- Tambahkan Tailwind dan Chart.js jika belum -->
+<!-- Include Tailwind & Chart.js -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <style>
     body {
         overflow-x: hidden;
     }
 </style>
 
-<!-- Statistik box -->
-<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6 px-4 text-center">
-    <?php
-    foreach (['total' => 'Total Akun', 'vmess' => 'VMess', 'vless' => 'VLess', 'trojan' => 'Trojan', 'shadowsocks' => 'Shadowsocks'] as $k => $label) {
-        $color = ['total' => 'green', 'vmess' => 'blue', 'vless' => 'purple', 'trojan' => 'red', 'shadowsocks' => 'yellow'][$k];
-        echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-4 sm:p-5 rounded-lg shadow'>
-                <p class='text-sm sm:text-base font-semibold'>{$label}</p>
-                <p class='text-xl sm:text-2xl mt-2 font-bold'>{$stats[$k]}</p>
-              </div>";
-    }
-    ?>
+<!-- Statistik Box -->
+<div class="px-4 mb-6">
+    <div class="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <?php
+        foreach (['total' => 'Total Akun', 'vmess' => 'VMess', 'vless' => 'VLess', 'trojan' => 'Trojan', 'shadowsocks' => 'Shadowsocks'] as $k => $label) {
+            $color = ['total' => 'green', 'vmess' => 'blue', 'vless' => 'purple', 'trojan' => 'red', 'shadowsocks' => 'yellow'][$k];
+            echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-4 sm:p-5 rounded-lg shadow text-center'>
+                    <p class='text-sm sm:text-base font-semibold'>{$label}</p>
+                    <p class='text-xl sm:text-2xl mt-2 font-bold'>{$stats[$k]}</p>
+                  </div>";
+        }
+        ?>
+    </div>
 </div>
 
-<!-- Grafik: hanya muncul jika ada akun -->
+<!-- Grafik -->
 <?php if ($stats['total'] > 0): ?>
 <div class="flex justify-center px-4 mb-8">
-    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow w-full sm:w-3/4 max-w-3xl">
-        <div class="relative h-[300px]">
+    <div class="w-full sm:w-11/12 md:w-4/5 lg:w-3/5 xl:w-1/2 bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+        <div class="relative h-[300px] w-full">
             <canvas id="myChart"></canvas>
         </div>
-        <!-- Label protokol di bawah grafik -->
         <div class="flex justify-between mt-4 text-sm text-gray-700 dark:text-gray-200 font-semibold">
             <span>VMess</span>
             <span>VLess</span>
@@ -111,34 +111,36 @@ new Chart(ctx, {
 <?php endif; ?>
 
 <!-- Tabel Akun -->
-<div class="px-4 overflow-x-auto rounded-lg shadow border border-gray-300 dark:border-gray-700">
-    <table class="min-w-[600px] text-sm text-left text-gray-800 dark:text-white">
-        <thead class="bg-gray-200 dark:bg-gray-700">
-            <tr>
-                <th class="px-4 py-3">No</th>
-                <th class="px-4 py-3">Username</th>
-                <th class="px-4 py-3">Protocol</th>
-                <th class="px-4 py-3">Expired</th>
-                <th class="px-4 py-3">UUID/Pass</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (empty($rows)) : ?>
+<div class="px-4 mb-6 overflow-x-auto">
+    <div class="rounded-lg shadow border border-gray-300 dark:border-gray-700 min-w-full">
+        <table class="min-w-[600px] w-full text-sm text-left text-gray-800 dark:text-white">
+            <thead class="bg-gray-200 dark:bg-gray-700">
                 <tr>
-                    <td colspan="5" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Belum ada akun.</td>
+                    <th class="px-4 py-3">No</th>
+                    <th class="px-4 py-3">Username</th>
+                    <th class="px-4 py-3">Protocol</th>
+                    <th class="px-4 py-3">Expired</th>
+                    <th class="px-4 py-3">UUID/Pass</th>
                 </tr>
-            <?php else : ?>
-                <?php foreach ($rows as $r) : ?>
-                    <tr class="border-t border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <td class="px-4 py-2"><?= $r['no'] ?></td>
-                        <td class="px-4 py-2"><?= $r['user'] ?></td>
-                        <td class="px-4 py-2"><?= $r['proto'] ?></td>
-                        <td class="px-4 py-2"><?= $r['exp'] ?></td>
-                        <td class="px-4 py-2 font-mono"><?= $r['buyer'] ?></td>
+            </thead>
+            <tbody>
+                <?php if (empty($rows)) : ?>
+                    <tr>
+                        <td colspan="5" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Belum ada akun.</td>
                     </tr>
-                <?php endforeach ?>
-            <?php endif ?>
-        </tbody>
-    </table>
+                <?php else : ?>
+                    <?php foreach ($rows as $r) : ?>
+                        <tr class="border-t border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <td class="px-4 py-2"><?= $r['no'] ?></td>
+                            <td class="px-4 py-2"><?= $r['user'] ?></td>
+                            <td class="px-4 py-2"><?= $r['proto'] ?></td>
+                            <td class="px-4 py-2"><?= $r['exp'] ?></td>
+                            <td class="px-4 py-2 font-mono"><?= $r['buyer'] ?></td>
+                        </tr>
+                    <?php endforeach ?>
+                <?php endif ?>
+            </tbody>
+        </table>
+    </div>
 </div>
 
