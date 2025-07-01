@@ -75,10 +75,6 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
             <canvas id="myChart"></canvas>
         </div>
         <div class="text-center mt-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
-            <span class="inline-block mx-1 sm:mx-2">VMess</span>
-            <span class="inline-block mx-1 sm:mx-2">VLess</span>
-            <span class="inline-block mx-1 sm:mx-2">Trojan</span>
-            <span class="inline-block mx-1 sm:mx-2">Shadowsocks</span>
         </div>
     </div>
 </div>
