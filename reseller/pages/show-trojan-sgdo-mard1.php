@@ -14,12 +14,6 @@ $cmdListFiles = "$sshPrefix 'ls $remotePath/akun-$reseller-*.txt 2>/dev/null'";
 $fileListRaw = shell_exec($cmdListFiles);
 $fileList = array_filter(explode("\n", trim($fileListRaw)));
 
-<?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-session_start();
-
-$reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? 'unknown';
 
 $configPath = '/etc/xray/config.json';
 $logDir = "/etc/xray/data-panel/reseller";
