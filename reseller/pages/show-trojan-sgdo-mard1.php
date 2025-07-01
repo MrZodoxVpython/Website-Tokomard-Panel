@@ -49,10 +49,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
                 $currentTag = '#' . strtolower($m[1] . ($m[2] ?? ''));
             }
             if (in_array($currentTag, ['#trojanws', '#trojangrpc'])) {
-                if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($userEdit, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line, $matches)) {
-                    $prefix = $matches[1];
-                    $lines[$i] = "$prefix $userEdit $expiredBaru\n";
-                }
+               if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($userEdit, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line, $matches)) {
+                   $prefix = $matches[1];
+                   $lines[$i] = "$prefix $userEdit $expiredBaru\n";
+               }
             }
         }
         file_put_contents($configPath, implode('', $lines));
