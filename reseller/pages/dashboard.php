@@ -69,7 +69,6 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
             <canvas id="myChart"></canvas>
         </div>
         <div class="flex justify-between mt-4 text-sm text-gray-700 dark:text-gray-200 font-semibold">
-            <span>VMess</span>
             <span>VLess</span>
             <span>Trojan</span>
             <span>Shadowsocks</span>
