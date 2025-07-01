@@ -240,7 +240,6 @@ if ($stmt) {
                       </tr>";
             }
         }
-        echo '</tbody></table></div>';
     } else {
       $path = __DIR__."/pages/$page.php";
       if(file_exists($path)) include $path;
