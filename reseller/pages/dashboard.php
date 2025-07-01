@@ -46,17 +46,18 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
     <title>Dashboard Akun</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-<style>
-    html, body {
-        max-width: 100%;
-        overflow-x: hidden;
-    }
-</style>
+    <style>
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+            box-sizing: border-box;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-4">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-4 overflow-x-hidden">
 
-<!-- Statistik Akun -->
-<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6 text-center">
+<!-- Statistik -->
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6 text-center w-full max-w-screen">
     <?php
     foreach (['total' => 'Total Akun', 'vmess' => 'VMess', 'vless' => 'VLess', 'trojan' => 'Trojan', 'shadowsocks' => 'Shadowsocks'] as $k => $label) {
         $color = ['total' => 'green', 'vmess' => 'blue', 'vless' => 'purple', 'trojan' => 'red', 'shadowsocks' => 'yellow'][$k];
@@ -68,8 +69,8 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
     ?>
 </div>
 
-<!-- Grafik Akun Terjual -->
-<div class="w-full flex justify-center mb-8">
+<!-- Grafik -->
+<div class="w-full flex justify-center mb-8 px-2">
     <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow w-full max-w-2xl">
         <div class="relative h-[280px] w-full">
             <canvas id="myChart"></canvas>
@@ -121,35 +122,35 @@ new Chart(ctx, {
 </script>
 
 <!-- Tabel Akun -->
-<div class="overflow-x-auto w-full">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-300 dark:border-gray-700 min-w-full">
+<div class="overflow-x-auto w-full px-1">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-300 dark:border-gray-700 w-full">
         <table class="w-full text-sm text-left text-gray-800 dark:text-white table-auto">
-        <thead class="bg-gray-100 dark:bg-gray-700">
-            <tr>
-                <th class="px-3 py-2">No</th>
-                <th class="px-3 py-2">Username</th>
-                <th class="px-3 py-2">Protocol</th>
-                <th class="px-3 py-2">Expired</th>
-                <th class="px-3 py-2">UUID/Pass</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (empty($rows)) : ?>
+            <thead class="bg-gray-100 dark:bg-gray-700">
                 <tr>
-                    <td colspan="5" class="text-center px-3 py-4 text-gray-500 dark:text-gray-400">Belum ada akun.</td>
+                    <th class="px-3 py-2 whitespace-nowrap">No</th>
+                    <th class="px-3 py-2 whitespace-nowrap">Username</th>
+                    <th class="px-3 py-2 whitespace-nowrap">Protocol</th>
+                    <th class="px-3 py-2 whitespace-nowrap">Expired</th>
+                    <th class="px-3 py-2 whitespace-nowrap">UUID/Pass</th>
                 </tr>
-            <?php else : ?>
-                <?php foreach ($rows as $r) : ?>
-                    <tr class="border-t border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <td class="px-3 py-2"><?= $r['no'] ?></td>
-                        <td class="px-3 py-2"><?= $r['user'] ?></td>
-                        <td class="px-3 py-2"><?= $r['proto'] ?></td>
-                        <td class="px-3 py-2"><?= $r['exp'] ?></td>
-                        <td class="px-3 py-2 font-mono break-all"><?= $r['buyer'] ?></td>
+            </thead>
+            <tbody>
+                <?php if (empty($rows)) : ?>
+                    <tr>
+                        <td colspan="5" class="text-center px-3 py-4 text-gray-500 dark:text-gray-400">Belum ada akun.</td>
                     </tr>
-                <?php endforeach ?>
-            <?php endif ?>
-        </tbody>
+                <?php else : ?>
+                    <?php foreach ($rows as $r) : ?>
+                        <tr class="border-t border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <td class="px-3 py-2"><?= $r['no'] ?></td>
+                            <td class="px-3 py-2 break-words"><?= $r['user'] ?></td>
+                            <td class="px-3 py-2"><?= $r['proto'] ?></td>
+                            <td class="px-3 py-2"><?= $r['exp'] ?></td>
+                            <td class="px-3 py-2 font-mono break-all"><?= $r['buyer'] ?></td>
+                        </tr>
+                    <?php endforeach ?>
+                <?php endif ?>
+            </tbody>
         </table>
     </div>
 </div>
