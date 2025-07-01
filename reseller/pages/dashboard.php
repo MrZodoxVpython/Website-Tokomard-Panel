@@ -38,8 +38,8 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
 }
 ?>
 
-<!-- Statistik -->
-<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4 mb-6 text-center">
+<!-- Statistik Akun -->
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6 text-center">
     <?php
     foreach (['total' => 'Total Akun', 'vmess' => 'VMess', 'vless' => 'VLess', 'trojan' => 'Trojan', 'shadowsocks' => 'Shadowsocks'] as $k => $label) {
         $color = ['total' => 'green', 'vmess' => 'blue', 'vless' => 'purple', 'trojan' => 'red', 'shadowsocks' => 'yellow'][$k];
@@ -51,21 +51,22 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
     ?>
 </div>
 
-<!-- Grafik -->
+<!-- Grafik Akun Terjual -->
 <div class="w-full flex justify-center mb-8">
     <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow w-full max-w-2xl">
-        <div class="relative h-[300px] w-full">
+        <div class="relative h-[280px] w-full">
             <canvas id="myChart"></canvas>
         </div>
         <div class="text-center mt-3 text-sm text-gray-600 dark:text-gray-300">
-            <span class="mx-2">VMess</span>
-            <span class="mx-2">VLess</span>
-            <span class="mx-2">Trojan</span>
-            <span class="mx-2">Shadowsocks</span>
+            <span class="inline-block mx-2">VMess</span>
+            <span class="inline-block mx-2">VLess</span>
+            <span class="inline-block mx-2">Trojan</span>
+            <span class="inline-block mx-2">Shadowsocks</span>
         </div>
     </div>
 </div>
 
+<!-- Chart.js -->
 <script>
 const ctx = document.getElementById("myChart").getContext("2d");
 new Chart(ctx, {
@@ -104,7 +105,7 @@ new Chart(ctx, {
 </script>
 
 <!-- Tabel Akun -->
-<div class="overflow-auto rounded-lg shadow border border-gray-300 dark:border-gray-700">
+<div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-300 dark:border-gray-700">
     <table class="min-w-full text-sm text-left text-gray-800 dark:text-white">
         <thead class="bg-gray-100 dark:bg-gray-700">
             <tr>
