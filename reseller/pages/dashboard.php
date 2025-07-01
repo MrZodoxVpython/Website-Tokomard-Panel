@@ -1,149 +1,95 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Akun Xray</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
-    }
-  </style>
-</head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white">
-  <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-    <?php
-    if (session_status() == PHP_SESSION_NONE) {
-        session_start();
-    }
-    $reseller = $_SESSION['reseller'] ?? 'unknown';
+$reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? 'unknown';
 
-    $stats = ['total' => 0, 'vmess' => 0, 'vless' => 0, 'trojan' => 0, 'shadowsocks' => 0];
-    $rows = [];
-    $dir = "/etc/xray/data-panel/reseller/";
-    $no = 1;
+// Contoh data dummy
+$total = 0;
+$vmess = 0;
+$vless = 0;
+$trojan = 0;
+$shadowsocks = 0;
+?>
 
-    foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
-        $buyer = basename($file, ".txt");
-        $buyer = str_replace("akun-{$reseller}-", "", $buyer);
-        $lines = file($file);
-        $proto = null;
-        $expired = "-";
-        $uuidOrPass = "-";
-        foreach ($lines as $line) {
-            if (stripos($line, 'TROJAN ACCOUNT') !== false) $proto = 'trojan';
-            elseif (stripos($line, 'VMESS ACCOUNT') !== false) $proto = 'vmess';
-            elseif (stripos($line, 'VLESS ACCOUNT') !== false) $proto = 'vless';
-            elseif (stripos($line, 'SHADOWSOCKS ACCOUNT') !== false) $proto = 'shadowsocks';
-            elseif (stripos($line, 'Expired On') !== false) {
-                $expParts = explode(':', $line, 2);
-                $expired = trim($expParts[1] ?? '-');
-            }
-            if (stripos($line, 'Password') !== false) {
-                $uuidOrPass = trim(explode(':', $line, 2)[1] ?? '-');
-            }
-        }
-        if ($proto) {
-            $stats[$proto]++;
-            $stats['total']++;
-            $rows[] = [
-                'no' => $no++, 'user' => $buyer,
-                'proto' => strtoupper($proto), 'exp' => $expired, 'buyer' => $uuidOrPass
-            ];
-        }
-    }
-    ?>
-
-    <!-- Statistik -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6">
-    <?php
-    foreach (['total' => 'Total Akun', 'vmess' => 'VMess', 'vless' => 'VLess', 'trojan' => 'Trojan', 'shadowsocks' => 'Shadowsocks'] as $k => $label) {
-        $color = ['total' => 'green', 'vmess' => 'blue', 'vless' => 'purple', 'trojan' => 'red', 'shadowsocks' => 'yellow'][$k];
-        echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-4 rounded-lg shadow text-center'>
-            <p class='text-sm sm:text-base font-semibold'>{$label}</p>
-            <p class='text-xl sm:text-2xl mt-2 font-bold'>{$stats[$k]}</p>
-        </div>";
-    }
-    ?>
+<div class="w-screen min-h-screen bg-gray-100 dark:bg-gray-900 pt-16 px-4 sm:ml-64 overflow-x-hidden">
+  <div class="max-w-full mx-auto">
+    <!-- Kotak Statistik -->
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+      <div class="flex flex-col items-center justify-center h-24 bg-green-500 text-white rounded-md font-semibold">
+        Total Akun <div class="text-2xl"><?= $total ?></div>
+      </div>
+      <div class="flex flex-col items-center justify-center h-24 bg-blue-600 text-white rounded-md font-semibold">
+        VMess <div class="text-2xl"><?= $vmess ?></div>
+      </div>
+      <div class="flex flex-col items-center justify-center h-24 bg-purple-500 text-white rounded-md font-semibold">
+        VLess <div class="text-2xl"><?= $vless ?></div>
+      </div>
+      <div class="flex flex-col items-center justify-center h-24 bg-red-600 text-white rounded-md font-semibold">
+        Trojan <div class="text-2xl"><?= $trojan ?></div>
+      </div>
+      <div class="flex flex-col items-center justify-center h-24 bg-yellow-600 text-white rounded-md font-semibold">
+        Shadowsocks <div class="text-2xl"><?= $shadowsocks ?></div>
+      </div>
     </div>
 
     <!-- Grafik -->
-    <div class="mb-8 bg-white dark:bg-gray-800 p-4 rounded-lg shadow w-full">
-      <div class="relative w-full h-[300px]">
-        <canvas id="myChart" class="w-full h-full"></canvas>
+    <div class="w-full bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
+      <div class="w-full h-[300px] relative">
+        <canvas id="myChart"></canvas>
       </div>
     </div>
 
     <!-- Tabel -->
-    <div class="overflow-x-auto rounded-lg border border-gray-300 dark:border-gray-700 shadow">
-      <table class="min-w-full text-sm text-left text-gray-700 dark:text-white">
-        <thead class="bg-gray-100 dark:bg-gray-700">
+    <div class="overflow-x-auto shadow-md sm:rounded-lg mb-12">
+      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
-            <th class="px-4 py-2 whitespace-nowrap">No</th>
-            <th class="px-4 py-2 whitespace-nowrap">Username</th>
-            <th class="px-4 py-2 whitespace-nowrap">Protocol</th>
-            <th class="px-4 py-2 whitespace-nowrap">Expired</th>
-            <th class="px-4 py-2 whitespace-nowrap">UUID / Pass</th>
+            <th class="px-6 py-3">No</th>
+            <th class="px-6 py-3">Username</th>
+            <th class="px-6 py-3">Protocol</th>
+            <th class="px-6 py-3">Expired</th>
+            <th class="px-6 py-3">UUID / Password</th>
+            <th class="px-6 py-3">Status</th>
+            <th class="px-6 py-3">Action</th>
           </tr>
         </thead>
         <tbody>
-        <?php if (empty($rows)): ?>
-          <tr><td colspan="5" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Belum ada akun.</td></tr>
-        <?php else: ?>
-          <?php foreach ($rows as $r): ?>
-            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
-              <td class="px-4 py-2"><?= $r['no'] ?></td>
-              <td class="px-4 py-2 break-words"><?= $r['user'] ?></td>
-              <td class="px-4 py-2"><?= $r['proto'] ?></td>
-              <td class="px-4 py-2"><?= $r['exp'] ?></td>
-              <td class="px-4 py-2 break-all font-mono"><?= $r['buyer'] ?></td>
-            </tr>
-          <?php endforeach ?>
-        <?php endif ?>
+          <tr class="bg-white dark:bg-gray-800">
+            <td colspan="7" class="px-6 py-4 text-center">Belum ada akun.</td>
+          </tr>
         </tbody>
       </table>
     </div>
   </div>
+</div>
 
-  <script>
-  const ctx = document.getElementById("myChart").getContext("2d");
-  new Chart(ctx, {
-      type: "bar",
-      data: {
-          labels: ["VMess", "VLess", "Trojan", "Shadowsocks"],
-          datasets: [{
-              label: "Akun Terjual",
-              data: [<?= $stats['vmess'] ?>, <?= $stats['vless'] ?>, <?= $stats['trojan'] ?>, <?= $stats['shadowsocks'] ?>],
-              backgroundColor: ["#3b82f6", "#8b5cf6", "#ef4444", "#f59e0b"],
-              borderRadius: 8
-          }]
-      },
-      options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-              legend: { display: false },
-              tooltip: {
-                  backgroundColor: "#1f2937",
-                  titleColor: "#fff",
-                  bodyColor: "#ddd"
-              }
-          },
-          scales: {
-              y: { beginAtZero: true, ticks: { color: "#94a3b8" } },
-              x: { ticks: { color: "#94a3b8" } }
-          }
+<!-- ChartJS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('myChart').getContext('2d');
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['VMess', 'VLess', 'Trojan', 'Shadowsocks'],
+    datasets: [{
+      label: 'Jumlah Akun',
+      data: [<?= $vmess ?>, <?= $vless ?>, <?= $trojan ?>, <?= $shadowsocks ?>],
+      backgroundColor: ['#3b82f6', '#a855f7', '#ef4444', '#f59e0b'],
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: { precision: 0 }
       }
-  });
-  </script>
-</body>
-</html>
+    }
+  }
+});
+</script>
 
