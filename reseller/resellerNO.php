@@ -241,10 +241,10 @@ if ($stmt) {
             }
         }
         echo '</tbody></table></div>';
-    } elseif (file_exists($pagePath)) {
-        include $pagePath;
     } else {
-        echo "<div class='text-red-500 text-center'>Halaman <b>{$page}</b> tidak ditemukan.</div>";
+      $path = __DIR__."/pages/$page.php";
+      if(file_exists($path)) include $path;
+      else echo "<div class='text-red-500'>Halaman tidak ditemukan.</div>";
     }
     ?>
   </main>
