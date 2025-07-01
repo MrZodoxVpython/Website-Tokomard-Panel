@@ -8,16 +8,13 @@ $reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? 'unknown';
 $remoteIP = '152.42.182.187';
 $sshUser = 'root';
 $remotePath = "/etc/xray/data-panel/reseller";
-$configPath = "/etc/xray/config.json";
-$restartScript = "/etc/xray/restart-xray.sh";
-$sshPrefix = "ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no $sshUser@$remoteIP";
+$configPath = '/etc/xray/config.json';
 
-// Ambil daftar akun
-$cmdListFiles = "$sshPrefix 'ls $remotePath/akun-$reseller-*.txt 2>/dev/null'";
-$fileListRaw = shell_exec($cmdListFiles);
+$sshPrefix = "ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no $sshUser@$remoteIP";
+$fileListRaw = shell_exec("$sshPrefix 'ls $remotePath/akun-$reseller-*.txt 2>/dev/null'");
 $fileList = array_filter(explode("\n", trim($fileListRaw)));
 
-// Handle Edit Expired
+// HANDLE EDIT
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
     $userEdit = $_POST['edit_user'];
     $expiredInput = trim($_POST['expired']);
@@ -30,49 +27,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
     }
 
     if ($expiredBaru) {
-        $cmd = <<<EOT
-$sshPrefix "sed -i 's/\\(#!\\s\\+$userEdit\\s\\+\\)20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]/\\1$expiredBaru/' $configPath && bash $restartScript"
-EOT;
-        shell_exec($cmd);
+        // Ubah tanggal expired di config.json lokal
+        $lines = file($configPath);
+        $currentTag = '';
+        foreach ($lines as $i => $line) {
+            if (preg_match('/^\s*#(trojan)(grpc|ws)?$/i', trim($line), $m)) {
+                $currentTag = '#' . strtolower($m[1] . ($m[2] ?? ''));
+            }
+            if (in_array($currentTag, ['#trojanws', '#trojangrpc'])) {
+                if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($userEdit, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line, $matches)) {
+                    $prefix = $matches[1];
+                    $lines[$i] = "$prefix $userEdit $expiredBaru\n";
+                }
+            }
+        }
+        file_put_contents($configPath, implode('', $lines));
+
+        // Update remote file
+        $remoteFile = "$remotePath/akun-$reseller-$userEdit.txt";
+        $escapedDate = escapeshellarg($expiredBaru);
+        $sshUpdateCmd = "$sshPrefix \"sed -i 's/^Expired On\\s*:\\s*.*/Expired On     : $expiredBaru/' '$remoteFile'\"";
+        shell_exec($sshUpdateCmd);
+
+        shell_exec('sudo /etc/xray/restart-xray.sh');
     }
 
     header("Location: show-trojan-sgdo-mard1.php");
     exit;
 }
 
-// Handle Stop/Start
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_user']) && isset($_POST['action'])) {
-    $user = $_POST['toggle_user'];
-    $action = $_POST['action'];
-
-    if ($action === 'stop') {
-        $cmd = "$sshPrefix \"sed -i 's/^#!\\s\\+$user\\s\\+/#& $user /' $configPath && bash $restartScript\"";
-    } elseif ($action === 'start') {
-        $cmd = "$sshPrefix \"sed -i 's/^#&\\s\\+$user\\s\\+/#! $user /' $configPath && bash $restartScript\"";
-    }
-
-    shell_exec($cmd);
-    header("Location: show-trojan-sgdo-mard1.php");
-    exit;
-}
-
-// Handle Delete
+// HANDLE DELETE
 if (isset($_GET['hapus'])) {
-    $user = $_GET['hapus'];
+    $userDel = basename($_GET['hapus']);
+    $lines = file($configPath);
+    $output = [];
 
-    $deleteCmd = <<<EOD
-$sshPrefix "awk '
-    BEGIN { skip = 0 }
-    /^#!\\s+$user\\s+[0-9]{4}-[0-9]{2}-[0-9]{2}/ { skip = 1; next }
-    /^\s*}/ && skip == 1 { skip = 0; next }
-    skip == 0 { print }
-' $configPath > /tmp/tmp_config.json && mv /tmp/tmp_config.json $configPath && bash $restartScript"
-EOD;
-    shell_exec($deleteCmd);
+    $currentTag = '';
+    $skipNext = false;
+    foreach ($lines as $i => $line) {
+        if (preg_match('/^\s*#(trojan)(grpc|ws)?$/i', trim($line), $m)) {
+            $currentTag = '#' . strtolower($m[1] . ($m[2] ?? ''));
+        }
+
+        if (in_array($currentTag, ['#trojanws', '#trojangrpc'])) {
+            if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($userDel, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line)) {
+                $skipNext = true;
+                continue;
+            }
+            if ($skipNext && preg_match('/^\s*{/', $line)) {
+                $skipNext = false;
+                continue;
+            }
+        }
+
+        if (!$skipNext) {
+            $output[] = $line;
+        }
+    }
+
+    file_put_contents($configPath, implode('', $output));
+
+    // Hapus file remote
+    $remoteDelCmd = "$sshPrefix 'rm -f $remotePath/akun-$reseller-$userDel.txt'";
+    shell_exec($remoteDelCmd);
+
+    shell_exec('sudo /etc/xray/restart-xray.sh');
     header("Location: show-trojan-sgdo-mard1.php");
     exit;
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
