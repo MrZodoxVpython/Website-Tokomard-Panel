@@ -240,13 +240,56 @@ if (file_exists($avatarJsonPath)) {
 
   <section class="flex-1 p-5 bg-white dark:bg-gray-900 rounded-xl shadow-md">
     <?php
-  $path = __DIR__ . "/pages/$page.php";
-  if (file_exists($path)) {
-      include $path;
-  } else {
-      echo "<div class='text-red-500'>Halaman tidak ditemukan.</div>";
-  }
-?>
+    $pagePath = __DIR__ . "/pages/{$page}.php";
+    if ($page === 'dashboard') {
+        $stats = ['total' => 0, 'vmess' => 0, 'vless' => 0, 'trojan' => 0, 'shadowsocks' => 0];
+        $rows = [];
+        $dir = "/etc/xray/data-panel/reseller/";
+        $no = 1;
+        foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
+            $buyer = basename($file, ".txt");
+            $buyer = str_replace("akun-{$reseller}-", "", $buyer);
+            $lines = file($file);
+            $proto = null;
+            $expired = "-";
+            $uuidOrPass = "-";
+            foreach ($lines as $line) {
+                if (stripos($line, 'TROJAN ACCOUNT') !== false) $proto = 'trojan';
+                elseif (stripos($line, 'VMESS ACCOUNT') !== false) $proto = 'vmess';
+                elseif (stripos($line, 'VLESS ACCOUNT') !== false) $proto = 'vless';
+                elseif (stripos($line, 'SHADOWSOCKS ACCOUNT') !== false) $proto = 'shadowsocks';
+                elseif (stripos($line, 'Expired On') !== false) {
+                    $expParts = explode(':', $line, 2);
+                    $expired = trim($expParts[1] ?? '-');
+                }
+                // Ambil UUID atau Password
+                if (stripos($line, 'Password') !== false && $proto === 'trojan') {
+                    $uuidOrPass = trim(explode(':', $line, 2)[1] ?? '-');
+                } elseif (stripos($line, 'Password') !== false && in_array($proto, ['vmess', 'vless', 'shadowsocks'])) {
+                    $uuidOrPass = trim(explode(':', $line, 2)[1] ?? '-');
+                }
+            }
+            if ($proto) {
+                $stats[$proto]++;
+                $stats['total']++;
+                $rows[] = [
+                    'no' => $no++, 'user' => $buyer,
+                    'proto' => strtoupper($proto), 'exp' => $expired, 'buyer' => $uuidOrPass
+                ];
+            }
+        }
+
+        // Statistik
+        echo '<div class="text-center grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">';
+        foreach (['total' => 'Total Akun', 'vmess' => 'VMess', 'vless' => 'VLess', 'trojan' => 'Trojan', 'shadowsocks' => 'Shadowsocks'] as $k => $label) {
+            $color = ['total' => 'green', 'vmess' => 'blue', 'vless' => 'purple', 'trojan' => 'red', 'shadowsocks' => 'yellow'][$k];
+            echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-5 rounded-lg shadow'>
+            <p class='text-lg font-semibold'>{$label}</p>
+            <p class='text-3xl mt-2 font-bold'>{$stats[$k]}</p>
+            </div>";
+        }
+        echo "</div>";
+
         // Grafik
         echo '<div class="mb-8 max-w-full bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
         <canvas id="myChart" class="h-[450px]"></canvas>
