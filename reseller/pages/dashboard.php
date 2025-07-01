@@ -107,7 +107,7 @@ new Chart(ctx, {
         scales: {
             y: {
                 beginAtZero: true,
-                ticks: { color: "#94a3b8", font: { size: 15 } }
+                ticks: { color: "#94a3b8", font: { size: 13 } }
             },
             x: {
                 ticks: { color: "#94a3b8", font: { size: 13 } }
