@@ -46,14 +46,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $expiredInput = trim($_POST['expired']);
         $expiredBaru = null;
 
-	if (preg_match('/^\d+$/', $expiredInput)) {
-           // Cari tanggal expired saat ini
-           $expiredLama = null;
+        // Ambil isi config.json
+        $lines = file($configPath); // <-- pindahkan ke sini dulu
 
-           foreach ($lines as $line) {
-               if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($userEdit, '/') . '\s+(\d{4}-\d{2}-\d{2})/', $line, $matches)) {
-                   $expiredLama = $matches[2];
-                   break;
+        if (preg_match('/^\d+$/', $expiredInput)) {
+            // Cari tanggal expired saat ini
+            $expiredLama = null;
+
+            foreach ($lines as $line) {
+                if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($userEdit, '/') . '\s+(\d{4}-\d{2}-\d{2})/', $line, $matches)) {
+                    $expiredLama = $matches[2];
+                    break;
                 }
             }
 
@@ -62,13 +65,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $expiredBaru = date('Y-m-d', strtotime("+$expiredInput days"));
             }
-    }
-        elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $expiredInput)) {
+        } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $expiredInput)) {
             $expiredBaru = $expiredInput;
         }
 
         if ($expiredBaru) {
-            $lines = file($configPath);
             $currentTag = '';
 
             foreach ($lines as $i => $line) {
@@ -98,6 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: show-trojan-sgdo-2dev.php");
         exit;
     }
+}
 
 // START / STOP
 if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
