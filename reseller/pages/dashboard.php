@@ -37,25 +37,26 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
 }
 ?>
 
-<!-- Statistik box -->
-<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6 text-center">
-    <?php
-    foreach (['total' => 'Total Akun', 'vmess' => 'VMess', 'vless' => 'VLess', 'trojan' => 'Trojan', 'shadowsocks' => 'Shadowsocks'] as $k => $label) {
-        $color = ['total' => 'green', 'vmess' => 'blue', 'vless' => 'purple', 'trojan' => 'red', 'shadowsocks' => 'yellow'][$k];
-        echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-4 rounded-lg shadow'>
-                <p class='text-base font-semibold'>{$label}</p>
-                <p class='text-2xl mt-2 font-bold'>{$stats[$k]}</p>
-              </div>";
-    }
-    ?>
+<!-- Statistik -->
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6">
+<?php
+foreach (['total' => 'Total Akun', 'vmess' => 'VMess', 'vless' => 'VLess', 'trojan' => 'Trojan', 'shadowsocks' => 'Shadowsocks'] as $k => $label) {
+    $color = ['total' => 'green', 'vmess' => 'blue', 'vless' => 'purple', 'trojan' => 'red', 'shadowsocks' => 'yellow'][$k];
+    echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-4 rounded-lg shadow'>
+        <p class='text-sm sm:text-base font-semibold'>{$label}</p>
+        <p class='text-xl sm:text-2xl mt-2 font-bold'>{$stats[$k]}</p>
+    </div>";
+}
+?>
 </div>
 
 <!-- Grafik -->
-<div class="mb-8 bg-white dark:bg-gray-800 p-4 rounded-lg shadow w-full overflow-hidden">
-    <div class="relative w-full max-w-full h-[350px]">
+<div class="mb-8 bg-white dark:bg-gray-800 p-4 rounded-lg shadow w-full">
+    <div class="relative w-full h-[300px]">
         <canvas id="myChart" class="w-full h-full"></canvas>
     </div>
 </div>
+
 <script>
 const ctx = document.getElementById("myChart").getContext("2d");
 new Chart(ctx, {
@@ -66,7 +67,7 @@ new Chart(ctx, {
             label: "Akun Terjual",
             data: [<?= $stats['vmess'] ?>, <?= $stats['vless'] ?>, <?= $stats['trojan'] ?>, <?= $stats['shadowsocks'] ?>],
             backgroundColor: ["#6366f1", "#3b82f6", "#ef4444", "#10b981"],
-            borderRadius: 6
+            borderRadius: 8
         }]
     },
     options: {
@@ -88,35 +89,33 @@ new Chart(ctx, {
 });
 </script>
 
-<!-- Tabel Akun -->
-<div class="w-full overflow-x-auto rounded-lg border border-gray-300 dark:border-gray-700 shadow">
-    <table class="w-full text-sm text-left text-gray-800 dark:text-white table-auto">
-        <thead class="bg-gray-200 dark:bg-gray-700">
-            <tr>
-                <th class="px-4 py-3">No</th>
-                <th class="px-4 py-3">Username</th>
-                <th class="px-4 py-3">Protocol</th>
-                <th class="px-4 py-3">Expired</th>
-                <th class="px-4 py-3">UUID/Pass</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (empty($rows)) : ?>
-                <tr>
-                    <td colspan="5" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Belum ada akun.</td>
-                </tr>
-            <?php else : ?>
-                <?php foreach ($rows as $r) : ?>
-                    <tr class="border-t border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <td class="px-4 py-2"><?= $r['no'] ?></td>
-                        <td class="px-4 py-2"><?= $r['user'] ?></td>
-                        <td class="px-4 py-2"><?= $r['proto'] ?></td>
-                        <td class="px-4 py-2"><?= $r['exp'] ?></td>
-                        <td class="px-4 py-2 font-mono break-all"><?= $r['buyer'] ?></td>
-                    </tr>
-                <?php endforeach ?>
-            <?php endif ?>
-        </tbody>
-    </table>
+<!-- Tabel -->
+<div class="overflow-x-auto rounded-lg border border-gray-300 dark:border-gray-700 shadow">
+  <table class="min-w-[600px] w-full text-sm text-left text-gray-700 dark:text-white">
+    <thead class="bg-gray-100 dark:bg-gray-700">
+      <tr>
+        <th class="px-4 py-2 whitespace-nowrap">No</th>
+        <th class="px-4 py-2 whitespace-nowrap">Username</th>
+        <th class="px-4 py-2 whitespace-nowrap">Protocol</th>
+        <th class="px-4 py-2 whitespace-nowrap">Expired</th>
+        <th class="px-4 py-2 whitespace-nowrap">UUID / Pass</th>
+      </tr>
+    </thead>
+    <tbody>
+    <?php if (empty($rows)): ?>
+      <tr><td colspan="5" class="px-4 py-4 text-center text-gray-500 dark:text-gray-400">Belum ada akun.</td></tr>
+    <?php else: ?>
+      <?php foreach ($rows as $r): ?>
+        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
+          <td class="px-4 py-2"><?= $r['no'] ?></td>
+          <td class="px-4 py-2 break-words"><?= $r['user'] ?></td>
+          <td class="px-4 py-2"><?= $r['proto'] ?></td>
+          <td class="px-4 py-2"><?= $r['exp'] ?></td>
+          <td class="px-4 py-2 break-all font-mono"><?= $r['buyer'] ?></td>
+        </tr>
+      <?php endforeach ?>
+    <?php endif ?>
+    </tbody>
+  </table>
 </div>
 
