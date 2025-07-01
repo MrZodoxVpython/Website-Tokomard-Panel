@@ -46,9 +46,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $expiredInput = trim($_POST['expired']);
         $expiredBaru = null;
 
-        if (preg_match('/^\d+$/', $expiredInput)) {
-            $expiredBaru = date('Y-m-d', strtotime("+$expiredInput days"));
-        } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $expiredInput)) {
+	if (preg_match('/^\d+$/', $expiredInput)) {
+           // Cari tanggal expired saat ini
+           $expiredLama = null;
+
+           foreach ($lines as $line) {
+               if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($userEdit, '/') . '\s+(\d{4}-\d{2}-\d{2})/', $line, $matches)) {
+                   $expiredLama = $matches[2];
+                   break;
+                }
+            }
+
+            if ($expiredLama) {
+                $expiredBaru = date('Y-m-d', strtotime("+$expiredInput days", strtotime($expiredLama)));
+            } else {
+                $expiredBaru = date('Y-m-d', strtotime("+$expiredInput days"));
+            }
+    }
+        elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $expiredInput)) {
             $expiredBaru = $expiredInput;
         }
 
