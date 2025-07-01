@@ -6,9 +6,19 @@
   <title>Dashboard Akun Xray</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html, body {
+      padding: 0;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    * {
+      box-sizing: border-box;
+    }
+  </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white">
-  <div class="max-w-screen-xl mx-auto px-4 py-6">
+  <div class="max-w-full w-full px-4 sm:px-6 md:px-8 py-6 mx-auto">
     <?php
     $reseller = $_SESSION['reseller'] ?? 'unknown';
 
@@ -63,13 +73,13 @@
 
     <!-- Grafik -->
     <div class="mb-8 bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-      <div class="w-full h-[300px] sm:h-[400px] relative">
+      <div class="relative w-full" style="height: 300px;">
         <canvas id="myChart" class="w-full h-full"></canvas>
       </div>
     </div>
 
     <!-- Tabel -->
-    <div class="w-full overflow-x-auto rounded-lg border border-gray-300 dark:border-gray-700 shadow">
+    <div class="overflow-auto rounded-lg border border-gray-300 dark:border-gray-700 shadow">
       <table class="w-full text-sm text-left text-gray-700 dark:text-white">
         <thead class="bg-gray-100 dark:bg-gray-700">
           <tr>
