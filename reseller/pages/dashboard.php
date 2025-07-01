@@ -5,7 +5,6 @@ if (session_status() === PHP_SESSION_NONE) {
 
 $reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? 'unknown';
 
-// Contoh data dummy
 $total = 0;
 $vmess = 0;
 $vless = 0;
@@ -13,39 +12,44 @@ $trojan = 0;
 $shadowsocks = 0;
 ?>
 
-<!-- Container Full Screen -->
+<!-- Container Full -->
 <div class="w-full min-h-screen bg-gray-100 dark:bg-gray-900 pt-16 px-2 sm:px-4 overflow-x-hidden">
-  <div class="max-w-full mx-auto">
+  <div class="max-w-screen-xl mx-auto w-full">
 
-    <!-- Statistik Grid -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4 mb-6">
-      <div class="flex flex-col items-center justify-center h-24 bg-green-500 text-white rounded-lg font-semibold shadow">
-        Total Akun <div class="text-2xl"><?= $total ?></div>
+    <!-- Statistik Responsive Grid -->
+    <div class="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-4 mb-6">
+      <div class="flex flex-col justify-center items-center h-20 sm:h-24 bg-green-500 text-white rounded-lg font-bold shadow">
+        <div>Total Akun</div>
+        <div class="text-xl sm:text-2xl"><?= $total ?></div>
       </div>
-      <div class="flex flex-col items-center justify-center h-24 bg-blue-600 text-white rounded-lg font-semibold shadow">
-        VMess <div class="text-2xl"><?= $vmess ?></div>
+      <div class="flex flex-col justify-center items-center h-20 sm:h-24 bg-blue-600 text-white rounded-lg font-bold shadow">
+        <div>VMess</div>
+        <div class="text-xl sm:text-2xl"><?= $vmess ?></div>
       </div>
-      <div class="flex flex-col items-center justify-center h-24 bg-purple-500 text-white rounded-lg font-semibold shadow">
-        VLess <div class="text-2xl"><?= $vless ?></div>
+      <div class="flex flex-col justify-center items-center h-20 sm:h-24 bg-purple-500 text-white rounded-lg font-bold shadow">
+        <div>VLess</div>
+        <div class="text-xl sm:text-2xl"><?= $vless ?></div>
       </div>
-      <div class="flex flex-col items-center justify-center h-24 bg-red-600 text-white rounded-lg font-semibold shadow">
-        Trojan <div class="text-2xl"><?= $trojan ?></div>
+      <div class="flex flex-col justify-center items-center h-20 sm:h-24 bg-red-600 text-white rounded-lg font-bold shadow">
+        <div>Trojan</div>
+        <div class="text-xl sm:text-2xl"><?= $trojan ?></div>
       </div>
-      <div class="flex flex-col items-center justify-center h-24 bg-yellow-600 text-white rounded-lg font-semibold shadow">
-        Shadowsocks <div class="text-2xl"><?= $shadowsocks ?></div>
+      <div class="flex flex-col justify-center items-center h-20 sm:h-24 bg-yellow-600 text-white rounded-lg font-bold shadow">
+        <div>Shadowsocks</div>
+        <div class="text-xl sm:text-2xl"><?= $shadowsocks ?></div>
       </div>
     </div>
 
     <!-- Grafik -->
     <div class="w-full bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
-      <div class="w-full h-[300px] relative">
+      <div class="w-full h-64 sm:h-80">
         <canvas id="myChart"></canvas>
       </div>
     </div>
 
     <!-- Tabel -->
     <div class="w-full overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow mb-12">
-      <table class="min-w-full text-sm text-left text-gray-700 dark:text-gray-300">
+      <table class="min-w-full text-sm text-left text-gray-700 dark:text-gray-300 whitespace-nowrap">
         <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-200">
           <tr>
             <th class="px-4 py-3">No</th>
