@@ -114,16 +114,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
                     <pre class="text-sm text-green-300 whitespace-pre-wrap"><?= htmlspecialchars($content ?: "❌ Gagal membaca isi file.") ?></pre>
                 </div>
             </div>
-
-            <!-- Form Edit Expired -->
-            <div id="edit-<?= $username ?>" class="hidden mt-3">
-                <form method="POST" class="flex flex-wrap items-center gap-2" onsubmit="return confirm('Yakin ubah masa aktif akun ini?')">
-                    <input type="hidden" name="edit_user" value="<?= htmlspecialchars($username) ?>">
-                    <input type="text" name="expired" placeholder="7 / 2025-07-10" class="text-sm text-black px-2 py-1 rounded w-28" required>
-                    <button class="bg-green-600 hover:bg-green-700 px-2 py-1 rounded text-white text-sm">Save</button>
-                </form>
-            </div>
-        </div>
+        <!-- Form Edit Expired -->
+<div id="edit-<?= $username ?>" class="hidden mt-2">
+    <form method="POST" class="flex items-center gap-2 flex-wrap" onsubmit="return confirm('Yakin ubah masa aktif akun ini?')">
+        <input type="hidden" name="edit_user" value="<?= htmlspecialchars($username) ?>">
+        <input type="text" name="expired" placeholder="tgl / jumlah hari" class="px-2 py-1 text-sm rounded text-black bg-white w-40" required>
+        <button class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-white text-sm">Simpan</button>
+    </form>
+</div>
         <?php endforeach; ?>
     <?php endif; ?>
 </div>
