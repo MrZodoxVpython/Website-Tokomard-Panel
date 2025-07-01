@@ -5,7 +5,7 @@ session_start();
 
 $reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? 'unknown';
 
-$remoteIP = '152.42.182.187'; // IP VPS remote
+$remoteIP = '152.42.182.187';
 $sshUser = 'root';
 $remotePath = "/etc/xray/data-panel/reseller";
 $sshPrefix = "ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no $sshUser@$remoteIP";
@@ -14,43 +14,11 @@ $cmdListFiles = "$sshPrefix 'ls $remotePath/akun-$reseller-*.txt 2>/dev/null'";
 $fileListRaw = shell_exec($cmdListFiles);
 $fileList = array_filter(explode("\n", trim($fileListRaw)));
 
-
 $configPath = '/etc/xray/config.json';
 $logDir = "/etc/xray/data-panel/reseller";
-$akunFiles = glob("$logDir/akun-$reseller-*.txt");
 
-// Handle DELETE
-if (isset($_GET['hapus'])) {
-    $userToDelete = $_GET['hapus'];
-    $lines = file($configPath);
-    $newLines = [];
-
-    for ($i = 0; $i < count($lines); $i++) {
-        if (preg_match('/^\s*(###|#&|#!|#\$)\s+' . preg_quote($userToDelete) . '\s+\d{4}-\d{2}-\d{2}/', $lines[$i])) {
-            $i++; // skip JSON line
-            continue;
-        }
-        if (preg_match('/^##LOCK##/', trim($lines[$i]))) {
-            continue; // skip LOCK lines if any
-        }
-        $newLines[] = $lines[$i];
-    }
-
-    file_put_contents($configPath, implode('', $newLines));
-    shell_exec('sudo /usr/local/bin/restart-xray.sh');
-
-    foreach (glob("$logDir/akun-$reseller-$userToDelete.txt") as $file) {
-        unlink($file);
-    }
-
-    header("Location: show-trojan-sgdo-2dev.php");
-    exit;
-}
-
-// Handle POST (Edit & Start/Stop)
+// Handle POST Edit
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    // Edit Expired
     if (isset($_POST['edit_user'])) {
         $userEdit = $_POST['edit_user'];
         $expiredInput = trim($_POST['expired']);
@@ -65,12 +33,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($expiredBaru) {
             $lines = file($configPath);
             $currentTag = '';
-
             foreach ($lines as $i => $line) {
                 if (preg_match('/^\s*#(trojan)(grpc|ws)?$/i', trim($line), $m)) {
                     $currentTag = '#' . strtolower($m[1] . ($m[2] ?? ''));
                 }
-
                 if (in_array($currentTag, ['#trojanws', '#trojangrpc'])) {
                     if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($userEdit, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line, $matches)) {
                         $prefix = $matches[1];
@@ -78,7 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 }
             }
-
             file_put_contents($configPath, implode('', $lines));
 
             foreach (glob("$logDir/akun-$reseller-$userEdit.txt") as $file) {
@@ -90,79 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             shell_exec('sudo /usr/local/bin/restart-xray.sh');
         }
 
-        header("Location: show-trojan-sgdo-2dev.php");
+        header("Location: show-trojan-sgdo-mard1.php");
         exit;
     }
-
-// START / STOP
-if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
-    $user = $_POST['toggle_user'];
-    $action = $_POST['action']; // start or stop
-    $lines = file($configPath);
-    $currentTag = '';
-    $updated = false;
-
-    for ($i = 0; $i < count($lines); $i++) {
-        $line = trim($lines[$i]);
-
-        // Deteksi blok protokol
-        if (preg_match('/^#trojan(ws|grpc)?$/i', $line)) {
-            $currentTag = strtolower($line);
-        }
-
-        // Proses hanya jika sedang dalam blok trojan
-        if (in_array($currentTag, ['#trojanws', '#trojangrpc'])) {
-            if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($user, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line)) {
-                $jsonIndex = $i + 1;
-                if (!isset($lines[$jsonIndex])) continue;
-
-                $jsonLine = trim($lines[$jsonIndex]);
-
-                // STOP: lock akun
-                if ($action === 'stop') {
-                    if (preg_match('/"password"\s*:\s*"([^"]+)"/', $jsonLine, $m)) {
-                        $originalPassword = $m[1];
-                        if ($originalPassword !== 'locked') {
-                            $lines[$jsonIndex] = preg_replace('/"password"\s*:\s*"[^"]+"/', '"password": "locked"', $jsonLine) . "\n";
-                            array_splice($lines, $jsonIndex, 0, ["##LOCK##$originalPassword\n"]);
-                            $updated = true;
-                        }
-                    }
-                }
-
-                // START: unlock akun
-                if ($action === 'start') {
-                    if (preg_match('/"password"\s*:\s*"locked"/', $jsonLine)) {
-                        // Cari baris LOCK di atasnya, max 10 baris ke atas
-                        for ($k = $jsonIndex - 1; $k >= max(0, $jsonIndex - 10); $k--) {
-                            if (preg_match('/^##LOCK##(.+)/', trim($lines[$k]), $match)) {
-                                $realPassword = trim($match[1]);
-
-                                // Kembalikan password asli
-                                $lines[$jsonIndex] = preg_replace('/"password"\s*:\s*"locked"/', '"password": "' . $realPassword . '"', $lines[$jsonIndex]);
-
-                                // Hapus baris ##LOCK##
-                                array_splice($lines, $k, 1);
-                                $updated = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    if ($updated) {
-        file_put_contents($configPath, implode('', $lines));
-        shell_exec('sudo /usr/local/bin/restart-xray.sh');
-    }
-
-    header("Location: show-trojan-sgdo-2dev.php");
-    exit;
-    }
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -177,8 +73,7 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
 
     <?php if (empty($fileList)) : ?>
         <div class="text-center bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded">
-            ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>,
-            silakan buat akun terlebih dahulu.
+            ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>
         </div>
     <?php else: ?>
         <?php foreach ($fileList as $remoteFile):
@@ -190,9 +85,9 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
             $content = trim(shell_exec($sshCatCmd));
         ?>
         <div class="bg-gray-800 rounded shadow mb-6 p-4">
-            <div class="flex justify-between items-center flex-wrap">
+            <div class="flex justify-between items-center flex-wrap gap-2">
                 <div class="text-blue-400 font-semibold text-lg"><?= htmlspecialchars($username) ?></div>
-                <div class="flex gap-2 mt-2 sm:mt-0">
+                <div class="flex gap-2 flex-wrap">
                     <button onclick="toggleDetail('<?= $username ?>')" id="btn-<?= $username ?>" class="toggle-btn bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white">Show</button>
 
                     <form method="POST" action="aksi-trojan.php" class="inline">
@@ -211,17 +106,16 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
                         <button class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded">Delete</button>
                     </form>
 
-                    <form method="GET" action="edit-akun.php" class="inline">
-                        <input type="hidden" name="username" value="<?= htmlspecialchars($username) ?>">
-                        <input type="hidden" name="reseller" value="<?= htmlspecialchars($reseller) ?>">
-                        <input type="hidden" name="vps" value="rw-mard">
-                        <button class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded">Edit</button>
+                    <form method="POST" class="inline flex items-center gap-1" onsubmit="return confirm('Yakin ubah masa aktif akun ini?')">
+                        <input type="hidden" name="edit_user" value="<?= htmlspecialchars($username) ?>">
+                        <input type="text" name="expired" placeholder="7 / 2025-07-10" class="text-sm text-black px-2 py-1 rounded w-28" required>
+                        <button class="bg-green-600 hover:bg-green-700 px-2 py-1 rounded text-white text-sm">Save</button>
                     </form>
                 </div>
             </div>
             <div id="detail-<?= $username ?>" class="hidden mt-4">
                 <div class="overflow-x-auto bg-gray-700 rounded p-3">
-                    <pre class="text-sm text-green-300 whitespace-pre-wrap"><?= htmlspecialchars($content ?: "❌ Gagal membaca isi file atau file kosong.") ?></pre>
+                    <pre class="text-sm text-green-300 whitespace-pre-wrap"><?= htmlspecialchars($content ?: "❌ Gagal membaca isi file.") ?></pre>
                 </div>
             </div>
         </div>
@@ -235,7 +129,6 @@ function toggleDetail(id) {
     const btn = document.getElementById('btn-' + id);
     const isHidden = detailBox.classList.contains('hidden');
     
-    // Sembunyikan semua detail & reset semua tombol
     document.querySelectorAll('[id^="detail-"]').forEach(e => e.classList.add('hidden'));
     document.querySelectorAll('.toggle-btn').forEach(b => b.textContent = 'Show');
 
@@ -247,3 +140,4 @@ function toggleDetail(id) {
 </script>
 </body>
 </html>
+
