@@ -75,7 +75,7 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
             <canvas id="myChart"></canvas>
         </div>
         <div class="text-center mt-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
-            <span class="inline-block mx-1 sm:mx-2">TOKOMARD</span>
+            <span class="inline-block mx-1 sm:mx-2">TOKOMARD CHART</span>
         </div>
     </div>
 </div>
