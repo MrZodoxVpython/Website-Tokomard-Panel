@@ -1,3 +1,4 @@
+p
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -5,12 +6,11 @@ session_start();
 
 $reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? 'unknown';
 
-$remoteIP = '152.42.182.187'; // IP VPS sgdo-mard1
+$remoteIP = '203.194.113.140'; // IP VPS remote
 $sshUser = 'root';
 $remotePath = "/etc/xray/data-panel/reseller";
 $sshPrefix = "ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no $sshUser@$remoteIP";
 
-// Ambil daftar file akun reseller
 $cmdListFiles = "$sshPrefix 'ls $remotePath/akun-$reseller-*.txt 2>/dev/null'";
 $fileListRaw = shell_exec($cmdListFiles);
 $fileList = array_filter(explode("\n", trim($fileListRaw)));
@@ -19,37 +19,60 @@ $fileList = array_filter(explode("\n", trim($fileListRaw)));
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Trojan - SGDO-MARD1</title>
+    <title>Trojan - RW-MARD</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen p-6">
-<div class="max-w-4xl mx-auto">
-    <h1 class="text-center text-2xl font-bold mb-4">Daftar Akun Trojan (SGDO-MARD1) - <?= htmlspecialchars($reseller) ?></h1>
+<div class="max-w-5xl mx-auto">
+    <h1 class="text-2xl font-bold text-center mb-6">Daftar Akun Trojan (RW-MARD) - <?= htmlspecialchars($reseller) ?></h1>
 
     <?php if (empty($fileList)) : ?>
         <div class="text-center bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded">
-            ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>
-            silahkan buat akan terlebih dahulu.
+            ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>,
+            silakan buat akun terlebih dahulu.
         </div>
     <?php else: ?>
         <?php foreach ($fileList as $remoteFile):
             $filename = basename($remoteFile);
             preg_match('/akun-' . preg_quote($reseller, '/') . '-(.+)\.txt/', $filename, $m);
             $username = $m[1] ?? 'unknown';
-
-            // Ambil isi file dari server
             $escapedFile = escapeshellarg($remoteFile);
             $sshCatCmd = "$sshPrefix 'cat $escapedFile'";
             $content = trim(shell_exec($sshCatCmd));
         ?>
-        <div class="bg-gray-800 p-4 rounded mb-4 shadow">
-            <div class="flex justify-between items-center">
-                <div class="text-lg font-semibold text-blue-300"><?= htmlspecialchars($username) ?></div>
-                <button id="btn-<?= $username ?>" onclick="toggleDetail('<?= $username ?>')" class="btn-show bg-blue-600 px-3 py-1 rounded hover:bg-blue-700">Show</button>
+        <div class="bg-gray-800 rounded shadow mb-6 p-4">
+            <div class="flex justify-between items-center flex-wrap">
+                <div class="text-blue-400 font-semibold text-lg"><?= htmlspecialchars($username) ?></div>
+                <div class="flex gap-2 mt-2 sm:mt-0">
+                    <button onclick="toggleDetail('<?= $username ?>')" id="btn-<?= $username ?>" class="toggle-btn bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white">Show</button>
+
+                    <form method="POST" action="aksi-trojan.php" class="inline">
+                        <input type="hidden" name="aksi" value="stop">
+                        <input type="hidden" name="username" value="<?= htmlspecialchars($username) ?>">
+                        <input type="hidden" name="reseller" value="<?= htmlspecialchars($reseller) ?>">
+                        <input type="hidden" name="vps" value="rw-mard">
+                        <button class="bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded">Stop</button>
+                    </form>
+
+                    <form method="POST" action="aksi-trojan.php" class="inline" onsubmit="return confirm('Yakin ingin menghapus akun ini?')">
+                        <input type="hidden" name="aksi" value="delete">
+                        <input type="hidden" name="username" value="<?= htmlspecialchars($username) ?>">
+                        <input type="hidden" name="reseller" value="<?= htmlspecialchars($reseller) ?>">
+                        <input type="hidden" name="vps" value="rw-mard">
+                        <button class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded">Delete</button>
+                    </form>
+
+                    <form method="GET" action="edit-akun.php" class="inline">
+                        <input type="hidden" name="username" value="<?= htmlspecialchars($username) ?>">
+                        <input type="hidden" name="reseller" value="<?= htmlspecialchars($reseller) ?>">
+                        <input type="hidden" name="vps" value="rw-mard">
+                        <button class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded">Edit</button>
+                    </form>
+                </div>
             </div>
-            <div id="detail-<?= $username ?>" class="detail-box mt-3 bg-gray-700 rounded hidden">
-                <div class="overflow-x-auto">
-                    <pre class="text-green-300 font-mono text-sm whitespace-pre p-3 min-w-full"><?= htmlspecialchars($content ?: "❌ Gagal membaca isi file atau file kosong.") ?></pre>
+            <div id="detail-<?= $username ?>" class="hidden mt-4">
+                <div class="overflow-x-auto bg-gray-700 rounded p-3">
+                    <pre class="text-sm text-green-300 whitespace-pre-wrap"><?= htmlspecialchars($content ?: "❌ Gagal membaca isi file atau file kosong.") ?></pre>
                 </div>
             </div>
         </div>
@@ -59,20 +82,17 @@ $fileList = array_filter(explode("\n", trim($fileListRaw)));
 
 <script>
 function toggleDetail(id) {
-    const box = document.getElementById('detail-' + id);
+    const detailBox = document.getElementById('detail-' + id);
     const btn = document.getElementById('btn-' + id);
-    const allBoxes = document.querySelectorAll('.detail-box');
-    const allBtns = document.querySelectorAll('.btn-show');
+    const isHidden = detailBox.classList.contains('hidden');
+    
+    // Sembunyikan semua detail & reset semua tombol
+    document.querySelectorAll('[id^="detail-"]').forEach(e => e.classList.add('hidden'));
+    document.querySelectorAll('.toggle-btn').forEach(b => b.textContent = 'Show');
 
-    allBoxes.forEach(b => b.classList.add('hidden'));
-    allBtns.forEach(b => b.innerText = 'Show');
-
-    if (box.classList.contains('hidden')) {
-        box.classList.remove('hidden');
-        btn.innerText = 'Hide';
-    } else {
-        box.classList.add('hidden');
-        btn.innerText = 'Show';
+    if (isHidden) {
+        detailBox.classList.remove('hidden');
+        btn.textContent = 'Hide';
     }
 }
 </script>
