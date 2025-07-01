@@ -41,7 +41,7 @@ $sshProducts = [
 function getShowFile($serverName) {
     switch ($serverName) {
         case 'RW-MARD': return 'show-trojan-rw-mard.php';
-        case 'SGDO-MARD': return 'show-trojan-sgdo-mard1.php';
+        case 'SGDO-MARD1': return 'show-trojan-sgdo-mard1.php';
         case 'SGDO-2DEV': return 'show-trojan-sgdo-2dev.php';
         default: return 'show-trojan.php';
     }
@@ -50,7 +50,7 @@ function getShowFile($serverName) {
 function getCheckoutFile($serverName) {
     switch ($serverName) {
         case 'RW-MARD': return 'co-trojan-rw-mard.php';
-        case 'SGDO-MARD': return 'co-trojan-sgdo-mard1.php';
+        case 'SGDO-MARD1': return 'co-trojan-sgdo-mard1.php';
         case 'SGDO-2DEV': return 'co-trojan-sgdo-2dev.php';
         default: return 'co-trojan.php';
     }
