@@ -104,46 +104,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
                         <button class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded">Delete</button>
                     </form>
 
-                    <button onclick="toggleEdit('<?= $username ?>')" class="bg-green-700 hover:bg-green-800 px-3 py-1 rounded text-white text-sm">Edit</button>
+                    <button onclick="document.getElementById('form-<?= $username ?>').classList.toggle('hidden')" class="bg-green-600 px-3 py-1 rounded hover:bg-green-700">Edit</button>
                 </div>
             </div>
 
-            <!-- Detail -->
-            <div id="detail-<?= $username ?>" class="hidden mt-4 detail-box">
-                <div class="overflow-x-auto bg-gray-700 rounded p-3">
-                    <pre class="text-sm text-green-300 whitespace-pre-wrap"><?= htmlspecialchars($content ?: "❌ Gagal membaca isi file.") ?></pre>
+            <div id="detail-<?= $username ?>" class="detail-box mt-3 bg-gray-700 rounded hidden">
+                <div class="overflow-x-auto">
+                    <pre class="text-green-300 font-mono text-sm whitespace-pre p-3 min-w-full"><?= htmlspecialchars($content) ?></pre>
                 </div>
             </div>
 
-            <!-- Edit Form -->
-            <div id="edit-<?= $username ?>" class="hidden mt-2">
-                <form method="POST" class="flex items-center gap-2 flex-wrap" onsubmit="return confirm('Yakin ubah masa aktif akun ini?')">
-                    <input type="hidden" name="edit_user" value="<?= htmlspecialchars($username) ?>">
-                    <input type="text" name="expired" placeholder="tgl / jumlah hari" class="px-2 py-1 text-sm rounded text-black bg-white w-40" required>
-                    <button class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-white text-sm">Simpan</button>
-                </form>
-            </div>
+            <form method="POST" id="form-<?= $username ?>" class="mt-3 hidden bg-gray-700 p-4 rounded">
+                <input type="hidden" name="edit_user" value="<?= htmlspecialchars($username) ?>">
+                <label class="block mb-1">Perbarui Expired (tgl atau jumlah hari)</label>
+                <input type="text" name="expired" required class="w-full p-2 rounded bg-gray-600 mb-2 text-white">
+                <button type="submit" class="bg-green-600 px-4 py-2 rounded hover:bg-green-700">Simpan</button>
+            </form>
         </div>
-        <?php endforeach; ?>
+    <?php endforeach; ?>
     <?php endif; ?>
 </div>
 
 <script>
     function toggleDetail(id) {
-        const detail = document.getElementById('detail-' + id);
-        const btn = document.getElementById('btn-' + id);
-        if (detail.classList.contains('hidden')) {
-            detail.classList.remove('hidden');
-            btn.textContent = 'Hide';
-        } else {
-            detail.classList.add('hidden');
-            btn.textContent = 'Show';
-        }
-    }
+        const targetBox = document.getElementById('detail-' + id);
+        const targetBtn = document.getElementById('btn-' + id);
+        const allBoxes = document.querySelectorAll('.detail-box');
+        const allButtons = document.querySelectorAll('.btn-show');
 
-    function toggleEdit(id) {
-        const editBox = document.getElementById('edit-' + id);
-        editBox.classList.toggle('hidden');
+        if (!targetBox.classList.contains('hidden')) {
+            targetBox.classList.add('hidden');
+            targetBtn.innerText = 'Show';
+            return;
+        }
+
+        allBoxes.forEach(box => box.classList.add('hidden'));
+        allButtons.forEach(btn => btn.innerText = 'Show');
+
+        targetBox.classList.remove('hidden');
+        targetBtn.innerText = 'Hide';
     }
 </script>
 
