@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // START / STOP
 if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
     $user = $_POST['toggle_user'];
-    $action = $_POST['action']; // start or stop
+    $action = $_POST['action'];
     $lines = file($configPath);
     $currentTag = '';
     $updated = false;
@@ -119,23 +119,27 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
             $currentTag = strtolower($line);
         }
 
-        // Proses hanya jika sedang dalam blok trojan
+        // Proses hanya blok trojan
         if (in_array($currentTag, ['#trojanws', '#trojangrpc'])) {
             if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($user, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line)) {
-                $jsonIndex = $i + 1;
-                if (!isset($lines[$jsonIndex])) continue;
+                // Cari baris JSON (bisa 1 atau 2 baris setelah baris username jika ada ##LOCK##)
+                $jsonLineIndex = $i + 1;
+                $possibleLockLine = trim($lines[$jsonLineIndex]);
+                if (strpos($possibleLockLine, '##LOCK##') === 0) {
+                    $jsonLineIndex++; // lompat ke baris json yang sebenarnya
+                }
 
-                $jsonLine = trim($lines[$jsonIndex]);
+                $jsonLine = trim($lines[$jsonLineIndex] ?? '');
 
                 // STOP: lock akun
                 if ($action === 'stop') {
                     if (preg_match('/"password"\s*:\s*"([^"]+)"/', $jsonLine, $m)) {
                         $originalPassword = $m[1];
                         if ($originalPassword !== 'locked') {
-                            // Ganti ke locked
-                            $lines[$jsonIndex] = preg_replace('/"password"\s*:\s*"[^"]+"/', '"password": "locked"', $jsonLine) . "\n";
-                            // Sisipkan ##LOCK## sebelum JSON
-                            array_splice($lines, $jsonIndex, 0, ["##LOCK##$originalPassword\n"]);
+                            // Simpan password sebelum JSON
+                            array_splice($lines, $jsonLineIndex, 0, ["##LOCK##$originalPassword\n"]);
+                            // Ganti password jadi "locked"
+                            $lines[$jsonLineIndex + 1] = preg_replace('/"password"\s*:\s*"[^"]+"/', '"password": "locked"', $jsonLine) . "\n";
                             $updated = true;
                         }
                     }
@@ -143,25 +147,21 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
 
                 // START: unlock akun
                 if ($action === 'start') {
+                    // Pastikan jsonLine ada dan sedang terkunci
                     if (preg_match('/"password"\s*:\s*"locked"/', $jsonLine)) {
-                        // Cari baris nama user sebelumnya
-                        $usernameLine = $lines[$jsonIndex - 1] ?? '';
-                        if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($user, '/') . '\s+\d{4}-\d{2}-\d{2}/', $usernameLine)) {
-                            // Cari ##LOCK## di sekitar baris JSON
-                            for ($offset = -5; $offset <= 5; $offset++) {
-                                $k = $jsonIndex + $offset;
-                                if ($k < 0 || $k >= count($lines)) continue;
+                        // Cari ##LOCK## milik user ini dalam 10 baris sekitar JSON
+                        for ($j = $jsonLineIndex - 5; $j <= $jsonLineIndex + 5; $j++) {
+                            if ($j < 0 || $j >= count($lines)) continue;
 
-                                if (preg_match('/^##LOCK##(.+)/', trim($lines[$k]), $match)) {
-                                    $realPassword = trim($match[1]);
+                            if (preg_match('/^##LOCK##(.+)/', trim($lines[$j]), $match)) {
+                                $realPassword = trim($match[1]);
 
-                                    // Cek juga email agar tidak salah user
-                                    if (strpos($jsonLine, "\"email\": \"$user\"") !== false) {
-                                        $lines[$jsonIndex] = preg_replace('/"password"\s*:\s*"locked"/', '"password": "' . $realPassword . '"', $lines[$jsonIndex]);
-                                        array_splice($lines, $k, 1); // Hapus baris ##LOCK##
-                                        $updated = true;
-                                        break;
-                                    }
+                                // Pastikan email sesuai
+                                if (strpos($jsonLine, "\"email\": \"$user\"") !== false) {
+                                    $lines[$jsonLineIndex] = preg_replace('/"password"\s*:\s*"locked"/', '"password": "' . $realPassword . '"', $jsonLine) . "\n";
+                                    array_splice($lines, $j, 1); // hapus baris ##LOCK##
+                                    $updated = true;
+                                    break;
                                 }
                             }
                         }
