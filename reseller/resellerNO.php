@@ -128,13 +128,15 @@ if ($stmt) {
 
   <!-- MAIN CONTENT -->
   <main class="flex-1 ml-0 md:ml-64 p-4">
-    <?php
-    if($page==='dashboard'){
-      $path = __DIR__."/pages/$page.php";
-      if(file_exists($path)) include $path;
-      else echo "<div class='text-red-500'>Halaman <b>{$page} </b>tidak ditemukan.</div>";
-    }
-    ?>
+<?php
+$path = __DIR__ . "/pages/{$page}.php";
+if (file_exists($path)) {
+    include $path;
+} else {
+    echo "<div class='text-red-500'>Halaman <b>{$page}</b> tidak ditemukan.</div>";
+}
+?>
+
   </main>
 </div>
 
