@@ -154,21 +154,27 @@ if ($stmt) {
   <!-- SIDEBAR -->
   <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-gray-800 w-64 p-4 transform -translate-x-full md:translate-x-0 transition-transform z-20">
     <!-- Avatar Upload -->
-    <form action="upload-avatar.php" method="POST" enctype="multipart/form-data" class="flex flex-col items-center mb-4">
-      <label for="avatarUpload" class="cursor-pointer">
-        <?php
-        $avatarPath = 'uploads/avatars/default.png';
-        $avatarJson = __DIR__.'/uploads/avatar.json';
-        if (file_exists($avatarJson)) {
-          $arr = json_decode(file_get_contents($avatarJson), true);
-          if(isset($arr[$reseller]) && file_exists(__DIR__.'/'.$arr[$reseller])) $avatarPath = $arr[$reseller];
-        }
-        ?>
-        <img src="<?= $avatarPath ?>?v=<?= time() ?>" class="w-20 h-20 rounded-full mb-2">
-      </label>
-      <input type="file" name="avatar" id="avatarUpload" class="hidden" accept="image/*" onchange="this.form.submit()">
-      <div class="font-semibold">@<?= htmlspecialchars($reseller) ?></div>
-    </form>
+<form action="upload-avatar.php" method="POST" enctype="multipart/form-data" class="flex flex-col items-center mb-4 relative">
+  <label for="avatarUpload" class="cursor-pointer relative">
+    <?php
+    $avatarPath = 'uploads/avatars/default.png';
+    $avatarJson = __DIR__.'/uploads/avatar.json';
+    if (file_exists($avatarJson)) {
+      $arr = json_decode(file_get_contents($avatarJson), true);
+      if(isset($arr[$reseller]) && file_exists(__DIR__.'/'.$arr[$reseller])) $avatarPath = $arr[$reseller];
+    }
+    ?>
+    <img src="<?= $avatarPath ?>?v=<?= time() ?>" class="w-20 h-20 rounded-full mb-2">
+
+    <?php if ($notifCount > 0): ?>
+    <span class="absolute top-0 right-0 w-5 h-5 text-[12px] flex items-center justify-center font-bold text-white bg-red-600 border-2 border-white dark:border-gray-800 rounded-full animate-pulse z-10">
+      <?= $notifCount > 9 ? '9+' : $notifCount ?>
+    </span>
+    <?php endif; ?>
+  </label>
+  <input type="file" name="avatar" id="avatarUpload" class="hidden" accept="image/*" onchange="this.form.submit()">
+  <div class="font-semibold cursor-pointer" onclick="toggleNotif()">@<?= htmlspecialchars($reseller) ?></div>
+</form>
 
     <!-- Menu -->
     <nav class="space-y-2">
