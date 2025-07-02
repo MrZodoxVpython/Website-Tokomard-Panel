@@ -253,11 +253,6 @@ document.addEventListener('click', (e) => {
     sidebar.classList.add('-translate-x-full');
   }
 });
-function toggleTheme(){
-  let html=document.documentElement;
-  html.classList.toggle('dark');
-  document.getElementById('themeIcon').textContent = html.classList.contains('dark')?'🌞':'🌙';
-}
 // Toggle Notifikasi
 function toggleNotif(event) {
   event.stopPropagation(); // <- penting! mencegah dropdown langsung tertutup saat diklik
