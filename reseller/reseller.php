@@ -151,7 +151,7 @@ if ($stmt) {
   <div class="relative text-center font-semibold cursor-pointer -mt-2 mb-8" onclick="toggleNotif()">
     @<?= htmlspecialchars($reseller) ?>
     <?php if ($notifCount > 0): ?>
-    <span class="absolute top-2 right-7 w-4 h-4 bg-red-600 text-white text-[10px] flex items-center justify-center font-bold rounded-full animate-pulse z-10">
+    <span class="absolute top-1 right-7 w-4 h-4 bg-red-600 text-white text-[10px] flex items-center justify-center font-bold rounded-full animate-pulse z-10">
       <?= $notifCount > 9 ? '9+' : $notifCount ?>
     </span>
     <?php endif; ?>
