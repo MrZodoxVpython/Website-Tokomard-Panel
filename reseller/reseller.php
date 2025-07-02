@@ -76,38 +76,6 @@ if ($stmt) {
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
 <header class="px-4 py-3 bg-gray-100 dark:bg-gray-800 shadow-md flex justify-between items-center sticky top-0 z-10">
-  <!-- Logo + Judul -->
-  <div class="flex items-center gap-3 cursor-pointer relative" onclick="document.getElementById('notifDropdown').classList.toggle('hidden')">
-
-    <!-- Logo dengan badge -->
-    <div class="relative">
-      <img src="https://i.imgur.com/q3DzxiB.png" class="w-10 h-10" alt="Logo Imgur" />
-      <?php if ($notifCount > 0): ?>
-      <span
-        class="absolute top-1 right-1 transform translate-x-1/4 -translate-y-1/4 w-5 h-5 text-[12px] flex items-center justify-center font-bold text-white bg-red-600 border-2 border-white dark:border-gray-800 rounded-full animate-pulse"
-      >
-        <?= $notifCount > 9 ? '9+' : $notifCount ?>
-      </span>
-      <?php endif; ?>
-    </div>
-
-    <!-- Judul Panel -->
-    <h1 class="text-lg md:text-xl font-bold text-gray-800 dark:text-white whitespace-nowrap select-none">
-      Panel Reseller Tokomard
-    </h1>
-  </div>
-
-<!-- Tombol Aksi -->
-  <div class="flex items-center gap-4">
-  <button onclick="toggleTheme()" class="text-xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
-    <span id="themeIcon"><?= $theme === 'dark' ? '🌞' : '🌙' ?></span>
-  </button>
-    <a href="../logout.php" class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-500 text-sm">
-      Logout
-    </a>
-  </div>
-</header>
-
 <!-- HEADER -->
 <header class="flex justify-between items-center bg-gray-100 dark:bg-gray-800 p-3 shadow sticky top-0 z-20">
   <div class="flex items-center space-x-3">
