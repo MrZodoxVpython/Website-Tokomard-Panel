@@ -38,22 +38,7 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard Akun</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        html, body {
-            max-width: 100%;
-            overflow-x: hidden;
-        }
-    </style>
-</head>
-
 <!-- Statistik Akun -->
 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 mb-4 text-center">
     <?php
@@ -150,5 +135,4 @@ new Chart(ctx, {
     </div>
 </div>
 
-</html>
 
