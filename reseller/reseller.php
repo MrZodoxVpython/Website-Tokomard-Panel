@@ -41,9 +41,38 @@ if ($stmt) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= $notifCount ? "($notifCount) " : "" ?>Panel Reseller Tokomard</title>
+  <meta property="og:title" content="Tokomard Panel VPN - Kelola Trojan & Xray dengan Mudah">
+  <meta property="og:description" content="Panel untuk manajemen SSH, Xray (VLESS, VMess, Trojan, Shadowsocks).">
+  <meta property="og:image" content="https://i.imgur.com/q3DzxiB.png">
+  <meta property="og:url" content="https://panel.tokomard.store/">
+  <meta property="og:type" content="website">
+  <title>Tokomard</title>
+  <link rel="SHORTCUT ICON" href="https://i.imgur.com/q3DzxiB.png">
+  <!-- Tailwind CSS CDN -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Tokomard VPN Panel",
+  "operatingSystem": "Linux",
+  "applicationCategory": "DeveloperApplication",
+  "description": "Panel web untuk mengelola akun VPN berbasis Xray.",
+  "url": "https://tokomard.com/",
+  "author": {
+    "@type": "Person",
+    "name": "Benjamin Wickman"
+  }
+}
+  </script>
+  <!-- Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- AlpineJS for slider -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <title>Panel Reseller</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' };</script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
 
