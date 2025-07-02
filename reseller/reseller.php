@@ -267,8 +267,8 @@ if (
 ) {
   dropdown.classList.add('hidden');
 }
-
-  });
+ 
+});
 </script>
 </body>
 </html>
