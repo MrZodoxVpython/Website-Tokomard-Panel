@@ -38,7 +38,7 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
 }
 ?>
 
-    <title>Dashboard Akun</title>
+<title>Dashboard Akun</title>
 <!-- Statistik Akun -->
 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 mb-4 text-center">
     <?php
@@ -134,5 +134,3 @@ new Chart(ctx, {
         </table>
     </div>
 </div>
-
-
