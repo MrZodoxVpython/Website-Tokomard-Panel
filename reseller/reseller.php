@@ -237,8 +237,21 @@ function toggleTheme() {
 function toggleNotif(){
   document.getElementById('notifDropdown').classList.toggle('hidden');
 }
-document.getElementById('sidebarToggle').addEventListener('click',()=> {
-  document.getElementById('sidebar').classList.toggle('-translate-x-full');
+// Toggle sidebar (mobile)
+const sidebar = document.getElementById('sidebar');
+const toggleBtn = document.getElementById('sidebarToggle');
+
+// Saat klik tombol ☰
+toggleBtn.addEventListener('click', (e) => {
+  e.stopPropagation(); // Jangan biarkan klik ini menutup sidebar langsung
+  sidebar.classList.toggle('-translate-x-full');
+});
+
+// Auto close jika klik di luar sidebar (khusus mobile)
+document.addEventListener('click', (e) => {
+  if (!sidebar.classList.contains('-translate-x-full') && !sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
+    sidebar.classList.add('-translate-x-full');
+  }
 });
 function toggleTheme(){
   let html=document.documentElement;
