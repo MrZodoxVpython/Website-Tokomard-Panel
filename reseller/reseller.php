@@ -75,7 +75,6 @@ if ($stmt) {
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
-<header class="px-4 py-3 bg-gray-100 dark:bg-gray-800 shadow-md flex justify-between items-center sticky top-0 z-10">
 <!-- HEADER -->
 <header class="flex justify-between items-center bg-gray-100 dark:bg-gray-800 p-3 shadow sticky top-0 z-20">
   <div class="flex items-center space-x-3">
