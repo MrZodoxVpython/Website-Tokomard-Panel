@@ -245,6 +245,26 @@ function toggleTheme(){
   html.classList.toggle('dark');
   document.getElementById('themeIcon').textContent = html.classList.contains('dark')?'🌞':'🌙';
 }
+// Toggle Notifikasi
+function toggleNotif() {
+  const dropdown = document.getElementById('notifDropdown');
+  dropdown.classList.toggle('hidden');
+}
+
+// Tutup dropdown saat klik di luar
+document.addEventListener('click', function(event) {
+  const dropdown = document.getElementById('notifDropdown');
+  const trigger = document.querySelector('[onclick="toggleNotif()"]');
+
+  // Cek apakah klik dilakukan di luar dropdown dan trigger
+  if (
+    !dropdown.classList.contains('hidden') &&
+    !dropdown.contains(event.target) &&
+    !trigger.contains(event.target)
+  ) {
+    dropdown.classList.add('hidden');
+  }
+});
 </script>
 </body>
 </html>
