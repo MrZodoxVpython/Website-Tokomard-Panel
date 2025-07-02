@@ -71,7 +71,7 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
 <!-- Grafik Akun Terjual -->
 <div class="w-full flex justify-center mb-6">
     <div class="bg-white dark:bg-gray-800 p-2 sm:p-4 rounded-lg shadow w-full max-w-2xl">
-        <div class="relative h-[220px] sm:h-[280px] w-full">
+        <div class="relative w-full aspect-[2/1] sm:aspect-[3/1] lg:aspect-[4/1]">
             <canvas id="myChart"></canvas>
         </div>
         <div class="text-center mt-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
