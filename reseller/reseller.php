@@ -109,6 +109,26 @@ if ($stmt) {
 </header>
 
 <!-- HEADER -->
+<header class="flex justify-between items-center bg-gray-100 dark:bg-gray-800 p-3 shadow sticky top-0 z-20">
+  <div class="flex items-center space-x-3">
+    <button id="sidebarToggle" class="md:hidden text-gray-700 dark:text-gray-300">
+      &#9776;
+    </button>
+    <div class="relative cursor-pointer" onclick="toggleNotif()">
+      <img src="https://i.imgur.com/q3DzxiB.png" class="w-10 h-10" alt="Logo">
+      <?php if ($notifCount): ?>
+      <span class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full px-1 animate-pulse"><?= $notifCount>9?'9+':$notifCount ?></span>
+      <?php endif; ?>
+    </div>
+    <h1 class="text-xl font-bold">Panel Reseller</h1>
+  </div>
+  <div class="flex items-center space-x-3">
+    <button onclick="toggleTheme()" class="p-2 rounded bg-gray-200 dark:bg-gray-700">
+      <span id="themeIcon"><?= $theme==='dark'?'🌞':'🌙' ?></span>
+    </button>
+    <a href="../logout.php" class="bg-red-600 text-white px-3 py-1 rounded">Logout</a>
+  </div>
+</header>
 
 <!-- NOTIF DROPDOWN -->
 <div id="notifDropdown" class="hidden absolute top-16 right-4 w-80 bg-white dark:bg-gray-800 shadow-lg rounded border z-30">
