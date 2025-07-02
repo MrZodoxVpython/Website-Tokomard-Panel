@@ -122,7 +122,7 @@ if ($stmt) {
 <!-- SIDEBAR -->
 <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-gray-800 w-64 p-4 transform -translate-x-full md:translate-x-0 transition-transform z-20">
   <!-- Avatar Upload -->
-  <form action="upload-avatar.php" method="POST" enctype="multipart/form-data" class="flex flex-col items-center mb-2 relative">
+  <form action="upload-avatar.php" method="POST" enctype="multipart/form-data" class="flex flex-col items-center mb-4 relative">
     <label for="avatarUpload" class="cursor-pointer relative">
       <?php
       $avatarPath = 'uploads/avatars/default.png';
