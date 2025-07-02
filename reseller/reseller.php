@@ -197,6 +197,17 @@ function toggleTheme() {
         body: 'theme=' + encodeURIComponent(newTheme)
     }).then(r => r.text()).then(console.log).catch(console.error);
 }
+function toggleNotif(){
+  document.getElementById('notifDropdown').classList.toggle('hidden');
+}
+document.getElementById('sidebarToggle').addEventListener('click',()=> {
+  document.getElementById('sidebar').classList.toggle('-translate-x-full');
+});
+function toggleTheme(){
+  let html=document.documentElement;
+  html.classList.toggle('dark');
+  document.getElementById('themeIcon').textContent = html.classList.contains('dark')?'🌞':'🌙';
+}
 </script>
 </body>
 </html>
