@@ -118,37 +118,45 @@ if ($stmt) {
 </div>
 
 <div class="flex">
-  <!-- SIDEBAR -->
-  <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-gray-800 w-64 p-4 transform -translate-x-full md:translate-x-0 transition-transform z-20">
-    <!-- Avatar Upload -->
-<form action="upload-avatar.php" method="POST" enctype="multipart/form-data" class="flex flex-col items-center mb-4 relative">
-  <label for="avatarUpload" class="cursor-pointer relative">
-    <?php
-    $avatarPath = 'uploads/avatars/default.png';
-    $avatarJson = __DIR__.'/uploads/avatar.json';
-    if (file_exists($avatarJson)) {
-      $arr = json_decode(file_get_contents($avatarJson), true);
-      if(isset($arr[$reseller]) && file_exists(__DIR__.'/'.$arr[$reseller])) $avatarPath = $arr[$reseller];
-    }
-    ?>
-    <img src="<?= $avatarPath ?>?v=<?= time() ?>" class="w-20 h-20 rounded-full mb-2">
 
+<!-- SIDEBAR -->
+<aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-gray-800 w-64 p-4 transform -translate-x-full md:translate-x-0 transition-transform z-20">
+  <!-- Avatar Upload -->
+  <form action="upload-avatar.php" method="POST" enctype="multipart/form-data" class="flex flex-col items-center mb-4 relative">
+    <label for="avatarUpload" class="cursor-pointer relative">
+      <?php
+      $avatarPath = 'uploads/avatars/default.png';
+      $avatarJson = __DIR__.'/uploads/avatar.json';
+      if (file_exists($avatarJson)) {
+        $arr = json_decode(file_get_contents($avatarJson), true);
+        if(isset($arr[$reseller]) && file_exists(__DIR__.'/'.$arr[$reseller])) $avatarPath = $arr[$reseller];
+      }
+      ?>
+      <img src="<?= $avatarPath ?>?v=<?= time() ?>" class="w-20 h-20 rounded-full mb-2">
+
+      <!-- Titik merah di avatar DIHAPUS -->
+      <!--
+      <?php if ($notifCount > 0): ?>
+      <span class="absolute top-0 right-0 w-5 h-5 text-[12px] flex items-center justify-center font-bold text-white bg-red-600 border-2 border-white dark:border-gray-800 rounded-full animate-pulse z-10">
+        <?= $notifCount > 9 ? '9+' : $notifCount ?>
+      </span>
+      <?php endif; ?>
+      -->
+    </label>
+
+    <input type="file" name="avatar" id="avatarUpload" class="hidden" accept="image/*" onchange="this.form.submit()">
+  </form>
+
+  <!-- Username reseller + titik merah NOTIF -->
+  <div class="relative text-center font-semibold cursor-pointer mt-1" onclick="toggleNotif()">
+    @<?= htmlspecialchars($reseller) ?>
     <?php if ($notifCount > 0): ?>
-    <span class="absolute top-0 right-0 w-5 h-5 text-[12px] flex items-center justify-center font-bold text-white bg-red-600 border-2 border-white dark:border-gray-800 rounded-full animate-pulse z-10">
+    <span class="absolute -top-1 -right-2 w-4 h-4 bg-red-600 text-white text-[10px] flex items-center justify-center font-bold rounded-full animate-pulse z-10">
       <?= $notifCount > 9 ? '9+' : $notifCount ?>
     </span>
     <?php endif; ?>
-  </label>
-  <input type="file" name="avatar" id="avatarUpload" class="hidden" accept="image/*" onchange="this.form.submit()">
-  <div class="relative cursor-pointer font-semibold" onclick="toggleNotif()">
-  @<?= htmlspecialchars($reseller) ?>
-  <?php if ($notifCount > 0): ?>
-  <span class="absolute -top-1 -right-2 w-4 h-4 bg-red-600 text-white text-[10px] flex items-center justify-center font-bold rounded-full animate-pulse z-10">
-    <?= $notifCount > 9 ? '9+' : $notifCount ?>
-  </span>
-  <?php endif; ?>
   </div>
-</form>
+</aside>
 
     <!-- Menu -->
     <nav class="space-y-2">
