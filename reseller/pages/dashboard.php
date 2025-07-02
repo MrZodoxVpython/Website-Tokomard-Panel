@@ -53,7 +53,6 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
         }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-2 sm:p-4">
 
 <!-- Statistik Akun -->
 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 mb-4 text-center">
@@ -151,6 +150,5 @@ new Chart(ctx, {
     </div>
 </div>
 
-</body>
 </html>
 
