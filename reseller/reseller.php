@@ -246,7 +246,8 @@ function toggleTheme(){
   document.getElementById('themeIcon').textContent = html.classList.contains('dark')?'🌞':'🌙';
 }
 // Toggle Notifikasi
-function toggleNotif() {
+function toggleNotif(event) {
+  event.stopPropagation(); // <- penting! mencegah dropdown langsung tertutup saat diklik
   const dropdown = document.getElementById('notifDropdown');
   dropdown.classList.toggle('hidden');
 }
