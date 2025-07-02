@@ -158,7 +158,7 @@ if ($stmt) {
   </div>
 
     <!-- Menu -->
-    <nav class="space-y-2 mb-50">
+    <nav class="space-y-2">
       <?php
       $menus = [
         'dashboard'=>'📊 Dashboard','ssh'=>'🔐 SSH','vmess'=>'🌀 Vmess',
