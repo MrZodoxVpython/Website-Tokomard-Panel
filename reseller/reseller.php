@@ -98,20 +98,44 @@ if ($stmt) {
 </header>
 
 <!-- NOTIF DROPDOWN -->
-<div id="notifDropdown" class="hidden absolute top-16 right-4 w-80 bg-white dark:bg-gray-800 shadow-lg rounded border z-30">
-  <div class="px-4 py-2 font-semibold border-b">🔔 Notifikasi</div>
-  <div class="max-h-60 overflow-y-auto divide-y">
-    <?php if(count($notifications)): foreach($notifications as $n): ?>
-    <div class="px-4 py-3 <?= $n['sudah_dibaca']?'':'bg-blue-50 dark:bg-blue-900' ?>">
-      <p class="text-sm"><?= htmlspecialchars($n['pesan']) ?></p>
-      <span class="text-xs text-gray-500"><?= date('d M H:i', strtotime($n['dibuat_pada'])) ?></span>
+<!-- Dropdown Notifikasi -->
+<div class="relative">
+  <div id="notifDropdown" class="hidden absolute top-16 right-4 w-96 bg-white dark:bg-gray-900 shadow-xl rounded-xl border border-gray-200 dark:border-gray-700 z-50">
+    <div class="px-5 py-4 border-b border-gray-200 dark:border-gray-700 text-lg font-semibold text-gray-800 dark:text-white">
+      🔔 Notifikasi
     </div>
-    <?php endforeach; else: ?>
-    <div class="px-4 py-4 text-center text-gray-500 italic">Belum ada notifikasi.</div>
+
+    <?php if (count($notifications) > 0): ?>
+      <div class="divide-y divide-gray-200 dark:divide-gray-700 max-h-96 overflow-y-auto">
+        <?php foreach ($notifications as $n): ?>
+          <div class="flex items-start gap-3 px-5 py-4 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-150 <?= $n['sudah_dibaca'] ? '' : 'bg-blue-50 dark:bg-blue-900' ?>">
+            <div class="flex-1">
+              <p class="text-sm text-gray-800 dark:text-gray-200">
+                <?= htmlspecialchars($n['pesan']) ?>
+              </p>
+              <span class="text-xs text-gray-500 dark:text-gray-400 block mt-1">
+                <?= date('d M H:i', strtotime($n['dibuat_pada'])) ?>
+              </span>
+            </div>
+            <?php if (!$n['sudah_dibaca']): ?>
+              <span class="inline-block mt-1 bg-blue-600 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">
+                Baru
+              </span>
+            <?php endif; ?>
+          </div>
+        <?php endforeach; ?>
+      </div>
+    <?php else: ?>
+      <div class="px-5 py-6 text-center text-sm text-gray-500 dark:text-gray-400 italic">
+        Tidak ada notifikasi baru.
+      </div>
     <?php endif; ?>
-    <div class="p-3 text-center border-t">
+
+    <div class="px-5 py-4 border-t border-gray-200 dark:border-gray-700 text-center">
       <form action="tandai-notif-dibaca.php" method="POST">
-        <button type="submit" class="text-sm text-blue-600">Tandai sudah dibaca</button>
+        <button type="submit" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
+          Tandai semua sudah dibaca
+        </button>
       </form>
     </div>
   </div>
