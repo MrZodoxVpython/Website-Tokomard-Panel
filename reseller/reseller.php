@@ -142,6 +142,11 @@ if ($stmt) {
   <input type="file" name="avatar" id="avatarUpload" class="hidden" accept="image/*" onchange="this.form.submit()">
   <div class="relative cursor-pointer font-semibold" onclick="toggleNotif()">
   @<?= htmlspecialchars($reseller) ?>
+  <?php if ($notifCount > 0): ?>
+  <span class="absolute -top-1 -right-2 w-4 h-4 bg-red-600 text-white text-[10px] flex items-center justify-center font-bold rounded-full animate-pulse z-10">
+    <?= $notifCount > 9 ? '9+' : $notifCount ?>
+  </span>
+  <?php endif; ?>
   </div>
 </form>
 
