@@ -48,7 +48,7 @@ if ($stmt) {
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
 
 <!-- HEADER -->
-<header class="flex justify-between items-center bg-gray-100 dark:bg-gray-800 p-2 shadow sticky top-0 z-20">
+<header class="flex justify-between items-center bg-gray-100 dark:bg-gray-800 p-3 shadow sticky top-0 z-20">
   <div class="flex items-center space-x-3">
     <button id="sidebarToggle" class="md:hidden text-gray-700 dark:text-gray-300">
       &#9776;
