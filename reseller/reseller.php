@@ -156,7 +156,6 @@ if ($stmt) {
     </span>
     <?php endif; ?>
   </div>
-</aside>
 
     <!-- Menu -->
     <nav class="space-y-2">
