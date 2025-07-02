@@ -170,6 +170,22 @@ if ($stmt) {
       <div class="font-semibold">@<?= htmlspecialchars($reseller) ?></div>
     </form>
 
+    <!-- Menu -->
+    <nav class="space-y-2">
+      <?php
+      $menus = [
+        'dashboard'=>'📊 Dashboard','ssh'=>'🔐 SSH','vmess'=>'🌀 Vmess',
+        'vless'=>'📡 Vless','trojan'=>'⚔ Trojan','shadowsocks'=>'🥷🏽 Shadowsocks',
+        'topup'=>'💳 Top Up','cek-server'=>'🖥 Cek Server','vip'=>'👑 Grup VIP'
+      ];
+      foreach($menus as $k=>$lbl){
+        $act = $page==$k?'bg-blue-500 text-white':'hover:bg-blue-100 dark:hover:bg-gray-700';
+        echo "<a href='?page=$k' class='block px-3 py-2 rounded $act'>$lbl</a>";
+        if($k=='shadowsocks') echo "<hr class='my-2 border-gray-300 dark:border-gray-600'>";
+      }
+      ?>
+    </nav>
+  </aside>
 
   <!-- MAIN CONTENT -->
   <main class="flex-1 ml-0 md:ml-64 p-4">
