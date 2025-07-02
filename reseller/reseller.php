@@ -70,27 +70,26 @@ if ($stmt) {
   </div>
 </header>
 
-<!-- NOTIF DROPDOWN -->
-<div id="notifDropdown" class="hidden absolute top-16 right-4 w-80 bg-white dark:bg-gray-800 shadow-lg rounded border z-30">
-  <div class="px-4 py-2 font-semibold border-b">🔔 Notifikasi</div>
-  <div class="max-h-60 overflow-y-auto divide-y">
-    <?php if(count($notifications)): foreach($notifications as $n): ?>
-    <div class="px-4 py-3 <?= $n['sudah_dibaca']?'':'bg-blue-50 dark:bg-blue-900' ?>">
-      <p class="text-sm"><?= htmlspecialchars($n['pesan']) ?></p>
-      <span class="text-xs text-gray-500"><?= date('d M H:i', strtotime($n['dibuat_pada'])) ?></span>
-    </div>
-    <?php endforeach; else: ?>
-    <div class="px-4 py-4 text-center text-gray-500 italic">Belum ada notifikasi.</div>
-    <?php endif; ?>
-    <div class="p-3 text-center border-t">
-      <form action="tandai-notif-dibaca.php" method="POST">
-        <button type="submit" class="text-sm text-blue-600">Tandai sudah dibaca</button>
-      </form>
+  <!-- NOTIF DROPDOWN -->
+  <div id="notifDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 shadow-lg rounded border z-30">
+    <div class="px-4 py-2 font-semibold border-b">🔔 Notifikasi</div>
+    <div class="max-h-60 overflow-y-auto divide-y">
+      <?php if(count($notifications)): foreach($notifications as $n): ?>
+      <div class="px-4 py-3 <?= $n['sudah_dibaca']?'':'bg-blue-50 dark:bg-blue-900' ?>">
+        <p class="text-sm"><?= htmlspecialchars($n['pesan']) ?></p>
+        <span class="text-xs text-gray-500"><?= date('d M H:i', strtotime($n['dibuat_pada'])) ?></span>
+      </div>
+      <?php endforeach; else: ?>
+      <div class="px-4 py-4 text-center text-gray-500 italic">Belum ada notifikasi.</div>
+      <?php endif; ?>
+      <div class="p-3 text-center border-t">
+        <form action="tandai-notif-dibaca.php" method="POST">
+          <button type="submit" class="text-sm text-blue-600">Tandai sudah dibaca</button>
+        </form>
+      </div>
     </div>
   </div>
 </div>
-
-<div class="flex">
   <!-- SIDEBAR -->
   <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-gray-800 w-64 p-4 transform -translate-x-full md:translate-x-0 transition-transform z-20">
     <!-- Avatar Upload -->
