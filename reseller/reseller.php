@@ -171,7 +171,7 @@ if ($stmt) {
   </form>
 
   <!-- Username reseller + titik merah NOTIF -->
-  <div class="relative text-center font-semibold cursor-pointer -mt-2 mb-8" onclick="toggleNotif()">
+  <div class="relative text-center font-semibold cursor-pointer -mt-2 mb-8" onclick="toggleNotif(event)">
     @<?= htmlspecialchars($reseller) ?>
     <?php if ($notifCount > 0): ?>
     <span class="absolute -top-1.5 right-5 w-4 h-4 bg-red-600 text-white text-[13px] flex items-center justify-center font-bold rounded-full animate-pulse z-10">
