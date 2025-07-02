@@ -114,7 +114,7 @@ if ($stmt) {
       <?php
       $menus = [
         'dashboard'=>'📊 Dashboard','ssh'=>'🔐 SSH','vmess'=>'🌀 Vmess',
-        'vless'=>'📡 Vless','trojan'=>'⚔ Trojan','shadowsocks'=>'🧑‍💻 Shadowsocks',
+        'vless'=>'📡 Vless','trojan'=>'⚔ Trojan','shadowsocks'=>'🥷🏽 Shadowsocks',
         'topup'=>'💳 Top Up','cek-server'=>'🖥 Cek Server','vip'=>'👑 Grup VIP'
       ];
       foreach($menus as $k=>$lbl){
