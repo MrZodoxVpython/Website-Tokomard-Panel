@@ -140,16 +140,28 @@ if ($stmt) {
 </div>
 
 <script>
-function toggleNotif(){
-  document.getElementById('notifDropdown').classList.toggle('hidden');
+var notifCount = <?= $notifCount ?>;
+if (notifCount > 0) {
+    let show = false;
+    setInterval(() => {
+        document.title = (show ? "🔔 " : "") + "<?= ($notifCount > 0 ? "($notifCount) " : "") ?>Tokomard Panel";
+        show = !show;
+    }, 3000);
 }
-document.getElementById('sidebarToggle').addEventListener('click',()=> {
-  document.getElementById('sidebar').classList.toggle('-translate-x-full');
-});
-function toggleTheme(){
-  let html=document.documentElement;
-  html.classList.toggle('dark');
-  document.getElementById('themeIcon').textContent = html.classList.contains('dark')?'🌞':'🌙';
+function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.classList.contains('dark');
+    const newTheme = isDark ? 'light' : 'dark';
+    html.classList.toggle('dark');
+
+    const icon = document.getElementById('themeIcon');
+    if (icon) icon.textContent = newTheme === 'dark' ? '🌞' : '🌙';
+
+    fetch('simpan-theme.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'theme=' + encodeURIComponent(newTheme)
+    }).then(r => r.text()).then(console.log).catch(console.error);
 }
 </script>
 </body>
