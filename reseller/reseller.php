@@ -255,17 +255,20 @@ function toggleNotif(event) {
 // Tutup dropdown saat klik di luar
 document.addEventListener('click', function(event) {
   const dropdown = document.getElementById('notifDropdown');
-  const trigger = document.querySelector('[onclick="toggleNotif()"]');
-
-  // Cek apakah klik dilakukan di luar dropdown dan trigger
-  if (
-    !dropdown.classList.contains('hidden') &&
-    !dropdown.contains(event.target) &&
-    !trigger.contains(event.target)
-  ) {
-    dropdown.classList.add('hidden');
-  }
+  const trigger = document.querySelectorAll('[onclick^="toggleNotif"]');
+let clickedInsideTrigger = false;
+trigger.forEach(t => {
+  if (t.contains(event.target)) clickedInsideTrigger = true;
 });
+if (
+  !dropdown.classList.contains('hidden') &&
+  !dropdown.contains(event.target) &&
+  !clickedInsideTrigger
+) {
+  dropdown.classList.add('hidden');
+}
+
+  });
 </script>
 </body>
 </html>
