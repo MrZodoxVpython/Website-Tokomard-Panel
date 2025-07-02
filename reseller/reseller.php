@@ -269,6 +269,33 @@ if (
 }
  
 });
+
+// Toggle dropdown dengan status aktif
+let notifIsOpen = false;
+
+function toggleNotif(event) {
+  event.stopPropagation();
+  const dropdown = document.getElementById('notifDropdown');
+  notifIsOpen = !notifIsOpen;
+  dropdown.classList.toggle('hidden', !notifIsOpen);
+}
+
+// Tutup dropdown jika klik di luar area dropdown atau icon
+document.addEventListener('click', function(event) {
+  const dropdown = document.getElementById('notifDropdown');
+  const notifButtons = document.querySelectorAll('[onclick^="toggleNotif"]');
+
+  let clickedInside = false;
+  notifButtons.forEach(btn => {
+    if (btn.contains(event.target)) clickedInside = true;
+  });
+
+  if (!dropdown.contains(event.target) && !clickedInside) {
+    notifIsOpen = false;
+    dropdown.classList.add('hidden');
+  }
+});
+
 </script>
 </body>
 </html>
