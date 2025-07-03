@@ -16,7 +16,7 @@ $configPath = '/etc/xray/config.json';
 // Ambil semua file akun remote reseller
 $cmdListFiles = "$sshPrefix 'ls $remotePath/akun-$reseller-*.txt 2>/dev/null'";
 $fileListRaw = shell_exec($cmdListFiles);
-$fileList = array_filter(explode("\n", trim($fileListRaw)));
+$fileList = array_filter(explode("\n", trim($fileListRaw ?? '')));
 
 // Handle POST Edit
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
@@ -118,7 +118,7 @@ if (isset($_GET['hapus'])) {
 
     <?php if (empty($fileList)) : ?>
         <div class="text-center bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded">
-            ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>
+            ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>, silakan buat akun terlebih dahulu. 
         </div>
     <?php else: ?>
         <?php foreach ($fileList as $remoteFile):

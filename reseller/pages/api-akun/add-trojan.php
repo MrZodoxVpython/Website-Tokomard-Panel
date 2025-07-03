@@ -33,4 +33,4 @@ $tags = ['trojanws', 'trojangrpc'];
 
 // Proses penambahan akun Xray Trojan
 $hasil = prosesXray('trojan', $tags, $commentLine, $jsonLine, $username, $expired, $password);
-
+echo $hasil;

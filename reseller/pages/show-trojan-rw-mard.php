@@ -12,7 +12,7 @@ $sshPrefix = "ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no $sshUser@$remo
 
 $cmdListFiles = "$sshPrefix 'ls $remotePath/akun-$reseller-*.txt 2>/dev/null'";
 $fileListRaw = shell_exec($cmdListFiles);
-$fileList = array_filter(explode("\n", trim($fileListRaw)));
+$fileList = array_filter(explode("\n", trim($fileListRaw ?? '')));
 ?>
 <!DOCTYPE html>
 <html lang="id">

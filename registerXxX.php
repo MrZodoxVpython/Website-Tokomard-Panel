@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include 'koneksi.php';
 session_start();
 
@@ -16,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif (strpos($email, '@reseller.com') !== false) {
             $role = 'reseller';
         } else {
-            $error = "Email tidak valid. Gunakan @tokomard.com atau @reseller.com.";
+            $error = "Email tidak valid. Gunakan @reseller.com.";
         }
 
         if (!isset($error)) {

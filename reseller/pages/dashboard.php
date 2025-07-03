@@ -53,7 +53,7 @@ foreach (glob("{$dir}akun-{$reseller}-*.txt") as $file) {
 </div>
 
 <!-- Grafik Akun Terjual -->
-<div class="w-full flex justify-center mb-6">
+<div class="w-full flex justify-center mb-4">
     <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow w-full">
         <div class="relative w-full h-[180px] sm:h-[220px] md:h-[260px] lg:h-[300px] xl:h-[320px]">
             <canvas id="myChart"></canvas>
