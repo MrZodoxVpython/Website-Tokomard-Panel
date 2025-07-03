@@ -50,7 +50,7 @@
   <header class="flex justify-between items-center px-4 md:px-6 py-4 bg-gray-900 shadow-md border-b border-gray-800">
     <div class="flex items-center space-x-3">
       <img src="https://i.imgur.com/q3DzxiB.png" alt="Logo" class="w-10 h-10 rounded-full" />
-      <h1 class="text-lg sm:text-xl md:text-2xl font-bold">Tokomard VPN Panel</h1>
+      <h1 class="text-lg sm:text-xl md:text-2xl font-bold">Tokomard Panel</h1>
     </div>
     <a href="login.php" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-4 py-2 rounded shadow-md">Login</a>
   </header>
