@@ -221,7 +221,7 @@ rclone config
 
 > n (new remote)
 > name: GDRIVE
-> storage: 20 (Google Drive)
+> storage: 22 (Google Drive)
 > client_id: [kosongkan]
 > client_secret: [kosongkan]
 > scope: 1 (full access)
