@@ -35,6 +35,18 @@ if ($stmt) {
     }
     $stmt->close();
 }
+// saldo 
+$saldo = 0;
+$q = $conn->prepare("SELECT saldo FROM reseller WHERE username = ?");
+if ($q) {
+    $q->bind_param("s", $reseller);
+    $q->execute();
+    $q->bind_result($saldo);
+    $q->fetch();
+    $q->close();
+}
+$formattedSaldo = "Rp. " . number_format($saldo, 0, ',', '.');
+
 ?>
 <!DOCTYPE html>
 <html lang="id" class="<?= $theme==='dark'?'dark':'' ?>">
