@@ -4,10 +4,11 @@ ini_set('display_errors',1); error_reporting(E_ALL);
 require 'koneksi.php';
 
 // Validasi login & role
-if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
+if (!isset($_SESSION['username']) || !in_array($_SESSION['role'], ['admin', 'reseller'])) {
     header("Location: ../index.php");
     exit;
 }
+
 $reseller = $_SESSION['username'];
 $page = $_GET['page'] ?? 'dashboard';
 
