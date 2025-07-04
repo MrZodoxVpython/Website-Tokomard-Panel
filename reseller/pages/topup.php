@@ -16,8 +16,9 @@ $reseller = $_SESSION['username'];
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- FORM TOPUP -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700">
-        <form action="proses_topup.php" method="POST" class="space-y-5">
+        <form id="topupForm" action="proses_topup.php" method="POST" class="space-y-5" onsubmit="return handleSubmit(event)">
             <div>
                 <label class="block font-semibold mb-1 text-gray-700 dark:text-gray-300">👤 Username</label>
                 <input type="text" readonly value="<?= htmlspecialchars($reseller) ?>"
@@ -67,8 +68,8 @@ $reseller = $_SESSION['username'];
         </form>
     </div>
 
-    <!-- Info Pembayaran -->
-    <div class="bg-gray-100 dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700">
+    <!-- INFO PEMBAYARAN (tersembunyi dulu) -->
+    <div id="info-wrapper" class="hidden bg-gray-100 dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700">
         <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">📌 Info Pembayaran</h3>
 
         <!-- QRIS -->
@@ -81,13 +82,13 @@ $reseller = $_SESSION['username'];
         <div id="info-dana" class="hidden">
             <p class="text-sm text-gray-700 dark:text-gray-300 mb-2">Kirim ke akun DANA berikut:</p>
             <ul class="text-sm text-gray-800 dark:text-gray-100 list-disc list-inside">
-                <li>Nomor:  0813-9000-4412</li>
+                <li>Nomor: 0813-9000-4412</li>
                 <li>Nama: TOKOMARD</li>
                 <li>Link API: <a href="https://link.dana.id/minta?full_url=https://qr.dana.id/v1/281012092025070434773168" target="_blank" class="text-blue-600 underline">Klik untuk bayar otomatis</a></li>
             </ul>
         </div>
 
-        <!-- Bank -->
+        <!-- BANK -->
         <div id="info-bank" class="hidden">
             <p class="text-sm text-gray-700 dark:text-gray-300 mb-2">Transfer ke rekening bank berikut:</p>
             <ul class="text-sm text-gray-800 dark:text-gray-100 list-disc list-inside">
@@ -106,7 +107,6 @@ $reseller = $_SESSION['username'];
     </div>
 </div>
 
-<!-- JavaScript -->
 <script>
 function showInfo(method) {
     const ids = ['qris', 'dana', 'bank'];
@@ -119,6 +119,17 @@ function showInfo(method) {
     document.getElementById('info-' + method).classList.remove('hidden');
     document.getElementById('label-' + method).classList.add('ring-2', 'ring-blue-500', 'bg-blue-50', 'dark:bg-blue-900', 'border-blue-500');
     document.getElementById('img-' + method).classList.add('scale-110', 'drop-shadow-lg');
+}
+
+function handleSubmit(event) {
+    event.preventDefault(); // Stop form dari langsung submit
+    const wrapper = document.getElementById('info-wrapper');
+    wrapper.classList.remove('hidden');
+
+    // Scroll ke bagian Info Pembayaran
+    wrapper.scrollIntoView({ behavior: 'smooth' });
+
+    return false; // Tidak submit dulu
 }
 </script>
 
