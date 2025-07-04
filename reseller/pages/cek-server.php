@@ -206,7 +206,6 @@ foreach ($servers as $name => $domain) {
             document.getElementById("js-gps").innerText = "Tidak didukung";
         }
     </script>
-<?php include '../templates/footer.php'; ?>
 
 </body>
 </html>
