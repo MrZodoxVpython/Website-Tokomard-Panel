@@ -218,6 +218,16 @@ if (notifCount > 0) {
         document.title = (show ? "🔔 " : "") + "<?= ($notifCount > 0 ? "($notifCount) " : "") ?>Tokomard Panel";
         show = !show;
     }, 3000);
+
+    const audio = document.getElementById('notifSound');
+    if (audio) {
+        const playAudio = () => {
+            audio.play().catch(() => {
+                document.addEventListener('click', () => audio.play(), { once: true });
+            });
+        };
+        playAudio();
+    }
 }
 function toggleTheme() {
     const html = document.documentElement;
