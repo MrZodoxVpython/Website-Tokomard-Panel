@@ -1,0 +1,34 @@
+<?php
+session_start();
+require '../koneksi.php';
+
+if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
+    header("Location: ../index.php");
+    exit;
+}
+
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kurangi Saldo Reseller</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-md mx-auto bg-white p-6 rounded shadow">
+        <h1 class="text-xl font-bold mb-4">Kurangi Saldo Reseller</h1>
+        <form action="proses_kurangi.php" method="POST" class="space-y-4">
+            <div>
+                <label class="block mb-1 font-medium">Username Reseller</label>
+                <input type="text" name="username" required class="w-full border p-2 rounded">
+            </div>
+            <div>
+                <label class="block mb-1 font-medium">Jumlah Saldo yang Dikurangi</label>
+                <input type="number" name="jumlah" min="1" required class="w-full border p-2 rounded">
+            </div>
+            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded">Kurangi Saldo</button>
+        </form>
+    </div>
+</body>
+</html>
+
