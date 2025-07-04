@@ -1,59 +1,105 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+if (session_status() === PHP_SESSION_NONE) session_start();
+require '../../koneksi.php';
+
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
     header("Location: ../index.php");
     exit;
 }
+
+$reseller = $_SESSION['username'];
 ?>
-<div class="mb-6">
-    <h2 class="text-2xl font-semibold mb-2">💸 Formulir Topup Saldo</h2>
-    <p class="text-sm text-gray-600 dark:text-gray-400">Silakan isi form berikut untuk melakukan topup saldo akun Anda.</p>
+
+<div class="mb-6 flex justify-between items-center">
+    <div>
+        <h2 class="text-2xl font-semibold mb-1">💰 Topup Saldo</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Isi form untuk menambah saldo akun Anda.</p>
+    </div>
+    <button id="toggleDark" class="flex items-center gap-2 text-sm bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded-full transition">
+        <span id="modeIcon">🌙</span> Mode
+    </button>
 </div>
 
-<div class="overflow-x-auto">
-    <form action="proses_topup.php" method="POST" class="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700">
-        <table class="w-full text-sm text-left text-gray-700 dark:text-gray-300 mb-4">
-            <tbody>
-                <tr class="border-b border-gray-200 dark:border-gray-700">
-                    <td class="py-2 pr-4 font-medium w-1/3">Nominal Topup</td>
-                    <td class="py-2">
-                        <input type="number" name="nominal" min="1000" required
-                            class="w-full p-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white">
-                    </td>
-                </tr>
-                <tr class="border-b border-gray-200 dark:border-gray-700">
-                    <td class="py-2 pr-4 font-medium">Metode Pembayaran</td>
-                    <td class="py-2">
-                        <select name="metode" required
-                            class="w-full p-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white">
-                            <option value="">-- Pilih Metode --</option>
-                            <option value="QRIS">🧾 QRIS</option>
-                            <option value="Dana">📱 Dana</option>
-                            <option value="OVO">📱 OVO</option>
-                            <option value="Gopay">📱 GoPay</option>
-                            <option value="Bank Transfer">🏦 Bank Transfer</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr class="border-b border-gray-200 dark:border-gray-700">
-                    <td class="py-2 pr-4 font-medium">Catatan / Referensi</td>
-                    <td class="py-2">
-                        <textarea name="catatan" rows="3"
-                            class="w-full p-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white"
-                            placeholder="Contoh: Transfer dari BCA a/n Andi, jam 10:15 WIB"></textarea>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700">
+        <form action="proses_topup.php" method="POST" class="space-y-5">
+            <div>
+                <label class="block font-semibold mb-1">👤 Username</label>
+                <input type="text" readonly value="<?= htmlspecialchars($reseller) ?>"
+                    class="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-black dark:text-white">
+            </div>
 
-        <div class="flex justify-end gap-2 mt-4">
-            <a href="/reseller/pages/index.php"
-                class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-500 transition">⬅️ Kembali</a>
-            <button type="submit"
-                class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500 transition">💳 Submit Topup</button>
+            <div>
+                <label class="block font-semibold mb-1">💵 Nominal Topup</label>
+                <input type="number" name="nominal" min="1000" step="500" required placeholder="Contoh: 10000"
+                    class="w-full px-4 py-2 border rounded border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-black dark:text-white">
+            </div>
+
+            <div>
+                <label class="block font-semibold mb-2">💳 Metode Pembayaran</label>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <label class="flex flex-col items-center bg-gray-50 dark:bg-gray-700 p-4 rounded-xl shadow cursor-pointer">
+                        <input type="radio" name="metode" value="qris" required class="hidden">
+                        <img src="https://img.icons8.com/ios-filled/100/000000/qr-code.png" class="w-10 h-10 mb-2" alt="QRIS"/>
+                        <span class="text-sm font-semibold">QRIS</span>
+                    </label>
+                    <label class="flex flex-col items-center bg-gray-50 dark:bg-gray-700 p-4 rounded-xl shadow cursor-pointer">
+                        <input type="radio" name="metode" value="dana" required class="hidden">
+                        <img src="https://img.icons8.com/color/96/dana.png" class="w-10 h-10 mb-2" alt="Dana"/>
+                        <span class="text-sm font-semibold">DANA</span>
+                    </label>
+                    <label class="flex flex-col items-center bg-gray-50 dark:bg-gray-700 p-4 rounded-xl shadow cursor-pointer">
+                        <input type="radio" name="metode" value="bank" required class="hidden">
+                        <img src="https://img.icons8.com/color/96/bank-building.png" class="w-10 h-10 mb-2" alt="Bank"/>
+                        <span class="text-sm font-semibold">Bank</span>
+                    </label>
+                </div>
+            </div>
+
+            <div>
+                <label class="block font-semibold mb-1">📝 Catatan (opsional)</label>
+                <textarea name="catatan" rows="3"
+                    class="w-full px-4 py-2 rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-black dark:text-white"
+                    placeholder="Contoh: Transfer dari BCA a.n. Andi, jam 10:15"></textarea>
+            </div>
+
+            <div class="flex justify-end">
+                <button type="submit"
+                    class="px-6 py-3 bg-green-600 hover:bg-green-500 text-white font-bold rounded-xl transition">
+                    🚀 Konfirmasi Topup
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="bg-gray-100 dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700">
+        <h3 class="text-lg font-semibold mb-4">📌 Info Pembayaran</h3>
+        <ul class="list-disc list-inside space-y-2 text-sm text-gray-700 dark:text-gray-300">
+            <li><strong>QRIS:</strong> Scan QR dari admin (hubungi CS)</li>
+            <li><strong>DANA:</strong> 0812-3456-7890 a.n. TOKOMARD</li>
+            <li><strong>Bank:</strong> BCA 1234567890 a.n. TOKOMARD</li>
+        </ul>
+        <div class="mt-4">
+            <a href="index.php"
+               class="inline-block bg-indigo-600 hover:bg-indigo-500 text-white text-sm px-4 py-2 rounded shadow transition">
+                ⬅️ Kembali ke Dashboard
+            </a>
         </div>
-    </form>
+    </div>
 </div>
+
+<script>
+  const toggle = document.getElementById('toggleDark');
+  const icon = document.getElementById('modeIcon');
+  toggle.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    const isDark = document.documentElement.classList.contains('dark');
+    icon.textContent = isDark ? '☀️' : '🌙';
+    localStorage.setItem('mode', isDark ? 'dark' : 'light');
+  });
+  if (localStorage.getItem('mode') === 'dark') {
+    document.documentElement.classList.add('dark');
+    icon.textContent = '☀️';
+  }
+</script>
 
