@@ -90,6 +90,11 @@ $formattedSaldo = "Rp. " . number_format($saldo, 0, ',', '.');
 <!-- HEADER -->
 <header class="flex justify-between items-center bg-gray-100 dark:bg-gray-800 p-3 shadow sticky top-0 z-20">
   <div class="flex items-center space-x-3">
+    <div class="hidden md:block text-sm font-medium text-gray-700 dark:text-gray-200 mr-2">
+  Hi <span class="text-blue-600 dark:text-blue-400"><?= htmlspecialchars($reseller) ?></span>, 
+  Your balance is <span class="text-green-600 dark:text-green-400"><?= $formattedSaldo ?></span>
+    </div>
+
     <button id="sidebarToggle" class="md:hidden text-gray-700 dark:text-gray-300">
       &#9776;
     </button>
