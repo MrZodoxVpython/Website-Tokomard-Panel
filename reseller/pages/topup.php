@@ -81,9 +81,9 @@ $reseller = $_SESSION['username'];
         <div id="info-dana" class="hidden">
             <p class="text-sm text-gray-700 dark:text-gray-300 mb-2">Kirim ke akun DANA berikut:</p>
             <ul class="text-sm text-gray-800 dark:text-gray-100 list-disc list-inside">
-                <li>Nomor: 0812-3456-7890</li>
+                <li>Nomor:  0813-9000-4412</li>
                 <li>Nama: TOKOMARD</li>
-                <li>Link API: <a href="https://link.dana.id/minta/1234567890" target="_blank" class="text-blue-600 underline">Klik untuk bayar otomatis</a></li>
+                <li>Link API: <a href="https://link.dana.id/minta/081390004412" target="_blank" class="text-blue-600 underline">Klik untuk bayar otomatis</a></li>
             </ul>
         </div>
 
