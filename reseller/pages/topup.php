@@ -83,7 +83,8 @@ $reseller = $_SESSION['username'];
             <ul class="text-sm text-gray-800 dark:text-gray-100 list-disc list-inside">
                 <li>Nomor:  0813-9000-4412</li>
                 <li>Nama: TOKOMARD</li>
-                <li>Link API: <a href="https://link.dana.id/minta/?c=081390004412&a=50000&n=Topup%20TOKOMARD%20Reseller" target="_blank" class="text-blue-600 underline">Klik untuk bayar otomatis</a></li>
+                <li>Link API: <a href="https://link.dana.id/minta/?c=081390004412
+" target="_blank" class="text-blue-600 underline">Klik untuk bayar otomatis</a></li>
             </ul>
         </div>
 
