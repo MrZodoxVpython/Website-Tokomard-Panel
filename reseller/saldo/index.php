@@ -29,7 +29,7 @@ $saldo = $row['saldo'];
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen flex items-center justify-center transition duration-300">
     <div class="w-full max-w-xl bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8">
         <div class="flex items-center justify-between mb-6">
-            <h1 class="text-2xl font-bold">👛 Saldo Rekening</h1>
+            <h1 class="text-2xl font-bold">👛 Saldo Reseller</h1>
             <span class="px-4 py-1 text-sm bg-blue-100 dark:bg-blue-900 dark:text-blue-200 text-blue-700 rounded-full shadow">
                 <?= htmlspecialchars($reseller) ?>
             </span>
@@ -53,27 +53,30 @@ $saldo = $row['saldo'];
             <a href="histori.php" class="text-sm text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition duration-150 underline">
                 📜 Lihat Riwayat Saldo
             </a>
-            <button id="toggleDark" class="bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded-full text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition">
-                🌙 Ganti Mode
+            <button id="toggleDark" class="flex items-center gap-2 bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded-full text-sm font-medium text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+                <span id="modeIcon">🌙</span> <span>Mode</span>
             </button>
         </div>
     </div>
 
     <script>
       const toggle = document.getElementById('toggleDark');
+      const icon = document.getElementById('modeIcon');
+
+      // Toggle class
       toggle.addEventListener('click', () => {
           document.documentElement.classList.toggle('dark');
-          // Simpan preferensi dark mode di localStorage
-          if (document.documentElement.classList.contains('dark')) {
-              localStorage.setItem('mode', 'dark');
-          } else {
-              localStorage.setItem('mode', 'light');
-          }
+          const isDark = document.documentElement.classList.contains('dark');
+          icon.textContent = isDark ? '☀️' : '🌙';
+          localStorage.setItem('mode', isDark ? 'dark' : 'light');
       });
 
-      // Terapkan preferensi saat load
+      // Apply mode from localStorage
       if (localStorage.getItem('mode') === 'dark') {
           document.documentElement.classList.add('dark');
+          icon.textContent = '☀️';
+      } else {
+          icon.textContent = '🌙';
       }
     </script>
 </body>
