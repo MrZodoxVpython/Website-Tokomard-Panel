@@ -226,6 +226,11 @@ function toggleTitleNotification(count) {
     }, 3000);
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    toggleTitleNotification(notifCount);
+    monitorNotificationStatus(notifCount);
+});
+
 function monitorNotificationStatus(notifCount) {
     const audio = document.getElementById('notifSound');
 
@@ -240,6 +245,7 @@ function monitorNotificationStatus(notifCount) {
         audio.currentTime = 0;
     }
 }
+
 
 function toggleTheme() {
     const html = document.documentElement;
