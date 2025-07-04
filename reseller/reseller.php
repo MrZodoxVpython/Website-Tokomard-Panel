@@ -212,51 +212,42 @@ if ($stmt) {
 
 <audio id="notifSound" src="uploads/notification.mp3"></audio>
 <script>
-var notifCount = <?= $notifCount ?>;
-
-function toggleTitleNotification(count) {
-    let show = false;
-    setInterval(() => {
-        if (count > 0) {
-            document.title = (show ? "🔔 " : "") + `(${count}) Tokomard Panel`;
-            show = !show;
-        } else {
-            document.title = "Tokomard Panel";
-        }
-    }, 3000);
-}
+const notifCount = <?= $notifCount ?>;
 
 document.addEventListener('DOMContentLoaded', () => {
-    toggleTitleNotification(notifCount);
-    monitorNotificationStatus(notifCount);
+    handleNotifications(notifCount);
 });
 
-function monitorNotificationStatus(notifCount) {
+function handleNotifications(count) {
     const audio = document.getElementById('notifSound');
     if (!audio) return;
 
     const originalTitle = "Tokomard Panel";
-    let wasRinging = false;
+    let wasNotified = false;
+    let show = false;
 
     setInterval(() => {
-        if (notifCount > 0 && !wasRinging) {
-            // 🔔 muncul pertama kali
-            document.title = `🔔 (${notifCount > 9 ? '9+' : notifCount}) Notifications`;
-            audio.currentTime = 0;
-            audio.play().catch(() => {
-                document.addEventListener('click', () => audio.play(), { once: true });
-            });
-            wasRinging = true;
-        }
+        if (count > 0) {
+            // Title berkedip dengan jumlah notifikasi
+            document.title = (show ? `🔔 (${count}) Tokomard Panel` : `(${count}) Tokomard Panel`);
+            show = !show;
 
-        if (notifCount === 0 && wasRinging) {
-            // 🔔 hilang
+            // Play audio hanya sekali saat notif aktif muncul
+            if (!wasNotified) {
+                audio.currentTime = 0;
+                audio.play().catch(() => {
+                    document.addEventListener('click', () => audio.play(), { once: true });
+                });
+                wasNotified = true;
+            }
+        } else {
+            // Tidak ada notifikasi
             document.title = originalTitle;
             audio.pause();
             audio.currentTime = 0;
-            wasRinging = false;
+            wasNotified = false;
         }
-    }, 1000);
+    }, 2000); // berkedip setiap 2 detik
 }
 
 function toggleTheme() {
