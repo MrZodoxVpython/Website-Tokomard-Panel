@@ -213,7 +213,7 @@ if ($stmt) {
 <audio id="notifSound" src="uploads/notification.mp3"></audio>
 <script>
 const audio = document.getElementById('notifSound');
-const originalTitle = "Tokomard Panel";
+const originalTitle = "Tokomard";
 let currentCount = <?= $notifCount ?>;
 
 let blinkInterval = null;
