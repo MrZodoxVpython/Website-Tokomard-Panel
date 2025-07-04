@@ -210,7 +210,7 @@ if ($stmt) {
   </main>
 </div>
 
-<audio id="notifSound" src="uploads/notification.mp3" preload="auto" loop></audio>
+<audio id="notifSound" src="uploads/notification.mp3"></audio>
 <script>
 var notifCount = <?= $notifCount ?>;
 
