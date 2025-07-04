@@ -27,7 +27,7 @@ include 'templates/header.php';
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-   <title>Admin Panel - Xray Multi-VPS</title>
+   <title>Admin Tools</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
