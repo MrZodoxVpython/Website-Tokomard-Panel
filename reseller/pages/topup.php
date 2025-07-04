@@ -42,7 +42,7 @@ $reseller = $_SESSION['username'];
                         </label>
                         <label id="label-dana" class="method-label flex flex-col items-center bg-gray-50 dark:bg-gray-700 p-4 rounded-xl shadow cursor-pointer border-2 border-transparent">
                             <input type="radio" name="metode" value="dana" class="hidden">
-                            <img src="https://i.imgur.com/8BuqVPf.png" class="w-full h-8 mb-2 mt-2" id="img-dana" alt="Dana"/>
+                            <img src="https://i.imgur.com/8BuqVPf.png" class="w-100% h-8 mb-2 mt-2" id="img-dana" alt="Dana"/>
                             <span class="text-sm font-semibold text-gray-800 dark:text-white">DANA</span>
                         </label>
                         <label id="label-bank" class="method-label flex flex-col items-center bg-gray-50 dark:bg-gray-700 p-4 rounded-xl shadow cursor-pointer border-2 border-transparent">
