@@ -213,49 +213,38 @@ if ($stmt) {
 <audio id="notifSound" src="uploads/notification.mp3"></audio>
 <script>
 const audio = document.getElementById('notifSound');
-const originalTitle = "Tokomard";
+const originalTitle = "Tokomard Panel";
 let currentCount = <?= $notifCount ?>;
 
 let blinkInterval = null;
-let audioInterval = null;
 let showNotif = false;
 
 function updateTitleBlink() {
     const displayCount = currentCount > 9 ? '9+' : currentCount;
-    document.title = showNotif
-        ? `🔔 (${displayCount}) Notifications`
-        : originalTitle;
 
-    showNotif = !showNotif;
-}
+    if (showNotif) {
+        document.title = `🔔 (${displayCount}) Notifications`;
 
-// Jalankan suara terus tiap 5 detik
-function startAudioLoop() {
-    if (!audioInterval) {
+        // Bunyi hanya saat icon muncul
         audio.currentTime = 0;
         audio.play().catch(() => {
             document.addEventListener('click', () => audio.play(), { once: true });
         });
-
-        audioInterval = setInterval(() => {
-            audio.currentTime = 0;
-            audio.play();
-        }, 5000);
+    } else {
+        document.title = originalTitle;
     }
+
+    showNotif = !showNotif;
 }
 
-// Hentikan audio & blinking
 function stopNotification() {
     clearInterval(blinkInterval);
-    clearInterval(audioInterval);
     blinkInterval = null;
-    audioInterval = null;
     document.title = originalTitle;
     audio.pause();
     audio.currentTime = 0;
 }
 
-// Periksa jumlah notif dari PHP
 function checkNotif() {
     fetch(window.location.pathname + "?checkNotif")
         .then(res => res.text())
@@ -266,10 +255,9 @@ function checkNotif() {
 
                 if (currentCount > 0) {
                     if (!blinkInterval) {
-                        blinkInterval = setInterval(updateTitleBlink, 3000); // 3 detik bergantian
-                        updateTitleBlink(); // langsung tampil awal
+                        blinkInterval = setInterval(updateTitleBlink, 3000);
+                        updateTitleBlink();
                     }
-                    startAudioLoop();
                 } else {
                     stopNotification();
                 }
@@ -281,11 +269,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (currentCount > 0) {
         blinkInterval = setInterval(updateTitleBlink, 3000);
         updateTitleBlink();
-        startAudioLoop();
     }
 
-    // Cek ke server tiap 3 detik
-    setInterval(checkNotif, 3000);
+    setInterval(checkNotif, 3000); // cek setiap 3 detik
 });
 
 function toggleTheme() {
