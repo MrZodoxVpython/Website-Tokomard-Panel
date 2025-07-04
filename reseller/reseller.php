@@ -89,9 +89,10 @@ $formattedSaldo = "Rp. " . number_format($saldo, 0, ',', '.');
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
 
 <!-- HEADER -->
-<header class="flex justify-between items-center bg-gray-100 dark:bg-gray-800 p-3 shadow sticky top-0 z-20">
-  <div class="flex items-center space-x-3 w-full">
-    <!-- Sidebar Toggle -->
+<header class="flex items-center justify-between bg-gray-100 dark:bg-gray-800 p-3 shadow sticky top-0 z-20">
+  <!-- KIRI: Logo, sidebar toggle, notif, judul -->
+  <div class="flex items-center space-x-3">
+    <!-- Sidebar Toggle (mobile) -->
     <button id="sidebarToggle" class="md:hidden text-gray-700 dark:text-gray-300">
       &#9776;
     </button>
@@ -104,17 +105,17 @@ $formattedSaldo = "Rp. " . number_format($saldo, 0, ',', '.');
       <?php endif; ?>
     </div>
 
-    <!-- Mobile only -->
+    <!-- Judul Mobile -->
     <h1 class="text-xl font-bold block md:hidden">Panel Reseller</h1>
-
-    <!-- Desktop only -->
-    <div class="hidden md:block md:ml-auto text-sm font-medium text-gray-700 dark:text-gray-200">
-      Hi <span class="text-blue-600 dark:text-blue-400"><?= htmlspecialchars($reseller) ?></span>,
-      Your balance is <span class="text-green-600 dark:text-green-400"><?= $formattedSaldo ?></span>
-    </div>
   </div>
 
-  <!-- Right section -->
+  <!-- TENGAH (desktop only): Sapaan -->
+  <div class="hidden md:block text-sm font-medium text-gray-700 dark:text-gray-200 mx-auto">
+    Hi <span class="text-blue-600 dark:text-blue-400"><?= htmlspecialchars($reseller) ?></span>,
+    Your balance is <span class="text-green-600 dark:text-green-400"><?= $formattedSaldo ?></span>
+  </div>
+
+  <!-- KANAN: Tema dan Logout -->
   <div class="flex items-center space-x-3">
     <button onclick="toggleTheme()" class="p-2 rounded bg-gray-200 dark:bg-gray-700">
       <span id="themeIcon"><?= $theme==='dark'?'🌞':'🌙' ?></span>
