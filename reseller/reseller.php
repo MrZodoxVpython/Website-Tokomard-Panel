@@ -210,6 +210,7 @@ if ($stmt) {
   </main>
 </div>
 
+<audio id="notifSound" src="uploads/notification.mp3" preload="auto" loop></audio>
 <script>
 var notifCount = <?= $notifCount ?>;
 if (notifCount > 0) {
@@ -315,7 +316,6 @@ document.addEventListener('click', function(event) {
 });
 
 </script>
-<audio id="notifSound" src="uploads/notification.mp3" preload="auto" loop></audio>
 </body>
 </html>
 
