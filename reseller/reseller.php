@@ -231,19 +231,17 @@ document.addEventListener('DOMContentLoaded', () => {
     monitorNotificationStatus(notifCount);
 });
 
-function monitorNotificationStatus() {
+function monitorNotificationStatus(notifCount) {
     const audio = document.getElementById('notifSound');
     if (!audio) return;
 
-    let wasRinging = false;
     const originalTitle = "Tokomard Panel";
+    let wasRinging = false;
 
     setInterval(() => {
-        const hasNotifIcon = document.title.includes('🔔');
-
-        if (hasNotifIcon && !wasRinging) {
-            // Title & suara hanya saat pertama kali 🔔 muncul
-            document.title = "🔔 Notifications";
+        if (notifCount > 0 && !wasRinging) {
+            // 🔔 muncul pertama kali
+            document.title = `🔔 (${notifCount > 9 ? '9+' : notifCount}) Notifications`;
             audio.currentTime = 0;
             audio.play().catch(() => {
                 document.addEventListener('click', () => audio.play(), { once: true });
@@ -251,14 +249,14 @@ function monitorNotificationStatus() {
             wasRinging = true;
         }
 
-        if (!hasNotifIcon && wasRinging) {
-            // Kembalikan title & stop audio saat 🔔 hilang
+        if (notifCount === 0 && wasRinging) {
+            // 🔔 hilang
             document.title = originalTitle;
             audio.pause();
             audio.currentTime = 0;
             wasRinging = false;
         }
-    }, 1000); // Cek tiap detik
+    }, 1000);
 }
 
 function toggleTheme() {
