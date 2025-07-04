@@ -105,7 +105,7 @@ $formattedSaldo = "Rp. " . number_format($saldo, 0, ',', '.');
     <h1 class="text-xl font-bold block md:hidden">Panel Reseller</h1>
 
     <!-- Desktop only: Sapaan dan saldo -->
-    <div class="hidden md:block text-sm font-medium text-gray-700 dark:text-gray-200">
+    <div class="hidden md:block ml-6 text-sm font-medium text-gray-700 dark:text-gray-200">
       Hi <span class="text-blue-600 dark:text-blue-400"><?= htmlspecialchars($reseller) ?></span>,
       Your balance is <span class="text-green-600 dark:text-green-400"><?= $formattedSaldo ?></span>
     </div>
