@@ -1,26 +1,46 @@
 <?php
 session_start();
-require '../koneksi.php';
+require '../../koneksi.php';
 
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../index.php");
     exit;
 }
 
+// Ambil semua username reseller
+$resellers = [];
+$result = $conn->query("SELECT username FROM users WHERE role = 'reseller'");
+while ($row = $result->fetch_assoc()) {
+    $resellers[] = $row['username'];
+}
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Kurangi Saldo Reseller</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script>
+        function autofillUsername(select) {
+            document.getElementById('usernameInput').value = select.value;
+        }
+    </script>
 </head>
 <body class="bg-gray-100 p-6">
     <div class="max-w-md mx-auto bg-white p-6 rounded shadow">
         <h1 class="text-xl font-bold mb-4">Kurangi Saldo Reseller</h1>
         <form action="proses_kurangi.php" method="POST" class="space-y-4">
             <div>
-                <label class="block mb-1 font-medium">Username Reseller</label>
-                <input type="text" name="username" required class="w-full border p-2 rounded">
+                <label class="block mb-1 font-medium">Pilih Username Reseller (opsional)</label>
+                <select onchange="autofillUsername(this)" class="w-full border p-2 rounded">
+                    <option value="">-- Pilih Reseller --</option>
+                    <?php foreach ($resellers as $reseller): ?>
+                        <option value="<?= htmlspecialchars($reseller) ?>"><?= htmlspecialchars($reseller) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div>
+                <label class="block mb-1 font-medium">Atau Ketik Username</label>
+                <input type="text" name="username" id="usernameInput" required class="w-full border p-2 rounded">
             </div>
             <div>
                 <label class="block mb-1 font-medium">Jumlah Saldo yang Dikurangi</label>
