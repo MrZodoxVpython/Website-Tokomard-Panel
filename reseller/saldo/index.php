@@ -54,7 +54,7 @@ $saldo = $row['saldo'];
                 📜 Lihat Riwayat Saldo
             </a>
             <button id="toggleDark" class="flex items-center gap-2 bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded-full text-sm font-medium text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition">
-                <span id="modeIcon">🌙</span> <span>Mode</span>
+                <span id="modeIcon">🌙</span> <span>Ganti Mode</span>
             </button>
         </div>
     </div>
