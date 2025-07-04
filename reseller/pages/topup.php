@@ -19,7 +19,7 @@ $reseller = $_SESSION['username'];
     <div class="w-full max-w-xl space-y-6">
         <!-- FORM TOPUP -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700">
-            <form id="topup-form" method="POST" class="space-y-5" onsubmit="return showPaymentInfo(event)">
+            <form action="proses_topup.php" method="POST" class="space-y-5">
                 <div>
                     <label class="block font-semibold mb-1 text-gray-700 dark:text-gray-300">👤 Username</label>
                     <input type="text" readonly value="<?= htmlspecialchars($reseller) ?>"
@@ -36,17 +36,17 @@ $reseller = $_SESSION['username'];
                     <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300">💳 Metode Pembayaran</label>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <label id="label-qris" class="method-label flex flex-col items-center bg-gray-50 dark:bg-gray-700 p-4 rounded-xl shadow cursor-pointer border-2 border-transparent">
-                            <input type="radio" name="metode" value="qris" required class="hidden">
+                            <input type="radio" name="metode" value="qris" required class="hidden" onchange="showInfo('qris')">
                             <img src="https://img.icons8.com/ios-filled/100/000000/qr-code.png" class="w-10 h-10 mb-2" id="img-qris" alt="QRIS"/>
                             <span class="text-sm font-semibold text-gray-800 dark:text-white">QRIS</span>
                         </label>
                         <label id="label-dana" class="method-label flex flex-col items-center bg-gray-50 dark:bg-gray-700 p-4 rounded-xl shadow cursor-pointer border-2 border-transparent">
-                            <input type="radio" name="metode" value="dana" required class="hidden">
+                            <input type="radio" name="metode" value="dana" required class="hidden" onchange="showInfo('dana')">
                             <img src="https://i.imgur.com/8BuqVPf.png" class="w-full h-8 mb-2 mt-2" id="img-dana" alt="Dana"/>
                             <span class="text-sm font-semibold text-gray-800 dark:text-white">DANA</span>
                         </label>
                         <label id="label-bank" class="method-label flex flex-col items-center bg-gray-50 dark:bg-gray-700 p-4 rounded-xl shadow cursor-pointer border-2 border-transparent">
-                            <input type="radio" name="metode" value="bank" required class="hidden">
+                            <input type="radio" name="metode" value="bank" required class="hidden" onchange="showInfo('bank')">
                             <img src="https://img.icons8.com/color/96/bank-building.png" class="w-10 h-10 mb-2" id="img-bank" alt="Bank"/>
                             <span class="text-sm font-semibold text-gray-800 dark:text-white">Bank</span>
                         </label>
@@ -101,28 +101,18 @@ $reseller = $_SESSION['username'];
 
 <!-- SCRIPT -->
 <script>
-function showPaymentInfo(e) {
-    e.preventDefault();
-    const metode = document.querySelector('input[name="metode"]:checked');
-    if (!metode) return alert("Silakan pilih metode pembayaran!");
-
-    // Tampilkan info box
+function showInfo(method) {
     document.getElementById('payment-info').classList.remove('hidden');
 
-    // Reset semua info
     ['qris', 'dana', 'bank'].forEach(id => {
         document.getElementById('info-' + id).classList.add('hidden');
         document.getElementById('label-' + id).classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50', 'dark:bg-blue-900', 'border-blue-500');
         document.getElementById('img-' + id).classList.remove('scale-110', 'drop-shadow-lg');
     });
 
-    // Tampilkan yang dipilih
-    const selected = metode.value;
-    document.getElementById('info-' + selected).classList.remove('hidden');
-    document.getElementById('label-' + selected).classList.add('ring-2', 'ring-blue-500', 'bg-blue-50', 'dark:bg-blue-900', 'border-blue-500');
-    document.getElementById('img-' + selected).classList.add('scale-110', 'drop-shadow-lg');
-
-    return false;
+    document.getElementById('info-' + method).classList.remove('hidden');
+    document.getElementById('label-' + method).classList.add('ring-2', 'ring-blue-500', 'bg-blue-50', 'dark:bg-blue-900', 'border-blue-500');
+    document.getElementById('img-' + method).classList.add('scale-110', 'drop-shadow-lg');
 }
 </script>
 
