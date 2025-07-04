@@ -214,43 +214,23 @@ if ($stmt) {
 <script>
 const audio = document.getElementById('notifSound');
 const originalTitle = "Tokomard Panel";
-let showIcon = false;
-let titleInterval = null;
-let audioInterval = null;
 let currentCount = <?= $notifCount ?>;
 
-// Fetch jumlah notifikasi dari server
-function checkNotif() {
-    fetch(window.location.pathname + "?checkNotif")
-        .then(res => res.text())
-        .then(text => {
-            const count = parseInt(text);
-            if (!isNaN(count)) {
-                currentCount = count;
+let blinkInterval = null;
+let audioInterval = null;
+let showNotif = false;
 
-                if (count > 0) {
-                    if (!titleInterval || !audioInterval) {
-                        startNotifikasi();
-                    }
-                } else {
-                    stopNotifikasi();
-                }
-            }
-        });
+function updateTitleBlink() {
+    const displayCount = currentCount > 9 ? '9+' : currentCount;
+    document.title = showNotif
+        ? `🔔 (${displayCount}) Notifications`
+        : originalTitle;
+
+    showNotif = !showNotif;
 }
 
-// Mulai title berkedip & suara berulang
-function startNotifikasi() {
-    // Title blinking
-    if (!titleInterval) {
-        titleInterval = setInterval(() => {
-            showIcon = !showIcon;
-            const displayCount = currentCount > 9 ? '9+' : currentCount;
-            document.title = `${showIcon ? "🔔 " : ""}(${displayCount}) Notifications`;
-        }, 1000);
-    }
-
-    // Play audio terus
+// Jalankan suara terus tiap 5 detik
+function startAudioLoop() {
     if (!audioInterval) {
         audio.currentTime = 0;
         audio.play().catch(() => {
@@ -264,23 +244,47 @@ function startNotifikasi() {
     }
 }
 
-// Stop title/audio
-function stopNotifikasi() {
-    if (titleInterval) clearInterval(titleInterval);
-    if (audioInterval) clearInterval(audioInterval);
-    titleInterval = null;
+// Hentikan audio & blinking
+function stopNotification() {
+    clearInterval(blinkInterval);
+    clearInterval(audioInterval);
+    blinkInterval = null;
     audioInterval = null;
-
     document.title = originalTitle;
     audio.pause();
     audio.currentTime = 0;
 }
 
+// Periksa jumlah notif dari PHP
+function checkNotif() {
+    fetch(window.location.pathname + "?checkNotif")
+        .then(res => res.text())
+        .then(text => {
+            const newCount = parseInt(text);
+            if (!isNaN(newCount)) {
+                currentCount = newCount;
+
+                if (currentCount > 0) {
+                    if (!blinkInterval) {
+                        blinkInterval = setInterval(updateTitleBlink, 3000); // 3 detik bergantian
+                        updateTitleBlink(); // langsung tampil awal
+                    }
+                    startAudioLoop();
+                } else {
+                    stopNotification();
+                }
+            }
+        });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     if (currentCount > 0) {
-        startNotifikasi();
+        blinkInterval = setInterval(updateTitleBlink, 3000);
+        updateTitleBlink();
+        startAudioLoop();
     }
-    // Cek update notifikasi tiap 3 detik
+
+    // Cek ke server tiap 3 detik
     setInterval(checkNotif, 3000);
 });
 
