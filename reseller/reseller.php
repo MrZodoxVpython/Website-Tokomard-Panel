@@ -231,21 +231,26 @@ document.addEventListener('DOMContentLoaded', () => {
     monitorNotificationStatus(notifCount);
 });
 
-function monitorNotificationStatus(notifCount) {
+function monitorNotificationStatus() {
     const audio = document.getElementById('notifSound');
-
     if (!audio) return;
 
-    if (notifCount > 0) {
-        audio.play().catch(() => {
-            document.addEventListener('click', () => audio.play(), { once: true });
-        });
-    } else {
-        audio.pause();
-        audio.currentTime = 0;
-    }
+    setInterval(() => {
+        const hasNotifIcon = document.title.includes('🔔');
+        if (hasNotifIcon) {
+            if (audio.paused) {
+                audio.play().catch(() => {
+                    document.addEventListener('click', () => audio.play(), { once: true });
+                });
+            }
+        } else {
+            if (!audio.paused) {
+                audio.pause();
+                audio.currentTime = 0;
+            }
+        }
+    }, 3000);
 }
-
 
 function toggleTheme() {
     const html = document.documentElement;
