@@ -33,21 +33,22 @@ $reseller = $_SESSION['username'];
             <div>
                 <label class="block font-semibold mb-2 text-gray-700 dark:text-gray-300">💳 Metode Pembayaran</label>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <label class="flex flex-col items-center bg-gray-50 dark:bg-gray-700 p-4 rounded-xl shadow cursor-pointer">
-                        <input type="radio" name="metode" value="qris" required class="hidden">
-                        <img src="https://img.icons8.com/ios-filled/100/000000/qr-code.png" class="w-10 h-10 mb-2" alt="QRIS"/>
-                        <span class="text-sm font-semibold text-gray-800 dark:text-white">QRIS</span>
-                    </label>
-                    <label class="flex flex-col items-center bg-gray-50 dark:bg-gray-700 p-4 rounded-xl shadow cursor-pointer">
-                        <input type="radio" name="metode" value="dana" required class="hidden">
-                        <img src="https://img.icons8.com/color/96/dana.png" class="w-10 h-10 mb-2" alt="Dana"/>
-                        <span class="text-sm font-semibold text-gray-800 dark:text-white">DANA</span>
-                    </label>
-                    <label class="flex flex-col items-center bg-gray-50 dark:bg-gray-700 p-4 rounded-xl shadow cursor-pointer">
-                        <input type="radio" name="metode" value="bank" required class="hidden">
-                        <img src="https://img.icons8.com/color/96/bank-building.png" class="w-10 h-10 mb-2" alt="Bank"/>
-                        <span class="text-sm font-semibold text-gray-800 dark:text-white">Bank</span>
-                    </label>
+                    <?php
+                    $metodes = [
+                        ['qris', 'QRIS', 'https://img.icons8.com/ios-filled/100/000000/qr-code.png'],
+                        ['dana', 'DANA', 'https://img.icons8.com/color/96/dana.png'],
+                        ['bank', 'Bank', 'https://img.icons8.com/color/96/bank-building.png']
+                    ];
+                    foreach ($metodes as [$value, $label, $img]) {
+                        echo <<<HTML
+<label class="flex flex-col items-center bg-gray-50 dark:bg-gray-700 p-4 rounded-xl shadow cursor-pointer">
+    <input type="radio" name="metode" value="$value" required class="hidden" onchange="showInfo('$value')">
+    <img src="$img" class="w-10 h-10 mb-2" alt="$label"/>
+    <span class="text-sm font-semibold text-gray-800 dark:text-white">$label</span>
+</label>
+HTML;
+                    }
+                    ?>
                 </div>
             </div>
 
@@ -69,17 +70,40 @@ $reseller = $_SESSION['username'];
 
     <div class="bg-gray-100 dark:bg-gray-800 rounded-xl shadow p-6 border border-gray-200 dark:border-gray-700">
         <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">📌 Info Pembayaran</h3>
-        <ul class="list-disc list-inside space-y-2 text-sm text-gray-700 dark:text-gray-300">
-            <li><strong>QRIS:</strong> Scan QR dari admin (hubungi CS)</li>
-            <li><strong>DANA:</strong> 0812-3456-7890 a.n. TOKOMARD</li>
-            <li><strong>Bank:</strong> BCA 1234567890 a.n. TOKOMARD</li>
-        </ul>
+        <div id="info-qris" class="hidden text-center">
+            <img src="/img/qr.png" alt="QRIS" class="mx-auto w-48 h-48 mb-4 rounded border border-gray-300">
+            <p class="text-sm text-gray-700 dark:text-gray-300">Scan kode QR di atas untuk melakukan pembayaran via QRIS.</p>
+        </div>
+        <div id="info-dana" class="hidden">
+            <ul class="text-sm space-y-2 text-gray-700 dark:text-gray-300">
+                <li><strong>DANA:</strong> 0812-3456-7890 a.n. TOKOMARD</li>
+                <li>📎 Gunakan nama akun yang sama untuk memudahkan verifikasi</li>
+                <li>🔗 <a href="https://link.dana.id/minta" class="text-blue-500 underline" target="_blank">Link DANA</a></li>
+            </ul>
+        </div>
+        <div id="info-bank" class="hidden">
+            <ul class="text-sm space-y-2 text-gray-700 dark:text-gray-300">
+                <li><strong>Bank:</strong> BCA 1234567890 a.n. TOKOMARD</li>
+                <li><strong>Catatan:</strong> Transfer antar bank bisa delay hingga 5 menit.</li>
+            </ul>
+        </div>
+
         <div class="mt-4">
             <a href="index.php"
                class="inline-block bg-indigo-600 hover:bg-indigo-500 text-white text-sm px-4 py-2 rounded shadow transition">
-                ⬅️ Kembali ke Dashboard
+                ⬅ Kembali ke Dashboard
             </a>
         </div>
     </div>
 </div>
+
+<script>
+function showInfo(method) {
+    const ids = ['qris', 'dana', 'bank'];
+    ids.forEach(id => {
+        document.getElementById('info-' + id).classList.add('hidden');
+    });
+    document.getElementById('info-' + method).classList.remove('hidden');
+}
+</script>
 
