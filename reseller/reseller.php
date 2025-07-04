@@ -213,23 +213,59 @@ if ($stmt) {
 <audio id="notifSound" src="uploads/notification.mp3" preload="auto" loop></audio>
 <script>
 var notifCount = <?= $notifCount ?>;
-if (notifCount > 0) {
+
+function toggleTitleNotification(count) {
     let show = false;
     setInterval(() => {
-        document.title = (show ? "🔔 " : "") + "<?= ($notifCount > 0 ? "($notifCount) " : "") ?>Tokomard Panel";
-        show = !show;
+        if (count > 0) {
+            document.title = (show ? "🔔 " : "") + `(${count}) Tokomard Panel`;
+            show = !show;
+        } else {
+            document.title = "Tokomard Panel";
+        }
     }, 3000);
+}
 
+function monitorNotificationVisibility() {
+    const indicator = document.getElementById('notificationIndicator');
     const audio = document.getElementById('notifSound');
-    if (audio) {
-        const playAudio = () => {
+
+    if (!indicator || !audio) return;
+
+    let isPlaying = false;
+
+    const observer = new MutationObserver(() => {
+        const visible = window.getComputedStyle(indicator).display !== 'none';
+        if (visible && !isPlaying) {
             audio.play().catch(() => {
                 document.addEventListener('click', () => audio.play(), { once: true });
             });
-        };
-        playAudio();
+            isPlaying = true;
+        } else if (!visible && isPlaying) {
+            audio.pause();
+            audio.currentTime = 0;
+            isPlaying = false;
+        }
+    });
+
+    observer.observe(indicator, { attributes: true, attributeFilter: ['style', 'class'] });
+
+    // Trigger first check
+    const visible = window.getComputedStyle(indicator).display !== 'none';
+    if (visible && !isPlaying) {
+        audio.play().catch(() => {
+            document.addEventListener('click', () => audio.play(), { once: true });
+        });
+        isPlaying = true;
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    toggleTitleNotification(notifCount);
+    monitorNotificationVisibility();
+});
+
+
 function toggleTheme() {
     const html = document.documentElement;
     const isDark = html.classList.contains('dark');
