@@ -226,45 +226,20 @@ function toggleTitleNotification(count) {
     }, 3000);
 }
 
-function monitorNotificationVisibility() {
-    const indicator = document.getElementById('notificationIndicator');
+function monitorNotificationStatus(notifCount) {
     const audio = document.getElementById('notifSound');
 
-    if (!indicator || !audio) return;
+    if (!audio) return;
 
-    let isPlaying = false;
-
-    const observer = new MutationObserver(() => {
-        const visible = window.getComputedStyle(indicator).display !== 'none';
-        if (visible && !isPlaying) {
-            audio.play().catch(() => {
-                document.addEventListener('click', () => audio.play(), { once: true });
-            });
-            isPlaying = true;
-        } else if (!visible && isPlaying) {
-            audio.pause();
-            audio.currentTime = 0;
-            isPlaying = false;
-        }
-    });
-
-    observer.observe(indicator, { attributes: true, attributeFilter: ['style', 'class'] });
-
-    // Trigger first check
-    const visible = window.getComputedStyle(indicator).display !== 'none';
-    if (visible && !isPlaying) {
+    if (notifCount > 0) {
         audio.play().catch(() => {
             document.addEventListener('click', () => audio.play(), { once: true });
         });
-        isPlaying = true;
+    } else {
+        audio.pause();
+        audio.currentTime = 0;
     }
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    toggleTitleNotification(notifCount);
-    monitorNotificationVisibility();
-});
-
 
 function toggleTheme() {
     const html = document.documentElement;
