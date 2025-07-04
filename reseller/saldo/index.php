@@ -24,7 +24,7 @@ $saldo = $row['saldo'];
 <body class="bg-gradient-to-br from-blue-100 via-white to-purple-100 min-h-screen flex items-center justify-center font-sans">
     <div class="w-full max-w-xl bg-white rounded-3xl shadow-xl p-8">
         <div class="flex items-center justify-between mb-6">
-            <h1 class="text-2xl font-bold text-gray-800">👛 Saldo Reseller</h1>
+            <h1 class="text-2xl font-bold text-gray-800">👛 Saldo Rekening</h1>
             <span class="px-4 py-1 text-sm bg-blue-100 text-blue-700 rounded-full shadow">
                 <?= htmlspecialchars($reseller) ?>
             </span>
