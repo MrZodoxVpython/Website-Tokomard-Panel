@@ -305,6 +305,7 @@ document.addEventListener('click', function(event) {
 });
 
 </script>
+<audio id="notifSound" src="uploads/notifikasi.mp3" preload="auto" loop></audio>
 </body>
 </html>
 
