@@ -32,7 +32,7 @@ while ($row = $result->fetch_assoc()) {
 </head>
 <body class="bg-gray-100 p-6">
     <div class="max-w-md mx-auto bg-white p-6 rounded shadow">
-        <h1 class="text-xl font-bold mb-4">Kurangi Saldo</h1>
+        <h1 class="text-center text-xl font-bold mb-4">Kurangi Saldo</h1>
         <form action="proses_kurangi.php" method="POST" class="space-y-4">
 
             <div>
