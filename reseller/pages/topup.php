@@ -74,7 +74,7 @@ $reseller = $_SESSION['username'];
         <!-- QRIS -->
         <div id="info-qris" class="hidden">
             <p class="text-sm text-gray-700 dark:text-gray-300 mb-2">Silakan scan QR di bawah ini untuk pembayaran QRIS:</p>
-            <img src="/images/qris.png" alt="QRIS" class="w-full max-w-xs rounded-xl border mx-auto mb-2">
+            <img src="https://i.imgur.com/LrhI27t.jpeg" alt="QRIS" class="w-full max-w-xs rounded-xl border mx-auto mb-2">
         </div>
 
         <!-- DANA -->
