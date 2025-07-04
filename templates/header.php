@@ -53,6 +53,7 @@ if (session_status() === PHP_SESSION_NONE) {
         <a href="/dashboard.php" class="text-gray-300 hover:text-white transition">Beranda</a>
         <a href="/reseller/pesan.php" class="text-gray-300 hover:text-white transition">Broadcast</a>
         <a href="/reseller/saldo/topup.php" class="text-gray-300 hover:text-white transition">Topup</a>
+        <a href="/reseller/saldo/index.php" class="text-gray-300 hover:text-white transition">Topup Index</a>
         <a href="/reseller/reseller.php" class="text-gray-300 hover:text-white transition">Reseller</a>
         <span class="text-sm text-gray-400">👤 <?php echo htmlspecialchars($_SESSION['username']); ?></span>
         <a href="/logout.php" class="text-red-400 hover:underline font-semibold">🔓 Logout</a>
