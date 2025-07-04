@@ -20,6 +20,16 @@ while ($row = $result->fetch_assoc()) {
     <title>Tambah Saldo Reseller/Admin</title>
     <meta charset="UTF-8">
     <link href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script>
+    function toggleManualInput(select) {
+        const manualInput = document.getElementById('manualUsername');
+        if (select.value === 'manual') {
+            manualInput.style.display = 'block';
+        } else {
+            manualInput.style.display = 'none';
+        }
+    }
+    </script>
 </head>
 <body class="bg-gray-100 p-6">
     <div class="max-w-md mx-auto bg-white p-6 rounded shadow">
@@ -27,13 +37,18 @@ while ($row = $result->fetch_assoc()) {
         <form action="proses_tambah.php" method="POST" class="space-y-4">
             <div>
                 <label class="block mb-1 font-medium">Pilih Username</label>
-                <select name="username" required class="w-full border p-2 rounded">
+                <select name="username_select" onchange="toggleManualInput(this)" class="w-full border p-2 rounded">
                     <?php foreach ($users as $user): ?>
                         <option value="<?= htmlspecialchars($user['username']) ?>">
                             <?= htmlspecialchars($user['username']) ?><?= $user['role'] === 'admin' ? ' (admin)' : '' ?>
                         </option>
                     <?php endforeach; ?>
+                    <option value="manual">Manual (ketik sendiri)</option>
                 </select>
+            </div>
+            <div id="manualUsername" style="display: none;">
+                <label class="block mb-1 font-medium">Masukkan Username Manual</label>
+                <input type="text" name="username_manual" class="w-full border p-2 rounded">
             </div>
             <div>
                 <label class="block mb-1 font-medium">Jumlah Tambah Saldo</label>
