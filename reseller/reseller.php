@@ -84,7 +84,7 @@ if ($stmt) {
     <div class="relative cursor-pointer" onclick="toggleNotif(event)">
       <img src="https://i.imgur.com/q3DzxiB.png" class="w-10 h-10" alt="Logo">
       <?php if ($notifCount): ?>
-      <span class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full px-1 animate-pulse"><?= $notifCount>9?'9+':$notifCount ?></span>
+      <span id="notificationIndicator" class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full px-1 animate-pulse"><?= $notifCount>9?'9+':$notifCount ?></span>
       <?php endif; ?>
     </div>
     <h1 class="text-xl font-bold">Panel Reseller</h1>
