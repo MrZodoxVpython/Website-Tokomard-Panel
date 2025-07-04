@@ -52,7 +52,7 @@ if (session_status() === PHP_SESSION_NONE) {
       <nav class="hidden md:flex items-center space-x-6">
         <a href="/dashboard.php" class="text-gray-300 hover:text-white transition">Beranda</a>
         <a href="/reseller/pesan.php" class="text-gray-300 hover:text-white transition">Broadcast</a>
-        <a href="/saldo/topup.php" class="text-gray-300 hover:text-white transition">Topup</a>
+        <a href="/reseller/saldo/topup.php" class="text-gray-300 hover:text-white transition">Topup</a>
         <a href="/reseller/pesan.php" class="text-gray-300 hover:text-white transition">Broadcast</a>
         <a href="/reseller/reseller.php" class="text-gray-300 hover:text-white transition">Reseller</a>
 
