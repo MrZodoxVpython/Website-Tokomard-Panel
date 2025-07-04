@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 require __DIR__ . '/../../koneksi.php';
 
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
-    header("Location: ../index.php");
+    echo "<script>window.location.href = '../index.php';</script>";
     exit;
 }
 
