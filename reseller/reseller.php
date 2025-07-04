@@ -112,7 +112,7 @@ $formattedSaldo = "Rp. " . number_format($saldo, 0, ',', '.');
 
   <!-- TENGAH (desktop only): Sapaan -->
   <div class="hidden md:block text-sm font-medium text-gray-700 dark:text-gray-200 ml-auto mr-6">
-    Hola <span class="text-blue-600 dark:text-blue-400"><?= htmlspecialchars($reseller) ?></span>,
+    Hola <span class="text-blue-600 dark:text-blue-400"><?= htmlspecialchars($reseller) ?></span>! ,
     Your balance is <span class="text-green-600 dark:text-green-400"><?= $formattedSaldo ?></span>
   </div>
 
