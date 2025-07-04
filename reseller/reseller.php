@@ -235,21 +235,30 @@ function monitorNotificationStatus() {
     const audio = document.getElementById('notifSound');
     if (!audio) return;
 
+    let wasRinging = false;
+    const originalTitle = "Tokomard Panel";
+
     setInterval(() => {
         const hasNotifIcon = document.title.includes('🔔');
-        if (hasNotifIcon) {
-            if (audio.paused) {
-                audio.play().catch(() => {
-                    document.addEventListener('click', () => audio.play(), { once: true });
-                });
-            }
-        } else {
-            if (!audio.paused) {
-                audio.pause();
-                audio.currentTime = 0;
-            }
+
+        if (hasNotifIcon && !wasRinging) {
+            // Title & suara hanya saat pertama kali 🔔 muncul
+            document.title = "🔔 Notifications";
+            audio.currentTime = 0;
+            audio.play().catch(() => {
+                document.addEventListener('click', () => audio.play(), { once: true });
+            });
+            wasRinging = true;
         }
-    }, 3000);
+
+        if (!hasNotifIcon && wasRinging) {
+            // Kembalikan title & stop audio saat 🔔 hilang
+            document.title = originalTitle;
+            audio.pause();
+            audio.currentTime = 0;
+            wasRinging = false;
+        }
+    }, 1000); // Cek tiap detik
 }
 
 function toggleTheme() {
