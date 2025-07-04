@@ -212,52 +212,73 @@ if ($stmt) {
 
 <audio id="notifSound" src="uploads/notification.mp3"></audio>
 <script>
-var notifCount = <?= $notifCount ?>;
+let notifCount = <?= $notifCount ?>;
+const audio = document.getElementById('notifSound');
+const originalTitle = "Tokomard Panel";
+let showIcon = false;
+let audioInterval = null;
+let titleInterval = null;
 
-function toggleTitleNotification(count) {
-    let show = false;
-    setInterval(() => {
-        if (count > 0) {
-            document.title = (show ? "🔔 " : "") + `(${count}) Tokomard Panel`;
-            show = !show;
-        } else {
-            document.title = "Tokomard Panel";
-        }
-    }, 3000);
+// Fungsi cek jumlah notifikasi dari halaman ini sendiri
+function checkNotif() {
+    fetch(window.location.pathname + "?checkNotif")
+        .then(res => res.text())
+        .then(text => {
+            const count = parseInt(text);
+            if (!isNaN(count)) {
+                notifCount = count;
+
+                if (notifCount > 0) {
+                    startNotifikasi(count);
+                } else {
+                    stopNotifikasi();
+                }
+            }
+        });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    toggleTitleNotification(notifCount);
-    monitorNotificationStatus(notifCount);
+// Mulai title berkedip dan bunyi notifikasi berulang
+function startNotifikasi(count) {
+    // Title berkedip
+    if (!titleInterval) {
+        titleInterval = setInterval(() => {
+            showIcon = !showIcon;
+            document.title = (showIcon ? `🔔 (${count > 9 ? '9+' : count}) Notifications` : `(${count > 9 ? '9+' : count}) Notifications`);
+        }, 1000);
+    }
+
+    // Suara notifikasi berulang
+    if (!audioInterval) {
+        audio.currentTime = 0;
+        audio.play().catch(() => {
+            document.addEventListener('click', () => audio.play(), { once: true });
+        });
+
+        audioInterval = setInterval(() => {
+            audio.currentTime = 0;
+            audio.play();
+        }, 5000); // setiap 5 detik
+    }
+}
+
+// Hentikan title berkedip dan suara
+function stopNotifikasi() {
+    clearInterval(titleInterval);
+    titleInterval = null;
+    document.title = originalTitle;
+
+    clearInterval(audioInterval);
+    audioInterval = null;
+    audio.pause();
+    audio.currentTime = 0;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    if (notifCount > 0) {
+        startNotifikasi(notifCount);
+    }
+    setInterval(checkNotif, 5000); // cek ke server tiap 5 detik
 });
-
-function monitorNotificationStatus(notifCount) {
-    const audio = document.getElementById('notifSound');
-    if (!audio) return;
-
-    const originalTitle = "Tokomard Panel";
-    let wasRinging = false;
-
-    setInterval(() => {
-        if (notifCount > 0 && !wasRinging) {
-            // 🔔 muncul pertama kali
-            document.title = `🔔 (${notifCount > 9 ? '9+' : notifCount}) Notifications`;
-            audio.currentTime = 0;
-            audio.play().catch(() => {
-                document.addEventListener('click', () => audio.play(), { once: true });
-            });
-            wasRinging = true;
-        }
-
-        if (notifCount === 0 && wasRinging) {
-            // 🔔 hilang
-            document.title = originalTitle;
-            audio.pause();
-            audio.currentTime = 0;
-            wasRinging = false;
-        }
-    }, 1000);
-}
 
 function toggleTheme() {
     const html = document.documentElement;
