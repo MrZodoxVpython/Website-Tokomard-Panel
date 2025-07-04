@@ -37,7 +37,7 @@ if ($stmt) {
 }
 // saldo 
 $saldo = 0;
-$q = $conn->prepare("SELECT role FROM users WHERE username = ?");
+$q = $conn->prepare("SELECT saldo FROM users WHERE username = ?");
 if ($q) {
     $q->bind_param("s", $reseller);
     $q->execute();
