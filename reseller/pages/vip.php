@@ -29,32 +29,28 @@ if (file_exists($userFile)) {
 echo "=== DEBUG USER COMPARISON ===\n";
 $current = null;
 $approved = false;
-foreach ($users as $u) {
-    $usernameJSON = strtolower(trim($u['username']));
-    $usernameSession = strtolower(trim($reseller));
-    $match = $usernameJSON === $usernameSession ? '✅' : '❌';
 
-    echo "Comparing: [$usernameJSON] vs [$usernameSession] => $match\n";
+echo "Raw user data:\n";
+print_r($users);
+
+$usernameSession = strtolower(trim($reseller));
+echo "Trimmed Session Username: [$usernameSession]\n";
+
+foreach ($users as $u) {
+    $usernameJSON = isset($u['username']) ? strtolower(trim($u['username'])) : '(missing)';
+    echo "→ JSON username raw: [" . $u['username'] . "] | trimmed: [$usernameJSON]\n";
+    echo "→ Comparing with session: [$usernameJSON] === [$usernameSession] ... ";
 
     if ($usernameJSON === $usernameSession) {
+        echo "✅ MATCH\n";
         $current = $u;
         $approved = isset($u['status']) && strtolower(trim($u['status'])) === 'approved';
         break;
+    } else {
+        echo "❌ NO MATCH\n";
     }
 }
 
-// Dump hasil akhir
-echo "Current user (dump): ";
-print_r($current);
-echo "Approved? ";
-var_dump($approved);
-echo "</pre>";
-
-// Jika belum disetujui
-if (!$approved) {
-    echo "<div style='color:red; font-weight:bold;'>Akun Anda belum disetujui oleh admin.</div>";
-    exit;
-}
 ?>
 
 <!DOCTYPE html>
