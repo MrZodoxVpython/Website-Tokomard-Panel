@@ -3,27 +3,34 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Validasi login reseller
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
     header("Location: ../index.php");
     exit;
 }
 
 $reseller = $_SESSION['username'];
-$userFile = '../data/reseller_users.json';
-$approved = false;
-$current = null;
 
+// Cek file user data
+$userFile = '../data/reseller_users.json';
+$users = [];
 if (file_exists($userFile)) {
-    $users = json_decode(file_get_contents($userFile), true);
-    foreach ($users as $u) {
-        if (strtolower(trim($u['username'])) === strtolower(trim($reseller))) {
-            $current = $u;
-            $approved = isset($u['status']) && strtolower(trim($u['status'])) === 'approved';
-            break;
-        }
+    $users = json_decode(file_get_contents($userFile), true) ?? [];
+}
+
+// Cari user yang cocok (case-insensitive & trim)
+$current = null;
+$approved = false;
+
+foreach ($users as $u) {
+    if (strtolower(trim($u['username'])) === strtolower(trim($reseller))) {
+        $current = $u;
+        $approved = isset($u['status']) && strtolower(trim($u['status'])) === 'approved';
+        break;
     }
 }
 
+// Debug info
 echo "<pre>";
 echo "Session Username: " . ($_SESSION['username'] ?? 'N/A') . "\n";
 echo "Session Role: " . ($_SESSION['role'] ?? 'N/A') . "\n";
@@ -31,6 +38,14 @@ echo "Reseller: $reseller\n";
 echo "Current user (dump): "; print_r($current);
 echo "Approved? "; var_dump($approved);
 echo "</pre>";
+
+// Cek jika belum approved
+if (!$approved) {
+    echo "<div style='color:red;font-weight:bold;'>Akun Anda belum disetujui oleh admin.</div>";
+    exit;
+}
+
+// Jika sudah approved, lanjutkan ke tampilan chat
 ?>
 
 <!DOCTYPE html>
