@@ -3,54 +3,52 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-echo "<pre>";
-echo "Session Username: " . ($_SESSION['username'] ?? 'N/A') . "\n";
-echo "Session Role: " . ($_SESSION['role'] ?? 'N/A') . "\n";
-
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
-    echo "Redirecting because session not valid\n";
-    echo "</pre>";
     header("Location: ../index.php");
     exit;
 }
 
 $reseller = $_SESSION['username'];
-echo "Reseller: $reseller\n";
+$trimmedReseller = strtolower(trim($reseller));
 
-// Cek file user data
-$userFile = '../data/reseller_users.json';
+// Path absolut ke file JSON
+$userFile = __DIR__ . '/../data/reseller_users.json';
+
+// Ambil data user
+$users = [];
 if (file_exists($userFile)) {
-    $users = json_decode(file_get_contents($userFile), true) ?? [];
-} else {
-    $users = [];
-}
-
-// Debug list user
-echo "=== DEBUG USER COMPARISON ===\n";
-$current = null;
-$approved = false;
-
-echo "Raw user data:\n";
-print_r($users);
-
-$usernameSession = strtolower(trim($reseller));
-echo "Trimmed Session Username: [$usernameSession]\n";
-
-foreach ($users as $u) {
-    $usernameJSON = isset($u['username']) ? strtolower(trim($u['username'])) : '(missing)';
-    echo "→ JSON username raw: [" . $u['username'] . "] | trimmed: [$usernameJSON]\n";
-    echo "→ Comparing with session: [$usernameJSON] === [$usernameSession] ... ";
-
-    if ($usernameJSON === $usernameSession) {
-        echo "✅ MATCH\n";
-        $current = $u;
-        $approved = isset($u['status']) && strtolower(trim($u['status'])) === 'approved';
-        break;
-    } else {
-        echo "❌ NO MATCH\n";
+    $jsonRaw = file_get_contents($userFile);
+    echo "<pre>=== DEBUG JSON ===\n$jsonRaw\n</pre>";
+    $users = json_decode($jsonRaw, true);
+    if ($users === null) {
+        echo "<pre>⚠️ JSON error: " . json_last_error_msg() . "</pre>";
     }
+} else {
+    echo "<pre>⚠️ File tidak ditemukan: $userFile</pre>";
 }
 
+// Cari user yang cocok
+$current = array_filter($users, function ($u) use ($trimmedReseller) {
+    return strtolower(trim($u['username'])) === $trimmedReseller;
+});
+$current = reset($current);
+$approved = $current && strtolower($current['status']) === 'approved';
+
+// Debug output
+echo "<pre>
+Session Username: {$_SESSION['username']}
+Session Role: {$_SESSION['role']}
+Reseller: $reseller
+Trimmed Session Username: [$trimmedReseller]
+Current user (dump): "; print_r($current);
+echo "Approved? "; var_dump($approved);
+echo "</pre>";
+
+// Jika belum disetujui
+if (!$approved) {
+    echo "<p style='color:red;'>Akun Anda belum disetujui oleh admin.</p>";
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
