@@ -35,14 +35,14 @@ $current = reset($current);
 $approved = $current && strtolower($current['status']) === 'approved';
 
 // Debug output
-echo "<pre>
-Session Username: {$_SESSION['username']}
-Session Role: {$_SESSION['role']}
-Reseller: $reseller
-Trimmed Session Username: [$trimmedReseller]
-Current user (dump): "; print_r($current);
-echo "Approved? "; var_dump($approved);
-echo "</pre>";
+//echo "<pre>
+//Session Username: {$_SESSION['username']}
+//Session Role: {$_SESSION['role']}
+//Reseller: $reseller
+//Trimmed Session Username: [$trimmedReseller]
+//Current user (dump): "; print_r($current);
+//echo "Approved? "; var_dump($approved);
+//echo "</pre>";
 
 // Jika belum disetujui
 if (!$approved) {
