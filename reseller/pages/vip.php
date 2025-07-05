@@ -19,7 +19,7 @@ if (file_exists($userFile)) {
 }
 
 // Cek status user
-$current = array_filter($users, fn($u) => strtolower($u['username']) == strtolower($reseller));
+$current = array_filter($users, fn($u) => strtolower($u['username']) === strtolower($reseller));
 //$current = array_filter($users, fn($u) => $u['username'] == $reseller);
 $current = reset($current);
 $approved = $current && $current['status'] === 'approved';
