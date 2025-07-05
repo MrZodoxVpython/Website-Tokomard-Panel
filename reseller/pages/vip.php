@@ -3,33 +3,27 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Cek sesi dan role
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
     header("Location: ../index.php");
     exit;
 }
 
 $reseller = $_SESSION['username'];
-
-// Baca file user data
 $userFile = '../data/reseller_users.json';
-$users = file_exists($userFile) ? json_decode(file_get_contents($userFile), true) : [];
-
 $approved = false;
 $current = null;
 
-// Cek status user (approved atau tidak)
-foreach ($users as $u) {
-    if (isset($u['username']) && strtolower($u['username']) === strtolower($reseller)) {
-        $current = $u;
-        if (isset($u['status']) && $u['status'] === 'approved') {
-            $approved = true;
+if (file_exists($userFile)) {
+    $users = json_decode(file_get_contents($userFile), true);
+    foreach ($users as $u) {
+        if (strtolower(trim($u['username'])) === strtolower(trim($reseller))) {
+            $current = $u;
+            $approved = isset($u['status']) && strtolower(trim($u['status'])) === 'approved';
+            break;
         }
-        break;
     }
 }
 
-// Debug output
 echo "<pre>";
 echo "Session Username: " . ($_SESSION['username'] ?? 'N/A') . "\n";
 echo "Session Role: " . ($_SESSION['role'] ?? 'N/A') . "\n";
