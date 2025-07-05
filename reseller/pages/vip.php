@@ -2,6 +2,14 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+echo "<pre>";
+echo "Session Username: " . ($_SESSION['username'] ?? 'N/A') . "\n";
+echo "Session Role: " . ($_SESSION['role'] ?? 'N/A') . "\n";
+echo "Reseller: $reseller\n";
+echo "Current user (dump): "; print_r($current);
+echo "Approved? "; var_dump($approved);
+echo "</pre>";
+
 
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
     header("Location: ../index.php");
