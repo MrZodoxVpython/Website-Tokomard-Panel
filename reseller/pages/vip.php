@@ -3,49 +3,58 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Validasi login reseller
+echo "<pre>";
+echo "Session Username: " . ($_SESSION['username'] ?? 'N/A') . "\n";
+echo "Session Role: " . ($_SESSION['role'] ?? 'N/A') . "\n";
+
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
+    echo "Redirecting because session not valid\n";
+    echo "</pre>";
     header("Location: ../index.php");
     exit;
 }
 
 $reseller = $_SESSION['username'];
+echo "Reseller: $reseller\n";
 
 // Cek file user data
 $userFile = '../data/reseller_users.json';
-$users = [];
 if (file_exists($userFile)) {
     $users = json_decode(file_get_contents($userFile), true) ?? [];
+} else {
+    $users = [];
 }
 
-// Cari user yang cocok (case-insensitive & trim)
+// Debug list user
+echo "=== DEBUG USER COMPARISON ===\n";
 $current = null;
 $approved = false;
-
 foreach ($users as $u) {
-    if (strtolower(trim($u['username'])) === strtolower(trim($reseller))) {
+    $usernameJSON = strtolower(trim($u['username']));
+    $usernameSession = strtolower(trim($reseller));
+    $match = $usernameJSON === $usernameSession ? '✅' : '❌';
+
+    echo "Comparing: [$usernameJSON] vs [$usernameSession] => $match\n";
+
+    if ($usernameJSON === $usernameSession) {
         $current = $u;
         $approved = isset($u['status']) && strtolower(trim($u['status'])) === 'approved';
         break;
     }
 }
 
-// Debug info
-echo "<pre>";
-echo "Session Username: " . ($_SESSION['username'] ?? 'N/A') . "\n";
-echo "Session Role: " . ($_SESSION['role'] ?? 'N/A') . "\n";
-echo "Reseller: $reseller\n";
-echo "Current user (dump): "; print_r($current);
-echo "Approved? "; var_dump($approved);
+// Dump hasil akhir
+echo "Current user (dump): ";
+print_r($current);
+echo "Approved? ";
+var_dump($approved);
 echo "</pre>";
 
-// Cek jika belum approved
+// Jika belum disetujui
 if (!$approved) {
-    echo "<div style='color:red;font-weight:bold;'>Akun Anda belum disetujui oleh admin.</div>";
+    echo "<div style='color:red; font-weight:bold;'>Akun Anda belum disetujui oleh admin.</div>";
     exit;
 }
-
-// Jika sudah approved, lanjutkan ke tampilan chat
 ?>
 
 <!DOCTYPE html>
