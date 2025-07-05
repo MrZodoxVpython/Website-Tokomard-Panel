@@ -23,14 +23,7 @@ if (file_exists($userFile)) {
     $current = reset($current);
     $approved = $current && strtolower($current['status']) === 'approved';
 }
-
-// Jika belum disetujui
-if (!$approved) {
-    echo "<p style='color:red;'>Akun Anda belum disetujui oleh admin.</p>";
-    exit;
-}
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
