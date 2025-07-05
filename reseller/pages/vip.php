@@ -15,17 +15,17 @@ $trimmedReseller = strtolower(trim($reseller));
 $userFile = __DIR__ . '/../data/reseller_users.json';
 
 // Ambil data user
-$users = [];
-if (file_exists($userFile)) {
-    $jsonRaw = file_get_contents($userFile);
-    echo "<pre>=== DEBUG JSON ===\n$jsonRaw\n</pre>";
-    $users = json_decode($jsonRaw, true);
-    if ($users === null) {
-        echo "<pre>⚠️ JSON error: " . json_last_error_msg() . "</pre>";
-    }
-} else {
-    echo "<pre>⚠️ File tidak ditemukan: $userFile</pre>";
-}
+//$users = [];
+//if (file_exists($userFile)) {
+ //   $jsonRaw = file_get_contents($userFile);
+  //  echo "<pre>=== DEBUG JSON ===\n$jsonRaw\n</pre>";
+   // $users = json_decode($jsonRaw, true);
+    //if ($users === null) {
+     //   echo "<pre>⚠️ JSON error: " . json_last_error_msg() . "</pre>";
+    //}
+//} else {
+ //   echo "<pre>⚠️ File tidak ditemukan: $userFile</pre>";
+//}
 
 // Cari user yang cocok
 $current = array_filter($users, function ($u) use ($trimmedReseller) {
