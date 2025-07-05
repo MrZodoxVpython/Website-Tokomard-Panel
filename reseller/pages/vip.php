@@ -11,38 +11,18 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
 $reseller = $_SESSION['username'];
 $trimmedReseller = strtolower(trim($reseller));
 
-// Path absolut ke file JSON
+// Path ke file JSON
 $userFile = __DIR__ . '/../data/reseller_users.json';
+$approved = false;
 
-// Ambil data user
-//$users = [];
-//if (file_exists($userFile)) {
- //   $jsonRaw = file_get_contents($userFile);
-  //  echo "<pre>=== DEBUG JSON ===\n$jsonRaw\n</pre>";
-   // $users = json_decode($jsonRaw, true);
-    //if ($users === null) {
-     //   echo "<pre>⚠️ JSON error: " . json_last_error_msg() . "</pre>";
-    //}
-//} else {
- //   echo "<pre>⚠️ File tidak ditemukan: $userFile</pre>";
-//}
-
-// Cari user yang cocok
-$current = array_filter($users, function ($u) use ($trimmedReseller) {
-    return strtolower(trim($u['username'])) === $trimmedReseller;
-});
-$current = reset($current);
-$approved = $current && strtolower($current['status']) === 'approved';
-
-// Debug output
-//echo "<pre>
-//Session Username: {$_SESSION['username']}
-//Session Role: {$_SESSION['role']}
-//Reseller: $reseller
-//Trimmed Session Username: [$trimmedReseller]
-//Current user (dump): "; print_r($current);
-//echo "Approved? "; var_dump($approved);
-//echo "</pre>";
+if (file_exists($userFile)) {
+    $users = json_decode(file_get_contents($userFile), true) ?? [];
+    $current = array_filter($users, function ($u) use ($trimmedReseller) {
+        return strtolower(trim($u['username'])) === $trimmedReseller;
+    });
+    $current = reset($current);
+    $approved = $current && strtolower($current['status']) === 'approved';
+}
 
 // Jika belum disetujui
 if (!$approved) {
