@@ -83,23 +83,24 @@
     }"
     class="relative w-full max-w-3xl mx-auto overflow-hidden rounded-xl shadow-lg"
   >
-    <!-- Track (gambar) -->
-    <div 
+    <!-- Track / container -->
+    <div
       class="flex transition-all duration-700 ease-in-out"
       :style="`width: ${images.length * 100}%; transform: translateX(-${active * (100 / images.length)}%);`"
     >
+      <!-- Slide per gambar -->
       <template x-for="img in images" :key="img">
         <div class="w-full flex-shrink-0">
-          <img 
-            :src="img" 
-            class="w-full h-64 sm:h-80 object-cover" 
-            alt="Slide" 
+          <img
+            :src="img"
+            class="w-full h-64 sm:h-80 object-cover"
+            alt="Slide"
           />
         </div>
       </template>
     </div>
 
-    <!-- Tombol panah -->
+    <!-- Navigasi kiri-kanan -->
     <div class="absolute inset-0 flex items-center justify-between px-4">
       <button @click="active = (active - 1 + images.length) % images.length"
         class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full">&#10094;</button>
