@@ -6,7 +6,7 @@ if (isset($_SESSION['expired_success'])) {
                    color:#16a34a;
                    padding:5px;
                    border-radius:5px;
-                   margin-top:5px;
+                   margin-top:1px;
                    margin-bottom:10px;
                    margin-left:auto;
                    margin-right:auto;
