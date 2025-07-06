@@ -146,19 +146,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
             shell_exec($c);
             //echo "Output: $out\n\n";
         }
-        echo "✅ Perpanjang Selesai!";
-        //exit;
-
-        // ✅ Redirect agar tidak eksekusi ulang saat refresh
-        header("Location: ".$_SERVER['PHP_SELF']."?updated=1");
-        exit;
-
+        $_SESSION['expired_success'] = true;
+	header("Location: ".$_SERVER['PHP_SELF']);
+	exit;
+ 
     } catch (Exception $e) {
         echo "<pre style='color:red;'>".$e->getMessage()."</pre>";
         exit;
     }
 }
-
+if (!empty($_SESSION['expired_success'])) {
+    echo "<div class='text-green-600 font-bold'>✅ Perpanjang Selesai!</div>";
+    unset($_SESSION['expired_success']);
+}
     // Jalankan semua command
     foreach ($cmds as $c) {
         $out = shell_exec($c);
