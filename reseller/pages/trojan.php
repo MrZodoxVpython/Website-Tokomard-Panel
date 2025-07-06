@@ -14,8 +14,8 @@ $sshProducts = [
         'price' => 20000,
         'country' => 'Singapura',
         'isp' => 'DigitalOcean',
-        'available' => true,
-        'stock' => 11
+        'available' => $stokData['SGDO-2DEV']['available'],
+        'stock' => $stokData['SGDO-2DEV']['stock']
     ],
     [
         'name' => 'RW-MARD',
@@ -23,8 +23,8 @@ $sshProducts = [
         'price' => 20000,
         'country' => 'Indonesia',
         'isp' => 'FCCDN',
-        'available' => true,
-        'stock' => 22
+        'available' => $stokData['RW-MARD']['available'],
+        'stock' => $stokData['RW-MARD']['stock']
     ],
     [
         'name' => 'SGDO-MARD1',
@@ -32,8 +32,8 @@ $sshProducts = [
         'price' => 15000,
         'country' => 'Singapura',
         'isp' => 'DigitalOcean',
-        'available' => true,
-        'stock' => 33
+        'available' => $stokData['SGDO-MARD1']['available'],
+        'stock' => $stokData['SGDO-MARD1']['stock']
     ],
 ];
 
