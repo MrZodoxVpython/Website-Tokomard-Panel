@@ -74,7 +74,7 @@ if (isset($_POST['edit_user'])) {
     $escapedUser = preg_quote($user, '/');
     
     // Ganti baris komentar akun: #! username YYYY-MM-DD
-    $cmds[] = "$sshPrefix \"sed -i 's|^.*#! *$escapedUser *[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}|#! $user $expired|' $configPath\"";
+    $cmds[] = "$sshPrefix \"sed -i 's|^Expired On[[:space:]]*:[[:space:]]*.*|Expired On     : $expired|' $pathUser\"";
 
     //$cmds[] = "$sshPrefix \"sed -i 's|^#! $escapedUser .*|#! $user $expired|g' $configPath\"";
 
