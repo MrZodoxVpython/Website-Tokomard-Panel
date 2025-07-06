@@ -6,7 +6,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
 }
 
 $vpsList = [
-    ['ip' => '178.128.60.185', 'country' => 'Singapore-SGDO-2DEV'],
+    ['ip' => '206.189.42.23', 'country' => 'Singapore-SGDO-2DEV'],
     ['ip' => '152.42.182.187', 'country' => 'Singapore-SGDO-MARD1'],
     ['ip' => '203.194.113.140', 'country' => 'Indonesia-RW-MARD']
 ];
