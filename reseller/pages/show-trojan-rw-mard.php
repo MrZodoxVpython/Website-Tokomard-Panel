@@ -136,11 +136,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
             throw new Exception("❌ Format tanggal salah. Gunakan YYYY-MM-DD atau jumlah hari.");
         }
 
- //       echo "<pre>";
-  //      echo "User        : $user\n";
-   //     echo "Prev Date   : $prevDate\n";
-    //    echo "New Expired : $expired\n";
-     //   echo "File Akun   : $fileAkun\n\n";
+        //echo "<pre>";
+        //echo "User        : $user\n";
+        //echo "Prev Date   : $prevDate\n";
+        //echo "New Expired : $expired\n";
+        //echo "File Akun   : $fileAkun\n\n";
 
         // 🛠   Update file dan config
         $cmds[] = "$sshPrefix \"sed -i 's|^Expired On[[:space:]]*:[[:space:]]*.*|Expired On     : $expired|' $fileAkun\"";
