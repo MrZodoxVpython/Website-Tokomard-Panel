@@ -104,6 +104,8 @@ $files = array_filter(explode("\n", trim($fileListRaw ?? '')));
     <meta charset="UTF-8">
     <title>Trojan RW‑MARD</title>
     <script src="https://cdn.tailwindcss.com"></script>
+<style>.hidden { display: none !important; }</style>
+
 </head>
 <body class="bg-gray-900 text-white min-h-screen p-6">
 <div class="max-w-5xl mx-auto">
