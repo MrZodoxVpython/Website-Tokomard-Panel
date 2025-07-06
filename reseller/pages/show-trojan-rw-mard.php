@@ -130,6 +130,8 @@ $files = array_filter(explode("\n", trim($fileListRaw ?? '')));
                     <!-- Show -->
                     <button id="btn-<?=$u?>" type="button" onclick="toggleDetail('<?=$u?>')" class="btn-show ...">Show</button>
 
+                    <button id="btn-<?=$u?>" onclick="toggleDetail('<?=$u?>')" class="btn-show bg-blue-600 px-3 py-1 rounded hover:bg-blue-700">Show</button>
+
                     <!-- Start/Stop -->
                     <form method="POST" class="inline">
                         <input type="hidden" name="toggle_user" value="<?=$u?>">
