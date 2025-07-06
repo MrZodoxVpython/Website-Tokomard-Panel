@@ -230,7 +230,7 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
 
             <form method="POST" id="form-<?= $username ?>" class="mt-3 hidden bg-gray-700 p-4 rounded">
                 <input type="hidden" name="edit_user" value="<?= htmlspecialchars($username) ?>">
-                <label class="block mb-1">Perbarui Expired (tgl atau jumlah hari)</label>
+                <label class="block mb-1">Perbarui Expired (tgl atau jumlah hari(renew))</label>
                 <input type="text" name="expired" required class="w-full p-2 rounded bg-gray-600 mb-2 text-white">
                 <button type="submit" class="bg-green-600 px-4 py-2 rounded hover:bg-green-700">Simpan</button>
             </form>
