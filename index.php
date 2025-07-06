@@ -70,9 +70,9 @@
     x-data="{
       active: 0,
       slides: [
-        { img: 'https://i.imgur.com/CX6v5kU.jpeg', url: 'https://link1.com' },
-        { img: 'https://i.imgur.com/q3DzxiB.png', url: 'https://link2.com' },
-        { img: 'https://i.imgur.com/8IiXQqY.png', url: 'https://link3.com' }
+        'https://i.imgur.com/CX6v5kU.jpeg',
+        'https://i.imgur.com/q3DzxiB.png',
+        'https://i.imgur.com/8IiXQqY.png'
       ],
       init() {
         setInterval(() => {
@@ -80,23 +80,20 @@
         }, 7000);
       }
     }"
-    class="relative w-full max-w-6xl mx-auto overflow-hidden rounded-xl"
+    class="relative w-full max-w-5xl mx-auto overflow-hidden rounded-xl"
   >
-    <!-- SLIDE TRACK -->
+    <!-- WRAPPER -->
     <div
-      class="flex transition-transform duration-700 ease-in-out"
+      class="flex transition-transform duration-700"
       :style="`width: ${slides.length * 100}%; transform: translateX(-${active * (100 / slides.length)}%)`"
     >
-      <template x-for="(slide, index) in slides" :key="index">
-        <div class="w-full flex-shrink-0 flex justify-center items-center bg-white">
-          <a :href="slide.url" target="_blank" class="block w-full h-full text-center">
-            <img
-              :src="slide.img"
-              alt="Slide"
-              class="w-auto max-w-full max-h-[80vh] mx-auto object-contain"
-              style="display: block; margin: 0 auto;"
-            />
-          </a>
+      <template x-for="(img, index) in slides" :key="index">
+        <div class="w-full flex-shrink-0 flex justify-center items-center">
+          <img
+            :src="img"
+            alt="Slide"
+            class="object-contain max-h-[85vh] w-auto max-w-full mx-auto"
+          />
         </div>
       </template>
     </div>
@@ -105,13 +102,13 @@
     <div class="absolute inset-0 flex items-center justify-between px-4">
       <button
         @click="active = (active - 1 + slides.length) % slides.length"
-        class="text-white text-2xl bg-black bg-opacity-40 hover:bg-opacity-70 p-2 rounded-full"
+        class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-50 p-2 rounded-full"
       >
         &#10094;
       </button>
       <button
         @click="active = (active + 1) % slides.length"
-        class="text-white text-2xl bg-black bg-opacity-40 hover:bg-opacity-70 p-2 rounded-full"
+        class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-50 p-2 rounded-full"
       >
         &#10095;
       </button>
