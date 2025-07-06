@@ -250,6 +250,15 @@ include 'templates/header.php';
     </form>
 <?php endif; ?>
 <hr class="my-6 border-gray-600">
+<form method="GET" class="mb-4">
+    <label class="block mb-1 font-semibold">Tampilkan akun dari VPS:</label>
+    <select name="vps_selected" onchange="this.form.submit()" class="w-full p-2 bg-gray-700 rounded max-w-xs">
+        <option value="rw-mard" <?= ($_GET['vps_selected'] ?? '') === 'rw-mard' ? 'selected' : '' ?>>RW-MARD</option>
+        <option value="sgdo-mard1" <?= ($_GET['vps_selected'] ?? '') === 'sgdo-mard1' ? 'selected' : '' ?>>SGDO-MARD1</option>
+        <option value="sgdo-2dev" <?= ($_GET['vps_selected'] ?? '') === 'sgdo-2dev' ? 'selected' : '' ?>>SGDO-2DEV</option>
+    </select>
+</form>
+
 <h3 class="text-xl font-semibold mb-4">Daftar Akun Client</h3>
 
 <!-- Tambahkan pembungkus scroll horizontal -->
