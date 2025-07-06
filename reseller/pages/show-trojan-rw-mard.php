@@ -175,6 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
 
     // Hilangkan redirect agar output bisa dilihat
 }
+ob_end_flush();
 ?>
 <!DOCTYPE html>
 <html lang="id">
