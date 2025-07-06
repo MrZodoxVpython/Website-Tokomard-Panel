@@ -140,9 +140,9 @@ if (isset($_POST['edit_user'])) {
         $cmds[] = "$sshPrefix \"sed -i 's|^#! $escapedUser .*|#! $user $expired|' $configPath\"";
         $cmds[] = "$sshPrefix 'systemctl restart xray'";
 
-        echo "CMDs:\n";
+        //echo "CMDs:\n";
         foreach ($cmds as $c) {
-            echo "👉 $c\n";
+            //echo "👉 $c\n";
             $out = shell_exec($c);
 	    //shell_exec($c);
             echo "Output: $out\n\n";
