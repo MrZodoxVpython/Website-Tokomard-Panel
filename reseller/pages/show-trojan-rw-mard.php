@@ -5,12 +5,6 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 session_start();
 
-// Logging awal
-file_put_contents("debug.log", "==== " . date("Y-m-d H:i:s") . " ====\n", FILE_APPEND);
-file_put_contents("debug.log", "METHOD: " . $_SERVER['REQUEST_METHOD'] . "\n", FILE_APPEND);
-file_put_contents("debug.log", "POST:\n" . print_r($_POST, true), FILE_APPEND);
-file_put_contents("debug.log", "GET:\n" . print_r($_GET, true), FILE_APPEND);
-
 $reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? '';
 if (empty($reseller)) {
     die("❌ Reseller tidak ditemukan dalam session.");
