@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($action === 'backup') {
             if ($isLocal) {
-                $cmd = "sudo /usr/bin/php /var/www/html/Website-Tokomard-Panel/admin/backup.php";
+		$cmd = "bash /var/www/html/Website-Tokomard-Panel/admin/auto-backup-vpn.sh";
             } else {
                 if (!empty($token)) {
                     file_put_contents('/tmp/tmp-token.json', $token);
