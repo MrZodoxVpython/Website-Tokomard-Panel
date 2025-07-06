@@ -563,3 +563,15 @@ GET:
 Array
 (
 )
+==== 2025-07-07 00:21:11 ====
+METHOD: POST
+POST:
+Array
+(
+    [edit_user] => OKECOBAYA
+    [expired] => 5
+)
+GET:
+Array
+(
+)
