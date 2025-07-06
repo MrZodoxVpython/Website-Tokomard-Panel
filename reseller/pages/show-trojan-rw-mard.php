@@ -141,8 +141,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
         shell_exec($cmd3);
 
         $_SESSION['expired_success'] = "✅ Akun <b>$user</b> berhasil diperpanjang sampai <b>$expired</b>.";
-        header("Location: ".$_SERVER['PHP_SELF']);
-        exit;
+	echo "<pre>Redirect seharusnya ke: ".$_SERVER['PHP_SELF']."</pre>";
+	exit;
+
+        //header("Location: ".$_SERVER['PHP_SELF']);
+        //exit;
 
     } catch (Exception $e) {
         echo "<pre style='color:red;'>".$e->getMessage()."</pre>";
