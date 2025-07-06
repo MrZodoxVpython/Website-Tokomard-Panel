@@ -227,19 +227,6 @@ if (empty($files)): ?>
 <?php endforeach; endif; ?>
 </div>
 
-<!-- DEBUGGING OUTPUT -->
-<pre class="bg-black text-green-400 p-4 text-sm overflow-x-auto">
-<?php
-echo "\n=== DEBUG LIVE ===\n";
-echo "SESSION:\n";
-print_r($_SESSION);
-echo "POST:\n";
-print_r($_POST);
-echo "CMDs:\n";
-print_r($cmds ?? []);
-?>
-</pre>
-
 <script>
 function toggleDetail(id) {
     const targetBox = document.getElementById('detail-' + id);
