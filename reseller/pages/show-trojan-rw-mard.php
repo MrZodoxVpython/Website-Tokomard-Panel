@@ -10,6 +10,30 @@ $sshUser = 'root';
 $remotePath = "/etc/xray/data-panel/reseller";
 $sshPrefix = "ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no $sshUser@$remoteIP";
 
+// === Proses Aksi Stop, Delete, Edit ===
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $aksi = $_POST['aksi'] ?? '';
+    $username = preg_replace('/[^a-zA-Z0-9_\-]/', '', $_POST['username'] ?? '');
+    $escapedFile = escapeshellarg("$remotePath/akun-$reseller-$username.txt");
+
+    if ($aksi === 'stop') {
+        // Tandai akun sebagai nonaktif (tambahkan baris DISABLED jika belum ada)
+        $cmd = "$sshPrefix \"grep -q 'DISABLED' $escapedFile || echo 'DISABLED' >> $escapedFile\"";
+        shell_exec($cmd);
+    } elseif ($aksi === 'delete') {
+        $cmd = "$sshPrefix 'rm -f $escapedFile'";
+        shell_exec($cmd);
+    } elseif ($aksi === 'edit') {
+        $new_expired = preg_replace('/[^0-9\-]/', '', $_POST['expired'] ?? '');
+        $cmd = "$sshPrefix \"sed -i 's/^Expired On.*/Expired On: $new_expired/' $escapedFile\"";
+        shell_exec($cmd);
+    }
+
+    header("Location: ".$_SERVER['PHP_SELF']);
+    exit;
+}
+
+// === Ambil Daftar Akun ===
 $cmdListFiles = "$sshPrefix 'ls $remotePath/akun-$reseller-*.txt 2>/dev/null'";
 $fileListRaw = shell_exec($cmdListFiles);
 $fileList = array_filter(explode("\n", trim($fileListRaw ?? '')));
@@ -42,29 +66,28 @@ $fileList = array_filter(explode("\n", trim($fileListRaw ?? '')));
         <div class="bg-gray-800 rounded shadow mb-6 p-4">
             <div class="flex justify-between items-center flex-wrap">
                 <div class="text-blue-400 font-semibold text-lg"><?= htmlspecialchars($username) ?></div>
-                <div class="flex gap-2 mt-2 sm:mt-0">
+                <div class="flex flex-col sm:flex-row gap-2 mt-2 sm:mt-0">
                     <button onclick="toggleDetail('<?= $username ?>')" id="btn-<?= $username ?>" class="toggle-btn bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white">Show</button>
 
-                    <form method="POST" action="aksi-trojan.php" class="inline">
+                    <!-- STOP -->
+                    <form method="POST" class="inline">
                         <input type="hidden" name="aksi" value="stop">
                         <input type="hidden" name="username" value="<?= htmlspecialchars($username) ?>">
-                        <input type="hidden" name="reseller" value="<?= htmlspecialchars($reseller) ?>">
-                        <input type="hidden" name="vps" value="rw-mard">
                         <button class="bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded">Stop</button>
                     </form>
 
-                    <form method="POST" action="aksi-trojan.php" class="inline" onsubmit="return confirm('Yakin ingin menghapus akun ini?')">
+                    <!-- DELETE -->
+                    <form method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus akun ini?')">
                         <input type="hidden" name="aksi" value="delete">
                         <input type="hidden" name="username" value="<?= htmlspecialchars($username) ?>">
-                        <input type="hidden" name="reseller" value="<?= htmlspecialchars($reseller) ?>">
-                        <input type="hidden" name="vps" value="rw-mard">
                         <button class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded">Delete</button>
                     </form>
 
-                    <form method="GET" action="edit-akun.php" class="inline">
+                    <!-- EDIT (TGL EXPIRED) -->
+                    <form method="POST" class="inline flex gap-1">
+                        <input type="hidden" name="aksi" value="edit">
                         <input type="hidden" name="username" value="<?= htmlspecialchars($username) ?>">
-                        <input type="hidden" name="reseller" value="<?= htmlspecialchars($reseller) ?>">
-                        <input type="hidden" name="vps" value="rw-mard">
+                        <input type="date" name="expired" required class="text-black px-2 py-1 rounded">
                         <button class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded">Edit</button>
                     </form>
                 </div>
