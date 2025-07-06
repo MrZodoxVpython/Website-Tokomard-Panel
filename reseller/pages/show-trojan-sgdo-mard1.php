@@ -199,12 +199,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Trojan RW‑MARD</title>
+    <title>Trojan SGDO-MARD1</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen p-6">
 <div class="max-w-5xl mx-auto">
-    <h1 class="text-center text-2xl font-bold mb-6">Daftar Trojan (RW‑MARD) – <?=htmlspecialchars($reseller)?></h1>
+    <h1 class="text-center text-2xl font-bold mb-6">Daftar Trojan (SGDO-MARD1) – <?=htmlspecialchars($reseller)?></h1>
 
 <?php
 $listCmd = "$sshPrefix \"ls $remotePath/akun-$reseller-*.txt 2>/dev/null\"";
