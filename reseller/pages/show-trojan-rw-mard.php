@@ -128,7 +128,7 @@ $files = array_filter(explode("\n", trim($fileListRaw ?? '')));
                 <div class="text-lg font-semibold"><?=htmlspecialchars($u)?></div>
                 <div class="space-x-2 mt-2 sm:mt-0">
                     <!-- Show -->
-                    <button id="btn-<?=$u?>" onclick="toggleDetail('<?=$u?>')" class="btn-show bg-blue-600 px-3 py-1 rounded hover:bg-blue-700">Show</button>
+                    <button id="btn-<?=$u?>" type="button" onclick="toggleDetail('<?=$u?>')" class="btn-show ...">Show</button>
 
                     <!-- Start/Stop -->
                     <form method="POST" class="inline">
