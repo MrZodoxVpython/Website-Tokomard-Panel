@@ -11,7 +11,7 @@ $vpsList = [
     ['ip' => '203.194.113.140', 'country' => 'Indonesia-RW-MARD']
 ];
 
-$localIp = '178.128.60.185';
+$localIp = '206.189.42.23';
 $backupFile = '/root/backup-vpn.tar.gz';
 $output = '';
 
