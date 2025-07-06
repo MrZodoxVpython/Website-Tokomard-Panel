@@ -29,7 +29,7 @@ if (isset($_GET['hapus'])) {
     }
 
     file_put_contents($configPath, implode('', $newLines));
-    shell_exec('sudo /usr/local/bin/restart-xray.sh');
+    shell_exec('sudo systemctl restart xray');
 
     foreach (glob("$logDir/akun-$reseller-$userToDelete.txt") as $file) {
         unlink($file);
@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 file_put_contents($file, $content);
             }
 
-            shell_exec('sudo /usr/local/bin/restart-xray.sh');
+	    shell_exec('sudo systemctl restart xray');
         }
 
         header("Location: show-trojan-sgdo-2dev.php");
@@ -158,7 +158,7 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
 
     if ($updated) {
         file_put_contents($configPath, implode('', $lines));
-        shell_exec('sudo /usr/local/bin/restart-xray.sh');
+	shell_exec('sudo systemctl restart xray');
     }
 
     header("Location: show-trojan-sgdo-2dev.php");
