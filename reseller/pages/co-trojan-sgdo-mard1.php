@@ -10,7 +10,7 @@ $server = [
     'name' => 'SGDO-MARD1',
     'country' => 'Singapura',
     'isp' => 'DigitalOcean, LLC.',
-    'ip' => '203.194.113.140',
+    'ip' => '152.42.182.187',
     'price' => 15000,
     'rules' => [
         'NO TORRENT',
