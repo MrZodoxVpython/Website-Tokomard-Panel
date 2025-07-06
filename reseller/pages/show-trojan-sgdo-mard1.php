@@ -118,7 +118,7 @@ if (isset($_GET['hapus'])) {
 
     <?php if (empty($fileList)) : ?>
         <div class="text-center bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded">
-            ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>, silakan buat akun terlebih dahulu. 
+            ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong> silakan buat akun terlebih dahulu. 
         </div>
     <?php else: ?>
         <?php foreach ($fileList as $remoteFile):
