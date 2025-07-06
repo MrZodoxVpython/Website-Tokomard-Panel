@@ -179,7 +179,7 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
     <?php if (empty($akunFiles)) : ?>
         <div class="text-center bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded">
             ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>
-            silahkan buat akan terlebih dahulu.
+            silahkan buat akun terlebih dahulu.
         </div>
     <?php else: ?>
     <?php foreach ($akunFiles as $file):
