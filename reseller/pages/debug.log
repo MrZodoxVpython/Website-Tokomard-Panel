@@ -602,3 +602,16 @@ OUTPUT:
 RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@203.194.113.140 "rm -f /etc/xray/data-panel/reseller/akun-MrZodoxVpython-OKECOBAYA.txt"
 OUTPUT:
 
+RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@203.194.113.140 'systemctl restart xray'
+OUTPUT:
+
+==== 2025-07-07 00:22:31 ====
+METHOD: GET
+POST:
+Array
+(
+)
+GET:
+Array
+(
+)
