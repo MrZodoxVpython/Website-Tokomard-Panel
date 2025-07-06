@@ -101,7 +101,7 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
     exit;
 }
 
-
+// EDIT EXPIRED
 if (isset($_POST['edit_user'])) {
     try {
         $user = preg_replace('/[^a-zA-Z0-9_\-]/', '', $_POST['edit_user']);
