@@ -80,6 +80,9 @@ cp -r /etc/ssh "\$BACKUP_DIR/" 2>/dev/null
 cp -r /etc/systemd/system "\$BACKUP_DIR/" 2>/dev/null
 echo "🗜 Membuat arsip backup..."
 tar -czf "\$BACKUP_FILE" -C /root backup-vpn
+# 🔒 Ubah hak akses agar bisa didownload
+chown www-data:www-data "\$BACKUP_FILE"
+chmod 755 "\$BACKUP_FILE"
 if [ ! -f "\$BACKUP_FILE" ]; then
     echo "❌ File backup gagal dibuat."
     ls -lah /root/backup-vpn
