@@ -129,11 +129,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
             throw new Exception("❌ Format tanggal salah. Gunakan YYYY-MM-DD atau jumlah hari.");
         }
 
-        echo "<pre>";
-        echo "User        : $user\n";
-        echo "Prev Date   : $prevDate\n";
-        echo "New Expired : $expired\n";
-        echo "File Akun   : $fileAkun\n\n";
+ //       echo "<pre>";
+  //      echo "User        : $user\n";
+   //     echo "Prev Date   : $prevDate\n";
+    //    echo "New Expired : $expired\n";
+     //   echo "File Akun   : $fileAkun\n\n";
 
         // 🛠   Update file dan config
         $cmds[] = "$sshPrefix \"sed -i 's|^Expired On[[:space:]]*:[[:space:]]*.*|Expired On     : $expired|' $fileAkun\"";
@@ -147,20 +147,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
             echo "Output: $out\n\n";
         }
 
-        echo "✅ Perpanjang Selesai!\n";
-        echo "\n⏳ Mengarahkan ulang ke halaman utama dalam 3 detik...\n";
-        echo "</pre>";
+        //echo "✅ Perpanjang Selesai!\n";
+        //echo "\n⏳ Mengarahkan ulang ke halaman utama dalam 3 detik...\n";
+        //echo "</pre>";
 
         // flush output
-        ob_flush();
-        flush();
-        sleep(3); // tunggu 3 detik biar user lihat debug
-                sleep(3); // tunggu 3 detik biar user lihat debug
+        //ob_flush();
+        //flush();
+        //sleep(3); // tunggu 3 detik biar user lihat debug
+                //sleep(3); // tunggu 3 detik biar user lihat debug
 
-        $_SESSION['expired_success'] = true;
+        //$_SESSION['expired_success'] = true;
  //       header("Location: ".$_SERVER['PHP_SELF']);
-        exit;
-
+        //exit;
+	$_SESSION['expired_success'] = "✅ Akun <b>$user</b> berhasil diperpanjang sampai <b>$expired</b>.";
+	header("Location: ".$_SERVER['PHP_SELF']);
+	exit;
     } catch (Exception $e) {
         echo "<pre style='color:red;'>".$e->getMessage()."</pre>";
         exit;
