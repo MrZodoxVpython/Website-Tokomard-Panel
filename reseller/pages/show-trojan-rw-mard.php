@@ -102,7 +102,7 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
 }
 
 // EDIT EXPIRED
-if (isset($_POST['edit_user'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
     try {
         $user = preg_replace('/[^a-zA-Z0-9_\-]/', '', $_POST['edit_user']);
         $expiredInput = trim($_POST['expired']);
@@ -111,11 +111,10 @@ if (isset($_POST['edit_user'])) {
 
         $fileAkun = "$remotePath/akun-$reseller-$user.txt";
 
-        // ✅ AMBIL TANGGAL DARI FILE .TXT YANG TERUPDATE
+        // ✅ Ambil tanggal expired terakhir
         $getDateCmd = "$sshPrefix \"grep 'Expired On' $fileAkun | awk -F ':' '{print \\$2}' | xargs\"";
         $prevDate = trim(shell_exec($getDateCmd));
 
-        // Fallback jika gagal baca
         if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $prevDate)) {
             $prevDate = date('Y-m-d');
         }
@@ -129,27 +128,30 @@ if (isset($_POST['edit_user'])) {
             throw new Exception("❌ Format tanggal salah. Gunakan YYYY-MM-DD atau jumlah hari.");
         }
 
-        //echo "<pre>";
+	//echo "<pre>";
         //echo "User        : $user\n";
         //echo "Prev Date   : $prevDate\n";
         //echo "New Expired : $expired\n";
         //echo "File Akun   : $fileAkun\n\n";
 
-        // 🛠️ Perbarui file akun dan config.json
+        // 🛠 Update file dan config
         $cmds[] = "$sshPrefix \"sed -i 's|^Expired On[[:space:]]*:[[:space:]]*.*|Expired On     : $expired|' $fileAkun\"";
         $cmds[] = "$sshPrefix \"sed -i 's|^#! $escapedUser .*|#! $user $expired|' $configPath\"";
         $cmds[] = "$sshPrefix 'systemctl restart xray'";
-
+        
         //echo "CMDs:\n";
         foreach ($cmds as $c) {
             //echo "👉 $c\n";
             //$out = shell_exec($c);
-	    shell_exec($c);
+            shell_exec($c);
             //echo "Output: $out\n\n";
         }
-
         echo "✅ Perpanjang Selesai!";
         //exit;
+
+        // ✅ Redirect agar tidak eksekusi ulang saat refresh
+        header("Location: ".$_SERVER['PHP_SELF']."?updated=1");
+        exit;
 
     } catch (Exception $e) {
         echo "<pre style='color:red;'>".$e->getMessage()."</pre>";
