@@ -1,7 +1,7 @@
 {
     "RW-MARD": {
-        "stock": 1,
-        "available": true
+        "stock": 0,
+        "available": false
     },
     "SGDO-2DEV": {
         "stock": 1,
