@@ -6,7 +6,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
     header("Location: ../index.php");
     exit;
 }
-$stokFile = __DIR__ . 'data/stok-trojan.json';
+$stokFile = __DIR__ . '/data/stok-trojan.json';
 $stokData = json_decode(file_get_contents($stokFile), true);
 
 $sshProducts = [
