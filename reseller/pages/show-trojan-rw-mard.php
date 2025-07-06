@@ -52,46 +52,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['hapus'])) {
 
 // EDIT expired
 if (isset($_POST['edit_user'])) {
+    $user = preg_replace('/[^a-zA-Z0-9_\-]/', '', $_POST['edit_user']);
     $expiredInput = trim($_POST['expired']);
-    if (preg_match('/^\d+$/', $expiredInput)) {
+    $escapedUser = preg_quote($user, '/');
+
     // Ambil tanggal expired sebelumnya dari file akun
-    // Ambil expired dari config.json jika tidak ada di file
-    $rawDetail = shell_exec("$sshPrefix \"grep '^Expired On:' $pathUser | cut -d':' -f2- | xargs\"");
+    $rawDetail = shell_exec("$sshPrefix \"grep '^Expired On:' $remotePath/akun-$reseller-$user.txt | cut -d':' -f2- | xargs\"");
     $prevDate = trim($rawDetail);
 
-    // Jika tidak ada atau salah format, fallback ke config.json
+    // Jika tidak ada atau format salah, ambil dari config.json
     if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $prevDate)) {
         $prevDateLine = shell_exec("$sshPrefix \"grep -E '^#! $escapedUser ' $configPath | awk '{print \$3}'\"");
         $prevDate = trim($prevDateLine);
     }
 
-    // Jika tetap gagal, pakai hari ini
+    // Jika tetap tidak valid, fallback ke hari ini
     if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $prevDate)) {
         $prevDate = date('Y-m-d');
     }
 
-    // Hitung tanggal baru berdasarkan penambahan hari dari tanggal sebelumnya
-    $expired = date('Y-m-d', strtotime("+$expiredInput days", strtotime($prevDate)));
+    // Hitung expired baru
+    if (preg_match('/^\d+$/', $expiredInput)) {
+        // Jika input berupa angka → tambah hari dari tanggal sebelumnya
+        $expired = date('Y-m-d', strtotime("+$expiredInput days", strtotime($prevDate)));
     } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $expiredInput)) {
+        // Jika input berupa tanggal → pakai langsung
         $expired = $expiredInput;
     } else {
-        die("❌ Format tanggal salah.");
+        die("❌ Format tanggal salah. Gunakan format YYYY-MM-DD atau jumlah hari.");
     }
 
-    $escapedUser = preg_quote($user, '/');
-    
-    // Ganti baris komentar akun: #! username YYYY-MM-DD
-    $cmds[] = "$sshPrefix \"sed -i 's|^Expired On[[:space:]]*:[[:space:]]*.*|Expired On     : $expired|' $pathUser\"";
-
-    $cmds[] = "$sshPrefix \"sed -i 's|^#! $escapedUser .*|#! $user $expired|g' $configPath\"";
-
-    // Update di file akun reseller
-
-    // Restart xray
+    // Buat perintah update expired
+    $cmds[] = "$sshPrefix \"sed -i 's|^Expired On[[:space:]]*:[[:space:]]*.*|Expired On     : $expired|' $remotePath/akun-$reseller-$user.txt\"";
+    $cmds[] = "$sshPrefix \"sed -i 's|^#! $escapedUser .*|#! $user $expired|' $configPath\"";
     $cmds[] = "$sshPrefix 'systemctl restart xray'";
-}
 
-    // Kirim semua perintah
+    // Eksekusi semua perintah
     foreach ($cmds as $c) {
         shell_exec($c);
     }
