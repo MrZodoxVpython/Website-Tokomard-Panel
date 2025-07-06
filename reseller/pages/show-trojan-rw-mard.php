@@ -103,7 +103,6 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
 
 // EDIT EXPIRED
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
-    session_start(); // Pastikan ini ada!
 
     try {
         $user = preg_replace('/[^a-zA-Z0-9_\-]/', '', $_POST['edit_user']);
