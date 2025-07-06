@@ -11,7 +11,7 @@ $server = [
     'country' => 'Singapura',
     'isp' => 'DigitalOcean, LLC.',
     'ip' => '152.42.182.187',
-    'price' => 20000,
+    'price' => 15000,
     'rules' => [
         'NO TORRENT',
         'NO MULTI LOGIN',
