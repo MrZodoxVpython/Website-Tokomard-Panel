@@ -96,8 +96,11 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
         // Restart Xray
         shell_exec("$sshPrefix 'systemctl restart xray'");
     }
-
-    header("Location: show-trojan-rw-mard.php");
+    echo "<pre style='color:yellow;background:black;padding:10px'>";
+    echo "✅ Aksi berhasil dilakukan\n";
+    echo "User: $user\nAction: $action\n";
+    echo "Redirect dibatalkan sementara untuk debug\n";
+    echo "</pre>";
     exit;
 }
 
