@@ -94,7 +94,7 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
         shell_exec('sudo systemctl restart xray');
     }
 
-    header("Location: show-trojan-sgdo-2dev.php");
+    header("Location: show-trojan-rw-mard.php");
     exit;
 }
 
