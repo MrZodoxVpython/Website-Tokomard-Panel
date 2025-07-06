@@ -116,10 +116,6 @@ $files = array_filter(explode("\n", trim($fileListRaw ?? '')));
             ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>
             silahkan buat akun terlebih dahulu.
         </div>
-
-        <div class="bg-yellow-600/20 text-yellow-300 p-4 rounded text-center">
-            ⚠ Belum ada daftar akun untuk reseller <strong><?=htmlspecialchars($reseller)?></strong> silahkan buat akun terlebih dahulu.
-        </div>
     <?php else: ?>
         <?php foreach ($files as $remoteFile):
             $fn = basename($remoteFile);
