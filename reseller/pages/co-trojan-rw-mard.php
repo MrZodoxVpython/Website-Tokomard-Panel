@@ -4,6 +4,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
     header("Location: ../index.php");
     exit;
 }
+require_once '../../koneksi.php'; // atau sesuaikan path ke koneksi database MySQL kamu
 
 // === Konfigurasi server remote ===
 $server = [
