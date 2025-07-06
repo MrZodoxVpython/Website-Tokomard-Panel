@@ -923,3 +923,15 @@ GET:
 Array
 (
 )
+==== 2025-07-07 01:03:19 ====
+METHOD: POST
+POST:
+Array
+(
+    [toggle_user] => SIAP
+    [action] => stop
+)
+GET:
+Array
+(
+)
