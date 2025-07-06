@@ -80,7 +80,7 @@
         }, 7000);
       }
     }"
-    class="relative w-full max-w-6xl mx-auto overflow-hidden bg-black rounded-xl shadow-lg"
+    class="relative w-full max-w-6xl mx-auto overflow-hidden rounded-xl shadow-lg"
   >
     <!-- SLIDER TRACK -->
     <div
@@ -88,8 +88,8 @@
       :style="`transform: translateX(-${active * 100}%); width: ${images.length * 100}%`"
     >
       <template x-for="img in images" :key="img">
-        <!-- Setiap slide harus basis-full dan no-shrink -->
-        <div class="basis-full flex-shrink-0 flex justify-center items-center bg-black">
+        <!-- Per slide -->
+        <div class="basis-full flex-shrink-0 flex justify-center items-center">
           <img
             :src="img"
             class="h-auto max-h-[80vh] w-auto max-w-full mx-auto"
@@ -103,13 +103,13 @@
     <div class="absolute inset-0 flex items-center justify-between px-4">
       <button
         @click="active = (active - 1 + images.length) % images.length"
-        class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full"
+        class="text-white text-2xl bg-gray-700 bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full"
       >
         &#10094;
       </button>
       <button
         @click="active = (active + 1) % images.length"
-        class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full"
+        class="text-white text-2xl bg-gray-700 bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full"
       >
         &#10095;
       </button>
