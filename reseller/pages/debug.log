@@ -1,0 +1,73 @@
+==== 2025-07-07 00:02:09 ====
+METHOD: GET
+POST:
+Array
+(
+)
+GET:
+Array
+(
+)
+==== 2025-07-07 00:02:58 ====
+METHOD: POST
+POST:
+Array
+(
+    [edit_user] => OKECOBAYA
+    [expired] => 1
+)
+GET:
+Array
+(
+)
+RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@203.194.113.140 "sed -i 's|^Expired On[[:space:]]*:[[:space:]]*.*|Expired On     : 2025-07-08|' /etc/xray/data-panel/reseller/akun-MrZodoxVpython-OKECOBAYA.txt"
+OUTPUT:
+
+RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@203.194.113.140 "sed -i 's|^#! OKECOBAYA .*|#! OKECOBAYA 2025-07-08|' /etc/xray/config.json"
+OUTPUT:
+
+RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@203.194.113.140 'systemctl restart xray'
+OUTPUT:
+
+==== 2025-07-07 00:03:19 ====
+METHOD: POST
+POST:
+Array
+(
+    [edit_user] => OKECOBAYA
+    [expired] => 4
+)
+GET:
+Array
+(
+)
+RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@203.194.113.140 "sed -i 's|^Expired On[[:space:]]*:[[:space:]]*.*|Expired On     : 2025-07-11|' /etc/xray/data-panel/reseller/akun-MrZodoxVpython-OKECOBAYA.txt"
+OUTPUT:
+
+RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@203.194.113.140 "sed -i 's|^#! OKECOBAYA .*|#! OKECOBAYA 2025-07-11|' /etc/xray/config.json"
+OUTPUT:
+
+RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@203.194.113.140 'systemctl restart xray'
+OUTPUT:
+
+==== 2025-07-07 00:03:34 ====
+METHOD: POST
+POST:
+Array
+(
+    [edit_user] => OKECOBAYA
+    [expired] => 1
+)
+GET:
+Array
+(
+)
+RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@203.194.113.140 "sed -i 's|^Expired On[[:space:]]*:[[:space:]]*.*|Expired On     : 2025-07-08|' /etc/xray/data-panel/reseller/akun-MrZodoxVpython-OKECOBAYA.txt"
+OUTPUT:
+
+RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@203.194.113.140 "sed -i 's|^#! OKECOBAYA .*|#! OKECOBAYA 2025-07-08|' /etc/xray/config.json"
+OUTPUT:
+
+RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@203.194.113.140 'systemctl restart xray'
+OUTPUT:
+

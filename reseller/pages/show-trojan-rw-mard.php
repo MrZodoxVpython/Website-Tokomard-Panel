@@ -48,42 +48,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['hapus'])) {
         $cmds[] = "$sshPrefix 'systemctl restart xray'";
     }
 
-    // EDIT expired
-    if (isset($_POST['edit_user'])) {
-        try {
-            $user = preg_replace('/[^a-zA-Z0-9_\-]/', '', $_POST['edit_user']);
-            $expiredInput = trim($_POST['expired']);
-            $escapedUser = preg_quote($user, '/');
-            $fileAkun = "$remotePath/akun-$reseller-$user.txt";
+// EDIT expired
+if (isset($_POST['edit_user'])) {
+    try {
+        $user = preg_replace('/[^a-zA-Z0-9_\-]/', '', $_POST['edit_user']);
+        $expiredInput = trim($_POST['expired']);
+        $escapedUser = preg_quote($user, '/');
 
-            // Ambil expired lama
-            $rawDetail = shell_exec("$sshPrefix \"grep '^Expired On:' $fileAkun | cut -d':' -f2- | xargs\"");
-            $prevDate = trim($rawDetail);
+        $fileAkun = "$remotePath/akun-$reseller-$user.txt";
 
-            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $prevDate)) {
-                $prevDateLine = shell_exec("$sshPrefix \"grep -E '^#! $escapedUser ' $configPath | awk '{print \\$3}'\"");
-                $prevDate = trim($prevDateLine);
-            }
+        // Ambil tanggal expired lama dari file akun
+        $prevDate = trim(shell_exec("$sshPrefix \"grep '^Expired On:' $fileAkun | cut -d':' -f2- | xargs\""));
 
-            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $prevDate)) {
-                $prevDate = date('Y-m-d');
-            }
-
-            if (preg_match('/^\d+$/', $expiredInput)) {
-                $expired = date('Y-m-d', strtotime("+$expiredInput days", strtotime($prevDate)));
-            } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $expiredInput)) {
-                $expired = $expiredInput;
-            } else {
-                throw new Exception("❌ Format tanggal salah. Gunakan YYYY-MM-DD atau jumlah hari.");
-            }
-
-            $cmds[] = "$sshPrefix \"sed -i 's|^Expired On[[:space:]]*:[[:space:]]*.*|Expired On     : $expired|' $fileAkun\"";
-            $cmds[] = "$sshPrefix \"sed -i 's|^#! $escapedUser .*|#! $user $expired|' $configPath\"";
-            $cmds[] = "$sshPrefix 'systemctl restart xray'";
-        } catch (Exception $e) {
-            echo "<pre style='color:red;'>".$e->getMessage()."</pre>";
+        // Jika tidak valid, ambil dari config.json
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $prevDate)) {
+            $prevDate = trim(shell_exec("$sshPrefix \"grep -E '^#! $escapedUser ' $configPath | awk '{print \\$3}'\""));
         }
+
+        // Jika masih gagal, pakai hari ini
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $prevDate)) {
+            $prevDate = date('Y-m-d');
+        }
+
+        // Hitung expired baru
+        if (preg_match('/^\d+$/', $expiredInput)) {
+            // Tambah jumlah hari ke tanggal sebelumnya
+            $expired = date('Y-m-d', strtotime("+$expiredInput days", strtotime($prevDate)));
+        } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $expiredInput)) {
+            // Tanggal langsung
+            $expired = $expiredInput;
+        } else {
+            throw new Exception("❌ Format tanggal salah. Gunakan YYYY-MM-DD atau jumlah hari.");
+        }
+
+        // Bangun perintah-perintah SSH
+        $cmds = [];
+        $cmds[] = "$sshPrefix \"sed -i 's|^Expired On[[:space:]]*:[[:space:]]*.*|Expired On     : $expired|' $fileAkun\"";
+        $cmds[] = "$sshPrefix \"sed -i 's|^#! $escapedUser .*|#! $user $expired|' $configPath\"";
+        $cmds[] = "$sshPrefix 'systemctl restart xray'";
+
+        echo "<pre>";
+        echo "User        : $user\n";
+        echo "Prev Date   : $prevDate\n";
+        echo "New Expired : $expired\n";
+        echo "File Akun   : $fileAkun\n\n";
+        echo "CMDs:\n";
+        foreach ($cmds as $c) {
+            echo "👉 $c\n";
+            $out = shell_exec($c);
+            echo "Output: $out\n\n";
+        }
+        echo "✅ Selesai!";
+
+        exit;
+    } catch (Exception $e) {
+        echo "<pre style='color:red;'>".$e->getMessage()."</pre>";
+        exit;
     }
+}
 
     // Jalankan semua command
     foreach ($cmds as $c) {
