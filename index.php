@@ -72,7 +72,7 @@
       active: 0,
       slides: [
         { img: 'https://i.imgur.com/CX6v5kU.jpeg', url: 'https://link1.com', maxHeight: '85vh' },
-        { img: 'https://i.imgur.com/q3DzxiB.png', url: 'https://link2.com', maxHeight: '60vh' },
+        { img: 'https://i.imgur.com/q3DzxiB.png', url: 'https://link2.com', maxHeight: '40vh' },
         { img: 'https://i.imgur.com/8IiXQqY.png', url: 'https://link3.com', maxHeight: '75vh' }
       ],
       init() {
