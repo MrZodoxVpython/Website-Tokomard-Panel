@@ -196,7 +196,8 @@ if (empty($files)): ?>
         preg_match("/akun-".preg_quote($reseller,"/")."-(.+)\.txt/", $fn, $m);
         $u = $m[1] ?? 'unknown';
         $content = trim(shell_exec("$sshPrefix \"cat ".escapeshellarg($remoteFile)."\""));
-        $isDisabled = strpos($content, 'DISABLED') !== false;
+	$checkCmd = "$sshPrefix \"grep -A 2 '#! $u' $configPath | grep 'locked'\"";
+	$isDisabled = trim(shell_exec($checkCmd)) !== '';
 ?>
     <div class="bg-gray-800 rounded p-4 shadow mb-4">
         <div class="flex justify-between items-center flex-wrap">
