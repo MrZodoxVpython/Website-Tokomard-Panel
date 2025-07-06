@@ -102,7 +102,6 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
 }
 
 // DEBUG EDIT EXPIRED (tanpa redirect otomatis)
-session_start(); // HARUS di paling atas, sebelum echo!
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
     try {
