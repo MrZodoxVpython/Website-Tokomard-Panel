@@ -82,18 +82,17 @@
     }"
     class="relative w-full max-w-6xl mx-auto overflow-hidden rounded-xl shadow-lg"
   >
-    <!-- SLIDER TRACK -->
+    <!-- SLIDER -->
     <div
       class="flex transition-transform duration-700 ease-in-out"
       :style="`transform: translateX(-${active * 100}%); width: ${images.length * 100}%`"
     >
       <template x-for="img in images" :key="img">
-        <!-- Per slide -->
         <div class="basis-full flex-shrink-0 flex justify-center items-center">
           <img
             :src="img"
             class="h-auto max-h-[80vh] w-auto max-w-full mx-auto"
-            :alt="'Slide ' + img"
+            alt="Slide"
           />
         </div>
       </template>
