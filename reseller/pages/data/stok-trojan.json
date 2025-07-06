@@ -8,7 +8,7 @@
         "available": true
     },
     "SGDO-MARD1": {
-        "stock": 1,
-        "available": true
+        "stock": 0,
+        "available": false
     }
 }
