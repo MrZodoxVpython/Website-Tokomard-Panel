@@ -8,7 +8,7 @@ if (empty($reseller)) {
     die("❌ Reseller tidak ditemukan dalam session.");
 }
 
-$remoteIP = '203.194.113.140';
+$remoteIP = '152.42.182.187';
 $sshUser = 'root';
 $sshPrefix = "ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no $sshUser@$remoteIP";
 $configPath = '/etc/xray/config.json';
