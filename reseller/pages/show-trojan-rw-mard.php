@@ -1,7 +1,12 @@
 <?php
 session_start();
 if (isset($_SESSION['expired_success'])) {
-    echo "<div style='background-color:#111827;color:#16a34a;padding:10px;border-radius:6px;margin:10px 0;'>
+	echo "<div 
+		style='background-color:#111827;
+		       color:#16a34a;
+		       padding:5px;
+		       border-radius:6px;
+                       margin:5px 0;'>
         " . $_SESSION['expired_success'] . "
     </div>";
     unset($_SESSION['expired_success']);
