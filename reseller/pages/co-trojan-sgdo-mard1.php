@@ -7,11 +7,11 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
 
 // === Konfigurasi server remote ===
 $server = [
-    'name' => 'SGDO-MARD1',
-    'country' => 'Singapura',
-    'isp' => 'DigitalOcean, LLC',
-    'ip' => '152.42.182.187',
-    'price' => 15000,
+    'name' => 'RW-MARD',
+    'country' => 'Indonesia',
+    'isp' => 'FCCDN',
+    'ip' => '203.194.113.140',
+    'price' => 20000,
     'rules' => [
         'NO TORRENT',
         'NO MULTI LOGIN',
@@ -40,10 +40,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $remoteIp = $server['ip'];
         $reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? 'unknown';
         $phpCmd = "php /etc/xray/api-akun/add-trojan.php '$username' '$expiredInput' '$password' '$reseller'";
-	$sshCmd = "ssh -i /var/www/.ssh/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR root@$remoteIp \"$phpCmd\"";
-	$output = shell_exec($sshCmd . ' 2>&1');
+        $sshCmd = "ssh -i /var/www/.ssh/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR root@$remoteIp \"$phpCmd\"";
+        $output = shell_exec($sshCmd . ' 2>&1');
         if (empty(trim($output))) {
-            $output = "❌ Tidak ada output dari VPS SGDO-MARD1. Cek file add-trojan.php di VPS atau pastikan script mencetak hasil.";
+            $output = "❌ Tidak ada output dari VPS RW-MARD. Cek file add-trojan.php di VPS atau pastikan script mencetak hasil.";
         }
     }
 }
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="id" class="dark">
 <head>
     <meta charset="UTF-8">
-    <title>Checkout Trojan SGDO-MARD1</title>
+    <title>Checkout Trojan RW-MARD</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class' }</script>
