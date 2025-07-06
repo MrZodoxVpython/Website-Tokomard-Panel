@@ -13,7 +13,7 @@ if (!isset($_SESSION['username'])) {
 $vpsList = [
     'rw-mard'     => ['ip' => '203.194.113.140', 'user' => 'root'],
     'sgdo-mard1'  => ['ip' => '152.42.182.187', 'user' => 'root'],
-    'sgdo-2dev'   => ['ip' => '178.128.60.185', 'user' => 'root'],
+    'sgdo-2dev'   => ['ip' => '206.189.42.23', 'user' => 'root'],
 ];
 
 // Path config untuk masing-masing VPS
