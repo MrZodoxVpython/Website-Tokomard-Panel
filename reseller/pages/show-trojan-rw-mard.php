@@ -1,5 +1,9 @@
 <?php
 session_start();
+if (isset($_SESSION['expired_success'])) {
+    echo "<div class='bg-green-500 text-white p-2 text-center rounded'>".$_SESSION['expired_success']."</div>";
+    unset($_SESSION['expired_success']);
+}
 ob_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
