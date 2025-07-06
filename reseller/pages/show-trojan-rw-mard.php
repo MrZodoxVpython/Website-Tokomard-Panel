@@ -5,8 +5,8 @@ if (isset($_SESSION['expired_success'])) {
 		style='background-color:#111827;
 		       color:#16a34a;
 		       padding:5px;
-		       border-radius:6px;
-                       margin:5px 0;'>
+		       border-radius:5px;
+                       margin:5px;'>
         " . $_SESSION['expired_success'] . "
     </div>";
     unset($_SESSION['expired_success']);
