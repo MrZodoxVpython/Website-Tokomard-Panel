@@ -7,11 +7,11 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
 
 // === Konfigurasi server remote ===
 $server = [
-    'name' => 'SGDO-MARD1',
-    'country' => 'Singapura',
-    'isp' => 'DigitalOcean, LLC.',
-    'ip' => '152.42.182.187',
-    'price' => 15000,
+    'name' => 'RW-MARD',
+    'country' => 'Indonesia',
+    'isp' => 'FCCDN',
+    'ip' => '203.194.113.140',
+    'price' => 20000,
     'rules' => [
         'NO TORRENT',
         'NO MULTI LOGIN',
@@ -25,6 +25,7 @@ $output = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once __DIR__ . '/api-akun/lib-akun.php';
+    require_once '../../koneksi.php'; // Pastikan path sesuai dengan struktur direktori kamu
 
     $username = trim($_POST['username'] ?? '');
     $expiredInput = trim($_POST['expired'] ?? '');
@@ -37,22 +38,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $password = generateUUID();
         }
 
-        $remoteIp = $server['ip'];
+        // Hitung harga berdasarkan hari
+        $lamaHari = (int)$expiredInput;
+        $hargaDasar = $server['price'];
+        $hargaFinal = intval($hargaDasar * $lamaHari / 30);
+
+        // Ambil saldo user
         $reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? 'unknown';
-        $phpCmd = "php /etc/xray/api-akun/add-trojan.php '$username' '$expiredInput' '$password' '$reseller'";
-        $sshCmd = "ssh -i /var/www/.ssh/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR root@$remoteIp \"$phpCmd\"";
-        $output = shell_exec($sshCmd . ' 2>&1');
-        if (empty(trim($output))) {
-            $output = "❌ Tidak ada output dari VPS RW-MARD. Cek file add-trojan.php di VPS atau pastikan script mencetak hasil.";
+        $q = $conn->prepare("SELECT saldo FROM users WHERE username = ?");
+        $q->bind_param("s", $reseller);
+        $q->execute();
+        $q->bind_result($saldoUser);
+        $q->fetch();
+        $q->close();
+
+        if ($saldoUser < $hargaFinal) {
+            $output = "❌ Saldo tidak cukup.\nSaldo Anda: Rp" . number_format($saldoUser, 0, ',', '.') .
+                      "\nHarga: Rp" . number_format($hargaFinal, 0, ',', '.');
+        } else {
+            // Jalankan SSH ke server remote
+            $remoteIp = $server['ip'];
+            $phpCmd = "php /etc/xray/api-akun/add-trojan.php '$username' '$expiredInput' '$password' '$reseller'";
+            $sshCmd = "ssh -i /var/www/.ssh/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR root@$remoteIp \"$phpCmd\"";
+            $output = shell_exec($sshCmd . ' 2>&1');
+
+            if (!empty(trim($output)) && str_contains($output, 'TROJAN ACCOUNT')) {
+                // Potong saldo
+                $stmt = $conn->prepare("UPDATE users SET saldo = saldo - ? WHERE username = ?");
+                $stmt->bind_param("is", $hargaFinal, $reseller);
+                if ($stmt->execute()) {
+                    $output .= "\n✅ Akun berhasil dibuat.";
+                    $output .= "\n💳 Saldo terpotong: Rp" . number_format($hargaFinal, 0, ',', '.');
+
+                    // 🔻 KURANGI STOK & UPDATE AVAILABLE
+                    $stokFile = __DIR__ . '/data/stok-trojan.json';
+                    $serverName = $server['name']; // nama server seperti "RW-MARD"
+                    if (file_exists($stokFile)) {
+                        $stokData = json_decode(file_get_contents($stokFile), true);
+                        if (isset($stokData[$serverName])) {
+                            $stokData[$serverName]['stock'] -= 1;
+                            if ($stokData[$serverName]['stock'] <= 0) {
+                                $stokData[$serverName]['stock'] = 0;
+                                $stokData[$serverName]['available'] = false;
+                            }
+                            file_put_contents($stokFile, json_encode($stokData, JSON_PRETTY_PRINT));
+                        }
+                    }
+                } else {
+                    $output .= "\n⚠ Akun dibuat, tapi gagal memotong saldo.";
+                }
+                $stmt->close();
+            } else {
+                $output = "❌ Gagal membuat akun: $output";
+            }
         }
     }
 }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="id" class="dark">
 <head>
     <meta charset="UTF-8">
-    <title>Checkout Trojan SGDO-MARD1</title>
+    <title>Checkout Trojan RW-MARD</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class' }</script>
@@ -76,8 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h3 class="text-xl font-semibold">🧾 Buat Akun Trojan</h3>
 
     <?php if ($output): ?>
-        <div class="bg-gray-800 text-green-400 p-4 rounded text-sm font-mono whitespace-pre-wrap border border-green-500">
-            <?= htmlspecialchars($output) ?>
+        <div class="bg-gray-800 text-green-400 p-4 rounded text-sm font-mono whitespace-pre-wrap border border-green-500"><?= htmlspecialchars($output) ?>
         </div>
     <?php endif; ?>
 
