@@ -7,8 +7,8 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
 
 // === Konfigurasi server remote ===
 $server = [
-    'name' => 'RW-MARD',
-    'country' => 'Indonesia',
+    'name' => 'SGDO-MARD1',
+    'country' => 'Singapura',
     'isp' => 'FCCDN',
     'ip' => '152.42.182.187',
     'price' => 20000,
