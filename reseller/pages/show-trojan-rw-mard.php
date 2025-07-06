@@ -35,11 +35,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['hapus'])) {
     }
 
     // START/STOP
-// START / STOP
 if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
     $user = $_POST['toggle_user'];
     $action = $_POST['action'];
-    $lines = file($configPath);
+
+    // Ambil config.json dari remote
+    $tmpFile = "/tmp/config-remote-$user.json";
+    shell_exec("$sshPrefix 'cat $configPath' > $tmpFile");
+    $lines = file($tmpFile);
     $currentTag = '';
     $updated = false;
 
@@ -90,13 +93,20 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
     }
 
     if ($updated) {
-        file_put_contents($configPath, implode('', $lines));
-        shell_exec('sudo systemctl restart xray');
+        // Simpan file sementara
+        file_put_contents($tmpFile, implode('', $lines));
+
+        // Kirim kembali ke VPS remote
+        shell_exec("scp -o StrictHostKeyChecking=no $tmpFile $sshUser@$remoteIP:$configPath");
+
+        // Restart Xray
+        shell_exec("$sshPrefix 'systemctl restart xray'");
     }
 
     header("Location: show-trojan-rw-mard.php");
     exit;
 }
+
 
 if (isset($_POST['edit_user'])) {
     try {
