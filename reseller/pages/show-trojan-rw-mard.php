@@ -158,7 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
                 sleep(3); // tunggu 3 detik biar user lihat debug
 
         $_SESSION['expired_success'] = true;
-        header("Location: ".$_SERVER['PHP_SELF']);
+ //       header("Location: ".$_SERVER['PHP_SELF']);
         exit;
 
     } catch (Exception $e) {
