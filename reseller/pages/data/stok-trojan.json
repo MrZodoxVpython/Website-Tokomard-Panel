@@ -1,15 +1,14 @@
 {
-  "RW-MARD": {
-    "stock": 2,
-    "available": true
-  },
-  "SGDO-2DEV": {
-    "stock": 1,
-    "available": true
-  },
-  "SGDO-MARD1": {
-    "stock": 3,
-    "available": true
-  }
+    "RW-MARD": {
+        "stock": 1,
+        "available": true
+    },
+    "SGDO-2DEV": {
+        "stock": 1,
+        "available": true
+    },
+    "SGDO-MARD1": {
+        "stock": 3,
+        "available": true
+    }
 }
-
