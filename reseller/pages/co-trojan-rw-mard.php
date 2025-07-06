@@ -42,24 +42,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$phpCmd = "php /etc/xray/api-akun/add-trojan.php '$username' '$expiredInput' '$password' '$reseller'";
 	$sshCmd = "ssh -i /var/www/.ssh/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR root@$remoteIp \"$phpCmd\"";
 	$output = shell_exec($sshCmd . ' 2>&1');
+        if (!empty(trim($output)) && str_contains($output, 'TROJAN ACCOUNT')) {
+            // Proses pengurangan saldo
+            $lamaHari = (int)$expiredInput;
+            $hargaDasar = $server['price'];
+            $hargaFinal = intval($hargaDasar * $lamaHari / 30);
 
-if (!empty(trim($output)) && str_contains($output, 'TROJAN ACCOUNT')) {
-    // Proses pengurangan saldo
-    $lamaHari = (int)$expiredInput;
-    $hargaDasar = $server['price'];
-    $hargaFinal = intval($hargaDasar * $lamaHari / 30);
-
-    $stmt = $conn->prepare("UPDATE users SET saldo = saldo - ? WHERE username = ? AND saldo >= ?");
-    $stmt->bind_param("isi", $hargaFinal, $reseller, $hargaFinal);
-    if ($stmt->execute() && $stmt->affected_rows > 0) {
-        // Berhasil potong saldo
-    } else {
-        $output .= "\n⚠️ Akun berhasil dibuat, tetapi saldo tidak cukup untuk dipotong.";
-    }
-    $stmt->close();
-} else {
-    $output = "❌ Gagal membuat akun: $output";
-}
+            $stmt = $conn->prepare("UPDATE users SET saldo = saldo - ? WHERE username = ? AND saldo >= ?");
+            $stmt->bind_param("isi", $hargaFinal, $reseller, $hargaFinal);
+            if ($stmt->execute() && $stmt->affected_rows > 0) {
+               // Berhasil potong saldo
+            } else {
+                $output .= "\n⚠️ Akun berhasil dibuat, tetapi saldo tidak cukup untuk dipotong.";
+            }
+            $stmt->close();
+        } else {
+            $output = "❌ Gagal membuat akun: $output";
+        }
 
     }
 }
