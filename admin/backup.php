@@ -68,9 +68,10 @@ token = $(cat "\$TOKEN_FILE")
 team_drive =
 EOF
 BACKUP_DIR="/root/backup-vpn/etc"
+RM="/root/backup-vpn"
 BACKUP_FILE="/root/backup-vpn.tar.gz"
 WEB_DEST="/var/www/html/Website-Tokomard-Panel/admin/backup-vpn.tar.gz"
-rm -rf "\$BACKUP_DIR"
+rm -rf "\$RM"
 mkdir -p "\$BACKUP_DIR"
 cp -r /etc/xray "\$BACKUP_DIR/" 2>/dev/null || echo "⚠ /etc/xray tidak ditemukan"
 cp -r /etc/v2ray "\$BACKUP_DIR/" 2>/dev/null || echo "⚠ /etc/v2ray tidak ditemukan"
