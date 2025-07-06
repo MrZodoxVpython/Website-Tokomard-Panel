@@ -8,7 +8,7 @@ if (empty($reseller)) {
     die("❌ Reseller tidak ditemukan dalam session.");
 }
 
-$remoteIP = '203.194.113.140';
+$remoteIP = '152.42.182.187';
 $sshUser = 'root';
 $sshPrefix = "ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no $sshUser@$remoteIP";
 $configPath = '/etc/xray/config.json';
@@ -21,11 +21,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['hapus'])) {
     // DELETE (GET)
     if (isset($_GET['hapus'])) {
         $u = preg_replace('/[^a-zA-Z0-9_\-]/', '', $_GET['hapus']);
-	$cmds[] = "$sshPrefix \"sed -i '/\\\\s$u /{N;/\\\n##LOCK##/N;d}' $configPath\"";
+        $cmds[] = "$sshPrefix \"sed -i '/\\\\s$u /{N;/\\\n##LOCK##/N;d}' $configPath\"";
         $cmds[] = "$sshPrefix \"rm -f $remotePath/akun-$reseller-$u.txt\"";
         $cmds[] = "$sshPrefix 'systemctl restart xray'";
-	
-	foreach ($cmds as $cmd) {
+
+        foreach ($cmds as $cmd) {
             shell_exec($cmd);
         }
 
@@ -55,22 +55,15 @@ if (isset($_POST['edit_user'])) {
     $expiredInput = trim($_POST['expired']);
     if (preg_match('/^\d+$/', $expiredInput)) {
     // Ambil tanggal expired sebelumnya dari file akun
-    // Ambil expired dari config.json jika tidak ada di file
     $rawDetail = shell_exec("$sshPrefix \"grep '^Expired On:' $pathUser | cut -d':' -f2- | xargs\"");
     $prevDate = trim($rawDetail);
 
-    // Jika tidak ada atau salah format, fallback ke config.json
-    if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $prevDate)) {
-        $prevDateLine = shell_exec("$sshPrefix \"grep -E '^#! $escapedUser ' $configPath | awk '{print \$3}'\"");
-        $prevDate = trim($prevDateLine);
-    }
-
-    // Jika tetap gagal, pakai hari ini
+    // Jika tidak ditemukan, fallback ke hari ini
     if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $prevDate)) {
         $prevDate = date('Y-m-d');
     }
 
-    // Hitung tanggal baru berdasarkan penambahan hari dari tanggal sebelumnya
+    // Tambahkan hari ke tanggal sebelumnya
     $expired = date('Y-m-d', strtotime("+$expiredInput days", strtotime($prevDate)));
     } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $expiredInput)) {
         $expired = $expiredInput;
@@ -109,12 +102,12 @@ $files = array_filter(explode("\n", trim($fileListRaw ?? '')));
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Trojan RW‑MARD</title>
+    <title>Trojan SGDO-MARD1</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen p-6">
 <div class="max-w-5xl mx-auto">
-    <h1 class="text-center text-2xl font-bold mb-6">Daftar Trojan (RW‑MARD) – <?=htmlspecialchars($reseller)?></h1>
+    <h1 class="text-center text-2xl font-bold mb-6">Daftar Trojan (SGDO-MARD1) – <?=htmlspecialchars($reseller)?></h1>
 
     <?php if (empty($files)): ?>
         <div class="text-center bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded">
