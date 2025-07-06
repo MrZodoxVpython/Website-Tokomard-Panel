@@ -80,26 +80,26 @@
         }, 7000);
       }
     }"
-    class="relative w-full max-w-5xl mx-auto overflow-hidden rounded-xl shadow-lg bg-black"
+    class="relative w-full max-w-6xl mx-auto overflow-hidden bg-black rounded-xl shadow-lg"
   >
-    <!-- TRACK -->
+    <!-- SLIDER TRACK -->
     <div
       class="flex transition-transform duration-700 ease-in-out"
       :style="`transform: translateX(-${active * 100}%); width: ${images.length * 100}%`"
     >
       <template x-for="img in images" :key="img">
-        <div class="w-full flex-shrink-0 flex justify-center items-center bg-black">
-          <!-- Gambar akan tampil sesuai ukuran asli -->
+        <!-- Container per gambar -->
+        <div class="w-full flex justify-center items-center bg-black">
           <img
             :src="img"
-            class="max-w-full max-h-screen"
+            class="h-auto max-h-[80vh] w-auto max-w-full mx-auto"
             :alt="'Slide ' + img"
           />
         </div>
       </template>
     </div>
 
-    <!-- TOMBOL NEXT PREV -->
+    <!-- PANAH -->
     <div class="absolute inset-0 flex items-center justify-between px-4">
       <button
         @click="active = (active - 1 + images.length) % images.length"
