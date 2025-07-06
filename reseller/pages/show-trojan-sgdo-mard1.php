@@ -21,11 +21,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['hapus'])) {
     // DELETE (GET)
     if (isset($_GET['hapus'])) {
         $u = preg_replace('/[^a-zA-Z0-9_\-]/', '', $_GET['hapus']);
-	$cmds[] = "$sshPrefix \"sed -i '/\\\\s$u /{N;/\\\n##LOCK##/N;d}' $configPath\"";
+        $cmds[] = "$sshPrefix \"sed -i '/\\\\s$u /{N;/\\\n##LOCK##/N;d}' $configPath\"";
         $cmds[] = "$sshPrefix \"rm -f $remotePath/akun-$reseller-$u.txt\"";
         $cmds[] = "$sshPrefix 'systemctl restart xray'";
-	
-	foreach ($cmds as $cmd) {
+
+        foreach ($cmds as $cmd) {
             shell_exec($cmd);
         }
 
@@ -151,7 +151,7 @@ $files = array_filter(explode("\n", trim($fileListRaw ?? '')));
 
             <form method="POST" id="form-<?=$u?>" class="mt-3 hidden bg-gray-700 p-4 rounded">
                 <input type="hidden" name="edit_user" value="<?=$u?>">
-                <label class="block mb-2">Masukkan tanggal expired baru (atau jumlah hari untuk perpanjang)</label>
+                <label class="block mb-2">Masukkan tanggal expired baru (yyyy-mm-dd) atau jumlah hari:</label>
                 <input type="text" name="expired" required class="w-full p-2 rounded bg-gray-600 text-white mb-3">
                 <button type="submit" class="bg-green-600 px-4 py-2 rounded hover:bg-green-700">Simpan</button>
             </form>
