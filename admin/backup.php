@@ -186,7 +186,7 @@ EOL;
 <pre>$output</pre>
 HTML;
 
-    if (file_exists("/var/www/html/Website-Tokomard-Panel/admin/backup-vpn.tar.gz")) {
+    if (file_exists("/var/www/html/Website-Tokomard-Panel/admin/backup-from-remote/backup-vpn.tar.gz")) {
         echo "<a class='download-link' href='?download=1'>📥 Download file backup dari server</a>";
     } else {
         echo "<p style='color:#f00;'>❌ File backup gagal dibuat atau tidak tersedia.</p>";
