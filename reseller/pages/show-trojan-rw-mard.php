@@ -197,7 +197,8 @@ if (empty($files)): ?>
         $u = $m[1] ?? 'unknown';
         $content = trim(shell_exec("$sshPrefix \"cat ".escapeshellarg($remoteFile)."\""));
 	$checkCmd = "$sshPrefix \"grep -A 2 '#! $u' $configPath | grep 'locked'\"";
-	$isDisabled = trim(shell_exec($checkCmd)) !== '';
+	$result = shell_exec($checkCmd);
+	$isDisabled = trim($result ?? '') !== '';
 ?>
     <div class="bg-gray-800 rounded p-4 shadow mb-4">
         <div class="flex justify-between items-center flex-wrap">
