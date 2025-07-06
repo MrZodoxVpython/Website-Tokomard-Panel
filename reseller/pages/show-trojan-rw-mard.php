@@ -35,18 +35,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['hapus'])) {
     }
 
     // START/STOP
-    if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
-        $user = preg_replace('/[^a-zA-Z0-9_\-]/', '', $_POST['toggle_user']);
-        $escapedUser = preg_quote($user, '/');
+// START / STOP
+if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
+    $user = $_POST['toggle_user'];
+    $action = $_POST['action'];
+    $lines = file($configPath);
+    $currentTag = '';
+    $updated = false;
 
-        if ($_POST['action'] === 'stop') {
-            $cmds[] = "$sshPrefix \"sed -i '/^\\s*(###|#!|#&|#\\$) $escapedUser / {N; s/\\\"password\\\": \\\"[^\"]*\\\"/\\\"locked\\\"/}' $configPath\"";
-        } else {
-            $cmds[] = "$sshPrefix \"sed -i '/##LOCK##/b; /##LOCK##/!{ s/\\\"password\\\": \\\"locked\\\"/\\\"password\\\": \\\"\\\"/ }' $configPath\"";
+    for ($i = 0; $i < count($lines); $i++) {
+        $line = trim($lines[$i]);
+
+        if (preg_match('/^#trojan(ws|grpc)?$/i', $line)) {
+            $currentTag = strtolower($line);
         }
 
-        $cmds[] = "$sshPrefix 'systemctl restart xray'";
+        if (in_array($currentTag, ['#trojanws', '#trojangrpc'])) {
+            if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($user, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line)) {
+                $lockLineIndex = $i + 1;
+                $jsonLineIndex = $i + 1;
+
+                if (isset($lines[$lockLineIndex]) && strpos(trim($lines[$lockLineIndex]), '##LOCK##') === 0) {
+                    $jsonLineIndex++; // JSON pindah ke bawah LOCK
+                }
+
+                $jsonLine = trim($lines[$jsonLineIndex] ?? '');
+
+                if ($action === 'stop') {
+                    if (preg_match('/"password"\s*:\s*"([^\"]+)"/', $jsonLine, $m)) {
+                        $originalPassword = $m[1];
+                        if ($originalPassword !== 'locked') {
+                            array_splice($lines, $jsonLineIndex, 0, ["##LOCK##$originalPassword\n"]);
+                            $lines[$jsonLineIndex + 1] = preg_replace('/"password"\s*:\s*"[^\"]+"/', '"password": "locked"', $jsonLine) . "\n";
+                            $updated = true;
+                        }
+                    }
+                }
+
+                if ($action === 'start') {
+                    if (preg_match('/"password"\s*:\s*"locked"/', $jsonLine)) {
+                        $lockLine = trim($lines[$jsonLineIndex - 1] ?? '');
+                        if (preg_match('/^##LOCK##(.+)/', $lockLine, $m)) {
+                            $realPassword = trim($m[1]);
+                            if (strpos($jsonLine, '"email": "' . $user . '"') !== false) {
+                                $lines[$jsonLineIndex] = preg_replace('/"password"\s*:\s*"locked"/', '"password": "' . $realPassword . '"', $jsonLine) . "\n";
+                                array_splice($lines, $jsonLineIndex - 1, 1); // hapus ##LOCK##
+                                $updated = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
+
+    if ($updated) {
+        file_put_contents($configPath, implode('', $lines));
+        shell_exec('sudo systemctl restart xray');
+    }
+
+    header("Location: show-trojan-sgdo-2dev.php");
+    exit;
+}
 
 if (isset($_POST['edit_user'])) {
     try {
