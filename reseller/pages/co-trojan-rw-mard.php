@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $output .= "\n💳 Saldo terpotong: Rp" . number_format($hargaFinal, 0, ',', '.');
 
                     // 🔻 KURANGI STOK & UPDATE AVAILABLE
-                    $stokFile = __DIR__ . 'data/stok-trojan.json';
+                    $stokFile = __DIR__ . '/data/stok-trojan.json';
                     $serverName = $server['name']; // nama server seperti "RW-MARD"
                     if (file_exists($stokFile)) {
                         $stokData = json_decode(file_get_contents($stokFile), true);
