@@ -146,10 +146,7 @@ $files = array_filter(explode("\n", trim($fileListRaw ?? '')));
                     <button onclick="document.getElementById('form-<?=$u?>').classList.toggle('hidden')" class="bg-green-600 px-3 py-1 rounded hover:bg-green-700">Edit</button>
                 </div>
             </div>
-
-            <div id="detail-<?=$u?>" class="detail-box mt-3 bg-gray-700 rounded hidden">
-                <pre class="p-3 text-green-300 font-mono text-sm whitespace-pre-wrap"><?=htmlspecialchars($content)?></pre>
-            </div>
+            <div id="detail-<?=$u?>" class="detail-box mt-3 bg-gray-700 rounded" style="display:none;">
 
             <form method="POST" id="form-<?=$u?>" class="mt-3 hidden bg-gray-700 p-4 rounded">
                 <input type="hidden" name="edit_user" value="<?=$u?>">
