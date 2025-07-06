@@ -168,6 +168,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
     }
 }
 
+    // Jalankan semua command
+    foreach ($cmds as $c) {
+        $out = shell_exec($c);
+        file_put_contents("debug.log", "RUNNING: $c\nOUTPUT:\n$out\n", FILE_APPEND);
+    }
+
+    // Hilangkan redirect agar output bisa dilihat
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
