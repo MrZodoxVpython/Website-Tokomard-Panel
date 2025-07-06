@@ -945,3 +945,15 @@ GET:
 Array
 (
 )
+==== 2025-07-07 01:04:11 ====
+METHOD: POST
+POST:
+Array
+(
+    [toggle_user] => MERAH
+    [action] => start
+)
+GET:
+Array
+(
+)
