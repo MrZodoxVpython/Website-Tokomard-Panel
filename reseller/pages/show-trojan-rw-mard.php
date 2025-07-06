@@ -20,18 +20,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['hapus'])) {
 
     // DELETE (GET)
     if (isset($_GET['hapus'])) {
-	$u = preg_replace('/[^a-zA-Z0-9_\-]/', '', $_GET['hapus']);
-	$cmds[] = "$sshPrefix 'sed -i -E \"/^[[:space:]]*(###|#!|#&|#\\\$)[[:space:]]+$u[[:space:]][0-9-]+/{N;/##LOCK##/N;d;}\" $configPath'";
+        $u = preg_replace('/[^a-zA-Z0-9_\-]/', '', $_GET['hapus']);
+	$cmds[] = "$sshPrefix \"sed -i '/\\\\s$u /{N;/\\\n##LOCK##/N;d}' $configPath\"";
         $cmds[] = "$sshPrefix \"rm -f $remotePath/akun-$reseller-$u.txt\"";
         $cmds[] = "$sshPrefix 'systemctl restart xray'";
-
-        foreach ($cmds as $cmd) {
+	
+	foreach ($cmds as $cmd) {
             shell_exec($cmd);
-    }
+        }
 
-        header('Location: ' . $_SERVER['PHP_SELF']);
+        header("Location: " . $_SERVER['PHP_SELF']);
         exit;
-    }
+        }
 
     // POST
     $user = preg_replace('/[^a-zA-Z0-9_\-]/', '', $_POST['username'] ?? $_POST['edit_user'] ?? '');
