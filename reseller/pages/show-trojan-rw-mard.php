@@ -165,21 +165,6 @@ function toggleDetail(id) {
     const b = document.getElementById('btn-'+id);
     const all = document.querySelectorAll('.detail-box');
     const allBtn = document.querySelectorAll('.btn-show');
-    all.forEach(x=>x.classList.add('hidden'));
-    allBtn.forEach(x=>x.innerText='Show');
-    if (d.classList.contains('hidden')) {
-        d.classList.remove('hidden');
-        b.innerText='Hide';
-    } else {
-        d.classList.add('hidden');
-        b.innerText='Show';
-    }
-}
-function toggleDetail(id) {
-    const d = document.getElementById('detail-'+id);
-    const b = document.getElementById('btn-'+id);
-    const all = document.querySelectorAll('.detail-box');
-    const allBtn = document.querySelectorAll('.btn-show');
 
     all.forEach(x => x.style.display = 'none');
     allBtn.forEach(x => x.innerText = 'Show');
