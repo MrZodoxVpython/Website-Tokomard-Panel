@@ -65,42 +65,49 @@
     </p>
 
     <!-- Slider -->
-<div
-  x-data="{
-    active: 0,
-    images: [
-      'https://i.imgur.com/CX6v5kU.jpeg',
-      'https://i.imgur.com/q3DzxiB.png',
-      'https://i.imgur.com/8IiXQqY.png'
-    ],
-    init() {
-      setInterval(() => this.active = (this.active + 1) % this.images.length, 5000)
-    }
-  }"
-  class="relative w-full max-w-3xl mx-auto overflow-hidden rounded-xl shadow-lg"
->
+<section class="py-8">
+  <!-- Slider -->
   <div
-    class="flex transition-all duration-700"
-    :style="`width: ${images.length * 100}%; transform: translateX(-${active * (100 / images.length)}%);`"
+    x-data="{
+      active: 0,
+      images: [
+        'https://i.imgur.com/CX6v5kU.jpeg',
+        'https://i.imgur.com/q3DzxiB.png',
+        'https://i.imgur.com/8IiXQqY.png'
+      ],
+      init() {
+        setInterval(() => {
+          this.active = (this.active + 1) % this.images.length;
+        }, 5000);
+      }
+    }"
+    class="relative w-full max-w-3xl mx-auto overflow-hidden rounded-xl shadow-lg"
   >
-    <template x-for="img in images" :key="img">
-      <img
-        :src="img"
-        class="w-full h-64 sm:h-80 object-cover flex-shrink-0"
-        alt="Slide"
-        style="width: 100%;"
-      />
-    </template>
-  </div>
+    <!-- Track (gambar) -->
+    <div 
+      class="flex transition-all duration-700 ease-in-out"
+      :style="`width: ${images.length * 100}%; transform: translateX(-${active * (100 / images.length)}%);`"
+    >
+      <template x-for="img in images" :key="img">
+        <div class="w-full flex-shrink-0">
+          <img 
+            :src="img" 
+            class="w-full h-64 sm:h-80 object-cover" 
+            alt="Slide" 
+          />
+        </div>
+      </template>
+    </div>
 
-  <!-- Navigasi -->
-  <div class="absolute inset-0 flex items-center justify-between px-4">
-    <button @click="active = (active - 1 + images.length) % images.length"
-      class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full">&#10094;</button>
-    <button @click="active = (active + 1) % images.length"
-      class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full">&#10095;</button>
+    <!-- Tombol panah -->
+    <div class="absolute inset-0 flex items-center justify-between px-4">
+      <button @click="active = (active - 1 + images.length) % images.length"
+        class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full">&#10094;</button>
+      <button @click="active = (active + 1) % images.length"
+        class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full">&#10095;</button>
+    </div>
   </div>
-</div>
+</section>
 
   <!-- Features -->
   <section class="bg-gray-900 py-12 px-4 sm:px-6 border-t border-gray-800">
