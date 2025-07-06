@@ -77,29 +77,29 @@
       init() {
         setInterval(() => {
           this.active = (this.active + 1) % this.images.length;
-        }, 5000);
+        }, 7000);
       }
     }"
-    class="relative w-full max-w-3xl mx-auto overflow-hidden rounded-xl shadow-lg"
+    class="relative w-full max-w-5xl mx-auto overflow-hidden rounded-xl shadow-lg bg-black"
   >
-    <!-- SLIDE TRACK -->
+    <!-- TRACK -->
     <div
       class="flex transition-transform duration-700 ease-in-out"
       :style="`transform: translateX(-${active * 100}%); width: ${images.length * 100}%`"
     >
       <template x-for="img in images" :key="img">
-        <!-- SET WIDTH 100% PER SLIDE -->
-        <div class="w-full flex-shrink-0">
+        <div class="w-full flex-shrink-0 flex justify-center items-center bg-black">
+          <!-- Gambar akan tampil sesuai ukuran asli -->
           <img
             :src="img"
-            class="w-full h-64 sm:h-80 object-cover"
-            alt="Slide"
+            class="max-w-full max-h-screen"
+            :alt="'Slide ' + img"
           />
         </div>
       </template>
     </div>
 
-    <!-- PANAH KIRI KANAN -->
+    <!-- TOMBOL NEXT PREV -->
     <div class="absolute inset-0 flex items-center justify-between px-4">
       <button
         @click="active = (active - 1 + images.length) % images.length"
