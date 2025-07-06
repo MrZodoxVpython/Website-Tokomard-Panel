@@ -44,7 +44,7 @@ function updateExpired($configPath, $user, $newDate, $proto, $tagMap) {
 
     if ($updated) {
         file_put_contents($configPath, implode('', $lines));
-        shell_exec('sudo /usr/local/bin/restart-xray.sh');
+        shell_exec('systemctl restart xray');
     }
 
     return $updated;
