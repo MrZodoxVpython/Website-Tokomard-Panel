@@ -65,6 +65,7 @@
     </p>
 
     <!-- Slider -->
+<!-- Slider -->
 <section class="py-8">
   <div
     x-data="{
@@ -80,27 +81,35 @@
         }, 7000);
       }
     }"
-    class="relative w-full max-w-5xl mx-auto overflow-hidden rounded-xl"
+    class="relative w-full max-w-screen-lg mx-auto"
   >
-    <!-- TRACK SLIDES -->
+    <!-- Slides container -->
     <div
-      class="flex transition-transform duration-700"
-      :style="`width: ${slides.length * 100}%; transform: translateX(-${active * (100 / slides.length)}%)`"
+      class="w-full overflow-hidden rounded-xl bg-transparent"
     >
       <template x-for="(slide, index) in slides" :key="index">
-        <div class="basis-full flex-shrink-0 flex justify-center items-center">
-          <a :href="slide.url" target="_blank" class="block w-full text-center">
+        <div
+          x-show="active === index"
+          x-transition:enter="transition ease-out duration-700"
+          x-transition:enter-start="opacity-0 scale-95"
+          x-transition:enter-end="opacity-100 scale-100"
+          x-transition:leave="transition ease-in duration-700"
+          x-transition:leave-start="opacity-100 scale-100"
+          x-transition:leave-end="opacity-0 scale-95"
+          class="w-full h-auto flex justify-center items-center"
+        >
+          <a :href="slide.url" target="_blank" class="block w-full">
             <img
               :src="slide.img"
               alt="Slide"
-              class="h-auto max-h-[85vh] w-auto max-w-full mx-auto object-contain"
+              class="w-full h-auto max-h-[85vh] object-contain mx-auto"
             />
           </a>
         </div>
       </template>
     </div>
 
-    <!-- TOMBOL -->
+    <!-- Controls -->
     <div class="absolute inset-0 flex items-center justify-between px-4">
       <button
         @click="active = (active - 1 + slides.length) % slides.length"
