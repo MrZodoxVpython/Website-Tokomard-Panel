@@ -69,46 +69,48 @@
   <div
     x-data="{
       active: 0,
-      images: [
-        'https://i.imgur.com/CX6v5kU.jpeg',
-        'https://i.imgur.com/q3DzxiB.png',
-        'https://i.imgur.com/8IiXQqY.png'
+      slides: [
+        { img: 'https://i.imgur.com/CX6v5kU.jpeg', url: 'https://link1.com' },
+        { img: 'https://i.imgur.com/q3DzxiB.png', url: 'https://link2.com' },
+        { img: 'https://i.imgur.com/8IiXQqY.png', url: 'https://link3.com' }
       ],
       init() {
         setInterval(() => {
-          this.active = (this.active + 1) % this.images.length;
+          this.active = (this.active + 1) % this.slides.length;
         }, 7000);
       }
     }"
-    class="relative w-full max-w-6xl mx-auto overflow-hidden rounded-xl shadow-lg"
+    class="relative w-full max-w-5xl mx-auto overflow-hidden rounded-xl"
   >
-    <!-- SLIDER -->
+    <!-- TRACK SLIDES -->
     <div
-      class="flex transition-transform duration-700 ease-in-out"
-      :style="`transform: translateX(-${active * 100}%); width: ${images.length * 100}%`"
+      class="flex transition-transform duration-700"
+      :style="`width: ${slides.length * 100}%; transform: translateX(-${active * (100 / slides.length)}%)`"
     >
-      <template x-for="img in images" :key="img">
+      <template x-for="(slide, index) in slides" :key="index">
         <div class="basis-full flex-shrink-0 flex justify-center items-center">
-          <img
-            :src="img"
-            class="h-auto max-h-[80vh] w-auto max-w-full mx-auto"
-            alt="Slide"
-          />
+          <a :href="slide.url" target="_blank" class="block w-full text-center">
+            <img
+              :src="slide.img"
+              alt="Slide"
+              class="h-auto max-h-[85vh] w-auto max-w-full mx-auto object-contain"
+            />
+          </a>
         </div>
       </template>
     </div>
 
-    <!-- PANAH -->
+    <!-- TOMBOL -->
     <div class="absolute inset-0 flex items-center justify-between px-4">
       <button
-        @click="active = (active - 1 + images.length) % images.length"
-        class="text-white text-2xl bg-gray-700 bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full"
+        @click="active = (active - 1 + slides.length) % slides.length"
+        class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-50 p-2 rounded-full"
       >
         &#10094;
       </button>
       <button
-        @click="active = (active + 1) % images.length"
-        class="text-white text-2xl bg-gray-700 bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full"
+        @click="active = (active + 1) % slides.length"
+        class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-50 p-2 rounded-full"
       >
         &#10095;
       </button>
