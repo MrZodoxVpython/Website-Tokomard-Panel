@@ -77,6 +77,8 @@ if (isset($_POST['edit_user'])) {
     $cmds[] = "$sshPrefix \"sed -i 's|^Expired On[[:space:]]*:[[:space:]]*.*|Expired On     : $expired|' $pathUser\"";
 
     //$cmds[] = "$sshPrefix \"sed -i 's|^#! $escapedUser .*|#! $user $expired|g' $configPath\"";
+    $cmds[] = "$sshPrefix \"sed -i 's|^#![[:space:]]*$escapedUser[[:space:]]*[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}|#! $user $expired|' $configPath\"";
+
 
     // Update di file akun reseller
     $cmds[] = "$sshPrefix \"sed -i 's/^.*Expired On:.*/Expired On: $expired/' $pathUser\"";
