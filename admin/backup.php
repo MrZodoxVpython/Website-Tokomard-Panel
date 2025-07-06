@@ -104,7 +104,7 @@ EOL;
         chmod($backupScript, 0700);
     }
 
-    $output = execute("sudo bash $backupScript");
+    $output = execute("sudo bash $backupScript 2>&1");
 
     // TAMPILAN TERMINAL RESPONSIF
     echo <<<HTML
