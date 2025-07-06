@@ -6,7 +6,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
-$file = '/root/backup-vpn.tar.gz';
+$file = '/var/www/html/Website-Tokomard-Panel/admin/backup-from-remote/backup-vpn.tar.gz';
 if (file_exists($file)) {
     header('Content-Description: File Transfer');
     header('Content-Type: application/gzip');
