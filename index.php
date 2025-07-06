@@ -66,7 +66,6 @@
 
     <!-- Slider -->
 <section class="py-8">
-  <!-- Slider -->
   <div
     x-data="{
       active: 0,
@@ -83,13 +82,13 @@
     }"
     class="relative w-full max-w-3xl mx-auto overflow-hidden rounded-xl shadow-lg"
   >
-    <!-- Track / container -->
+    <!-- SLIDE TRACK -->
     <div
-      class="flex transition-all duration-700 ease-in-out"
-      :style="`width: ${images.length * 100}%; transform: translateX(-${active * (100 / images.length)}%);`"
+      class="flex transition-transform duration-700 ease-in-out"
+      :style="`transform: translateX(-${active * 100}%); width: ${images.length * 100}%`"
     >
-      <!-- Slide per gambar -->
       <template x-for="img in images" :key="img">
+        <!-- SET WIDTH 100% PER SLIDE -->
         <div class="w-full flex-shrink-0">
           <img
             :src="img"
@@ -100,12 +99,20 @@
       </template>
     </div>
 
-    <!-- Navigasi kiri-kanan -->
+    <!-- PANAH KIRI KANAN -->
     <div class="absolute inset-0 flex items-center justify-between px-4">
-      <button @click="active = (active - 1 + images.length) % images.length"
-        class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full">&#10094;</button>
-      <button @click="active = (active + 1) % images.length"
-        class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full">&#10095;</button>
+      <button
+        @click="active = (active - 1 + images.length) % images.length"
+        class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full"
+      >
+        &#10094;
+      </button>
+      <button
+        @click="active = (active + 1) % images.length"
+        class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-60 p-2 rounded-full"
+      >
+        &#10095;
+      </button>
     </div>
   </div>
 </section>
