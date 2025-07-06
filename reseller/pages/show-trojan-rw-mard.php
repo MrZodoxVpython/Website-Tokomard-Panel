@@ -101,11 +101,10 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
     exit;
 }
 
-// EDIT EXPIRED
-// EDIT EXPIRED
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
-    session_start(); // Pastikan ini ada!
+// DEBUG EDIT EXPIRED (tanpa redirect otomatis)
+session_start(); // HARUS di paling atas, sebelum echo!
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
     try {
         $user = preg_replace('/[^a-zA-Z0-9_\-]/', '', $_POST['edit_user']);
         $expiredInput = trim($_POST['expired']);
@@ -114,15 +113,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
 
         $fileAkun = "$remotePath/akun-$reseller-$user.txt";
 
-        // ✅ Ambil tanggal expired terakhir
+        // Ambil expired sebelumnya
         $getDateCmd = "$sshPrefix \"grep 'Expired On' $fileAkun | awk -F ':' '{print \\$2}' | xargs\"";
         $prevDate = trim(shell_exec($getDateCmd));
-
         if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $prevDate)) {
             $prevDate = date('Y-m-d');
         }
 
-        // 🔁 Hitung tanggal baru
+        // Hitung expired baru
         if (preg_match('/^\d+$/', $expiredInput)) {
             $expired = date('Y-m-d', strtotime("+$expiredInput days", strtotime($prevDate)));
         } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $expiredInput)) {
@@ -131,51 +129,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
             throw new Exception("❌ Format tanggal salah. Gunakan YYYY-MM-DD atau jumlah hari.");
         }
 
-        echo "<pre>";
+        echo "<pre style='color:green'>";
+        echo "✅ DEBUG AKTIF - MODE MANUAL\n\n";
         echo "User        : $user\n";
         echo "Prev Date   : $prevDate\n";
         echo "New Expired : $expired\n";
         echo "File Akun   : $fileAkun\n\n";
 
-        // 🛠  Update file dan config
         $cmds[] = "$sshPrefix \"sed -i 's|^Expired On[[:space:]]*:[[:space:]]*.*|Expired On     : $expired|' $fileAkun\"";
         $cmds[] = "$sshPrefix \"sed -i 's|^#! $escapedUser .*|#! $user $expired|' $configPath\"";
         $cmds[] = "$sshPrefix 'systemctl restart xray'";
 
         echo "CMDs:\n";
+
         foreach ($cmds as $c) {
             echo "👉 $c\n";
             $out = shell_exec($c);
             echo "Output: $out\n\n";
+
+            // Simpan juga ke log file lokal
+            file_put_contents("debug.log", "CMD: $c\nOUTPUT:\n$out\n\n", FILE_APPEND);
         }
 
         echo "✅ Perpanjang Selesai!\n";
-        echo "\n⏳ Mengarahkan ulang ke halaman utama dalam 3 detik...\n";
         echo "</pre>";
 
-        // flush output
-        ob_flush();
-        flush();
-        sleep(3); // tunggu 3 detik biar user lihat debug
-
-        $_SESSION['expired_success'] = true;
-        header("Location: ".$_SERVER['PHP_SELF']);
-        exit;
+        // ⛔ Jangan redirect kalau mau lihat hasilnya
+        // header("Location: ".$_SERVER['PHP_SELF']); exit;
 
     } catch (Exception $e) {
         echo "<pre style='color:red;'>".$e->getMessage()."</pre>";
+        file_put_contents("debug.log", "ERROR: ".$e->getMessage()."\n", FILE_APPEND);
         exit;
     }
 }
 
-    // Jalankan semua command
-    foreach ($cmds as $c) {
-        $out = shell_exec($c);
-        file_put_contents("debug.log", "RUNNING: $c\nOUTPUT:\n$out\n", FILE_APPEND);
-    }
-
-    // Hilangkan redirect agar output bisa dilihat
-}
 ?>
 <!DOCTYPE html>
 <html lang="id">
