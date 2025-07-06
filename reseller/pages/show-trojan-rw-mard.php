@@ -50,7 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['hapus'])) {
         $cmds[] = "$sshPrefix 'systemctl restart xray'";
     }
 
-    // EDIT expired
 // EDIT expired
 if (isset($_POST['edit_user'])) {
     $expiredInput = trim($_POST['expired']);
