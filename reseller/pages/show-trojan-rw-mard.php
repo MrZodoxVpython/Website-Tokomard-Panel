@@ -79,7 +79,7 @@ if (isset($_POST['edit_user'])) {
     //$cmds[] = "$sshPrefix \"sed -i 's|^#! $escapedUser .*|#! $user $expired|g' $configPath\"";
 
     // Update di file akun reseller
-    $cmds[] = "$sshPrefix \"sed -i 's/^\\(.*Expired On:\\).*/\\1 $expired/' $pathUser\"";
+    $cmds[] = "$sshPrefix \"sed -i 's/^.*Expired On:.*/Expired On: $expired/' $pathUser\"";
 
     // Restart xray
     $cmds[] = "$sshPrefix 'systemctl restart xray'";
