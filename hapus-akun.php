@@ -26,7 +26,7 @@ if ($user) {
         file_put_contents($configPath, implode('', $newLines));
 
         // ⬇️ Restart Xray jika akun berhasil dihapus
-        shell_exec('sudo /usr/local/bin/restart-xray.sh');
+        shell_exec('systemctl restart xray');
     }
 }
 
