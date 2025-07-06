@@ -113,7 +113,7 @@ $files = array_filter(explode("\n", trim($fileListRaw ?? '')));
 
     <?php if (empty($files)): ?>
         <div class="bg-yellow-600/20 text-yellow-300 p-4 rounded text-center">
-            ⚠ Belum ada akun untuk reseller <strong><?=htmlspecialchars($reseller)?></strong>.
+            ⚠ Belum ada akun untuk reseller <strong><?=htmlspecialchars($reseller)?></strong>, silahkan buat akun dahulu.
         </div>
     <?php else: ?>
         <?php foreach ($files as $remoteFile):
