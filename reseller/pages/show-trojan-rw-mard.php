@@ -102,7 +102,6 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
 }
 
 // DEBUG EDIT EXPIRED (tanpa redirect otomatis)
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
     try {
         $user = preg_replace('/[^a-zA-Z0-9_\-]/', '', $_POST['edit_user']);
@@ -112,14 +111,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
 
         $fileAkun = "$remotePath/akun-$reseller-$user.txt";
 
-        // Ambil expired sebelumnya
         $getDateCmd = "$sshPrefix \"grep 'Expired On' $fileAkun | awk -F ':' '{print \\$2}' | xargs\"";
         $prevDate = trim(shell_exec($getDateCmd));
+
         if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $prevDate)) {
             $prevDate = date('Y-m-d');
         }
 
-        // Hitung expired baru
         if (preg_match('/^\d+$/', $expiredInput)) {
             $expired = date('Y-m-d', strtotime("+$expiredInput days", strtotime($prevDate)));
         } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $expiredInput)) {
@@ -129,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
         }
 
         echo "<pre style='color:green'>";
-        echo "✅ DEBUG AKTIF - MODE MANUAL\n\n";
+        echo "DEBUG MODE\n\n";
         echo "User        : $user\n";
         echo "Prev Date   : $prevDate\n";
         echo "New Expired : $expired\n";
@@ -139,22 +137,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
         $cmds[] = "$sshPrefix \"sed -i 's|^#! $escapedUser .*|#! $user $expired|' $configPath\"";
         $cmds[] = "$sshPrefix 'systemctl restart xray'";
 
-        echo "CMDs:\n";
-
         foreach ($cmds as $c) {
             echo "👉 $c\n";
             $out = shell_exec($c);
             echo "Output: $out\n\n";
-
-            // Simpan juga ke log file lokal
             file_put_contents("debug.log", "CMD: $c\nOUTPUT:\n$out\n\n", FILE_APPEND);
         }
 
-        echo "✅ Perpanjang Selesai!\n";
+        echo "✅ Perpanjang Selesai!";
         echo "</pre>";
-
-        // ⛔ Jangan redirect kalau mau lihat hasilnya
-        // header("Location: ".$_SERVER['PHP_SELF']); exit;
 
     } catch (Exception $e) {
         echo "<pre style='color:red;'>".$e->getMessage()."</pre>";
@@ -162,7 +153,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
         exit;
     }
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="id">
