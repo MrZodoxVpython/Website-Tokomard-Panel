@@ -2,45 +2,50 @@
 session_start();
 include 'koneksi.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $identifier = trim($_POST['identifier']);
-    $password = $_POST['password'];
+// Redirect jika diakses tanpa POST (misalnya langsung buka auth.php via browser)
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: login.php");
+    exit;
+}
 
-    // Cek apakah input berupa email atau username
-    if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
-        $query = "SELECT * FROM users WHERE email = ?";
-    } else {
-        $query = "SELECT * FROM users WHERE username = ?";
-    }
+$identifier = trim($_POST['identifier'] ?? '');
+$password = $_POST['password'] ?? '';
+$error = '';
 
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("s", $identifier);
-    $stmt->execute();
-    $result = $stmt->get_result();
+// Cek apakah input berupa email atau username
+if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
+    $query = "SELECT * FROM users WHERE email = ?";
+} else {
+    $query = "SELECT * FROM users WHERE username = ?";
+}
 
-    if ($result && $result->num_rows === 1) {
-        $user = $result->fetch_assoc();
+$stmt = $conn->prepare($query);
+$stmt->bind_param("s", $identifier);
+$stmt->execute();
+$result = $stmt->get_result();
 
-        if (password_verify($password, $user['password'])) {
-            $_SESSION['user_id']  = $user['id'];
-            $_SESSION['username'] = $user['username'];
-            $_SESSION['role']     = $user['role']; // tambahkan role ke session
+if ($result && $result->num_rows === 1) {
+    $user = $result->fetch_assoc();
 
-            // redirect berdasarkan role
-	    if ($user['role'] === 'admin') {
-                header("Location: dashboard.php");
-            } elseif ($user['role'] === 'reseller') {
-                header("Location: /reseller/reseller.php");
-            } else {
-                $error = "Role tidak dikenal.";
-            }
-            exit;
+    if (password_verify($password, $user['password'])) {
+        $_SESSION['user_id']  = $user['id'];
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['role']     = $user['role'];
+
+        // redirect berdasarkan role
+        if ($user['role'] === 'admin') {
+            header("Location: dashboard.php");
+        } elseif ($user['role'] === 'reseller') {
+            header("Location: /reseller/reseller.php");
         } else {
-            $error = "⚠ Password salah!";
+            $error = "⚠ Role tidak dikenali.";
         }
+        exit;
     } else {
-        $error = "❌ Username atau email tidak ditemukan!";
+        $error = "⚠ Password salah!";
     }
+} else {
+    $error = "❌ Username atau email tidak ditemukan!";
 }
 ?>
 
