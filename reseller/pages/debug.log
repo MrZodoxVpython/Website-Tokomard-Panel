@@ -1163,3 +1163,14 @@ OUTPUT:
 RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@203.194.113.140 'systemctl restart xray'
 OUTPUT:
 
+==== 2025-07-07 01:08:21 ====
+METHOD: GET
+POST:
+Array
+(
+)
+GET:
+Array
+(
+    [hapus] => MENYALA
+)
