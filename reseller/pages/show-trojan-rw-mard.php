@@ -48,60 +48,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['hapus'])) {
         $cmds[] = "$sshPrefix 'systemctl restart xray'";
     }
 
-// EDIT expired
 if (isset($_POST['edit_user'])) {
     try {
         $user = preg_replace('/[^a-zA-Z0-9_\-]/', '', $_POST['edit_user']);
         $expiredInput = trim($_POST['expired']);
         $escapedUser = preg_quote($user, '/');
 
+        $cmds = [];
+
         $fileAkun = "$remotePath/akun-$reseller-$user.txt";
 
-        // Ambil tanggal expired lama dari file akun
-// Ambil expired langsung dari config.json karena itu yang paling valid
-$prevDate = trim(shell_exec("$sshPrefix \"grep -E '^#! $escapedUser ' $configPath | awk '{print \\$3}'\""));
+        // 🔥 Hanya ambil dari config.json (tidak dari file txt)
+        $prevDate = trim(shell_exec("$sshPrefix \"grep -E '^#! $escapedUser ' $configPath | awk '{print \\$3}'\""));
 
-// Jika gagal, fallback ke file .txt
-if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $prevDate)) {
-    $prevDate = trim(shell_exec("$sshPrefix \"grep '^Expired On:' $fileAkun | cut -d':' -f2- | xargs\""));
-}
-
-// Jika masih gagal, fallback ke hari ini
-if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $prevDate)) {
-    $prevDate = date('Y-m-d');
-}
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $prevDate)) {
+            $prevDate = date('Y-m-d');
+        }
 
         // Hitung expired baru
         if (preg_match('/^\d+$/', $expiredInput)) {
-            // Tambah jumlah hari ke tanggal sebelumnya
             $expired = date('Y-m-d', strtotime("+$expiredInput days", strtotime($prevDate)));
         } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $expiredInput)) {
-            // Tanggal langsung
             $expired = $expiredInput;
         } else {
             throw new Exception("❌ Format tanggal salah. Gunakan YYYY-MM-DD atau jumlah hari.");
         }
-
-        // Bangun perintah-perintah SSH
-        $cmds = [];
-        $cmds[] = "$sshPrefix \"sed -i 's|^Expired On[[:space:]]*:[[:space:]]*.*|Expired On     : $expired|' $fileAkun\"";
-        $cmds[] = "$sshPrefix \"sed -i 's|^#! $escapedUser .*|#! $user $expired|' $configPath\"";
-        $cmds[] = "$sshPrefix 'systemctl restart xray'";
 
         echo "<pre>";
         echo "User        : $user\n";
         echo "Prev Date   : $prevDate\n";
         echo "New Expired : $expired\n";
         echo "File Akun   : $fileAkun\n\n";
+
+        $cmds[] = "$sshPrefix \"sed -i 's|^Expired On[[:space:]]*:[[:space:]]*.*|Expired On     : $expired|' $fileAkun\"";
+        $cmds[] = "$sshPrefix \"sed -i 's|^#! $escapedUser .*|#! $user $expired|' $configPath\"";
+        $cmds[] = "$sshPrefix 'systemctl restart xray'";
+
         echo "CMDs:\n";
         foreach ($cmds as $c) {
             echo "👉 $c\n";
             $out = shell_exec($c);
             echo "Output: $out\n\n";
         }
-        echo "✅ Selesai!";
 
+        echo "✅ Selesai!";
         exit;
+
     } catch (Exception $e) {
         echo "<pre style='color:red;'>".$e->getMessage()."</pre>";
         exit;
