@@ -142,9 +142,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
         //echo "CMDs:\n";
         foreach ($cmds as $c) {
             //echo "👉 $c\n";
-            //$out = shell_exec($c);
-            shell_exec($c);
-            //echo "Output: $out\n\n";
+            $out = shell_exec($c);
+            //shell_exec($c);
+            echo "Output: $out\n\n";
         }
         $_SESSION['expired_success'] = true;
 	header("Location: ".$_SERVER['PHP_SELF']);
