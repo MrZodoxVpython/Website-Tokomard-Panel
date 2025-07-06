@@ -967,3 +967,15 @@ GET:
 Array
 (
 )
+==== 2025-07-07 01:05:02 ====
+METHOD: POST
+POST:
+Array
+(
+    [toggle_user] => MERAH
+    [action] => stop
+)
+GET:
+Array
+(
+)
