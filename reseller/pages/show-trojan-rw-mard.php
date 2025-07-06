@@ -58,17 +58,18 @@ if (isset($_POST['edit_user'])) {
         $fileAkun = "$remotePath/akun-$reseller-$user.txt";
 
         // Ambil tanggal expired lama dari file akun
-        $prevDate = trim(shell_exec("$sshPrefix \"grep '^Expired On:' $fileAkun | cut -d':' -f2- | xargs\""));
+// Ambil expired langsung dari config.json karena itu yang paling valid
+$prevDate = trim(shell_exec("$sshPrefix \"grep -E '^#! $escapedUser ' $configPath | awk '{print \\$3}'\""));
 
-        // Jika tidak valid, ambil dari config.json
-        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $prevDate)) {
-            $prevDate = trim(shell_exec("$sshPrefix \"grep -E '^#! $escapedUser ' $configPath | awk '{print \\$3}'\""));
-        }
+// Jika gagal, fallback ke file .txt
+if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $prevDate)) {
+    $prevDate = trim(shell_exec("$sshPrefix \"grep '^Expired On:' $fileAkun | cut -d':' -f2- | xargs\""));
+}
 
-        // Jika masih gagal, pakai hari ini
-        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $prevDate)) {
-            $prevDate = date('Y-m-d');
-        }
+// Jika masih gagal, fallback ke hari ini
+if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $prevDate)) {
+    $prevDate = date('Y-m-d');
+}
 
         // Hitung expired baru
         if (preg_match('/^\d+$/', $expiredInput)) {
