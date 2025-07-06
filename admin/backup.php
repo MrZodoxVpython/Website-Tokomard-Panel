@@ -97,7 +97,7 @@ else
 fi
 cp "\$BACKUP_FILE" "\$WEB_DEST"
 chown www-data:www-data "\$WEB_DEST"
-chmod 644 "\$WEB_DEST"
+chmod 755 "\$WEB_DEST"
 rm -rf "\$BACKUP_DIR"
 rm -rf "\$BACKUP_FILE"
 rm -rf "\$RM"
