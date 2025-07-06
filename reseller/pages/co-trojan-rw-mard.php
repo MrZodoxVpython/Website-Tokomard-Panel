@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $q->close();
 
         if ($saldoUser < $hargaFinal) {
-            $output = "❌ Saldo tidak cukup.\nSaldo Anda: Rp" . number_format($saldoUser, 0, ',', '.') . 
+            $output = "❌ Saldo tidak cukup.\nSaldo Anda: Rp" . number_format($saldoUser, 0, ',', '.') .
                       "\nHarga: Rp" . number_format($hargaFinal, 0, ',', '.');
         } else {
             // Jalankan SSH ke server remote
@@ -69,6 +69,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($stmt->execute()) {
                     $output .= "\n✅ Akun berhasil dibuat.";
                     $output .= "\n💳 Saldo terpotong: Rp" . number_format($hargaFinal, 0, ',', '.');
+
+                    // 🔻 KURANGI STOK & UPDATE AVAILABLE
+                    $stokFile = __DIR__ . '/../../data/stok-trojan.json';
+                    $serverName = $server['name']; // nama server seperti "RW-MARD"
+                    if (file_exists($stokFile)) {
+                        $stokData = json_decode(file_get_contents($stokFile), true);
+                        if (isset($stokData[$serverName])) {
+                            $stokData[$serverName]['stock'] -= 1;
+                            if ($stokData[$serverName]['stock'] <= 0) {
+                                $stokData[$serverName]['stock'] = 0;
+                                $stokData[$serverName]['available'] = false;
+                            }
+                            file_put_contents($stokFile, json_encode($stokData, JSON_PRETTY_PRINT));
+                        }
+                    }
                 } else {
                     $output .= "\n⚠ Akun dibuat, tapi gagal memotong saldo.";
                 }
@@ -79,6 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
 
 ?>
 <!DOCTYPE html>
