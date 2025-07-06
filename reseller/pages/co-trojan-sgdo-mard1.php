@@ -10,7 +10,7 @@ $server = [
     'name' => 'RW-MARD',
     'country' => 'Indonesia',
     'isp' => 'FCCDN',
-    'ip' => '203.194.113.140',
+    'ip' => '152.42.182.187',
     'price' => 20000,
     'rules' => [
         'NO TORRENT',
