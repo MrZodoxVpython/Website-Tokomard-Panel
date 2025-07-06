@@ -847,3 +847,15 @@ GET:
 Array
 (
 )
+==== 2025-07-07 00:58:00 ====
+METHOD: POST
+POST:
+Array
+(
+    [toggle_user] => MENYALA
+    [action] => start
+)
+GET:
+Array
+(
+)
