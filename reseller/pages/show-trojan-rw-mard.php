@@ -145,7 +145,7 @@ if (isset($_POST['edit_user'])) {
             //echo "👉 $c\n";
             $out = shell_exec($c);
 	    //shell_exec($c);
-            echo "Output: $out\n\n";
+            echo "Output: $out";
         }
 
         echo "✅ Selesai!";
