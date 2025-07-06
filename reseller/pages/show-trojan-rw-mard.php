@@ -47,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['hapus'])) {
 
         $cmds[] = "$sshPrefix 'systemctl restart xray'";
     }
+
 if (isset($_POST['edit_user'])) {
     try {
         $user = preg_replace('/[^a-zA-Z0-9_\-]/', '', $_POST['edit_user']);
@@ -56,15 +57,16 @@ if (isset($_POST['edit_user'])) {
 
         $fileAkun = "$remotePath/akun-$reseller-$user.txt";
 
-        // 🔥 STEP 1: Ambil tanggal terakhir dari config.json
-        $prevDateCmd = "$sshPrefix \"grep -E '^#! $escapedUser ' $configPath | awk '{print \\$3}'\"";
-        $prevDate = trim(shell_exec($prevDateCmd));
+        // ✅ AMBIL TANGGAL DARI FILE .TXT YANG TERUPDATE
+        $getDateCmd = "$sshPrefix \"grep 'Expired On' $fileAkun | awk -F ':' '{print \\$2}' | xargs\"";
+        $prevDate = trim(shell_exec($getDateCmd));
 
+        // Fallback jika gagal baca
         if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $prevDate)) {
             $prevDate = date('Y-m-d');
         }
 
-        // 🔢 STEP 2: Hitung expired baru
+        // 🔁 Hitung tanggal baru
         if (preg_match('/^\d+$/', $expiredInput)) {
             $expired = date('Y-m-d', strtotime("+$expiredInput days", strtotime($prevDate)));
         } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $expiredInput)) {
@@ -79,7 +81,7 @@ if (isset($_POST['edit_user'])) {
         echo "New Expired : $expired\n";
         echo "File Akun   : $fileAkun\n\n";
 
-        // 🛠️ STEP 3: Update file .txt dan config.json
+        // 🛠️ Perbarui file akun dan config.json
         $cmds[] = "$sshPrefix \"sed -i 's|^Expired On[[:space:]]*:[[:space:]]*.*|Expired On     : $expired|' $fileAkun\"";
         $cmds[] = "$sshPrefix \"sed -i 's|^#! $escapedUser .*|#! $user $expired|' $configPath\"";
         $cmds[] = "$sshPrefix 'systemctl restart xray'";
