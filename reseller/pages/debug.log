@@ -105,3 +105,9 @@ OUTPUT:
 RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@203.194.113.140 "sed -i 's|^Expired On[[:space:]]*:[[:space:]]*.*|Expired On     : 2025-08-02|' /etc/xray/data-panel/reseller/akun-MrZodoxVpython-MERAH.txt"
 OUTPUT:
 
+RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@203.194.113.140 "sed -i 's|^#! MERAH .*|#! MERAH 2025-08-02|' /etc/xray/config.json"
+OUTPUT:
+
+RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@203.194.113.140 'systemctl restart xray'
+OUTPUT:
+
