@@ -88,8 +88,8 @@
       :style="`transform: translateX(-${active * 100}%); width: ${images.length * 100}%`"
     >
       <template x-for="img in images" :key="img">
-        <!-- Container per gambar -->
-        <div class="w-full flex justify-center items-center bg-black">
+        <!-- Setiap slide harus basis-full dan no-shrink -->
+        <div class="basis-full flex-shrink-0 flex justify-center items-center bg-black">
           <img
             :src="img"
             class="h-auto max-h-[80vh] w-auto max-w-full mx-auto"
