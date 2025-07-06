@@ -80,37 +80,38 @@
         }, 7000);
       }
     }"
-    class="relative w-full max-w-5xl mx-auto overflow-hidden rounded-xl"
+    class="relative w-full max-w-6xl mx-auto overflow-hidden rounded-xl"
   >
-    <!-- TRACK SLIDES -->
+    <!-- SLIDE TRACK -->
     <div
-      class="flex transition-transform duration-700"
+      class="flex transition-transform duration-700 ease-in-out"
       :style="`width: ${slides.length * 100}%; transform: translateX(-${active * (100 / slides.length)}%)`"
     >
       <template x-for="(slide, index) in slides" :key="index">
-        <div class="basis-full flex-shrink-0 flex justify-center items-center">
-          <a :href="slide.url" target="_blank" class="block w-full text-center">
+        <div class="w-full flex-shrink-0 flex justify-center items-center bg-white">
+          <a :href="slide.url" target="_blank" class="block w-full h-full text-center">
             <img
               :src="slide.img"
               alt="Slide"
-              class="h-auto max-h-[85vh] w-auto max-w-full mx-auto object-contain"
+              class="w-auto max-w-full max-h-[80vh] mx-auto object-contain"
+              style="display: block; margin: 0 auto;"
             />
           </a>
         </div>
       </template>
     </div>
 
-    <!-- TOMBOL -->
+    <!-- PANAH -->
     <div class="absolute inset-0 flex items-center justify-between px-4">
       <button
         @click="active = (active - 1 + slides.length) % slides.length"
-        class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-50 p-2 rounded-full"
+        class="text-white text-2xl bg-black bg-opacity-40 hover:bg-opacity-70 p-2 rounded-full"
       >
         &#10094;
       </button>
       <button
         @click="active = (active + 1) % slides.length"
-        class="text-white text-2xl bg-black bg-opacity-30 hover:bg-opacity-50 p-2 rounded-full"
+        class="text-white text-2xl bg-black bg-opacity-40 hover:bg-opacity-70 p-2 rounded-full"
       >
         &#10095;
       </button>
