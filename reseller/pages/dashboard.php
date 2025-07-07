@@ -115,41 +115,69 @@ foreach ($remote_servers as $srv) {
 <div class="p-4 sm:p-6 md:p-8 space-y-6">
 
     <!-- Stat Boxes Responsive -->
-<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 px-2 sm:px-4">
-    <div class="bg-blue-500 text-white rounded-xl p-3 text-center text-sm">
-        <div class="text-lg font-bold"><?= $stats['total'] ?></div>
-        <div>Total</div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+        <div class="bg-blue-500 text-white rounded-xl p-4 text-center">
+            <div class="text-xl font-bold"><?= $stats['total'] ?></div>
+            <div class="text-sm">Total Akun</div>
+        </div>
+        <div class="bg-green-500 text-white rounded-xl p-4 text-center">
+            <div class="text-xl font-bold"><?= $stats['vmess'] ?></div>
+            <div class="text-sm">VMess</div>
+        </div>
+        <div class="bg-purple-500 text-white rounded-xl p-4 text-center">
+            <div class="text-xl font-bold"><?= $stats['vless'] ?></div>
+            <div class="text-sm">VLess</div>
+        </div>
+        <div class="bg-red-500 text-white rounded-xl p-4 text-center">
+            <div class="text-xl font-bold"><?= $stats['trojan'] ?></div>
+            <div class="text-sm">Trojan</div>
+        </div>
+        <div class="bg-yellow-500 text-white rounded-xl p-4 text-center">
+            <div class="text-xl font-bold"><?= $stats['shadowsocks'] ?></div>
+            <div class="text-sm">Shadowsocks</div>
+        </div>
     </div>
-    <div class="bg-green-500 text-white rounded-xl p-3 text-center text-sm">
-        <div class="text-lg font-bold"><?= $stats['vmess'] ?></div>
-        <div>VMess</div>
-    </div>
-    <div class="bg-purple-500 text-white rounded-xl p-3 text-center text-sm">
-        <div class="text-lg font-bold"><?= $stats['vless'] ?></div>
-        <div>VLess</div>
-    </div>
-    <div class="bg-red-500 text-white rounded-xl p-3 text-center text-sm">
-        <div class="text-lg font-bold"><?= $stats['trojan'] ?></div>
-        <div>Trojan</div>
-    </div>
-    <div class="bg-yellow-500 text-white rounded-xl p-3 text-center text-sm">
-        <div class="text-lg font-bold"><?= $stats['shadowsocks'] ?></div>
-        <div>Shadowsocks</div>
-    </div>
-</div>
 
-<!-- Grafik Chart.js -->
-<div class="w-full max-w-md md:max-w-2xl mx-auto px-2">
-    <div class="relative w-full" style="height:250px">
-        <canvas id="chartProtokol" class="w-full h-full"></canvas>
+    <!-- Grafik Chart.js -->
+    <div class="w-full max-w-2xl mx-auto">
+        <canvas id="chartProtokol" height="160"></canvas>
     </div>
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    const ctx = document.getElementById('chartProtokol').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['VMess', 'VLess', 'Trojan', 'Shadowsocks'],
+            datasets: [{
+                label: 'Jumlah Akun',
+                data: [
+                    <?= $stats['vmess'] ?>,
+                    <?= $stats['vless'] ?>,
+                    <?= $stats['trojan'] ?>,
+                    <?= $stats['shadowsocks'] ?>
+                ],
+                backgroundColor: ['#10B981', '#8B5CF6', '#EF4444', '#F59E0B'],
+                borderRadius: 8,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+    </script>
 
-<!-- Tabel Akun Responsive Fix -->
-<div class="w-full overflow-x-auto mt-6 px-2">
-    <div class="min-w-[640px] bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-300 dark:border-gray-700">
-        <table class="w-full text-[13px] sm:text-sm text-left text-gray-800 dark:text-white">
-            <thead class="bg-gray-100 dark:bg-gray-700">
+    <!-- Tabel Akun Responsive -->
+    <div class="overflow-x-auto rounded-xl shadow border border-gray-200 dark:border-gray-700">
+        <table class="min-w-full text-[13px] sm:text-sm text-left text-gray-800 dark:text-white">
+            <thead class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white">
                 <tr>
                     <th class="px-2 py-2">No</th>
                     <th class="px-2 py-2">Username</th>
@@ -179,5 +207,6 @@ foreach ($remote_servers as $srv) {
             </tbody>
         </table>
     </div>
+
 </div>
 
