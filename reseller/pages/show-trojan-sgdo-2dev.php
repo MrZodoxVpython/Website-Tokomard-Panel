@@ -18,9 +18,16 @@ if (isset($_GET['hapus'])) {
     $newLines = [];
 
     for ($i = 0; $i < count($lines); $i++) {
-        if (preg_match('/^\s*(###|#&|#!|#\$)\s+' . preg_quote($userToDelete) . '\s+\d{4}-\d{2}-\d{2}/', $lines[$i])) {
-            $i++; // skip JSON line
-            continue;
+	if (preg_match('/^\s*(###|#&|#!|#\$)\s+' . preg_quote($userToDelete) . '\s+\d{4}-\d{2}-\d{2}/', $lines[$i])) {
+           // Cek apakah baris berikutnya adalah LOCK
+           if (isset($lines[$i + 1]) && strpos(trim($lines[$i + 1]), '##LOCK##') === 0) {
+               // Hapus komentar, LOCK, dan JSON (3 baris)
+               $i += 2; // lompat ke JSON line
+           } else {
+               // Hapus komentar dan JSON (2 baris)
+               $i += 1;
+           }
+           continue;
         }
         if (preg_match('/^##LOCK##/', trim($lines[$i]))) {
             continue; // skip LOCK lines if any
