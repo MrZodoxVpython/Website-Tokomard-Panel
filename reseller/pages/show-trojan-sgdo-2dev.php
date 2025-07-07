@@ -182,7 +182,7 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
             silahkan buat akun terlebih dahulu.
         </div>
     <?php else: ?>
-    <?php foreach ($akunFiles as $file):
+<?php foreach ($akunFiles as $file):
     $filename = basename($file);
     preg_match('/akun-' . preg_quote($reseller, '/') . '-(.+)\.txt/', $filename, $m);
     $username = $m[1] ?? 'unknown';
@@ -198,15 +198,21 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
     $configLines = file($configPath);
     for ($i = 0; $i < count($configLines); $i++) {
         if (preg_match('/^\s*#!\s+' . preg_quote($username) . '\s+\d{4}-\d{2}-\d{2}/', $configLines[$i])) {
-            for ($j = $i + 1; $j <= $i + 3 && $j < count($configLines); $j++) {
-                $line = trim($configLines[$j]);
-                if (strpos($line, '"password": "locked"') !== false) {
-                    $isDisabled = true;
-                    break 2;
-                }
-            }
+           $next = trim($configLines[$i + 1] ?? '');
+           if (strpos($next, '##LOCK##') === 0) {
+              $jsonLine = trim($configLines[$i + 2] ?? '');
+           } else {
+               $jsonLine = $next;
+           }
+
+           if (strpos($jsonLine, '"password": "locked"') !== false) {
+            $isDisabled = true;
+           }
+
+           break;
         }
     }
+ 
 ?>
         <div class="bg-gray-800 p-4 rounded mb-4 shadow">
             <div class="flex justify-between items-center">
