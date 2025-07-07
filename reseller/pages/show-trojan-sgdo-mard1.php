@@ -215,7 +215,7 @@ if (empty($files)): ?>
             ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>
             silahkan buat akun terlebih dahulu.
     </div>
-<!-- filter tag VMess only -->
+<!-- filter tag Trojan only -->
 <?php else:
     foreach ($files as $remoteFile):
         $fn = basename($remoteFile);
@@ -237,14 +237,6 @@ if (empty($files)): ?>
         $checkCmd = "$sshPrefix \"grep -A 2 '#! $u' $configPath | grep 'locked'\"";
         $result = shell_exec($checkCmd);
         $isDisabled = trim($result ?? '') !== '';
-?>
-<?php else:
-    foreach ($files as $remoteFile):
-        $fn = basename($remoteFile);
-        preg_match("/akun-".preg_quote($reseller,"/")."-(.+)\.txt/", $fn, $m);
-        $u = $m[1] ?? 'unknown';
-        $content = trim(shell_exec("$sshPrefix \"cat ".escapeshellarg($remoteFile)."\""));
-        $checkCmd = "$sshPrefix \"grep -A 2 '#! $u' $configPath | grep 'locked'\"";
 ?>
     <div class="bg-gray-800 rounded p-4 shadow mb-4">
         <div class="flex justify-between items-center flex-wrap">
