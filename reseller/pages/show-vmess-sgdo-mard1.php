@@ -150,11 +150,11 @@ if (empty($fileList[0])) {
         <div class="text-lg font-semibold"><?=htmlspecialchars($username)?></div>
         <div class="space-x-2 mt-2 sm:mt-0">
             <button id="btn-<?=$username?>" onclick="toggleDetail('<?=$username?>')" class="btn-show bg-blue-600 px-3 py-1 rounded hover:bg-blue-700">Show</button>
-            <form method="POST" class="inline">
-                <input type="hidden" name="toggle_user" value="<?=$username?>">
-                <input type="hidden" name="action" value="<?=$isLocked ? 'start' : 'stop'?>">
-                <button type="submit" class="<?= $isLocked ? 'bg-green-600':'bg-yellow-600' ?> px-3 py-1 rounded hover:bg-opacity-90"><?= $isLocked ? 'Start':'Stop' ?></button>
-            </form>
+            <a href="?toggle=<?=$username?>&action=<?=$isLocked ? 'start' : 'stop'?>"
+   class="<?= $isLocked ? 'bg-green-600':'bg-yellow-600' ?> px-3 py-1 rounded hover:bg-opacity-90"
+   onclick="return confirm('Yakin ingin <?= $isLocked ? 'mengaktifkan':'mengunci' ?> akun <?=$username?>?')">
+   <?= $isLocked ? 'Start':'Stop' ?>
+	    </a>
             <a href="?hapus=<?=$username?>" onclick="return confirm('Yakin hapus akun <?=$username?>?')" class="bg-red-600 px-3 py-1 rounded hover:bg-red-700">Delete</a>
             <button onclick="document.getElementById('form-<?=$username?>').classList.toggle('hidden')" class="bg-green-600 px-3 py-1 rounded hover:bg-green-700">Edit</button>
         </div>
