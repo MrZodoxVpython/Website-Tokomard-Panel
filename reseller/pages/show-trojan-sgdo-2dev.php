@@ -212,7 +212,6 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
            break;
         }
     }
- 
 ?>
         <div class="bg-gray-800 p-4 rounded mb-4 shadow">
             <div class="flex justify-between items-center">
