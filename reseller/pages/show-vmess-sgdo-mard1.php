@@ -210,11 +210,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
 $listCmd = "$sshPrefix \"ls $remotePath/akun-$reseller-*.txt 2>/dev/null\"";
 $fileListRaw = shell_exec($listCmd);
 $files = array_filter(explode("\n", trim($fileListRaw ?? '')));
-if (empty($files)): ?>
-    <div class="text-center bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded">
-            ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>
-            silahkan buat akun terlebih dahulu.
-    </div>
+if (empty($reseller)): ?>
+<div class="text-center bg-red-500/10 border border-red-400 text-red-300 p-4 rounded">
+    ⚠ Reseller tidak ditemukan. Pastikan parameter reseller dikirim dengan benar.
+</div>
 <!-- filter tag VMess only -->
 <?php else:
     foreach ($files as $remoteFile):
