@@ -171,12 +171,21 @@ if (empty($fileList[0])) {
 function toggleDetail(id) {
     const box = document.getElementById('detail-' + id);
     const btn = document.getElementById('btn-' + id);
-    const all = document.querySelectorAll('.detail-box');
-    const allBtn = document.querySelectorAll('.btn-show');
-    all.forEach(b => b.classList.add('hidden'));
-    allBtn.forEach(b => b.innerText = 'Show');
-    box.classList.remove('hidden');
-    btn.innerText = 'Hide';
+
+    const isVisible = !box.classList.contains('hidden');
+
+    // Sembunyikan semua detail
+    document.querySelectorAll('.detail-box').forEach(b => b.classList.add('hidden'));
+    document.querySelectorAll('.btn-show').forEach(b => b.innerText = 'Show');
+
+    // Kalau tadinya tersembunyi, tampilkan; kalau sudah tampil, sembunyikan
+    if (!isVisible) {
+        box.classList.remove('hidden');
+        btn.innerText = 'Hide';
+    } else {
+        box.classList.add('hidden');
+        btn.innerText = 'Show';
+    }
 }
 </script>
 </body>
