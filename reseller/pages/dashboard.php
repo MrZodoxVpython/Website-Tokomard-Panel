@@ -100,7 +100,7 @@ foreach ($remote_servers as $srv) {
 <!-- Statistik Responsive + Tooltip & Clickable -->
 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 sm:gap-4 mb-4 text-center">
 <?php
-// Fungsi JS untuk tampilkan isi teks saat diklik (mobile)
+// Fungsi JS untuk mobile
 echo "<script>
 function showFullText(text) {
     alert(text);
@@ -117,14 +117,17 @@ echo "<div class='bg-orange-100 dark:bg-orange-800 text-orange-900 dark:text-whi
 foreach (['total'=>'Total Akun','vmess'=>'VMess','vless'=>'VLess','trojan'=>'Trojan','shadowsocks'=>'Shadowsocks'] as $k => $label) {
     $color = ['total'=>'green','vmess'=>'blue','vless'=>'purple','trojan'=>'red','shadowsocks'=>'yellow'][$k];
     $value = $stats[$k];
-    echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-2 sm:p-4 text-[13px] sm:text-sm rounded-lg shadow overflow-hidden max-w-full cursor-pointer' title='{$label}: {$value}' onclick=\"showFullText('{$label}: {$value}')\">
-            <p class='font-semibold truncate'>{$label}</p>
-            <p class='text-base sm:text-lg font-bold truncate'>{$value}</p>
+
+    // Tampilkan "Total Akun" dan "Shadowsocks" di baris sendiri
+    $colSpan = ($k === 'total' || $k === 'shadowsocks') ? 'md:col-span-6' : '';
+    
+    echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-2 sm:p-4 text-[13px] sm:text-sm rounded-lg shadow overflow-hidden max-w-full cursor-pointer {$colSpan}' title='{$label}: {$value}' onclick=\"showFullText('{$label}: {$value}')\">
+            <p class='font-semibold'>{$label}</p>
+            <p class='text-base sm:text-lg font-bold'>{$value}</p>
           </div>";
 }
 ?>
 </div>
-
 
 <!-- Grafik -->
 <div class="overflow-x-auto w-full mt-4">
