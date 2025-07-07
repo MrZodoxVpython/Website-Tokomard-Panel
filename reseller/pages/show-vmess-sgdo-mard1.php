@@ -214,6 +214,7 @@ if (empty($files) || (count($files) === 1 && $files[0] === '')): ?>
     <div class="text-center bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded">
         ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>. Silakan buat akun terlebih dahulu.
     </div>
+<?php else: ?>
 
 <!-- filter tag VMess only -->
 <?php else:
