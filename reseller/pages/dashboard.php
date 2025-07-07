@@ -108,9 +108,9 @@ function showFullText(text) {
 </script>";
 
 // Saldo Anda
-echo "<div class='bg-orange-100 dark:bg-orange-800 text-orange-900 dark:text-white p-2 sm:p-4 text-[13px] sm:text-sm rounded-lg shadow overflow-hidden max-w-full cursor-pointer' title='Total Saldo Anda' onclick=\"showFullText('{$formattedSaldo}')\">
-        <p class='font-semibold truncate'>Total Saldo Anda</p>
-        <p class='text-base sm:text-lg font-bold truncate'>{$formattedSaldo}</p>
+echo "<div class='bg-orange-100 dark:bg-orange-800 text-orange-900 dark:text-white p-2 sm:p-4 text-[13px] sm:text-sm rounded-lg shadow overflow-hidden max-w-full cursor-pointer' title='Total Saldo Anda: {$formattedSaldo}' onclick=\"showFullText('Total Saldo Anda: {$formattedSaldo}')\">
+        <p class='font-semibold'>Total Saldo Anda</p>
+        <p class='text-base sm:text-lg font-bold'>{$formattedSaldo}</p>
       </div>";
 
 // Statistik Lainnya
