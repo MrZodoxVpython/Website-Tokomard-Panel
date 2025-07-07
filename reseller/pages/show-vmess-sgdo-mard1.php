@@ -279,9 +279,11 @@ if (!$found): ?>
                 <button onclick="document.getElementById('form-<?=$u?>').classList.toggle('hidden')" class="bg-green-600 px-3 py-1 rounded hover:bg-green-700">Edit</button>
             </div>
         </div>
-        <div id="detail-<?=$u?>" class="detail-box mt-3 bg-gray-700 rounded hidden">
-	    <pre class="p-3 text-green-300 font-mono text-sm whitespace-pre-wrap break-all overflow-x-auto"><?=htmlspecialchars($content)?></pre>
-        </div>
+            <div id="detail-<?= $u ?>" class="detail-box mt-3 bg-gray-700 rounded hidden">
+                <div class="overflow-x-auto">
+                    <pre class="text-green-300 font-mono text-sm whitespace-pre p-3 min-w-full"><?= htmlspecialchars($content) ?></pre>
+                </div>
+            </div>
         <form method="POST" id="form-<?=$u?>" class="mt-3 hidden bg-gray-700 p-4 rounded">
             <input type="hidden" name="edit_user" value="<?=$u?>">
             <label class="block mb-2">Masukkan tanggal expired baru (atau jumlah hari untuk perpanjang)</label>
