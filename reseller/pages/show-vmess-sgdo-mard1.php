@@ -136,9 +136,7 @@ if (empty($fileList[0])) {
 	    if ($rawContent !== null && is_string($rawContent)) {
     	        $content = trim($rawContent);
 	    }
-	    $checkCmd = <<<EOC
-	    $sshPrefix "awk '/### $username /{found=1;next} found && /^{/{depth=1} found && depth{ print; if(/}/) depth--; if(depth==0) exit }' $configPath | grep '\"id\": \"locked\"'"
-	    EOC;
+	    $checkCmd = "$sshPrefix \"awk '/### $username /{found=1;next} found && /^{/{depth=1} found && depth{ print; if(/}/) depth--; if(depth==0) exit }' $configPath | grep '\\\"id\\\": \\\"locked\\\"'\"";
 	    $check = shell_exec($checkCmd);
 	    $isLocked = trim($check ?? '') !== '';
 ?>
