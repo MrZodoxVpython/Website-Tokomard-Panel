@@ -168,23 +168,16 @@ if (empty($fileList[0])) {
 ?>
 </div>
 <script>
-    function toggleDetail(id) {
-        const targetBox = document.getElementById('detail-' + id);
-        const targetBtn = document.getElementById('btn-' + id);
-        const allBoxes = document.querySelectorAll('.detail-box');
-        const allButtons = document.querySelectorAll('.btn-show');
-
-        if (!targetBox.classList.contains('hidden')) {
-            targetBox.classList.add('hidden');
-            targetBtn.innerText = 'Show';
-            return;
-        }
-
-        allBoxes.forEach(box => box.classList.add('hidden'));
-        allButtons.forEach(btn => btn.innerText = 'Show');
-
-        targetBox.classList.remove('hidden');
-
+function toggleDetail(id) {
+    const box = document.getElementById('detail-' + id);
+    const btn = document.getElementById('btn-' + id);
+    const all = document.querySelectorAll('.detail-box');
+    const allBtn = document.querySelectorAll('.btn-show');
+    all.forEach(b => b.classList.add('hidden'));
+    allBtn.forEach(b => b.innerText = 'Show');
+    box.classList.remove('hidden');
+    btn.innerText = 'Hide';
+}
 </script>
 </body>
 </html>
