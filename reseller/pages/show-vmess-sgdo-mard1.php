@@ -79,17 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['hapus'])) {
     exit;
 }
    
-        if ($updated) {
-            file_put_contents($tmpFile, implode('', $lines));
-            shell_exec("scp -o StrictHostKeyChecking=no $tmpFile $sshUser@$remoteIP:$configPath");
-            shell_exec("$sshPrefix 'systemctl restart xray'");
-	    unlink($tmpFile);
-        }
-
-        header("Location: ".$_SERVER['PHP_SELF']);
-        exit;
-    }
-
     if (isset($_POST['edit_user'])) {
         $user = preg_replace('/[^a-zA-Z0-9_\-]/', '', $_POST['edit_user']);
         $expiredInput = trim($_POST['expired']);
