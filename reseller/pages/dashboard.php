@@ -26,15 +26,25 @@ function read_remote_files($remote_ip, $remote_user, $reseller, $server_name) {
         $expired = "-";
         $uuidOrPass = "-";
 
-        foreach ($lines as $line) {
-            if (stripos($line, 'TROJAN ACCOUNT') !== false) $proto = 'trojan';
-            elseif (stripos($line, 'VMESS ACCOUNT') !== false) $proto = 'vmess';
-            elseif (stripos($line, 'VLESS ACCOUNT') !== false) $proto = 'vless';
-            elseif (stripos($line, 'SHADOWSOCKS ACCOUNT') !== false) $proto = 'shadowsocks';
-            elseif (stripos($line, 'Expired On') !== false) $expired = trim(explode(':', $line, 2)[1] ?? '-');
-            elseif (stripos($line, 'Password') !== false) $uuidOrPass = trim(explode(':', $line, 2)[1] ?? '-');
+	foreach ($lines as $line) {
+	    if (stripos($line, 'TROJAN ACCOUNT') !== false) {
+   	        $proto = 'trojan';
+   	    } elseif (stripos($line, 'VMESS ACCOUNT') !== false) {
+       	        $proto = 'vmess';
+    	    } elseif (stripos($line, 'VLESS ACCOUNT') !== false) {
+        	$proto = 'vless';
+    	    } elseif (stripos($line, 'SHADOWSOCKS ACCOUNT') !== false) {
+        	$proto = 'shadowsocks';
+    	    } elseif (stripos($line, 'Expired On') !== false) {
+        	$expired = trim(explode(':', $line, 2)[1] ?? '-');
+   	    } elseif (stripos($line, 'Password') !== false && $uuidOrPass === '-') {
+        	$uuidOrPass = trim(explode(':', $line, 2)[1] ?? '-');
+    	    } elseif (stripos($line, 'ID') !== false && $uuidOrPass === '-') {
+        	$uuidOrPass = trim(explode(':', $line, 2)[1] ?? '-');
+            }
         }
 
+    
         if ($proto) {
             $data[] = [
                 'user' => $buyer,
