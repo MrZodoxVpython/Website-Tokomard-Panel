@@ -78,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['hapus'])) {
             file_put_contents($tmpFile, implode('', $lines));
             shell_exec("scp -o StrictHostKeyChecking=no $tmpFile $sshUser@$remoteIP:$configPath");
             shell_exec("$sshPrefix 'systemctl restart xray'");
+	    unlink($tmpFile);
         }
 
         header("Location: ".$_SERVER['PHP_SELF']);
