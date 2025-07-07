@@ -241,7 +241,6 @@ if (!$found): ?>
         ⚠ Tidak ada akun <strong>VMess</strong> yang ditemukan untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>. 
         Semua akun yang ada saat ini bukan VMess (mungkin Trojan atau lainnya).
     </div>
-<?php endif; ?>
 
 <!-- filter tag VMess only -->
 <?php else:
