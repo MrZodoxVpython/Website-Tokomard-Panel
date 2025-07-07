@@ -357,3 +357,9 @@ OUTPUT:
 RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@203.194.113.140 "sed -i '/\sPIMESRWMARDANJAY /{N;/\n##LOCK##/N;d}' /etc/xray/config.json"
 OUTPUT:
 
+RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@203.194.113.140 "rm -f /etc/xray/data-panel/reseller/akun-MrZodoxVpython-PIMESRWMARDANJAY.txt"
+OUTPUT:
+
+RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@203.194.113.140 'systemctl restart xray'
+OUTPUT:
+
