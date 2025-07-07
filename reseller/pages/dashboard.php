@@ -104,6 +104,13 @@ foreach ($remote_servers as $srv) {
     }
 }
 ?>
+<style>
+    html, body {
+        overflow-x: hidden;
+        max-width: 100vw;
+    }
+</style>
+
 <!-- Wrapper keseluruhan -->
 <div class="p-4 sm:p-6 md:p-8 space-y-6">
 
