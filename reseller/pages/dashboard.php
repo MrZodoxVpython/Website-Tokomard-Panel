@@ -97,25 +97,34 @@ foreach ($remote_servers as $srv) {
 }
 ?>
 
-<!-- Tampilan Statistik -->
+<!-- Statistik Responsive + Tooltip & Clickable -->
 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 sm:gap-4 mb-4 text-center">
 <?php
+// Fungsi JS untuk tampilkan isi teks saat diklik (mobile)
+echo "<script>
+function showFullText(text) {
+    alert(text);
+}
+</script>";
+
 // Saldo Anda
-echo "<div class='bg-orange-100 dark:bg-orange-800 text-orange-900 dark:text-white p-2 sm:p-4 text-[13px] sm:text-sm rounded-lg shadow overflow-hidden max-w-full'>
-        <p class='font-semibold break-words truncate' title='Total Saldo Anda'>Total Saldo Anda</p>
-        <p class='text-base sm:text-lg font-bold break-words truncate' title='{$formattedSaldo}'>{$formattedSaldo}</p>
+echo "<div class='bg-orange-100 dark:bg-orange-800 text-orange-900 dark:text-white p-2 sm:p-4 text-[13px] sm:text-sm rounded-lg shadow overflow-hidden max-w-full cursor-pointer' title='Total Saldo Anda' onclick=\"showFullText('{$formattedSaldo}')\">
+        <p class='font-semibold truncate'>Total Saldo Anda</p>
+        <p class='text-base sm:text-lg font-bold truncate'>{$formattedSaldo}</p>
       </div>";
 
-// Statistik lainnya
+// Statistik Lainnya
 foreach (['total'=>'Total Akun','vmess'=>'VMess','vless'=>'VLess','trojan'=>'Trojan','shadowsocks'=>'Shadowsocks'] as $k => $label) {
     $color = ['total'=>'green','vmess'=>'blue','vless'=>'purple','trojan'=>'red','shadowsocks'=>'yellow'][$k];
-    echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-2 sm:p-4 text-[13px] sm:text-sm rounded-lg shadow overflow-hidden max-w-full'>
-            <p class='font-semibold break-words truncate' title='{$label}'>{$label}</p>
-            <p class='text-base sm:text-lg font-bold break-words truncate' title='{$stats[$k]}'>{$stats[$k]}</p>
+    $value = $stats[$k];
+    echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-2 sm:p-4 text-[13px] sm:text-sm rounded-lg shadow overflow-hidden max-w-full cursor-pointer' title='{$label}: {$value}' onclick=\"showFullText('{$label}: {$value}')\">
+            <p class='font-semibold truncate'>{$label}</p>
+            <p class='text-base sm:text-lg font-bold truncate'>{$value}</p>
           </div>";
 }
 ?>
 </div>
+
 
 <!-- Grafik -->
 <div class="overflow-x-auto w-full mt-4">
