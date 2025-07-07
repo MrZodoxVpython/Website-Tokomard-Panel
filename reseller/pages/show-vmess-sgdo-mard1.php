@@ -46,20 +46,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['hapus'])) {
                 }
                 $jsonLine = trim($lines[$jsonLineIndex] ?? '');
 
-                if ($action === 'stop' && preg_match('/"password"\s*:\s*"([^\"]+)"/', $jsonLine, $m)) {
+                if ($action === 'stop' && preg_match('/"id"\s*:\s*"([^\"]+)"/', $jsonLine, $m)) {
                     $originalPassword = $m[1];
                     if ($originalPassword !== 'locked') {
                         array_splice($lines, $jsonLineIndex, 0, ["##LOCK##$originalPassword\n"]);
-                        $lines[$jsonLineIndex + 1] = preg_replace('/"password"\s*:\s*"[^\"]+"/', '"password": "locked"', $jsonLine) . "\n";
+                        $lines[$jsonLineIndex + 1] = preg_replace('/"id"\s*:\s*"[^\"]+"/', '"id": "locked"', $jsonLine) . "\n";
                         $updated = true;
                     }
                 }
 
-                if ($action === 'start' && preg_match('/"password"\s*:\s*"locked"/', $jsonLine)) {
+                if ($action === 'start' && preg_match('/"id"\s*:\s*"locked"/', $jsonLine)) {
                     $lockLine = trim($lines[$jsonLineIndex - 1] ?? '');
                     if (preg_match('/^##LOCK##(.+)/', $lockLine, $m)) {
                         $realPassword = trim($m[1]);
-                        $lines[$jsonLineIndex] = preg_replace('/"password"\s*:\s*"locked"/', '"password": "' . $realPassword . '"', $jsonLine) . "\n";
+                        $lines[$jsonLineIndex] = preg_replace('/"id"\s*:\s*"locked"/', '"id": "' . $realPassword . '"', $jsonLine) . "\n";
                         array_splice($lines, $jsonLineIndex - 1, 1);
                         $updated = true;
                     }
