@@ -49,7 +49,7 @@ function read_remote_files($remote_ip, $remote_user, $reseller, $server_name) {
 }
 
 $remote_servers = [
-    ['ip' => '152.42.182.187', 'user' => 'root', 'name' => 'SGDO-1DEV'],
+    ['ip' => '152.42.182.187', 'user' => 'root', 'name' => 'SGDO-MARD1'],
     ['ip' => '203.194.113.140', 'user' => 'root', 'name' => 'RW-MARD'],
 ];
 
