@@ -27,10 +27,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['hapus'])) {
     }
 
     if (isset($_POST['toggle_user'], $_POST['action'])) {
-        $user = $_POST['toggle_user'];
-        $action = $_POST['action'];
+	$user = $_POST['toggle_user'];
+	$action = $_POST['action'];
 	$tmpFile = tempnam(sys_get_temp_dir(), "config-vmess-");
 	shell_exec("$sshPrefix 'cat $configPath' > $tmpFile");
+
+        //$user = $_POST['toggle_user'];
+        //$action = $_POST['action'];
+	//$tmpFile = tempnam(sys_get_temp_dir(), "config-vmess-");
+	//shell_exec("$sshPrefix 'cat $configPath' > $tmpFile");
         //$tmpFile = "/tmp/config-remote-$user.json";
         //shell_exec("$sshPrefix 'cat $configPath' > $tmpFile");
 
