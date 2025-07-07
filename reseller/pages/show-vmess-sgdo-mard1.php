@@ -26,54 +26,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['hapus'])) {
         shell_exec("$sshPrefix 'systemctl restart xray'");
     }
 
-    if (isset($_POST['toggle_user'], $_POST['action'])) {
-	$user = $_POST['toggle_user'];
-	$action = $_POST['action'];
-	$tmpFile = tempnam(sys_get_temp_dir(), "config-vmess-");
-	shell_exec("$sshPrefix 'cat $configPath' > $tmpFile");
+    if (isset($_GET['toggle'], $_GET['action'])) {
+    $user = preg_replace('/[^a-zA-Z0-9_\-]/', '', $_GET['toggle']);
+    $action = $_GET['action'] === 'stop' ? 'stop' : 'start';
 
-        //$user = $_POST['toggle_user'];
-        //$action = $_POST['action'];
-	//$tmpFile = tempnam(sys_get_temp_dir(), "config-vmess-");
-	//shell_exec("$sshPrefix 'cat $configPath' > $tmpFile");
-        //$tmpFile = "/tmp/config-remote-$user.json";
-        //shell_exec("$sshPrefix 'cat $configPath' > $tmpFile");
+    $tmpFile = tempnam(sys_get_temp_dir(), "config-vmess-");
+    shell_exec("$sshPrefix 'cat $configPath' > $tmpFile");
 
-        $lines = file($tmpFile);
-        $updated = false;
-        for ($i = 0; $i < count($lines); $i++) {
-            $line = trim($lines[$i]);
+    $lines = file($tmpFile);
+    $updated = false;
 
-            if ((strpos($line, '#vmess') === 0 || strpos($line, '#vmessgrpc') === 0)
-                && isset($lines[$i + 1]) && preg_match('/^### ' . preg_quote($user, '/') . ' \d{4}-\d{2}-\d{2}$/', trim($lines[$i + 1]))) {
-                $lockLineIndex = $i + 2;
-                $jsonLineIndex = $i + 2;
-                if (isset($lines[$lockLineIndex]) && strpos(trim($lines[$lockLineIndex]), '##LOCK##') === 0) {
-                    $jsonLineIndex++;
+    for ($i = 0; $i < count($lines); $i++) {
+        $line = trim($lines[$i]);
+
+        if ((strpos($line, '#vmess') === 0 || strpos($line, '#vmessgrpc') === 0)
+            && isset($lines[$i + 1]) && preg_match('/^### ' . preg_quote($user, '/') . ' \d{4}-\d{2}-\d{2}$/', trim($lines[$i + 1]))) {
+            $lockLineIndex = $i + 2;
+            $jsonLineIndex = $i + 2;
+            if (isset($lines[$lockLineIndex]) && strpos(trim($lines[$lockLineIndex]), '##LOCK##') === 0) {
+                $jsonLineIndex++;
+            }
+            $jsonLine = trim($lines[$jsonLineIndex] ?? '');
+
+            if ($action === 'stop' && preg_match('/"id"\s*:\s*"([^\"]+)"/', $jsonLine, $m)) {
+                $originalPassword = $m[1];
+                if ($originalPassword !== 'locked') {
+                    array_splice($lines, $jsonLineIndex, 0, ["##LOCK##$originalPassword\n"]);
+                    $lines[$jsonLineIndex + 1] = preg_replace('/"id"\s*:\s*"[^\"]+"/', '"id": "locked"', $jsonLine) . "\n";
+                    $updated = true;
                 }
-                $jsonLine = trim($lines[$jsonLineIndex] ?? '');
+            }
 
-                if ($action === 'stop' && preg_match('/"id"\s*:\s*"([^\"]+)"/', $jsonLine, $m)) {
-                    $originalPassword = $m[1];
-                    if ($originalPassword !== 'locked') {
-                        array_splice($lines, $jsonLineIndex, 0, ["##LOCK##$originalPassword\n"]);
-                        $lines[$jsonLineIndex + 1] = preg_replace('/"id"\s*:\s*"[^\"]+"/', '"id": "locked"', $jsonLine) . "\n";
-                        $updated = true;
-                    }
-                }
-
-                if ($action === 'start' && preg_match('/"id"\s*:\s*"locked"/', $jsonLine)) {
-                    $lockLine = trim($lines[$jsonLineIndex - 1] ?? '');
-                    if (preg_match('/^##LOCK##(.+)/', $lockLine, $m)) {
-                        $realPassword = trim($m[1]);
-                        $lines[$jsonLineIndex] = preg_replace('/"id"\s*:\s*"locked"/', '"id": "' . $realPassword . '"', $jsonLine) . "\n";
-                        array_splice($lines, $jsonLineIndex - 1, 1);
-                        $updated = true;
-                    }
+            if ($action === 'start' && preg_match('/"id"\s*:\s*"locked"/', $jsonLine)) {
+                $lockLine = trim($lines[$jsonLineIndex - 1] ?? '');
+                if (preg_match('/^##LOCK##(.+)/', $lockLine, $m)) {
+                    $realPassword = trim($m[1]);
+                    $lines[$jsonLineIndex] = preg_replace('/"id"\s*:\s*"locked"/', '"id": "' . $realPassword . '"', $jsonLine) . "\n";
+                    array_splice($lines, $jsonLineIndex - 1, 1);
+                    $updated = true;
                 }
             }
         }
+    }
 
+    if ($updated) {
+        file_put_contents($tmpFile, implode('', $lines));
+        shell_exec("scp -o StrictHostKeyChecking=no $tmpFile $sshUser@$remoteIP:$configPath");
+        shell_exec("$sshPrefix 'systemctl restart xray'");
+    }
+    unlink($tmpFile);
+    header("Location: ".$_SERVER['PHP_SELF']);
+    exit;
+}
+   
         if ($updated) {
             file_put_contents($tmpFile, implode('', $lines));
             shell_exec("scp -o StrictHostKeyChecking=no $tmpFile $sshUser@$remoteIP:$configPath");
