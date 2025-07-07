@@ -227,8 +227,8 @@ if (empty($files)): ?>
 
         // ✅ Skip jika file tidak mengandung VMess
         if (
-            stripos($content, 'vmess') === false &&
-            !preg_match('/uuid\s*:\s*[0-9a-fA-F\-]{36}/', $content)
+            stripos($content, 'trojan') === false &&
+            !preg_match('/password\s*:\s*[0-9a-fA-F\-]{36}/', $content)
         ) {
             continue;
         }
