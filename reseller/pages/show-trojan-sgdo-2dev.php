@@ -183,6 +183,33 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
         </div>
     <?php else: ?>
     <?php foreach ($akunFiles as $file):
+    $filename = basename($file);
+    preg_match('/akun-' . preg_quote($reseller, '/') . '-(.+)\.txt/', $filename, $m);
+    $username = $m[1] ?? 'unknown';
+    $content = file_get_contents($file);
+
+    // ✅ Filter hanya akun Trojan
+    if (stripos($content, '"protocol": "trojan"') === false && stripos($content, 'trojan://') === false) {
+        continue; // Lewati Trojan, Shadowsocks, dll
+    }
+
+    $isDisabled = false;
+
+    $configLines = file($configPath);
+    for ($i = 0; $i < count($configLines); $i++) {
+        if (preg_match('/^\s*#!\s+' . preg_quote($username) . '\s+\d{4}-\d{2}-\d{2}/', $configLines[$i])) {
+            for ($j = $i + 1; $j <= $i + 3 && $j < count($configLines); $j++) {
+                $line = trim($configLines[$j]);
+                if (strpos($line, '"password": "locked"') !== false) {
+                    $isDisabled = true;
+                    break 2;
+                }
+            }
+        }
+    }
+?>
+
+    <?php foreach ($akunFiles as $file):
         $filename = basename($file);
         preg_match('/akun-' . preg_quote($reseller, '/') . '-(.+)\.txt/', $filename, $m);
         $username = $m[1] ?? 'unknown';
