@@ -136,8 +136,11 @@ if (empty($fileList[0])) {
 	    if ($rawContent !== null && is_string($rawContent)) {
     	        $content = trim($rawContent);
 	    }
-            $check = shell_exec("$sshPrefix \"grep -A 3 '#vmess\\|#vmessgrpc' $configPath | grep -A 3 '### $username' | grep 'locked'\"");
-            $isLocked = trim($check ?? '') !== '';
+	    $checkCmd = <<<EOC
+	    $sshPrefix "awk '/### $username /{found=1;next} found && /^{/{depth=1} found && depth{ print; if(/}/) depth--; if(depth==0) exit }' $configPath | grep '\"id\": \"locked\"'"
+	    EOC;
+	    $check = shell_exec($checkCmd);
+	    $isLocked = trim($check ?? '') !== '';
 ?>
 <div class="bg-gray-800 rounded p-4 shadow mb-4">
     <div class="flex justify-between items-center flex-wrap">
