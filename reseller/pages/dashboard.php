@@ -104,97 +104,102 @@ foreach ($remote_servers as $srv) {
     }
 }
 ?>
+<!-- Wrapper keseluruhan -->
+<div class="p-4 sm:p-6 md:p-8 space-y-6">
 
-<!-- Stat Boxes -->
-<div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-    <div class="bg-blue-500 text-white rounded-xl p-4 text-center">
-        <div class="text-xl font-bold"><?= $stats['total'] ?></div>
-        <div class="text-sm">Total Akun</div>
+    <!-- Stat Boxes Responsive -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+        <div class="bg-blue-500 text-white rounded-xl p-4 text-center">
+            <div class="text-xl font-bold"><?= $stats['total'] ?></div>
+            <div class="text-sm">Total Akun</div>
+        </div>
+        <div class="bg-green-500 text-white rounded-xl p-4 text-center">
+            <div class="text-xl font-bold"><?= $stats['vmess'] ?></div>
+            <div class="text-sm">VMess</div>
+        </div>
+        <div class="bg-purple-500 text-white rounded-xl p-4 text-center">
+            <div class="text-xl font-bold"><?= $stats['vless'] ?></div>
+            <div class="text-sm">VLess</div>
+        </div>
+        <div class="bg-red-500 text-white rounded-xl p-4 text-center">
+            <div class="text-xl font-bold"><?= $stats['trojan'] ?></div>
+            <div class="text-sm">Trojan</div>
+        </div>
+        <div class="bg-yellow-500 text-white rounded-xl p-4 text-center">
+            <div class="text-xl font-bold"><?= $stats['shadowsocks'] ?></div>
+            <div class="text-sm">Shadowsocks</div>
+        </div>
     </div>
-    <div class="bg-green-500 text-white rounded-xl p-4 text-center">
-        <div class="text-xl font-bold"><?= $stats['vmess'] ?></div>
-        <div class="text-sm">VMess</div>
-    </div>
-    <div class="bg-purple-500 text-white rounded-xl p-4 text-center">
-        <div class="text-xl font-bold"><?= $stats['vless'] ?></div>
-        <div class="text-sm">VLess</div>
-    </div>
-    <div class="bg-red-500 text-white rounded-xl p-4 text-center">
-        <div class="text-xl font-bold"><?= $stats['trojan'] ?></div>
-        <div class="text-sm">Trojan</div>
-    </div>
-    <div class="bg-yellow-500 text-white rounded-xl p-4 text-center">
-        <div class="text-xl font-bold"><?= $stats['shadowsocks'] ?></div>
-        <div class="text-sm">Shadowsocks</div>
-    </div>
-</div>
 
-<!-- Grafik Chart.js -->
-<canvas id="chartProtokol" height="120"></canvas>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-const ctx = document.getElementById('chartProtokol').getContext('2d');
-new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: ['VMess', 'VLess', 'Trojan', 'Shadowsocks'],
-        datasets: [{
-            label: 'Jumlah Akun',
-            data: [
-                <?= $stats['vmess'] ?>,
-                <?= $stats['vless'] ?>,
-                <?= $stats['trojan'] ?>,
-                <?= $stats['shadowsocks'] ?>
-            ],
-            backgroundColor: ['#10B981', '#8B5CF6', '#EF4444', '#F59E0B'],
-            borderRadius: 8,
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: { display: false }
+    <!-- Grafik Chart.js -->
+    <div class="w-full max-w-2xl mx-auto">
+        <canvas id="chartProtokol" height="160"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    const ctx = document.getElementById('chartProtokol').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['VMess', 'VLess', 'Trojan', 'Shadowsocks'],
+            datasets: [{
+                label: 'Jumlah Akun',
+                data: [
+                    <?= $stats['vmess'] ?>,
+                    <?= $stats['vless'] ?>,
+                    <?= $stats['trojan'] ?>,
+                    <?= $stats['shadowsocks'] ?>
+                ],
+                backgroundColor: ['#10B981', '#8B5CF6', '#EF4444', '#F59E0B'],
+                borderRadius: 8,
+            }]
         },
-        scales: {
-            y: { beginAtZero: true }
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { beginAtZero: true }
+            }
         }
-    }
-});
-</script>
+    });
+    </script>
 
-<!-- Tabel Akun -->
-<div class="overflow-x-auto w-full mt-6">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-300 dark:border-gray-700 min-w-full">
-        <table class="w-full text-[13px] sm:text-sm text-left text-gray-800 dark:text-white table-auto">
-        <thead class="bg-gray-100 dark:bg-gray-700">
-            <tr>
-                <th class="px-1 py-1 sm:px-3 sm:py-2 whitespace-nowrap">No</th>
-                <th class="px-1 py-1 sm:px-3 sm:py-2 whitespace-nowrap">Username</th>
-                <th class="px-1 py-1 sm:px-3 sm:py-2 whitespace-nowrap">Protocol</th>
-                <th class="px-1 py-1 sm:px-3 sm:py-2 whitespace-nowrap">Expired</th>
-                <th class="px-1 py-1 sm:px-3 sm:py-2 whitespace-nowrap">UUID/Pass</th>
-                <th class="px-1 py-1 sm:px-3 sm:py-2 whitespace-nowrap">Server</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (empty($rows)) : ?>
+    <!-- Tabel Akun Responsive -->
+    <div class="overflow-x-auto rounded-xl shadow border border-gray-200 dark:border-gray-700">
+        <table class="min-w-full text-[13px] sm:text-sm text-left text-gray-800 dark:text-white">
+            <thead class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white">
                 <tr>
-                    <td colspan="6" class="text-center px-2 py-3 text-gray-500 dark:text-gray-400">Belum ada akun.</td>
+                    <th class="px-2 py-2">No</th>
+                    <th class="px-2 py-2">Username</th>
+                    <th class="px-2 py-2">Protocol</th>
+                    <th class="px-2 py-2">Expired</th>
+                    <th class="px-2 py-2">UUID/Pass</th>
+                    <th class="px-2 py-2">Server</th>
                 </tr>
-            <?php else : ?>
-                <?php foreach ($rows as $r) : ?>
-                    <tr class="border-t border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <td class="px-1 py-1 sm:px-3 sm:py-2"><?= $r['no'] ?></td>
-                        <td class="px-1 py-1 sm:px-3 sm:py-2"><?= $r['user'] ?></td>
-                        <td class="px-1 py-1 sm:px-3 sm:py-2"><?= $r['proto'] ?></td>
-                        <td class="px-1 py-1 sm:px-3 sm:py-2"><?= $r['exp'] ?></td>
-                        <td class="px-1 py-1 sm:px-3 sm:py-2 font-mono break-all"><?= $r['buyer'] ?></td>
-                        <td class="px-1 py-1 sm:px-3 sm:py-2"><?= $r['server_name'] ?></td>
+            </thead>
+            <tbody>
+                <?php if (empty($rows)) : ?>
+                    <tr>
+                        <td colspan="6" class="text-center px-2 py-3 text-gray-500 dark:text-gray-400">Belum ada akun.</td>
                     </tr>
-                <?php endforeach ?>
-            <?php endif ?>
-        </tbody>
+                <?php else : ?>
+                    <?php foreach ($rows as $r) : ?>
+                        <tr class="border-t border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <td class="px-2 py-2"><?= $r['no'] ?></td>
+                            <td class="px-2 py-2"><?= $r['user'] ?></td>
+                            <td class="px-2 py-2"><?= $r['proto'] ?></td>
+                            <td class="px-2 py-2"><?= $r['exp'] ?></td>
+                            <td class="px-2 py-2 font-mono break-all"><?= $r['buyer'] ?></td>
+                            <td class="px-2 py-2"><?= $r['server_name'] ?></td>
+                        </tr>
+                    <?php endforeach ?>
+                <?php endif ?>
+            </tbody>
         </table>
     </div>
+
 </div>
 
