@@ -1,14 +1,14 @@
 {
     "RW-MARD": {
-        "stock": 5,
+        "stock": 11,
         "available": true
     },
     "SGDO-2DEV": {
-        "stock": 14,
+        "stock": 22,
         "available": true
     },
     "SGDO-MARD1": {
-        "stock": 30,
+        "stock": 33,
         "available": true
     }
 }
