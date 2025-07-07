@@ -230,10 +230,10 @@ foreach ($files as $remoteFile):
     $found = true;
 
     // tampilkan akun VMess valid
-    echo "<div class='p-4 border border-green-500 text-green-300 rounded mb-2'>
-        ✅ Akun VMess: <strong>$u</strong><br>
-        <pre class='text-sm whitespace-pre-wrap'>" . htmlspecialchars($content) . "</pre>
-    </div>";
+    //echo "<div class='p-4 border border-green-500 text-green-300 rounded mb-2'>
+     //   ✅ Akun VMess: <strong>$u</strong><br>
+      //  <pre class='text-sm whitespace-pre-wrap'>" . htmlspecialchars($content) . "</pre>
+    //</div>";
 endforeach;
 
 if (!$found): ?>
