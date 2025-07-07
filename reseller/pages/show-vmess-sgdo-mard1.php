@@ -238,7 +238,7 @@ endforeach;
 
 if (!$found): ?>
     <div class="text-center bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded mt-6">
-        ⚠ Tidak ada akun <strong>VMess</strong> yang ditemukan untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong> silahkan buat akun terlebih dahulu.
+        ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong> silahkan buat akun terlebih dahulu.
     </div>
 
 <!-- filter tag VMess only -->
