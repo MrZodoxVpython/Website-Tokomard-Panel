@@ -138,46 +138,18 @@ foreach ($remote_servers as $srv) {
         </div>
     </div>
 
-    <!-- Grafik Chart.js -->
-    <div class="w-full max-w-2xl mx-auto">
-        <canvas id="chartProtokol" height="160"></canvas>
+<!-- Grafik Chart.js -->
+<div class="w-full max-w-md md:max-w-2xl mx-auto px-2">
+    <div class="relative w-full" style="height:250px">
+        <canvas id="chartProtokol" class="w-full h-full"></canvas>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-    const ctx = document.getElementById('chartProtokol').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['VMess', 'VLess', 'Trojan', 'Shadowsocks'],
-            datasets: [{
-                label: 'Jumlah Akun',
-                data: [
-                    <?= $stats['vmess'] ?>,
-                    <?= $stats['vless'] ?>,
-                    <?= $stats['trojan'] ?>,
-                    <?= $stats['shadowsocks'] ?>
-                ],
-                backgroundColor: ['#10B981', '#8B5CF6', '#EF4444', '#F59E0B'],
-                borderRadius: 8,
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false }
-            },
-            scales: {
-                y: { beginAtZero: true }
-            }
-        }
-    });
-    </script>
+</div>
 
-    <!-- Tabel Akun Responsive -->
-    <div class="overflow-x-auto rounded-xl shadow border border-gray-200 dark:border-gray-700">
-        <table class="min-w-full text-[13px] sm:text-sm text-left text-gray-800 dark:text-white">
-            <thead class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white">
+<!-- Tabel Akun Responsive Fix -->
+<div class="w-full overflow-x-auto mt-6 px-2">
+    <div class="min-w-[640px] bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-300 dark:border-gray-700">
+        <table class="w-full text-[13px] sm:text-sm text-left text-gray-800 dark:text-white">
+            <thead class="bg-gray-100 dark:bg-gray-700">
                 <tr>
                     <th class="px-2 py-2">No</th>
                     <th class="px-2 py-2">Username</th>
@@ -207,6 +179,5 @@ foreach ($remote_servers as $srv) {
             </tbody>
         </table>
     </div>
-
 </div>
 
