@@ -100,18 +100,18 @@ foreach ($remote_servers as $srv) {
 <!-- Tampilan Statistik -->
 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 sm:gap-4 mb-4 text-center">
 <?php
-// Box Saldo Anda
+// Saldo Anda
 echo "<div class='bg-orange-100 dark:bg-orange-800 text-orange-900 dark:text-white p-2 sm:p-4 text-[13px] sm:text-sm rounded-lg shadow overflow-hidden max-w-full'>
-        <p class='font-semibold break-words truncate'>Total Saldo Anda</p>
-        <p class='text-base sm:text-lg font-bold break-words truncate'>{$formattedSaldo}</p>
+        <p class='font-semibold break-words truncate' title='Total Saldo Anda'>Total Saldo Anda</p>
+        <p class='text-base sm:text-lg font-bold break-words truncate' title='{$formattedSaldo}'>{$formattedSaldo}</p>
       </div>";
 
 // Statistik lainnya
 foreach (['total'=>'Total Akun','vmess'=>'VMess','vless'=>'VLess','trojan'=>'Trojan','shadowsocks'=>'Shadowsocks'] as $k => $label) {
     $color = ['total'=>'green','vmess'=>'blue','vless'=>'purple','trojan'=>'red','shadowsocks'=>'yellow'][$k];
     echo "<div class='bg-{$color}-100 dark:bg-{$color}-800 text-{$color}-900 dark:text-white p-2 sm:p-4 text-[13px] sm:text-sm rounded-lg shadow overflow-hidden max-w-full'>
-            <p class='font-semibold break-words truncate'>{$label}</p>
-            <p class='text-base sm:text-lg font-bold break-words truncate'>{$stats[$k]}</p>
+            <p class='font-semibold break-words truncate' title='{$label}'>{$label}</p>
+            <p class='text-base sm:text-lg font-bold break-words truncate' title='{$stats[$k]}'>{$stats[$k]}</p>
           </div>";
 }
 ?>
