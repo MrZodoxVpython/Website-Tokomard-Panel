@@ -102,7 +102,7 @@ foreach ($remote_servers as $srv) {
 <?php
 // Box "Saldo Anda" pakai variabel $formattedSaldo
 echo "<div class='bg-orange-100 dark:bg-orange-800 text-orange-900 dark:text-white p-2 sm:p-4 text-[15px] sm:text-sm rounded-lg shadow'>
-        <p class='font-semibold'>Total Saldo</p>
+        <p class='font-semibold'>Total Saldo Anda</p>
         <p class='text-lg sm:text-xl font-bold'>{$formattedSaldo}</p>
       </div>";
 
