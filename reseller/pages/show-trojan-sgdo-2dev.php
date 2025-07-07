@@ -194,6 +194,7 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
             if (preg_match('/^\s*(###|#!|#&|#\$)\s+' . preg_quote($username) . '\s+\d{4}-\d{2}-\d{2}/', $configLines[$i])) {
                 for ($j = $i + 1; $j <= $i + 3 && $j < count($configLines); $j++) {
                     $line = trim($configLines[$j]);
+
                     if (strpos($line, '"password": "locked"') !== false) {
                         $isDisabled = true;
                         break 2;
