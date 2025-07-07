@@ -85,7 +85,7 @@ foreach (glob("/etc/xray/data-panel/reseller/akun-{$reseller}-*.txt") as $file) 
         $rows[] = [
             'no' => $no++, 'user' => $buyer,
             'proto' => strtoupper($proto), 'exp' => $expired,
-            'buyer' => $uuidOrPass, 'server_name' => 'Lokal'
+            'buyer' => $uuidOrPass, 'server_name' => 'Lokal/SGDO-2DEV'
         ];
     }
 }
