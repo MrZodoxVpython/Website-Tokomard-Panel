@@ -279,7 +279,7 @@ if (!$found): ?>
                 <button onclick="document.getElementById('form-<?=$u?>').classList.toggle('hidden')" class="bg-green-600 px-3 py-1 rounded hover:bg-green-700">Edit</button>
             </div>
         </div>
-            <div id="detail-<?= $username ?>" class="detail-box mt-3 bg-gray-700 rounded hidden">
+            <div id="detail-<?= $u?>" class="detail-box mt-3 bg-gray-700 rounded hidden">
                 <div class="overflow-x-auto">
                     <pre class="text-green-300 font-mono text-sm whitespace-pre p-3 min-w-full"><?= htmlspecialchars($content) ?></pre>
                 </div>
