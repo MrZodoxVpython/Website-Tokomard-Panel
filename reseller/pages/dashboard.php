@@ -79,7 +79,6 @@ foreach (glob("/etc/xray/data-panel/reseller/akun-{$reseller}-*.txt") as $file) 
         elseif (stripos($line, 'VLESS ACCOUNT') !== false) $proto = 'vless';
         elseif (stripos($line, 'SHADOWSOCKS ACCOUNT') !== false) $proto = 'shadowsocks';
         elseif (stripos($line, 'Expired On') !== false) $expired = trim(explode(':', $line, 2)[1] ?? '-');
-        elseif (stripos($line, 'Password') !== false) $uuidOrPass = trim(explode(':', $line, 2)[1] ?? '-');
 	elseif (
 	    stripos($line, 'Password') !== false ||
 	    stripos($line, 'Id:') !== false ||
