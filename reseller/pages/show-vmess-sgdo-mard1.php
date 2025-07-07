@@ -281,7 +281,7 @@ if (!$found): ?>
             </div>
         </div>
         <div id="detail-<?=$u?>" class="detail-box mt-3 bg-gray-700 rounded hidden">
-            <pre class="p-3 text-green-300 font-mono text-sm whitespace-pre-wrap"><?=htmlspecialchars($content)?></pre>
+	    <pre class="p-3 text-green-300 font-mono text-sm whitespace-pre-wrap break-all overflow-x-auto">
         </div>
         <form method="POST" id="form-<?=$u?>" class="mt-3 hidden bg-gray-700 p-4 rounded">
             <input type="hidden" name="edit_user" value="<?=$u?>">
