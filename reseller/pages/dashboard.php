@@ -115,28 +115,28 @@ foreach ($remote_servers as $srv) {
 <div class="p-4 sm:p-6 md:p-8 space-y-6">
 
     <!-- Stat Boxes Responsive -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-        <div class="bg-blue-500 text-white rounded-xl p-4 text-center">
-            <div class="text-xl font-bold"><?= $stats['total'] ?></div>
-            <div class="text-sm">Total Akun</div>
-        </div>
-        <div class="bg-green-500 text-white rounded-xl p-4 text-center">
-            <div class="text-xl font-bold"><?= $stats['vmess'] ?></div>
-            <div class="text-sm">VMess</div>
-        </div>
-        <div class="bg-purple-500 text-white rounded-xl p-4 text-center">
-            <div class="text-xl font-bold"><?= $stats['vless'] ?></div>
-            <div class="text-sm">VLess</div>
-        </div>
-        <div class="bg-red-500 text-white rounded-xl p-4 text-center">
-            <div class="text-xl font-bold"><?= $stats['trojan'] ?></div>
-            <div class="text-sm">Trojan</div>
-        </div>
-        <div class="bg-yellow-500 text-white rounded-xl p-4 text-center">
-            <div class="text-xl font-bold"><?= $stats['shadowsocks'] ?></div>
-            <div class="text-sm">Shadowsocks</div>
-        </div>
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 px-2 sm:px-4">
+    <div class="bg-blue-500 text-white rounded-xl p-3 text-center text-sm">
+        <div class="text-lg font-bold"><?= $stats['total'] ?></div>
+        <div>Total</div>
     </div>
+    <div class="bg-green-500 text-white rounded-xl p-3 text-center text-sm">
+        <div class="text-lg font-bold"><?= $stats['vmess'] ?></div>
+        <div>VMess</div>
+    </div>
+    <div class="bg-purple-500 text-white rounded-xl p-3 text-center text-sm">
+        <div class="text-lg font-bold"><?= $stats['vless'] ?></div>
+        <div>VLess</div>
+    </div>
+    <div class="bg-red-500 text-white rounded-xl p-3 text-center text-sm">
+        <div class="text-lg font-bold"><?= $stats['trojan'] ?></div>
+        <div>Trojan</div>
+    </div>
+    <div class="bg-yellow-500 text-white rounded-xl p-3 text-center text-sm">
+        <div class="text-lg font-bold"><?= $stats['shadowsocks'] ?></div>
+        <div>Shadowsocks</div>
+    </div>
+</div>
 
 <!-- Grafik Chart.js -->
 <div class="w-full max-w-md md:max-w-2xl mx-auto px-2">
