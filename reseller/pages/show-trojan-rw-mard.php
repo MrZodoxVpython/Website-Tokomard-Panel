@@ -215,15 +215,28 @@ if (empty($files)): ?>
             ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>
             silahkan buat akun terlebih dahulu.
     </div>
+<!-- filter tag Trojan only -->
 <?php else:
     foreach ($files as $remoteFile):
         $fn = basename($remoteFile);
         preg_match("/akun-".preg_quote($reseller,"/")."-(.+)\.txt/", $fn, $m);
         $u = $m[1] ?? 'unknown';
+
+        // Ambil isi file akun (.txt)
         $content = trim(shell_exec("$sshPrefix \"cat ".escapeshellarg($remoteFile)."\""));
-	$checkCmd = "$sshPrefix \"grep -A 2 '#! $u' $configPath | grep 'locked'\"";
-	$result = shell_exec($checkCmd);
-	$isDisabled = trim($result ?? '') !== '';
+
+        // ✅ Skip jika file tidak mengandung VMess
+        if (
+            stripos($content, 'trojan') === false &&
+            !preg_match('/password\s*:\s*[0-9a-fA-F\-]{36}/', $content)
+        ) {
+            continue;
+        }
+
+        // Cek apakah akun sedang "locked"
+        $checkCmd = "$sshPrefix \"grep -A 2 '#! $u' $configPath | grep 'locked'\"";
+        $result = shell_exec($checkCmd);
+        $isDisabled = trim($result ?? '') !== '';
 ?>
     <div class="bg-gray-800 rounded p-4 shadow mb-4">
         <div class="flex justify-between items-center flex-wrap">
