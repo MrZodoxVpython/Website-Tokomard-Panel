@@ -185,10 +185,10 @@ new Chart(ctx, {
 
 <!-- Tabel Akun -->
 <div class="overflow-x-auto w-full mt-4">
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-300 dark:border-gray-700 min-w-full">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-300 dark:border-gray-700 overflow-hidden min-w-full">
     <table class="w-full text-[11px] sm:text-sm text-left text-gray-800 dark:text-white table-fixed">
       <thead class="bg-gray-100 dark:bg-gray-700">
-        <tr>
+        <tr class="rounded-t-lg">
           <th class="px-2 md:px-4 py-2 w-[7%]">No</th>
           <th class="px-2 md:px-4 py-2 w-[35%]">Username</th>
           <th class="px-2 md:px-4 py-2 w-[18%]">Protocol</th>
