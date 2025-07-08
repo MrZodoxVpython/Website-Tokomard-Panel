@@ -61,9 +61,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = $conn->prepare("UPDATE users SET saldo = saldo - ? WHERE username = ?");
                 $stmt->bind_param("is", $hargaFinal, $reseller);
                 if ($stmt->execute()) {
-    			$output = $outputRaw;
-    			$output .= "\n✅ Akun berhasil dibuat.";
-    			$output .= "\n💳 Saldo terpotong: Rp" . number_format($hargaFinal, 0, ',', '.');
+    		    $output = $outputRaw;
+    		    $output .= "\n✅ Akun berhasil dibuat.";
+    		    $output .= "\n💳 Saldo terpotong: Rp" . number_format($hargaFinal, 0, ',', '.');
 
     		    // Dapatkan ID user (reseller)
     		    $stmtUserId = $conn->prepare("SELECT id FROM users WHERE username = ?");
