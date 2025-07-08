@@ -1,26 +1,39 @@
 <?php
-require_once __DIR__ . '/../../koneksi.php';
-
 if (session_status() === PHP_SESSION_NONE) session_start();
-$reseller = $_SESSION['reseller'] ?? 'avtar';
-$email = $_SESSION['email'] ?? 'nafisbau06@gmail.com';
-$avatar = 'https://i.imgur.com/q3DzxiB.png';
-$account_id = 'ID-453';
-$balance = 30995;
-$role = 'reseller';
+require_once __DIR__ . '/../koneksi.php';
 
+$reseller = $_SESSION['reseller'] ?? 'avtar';
+$email = $_SESSION['email'] ?? '';
+$avatar = 'https://i.imgur.com/q3DzxiB.png';
+$account_id = '';
+$balance = 0;
 $transactions = [];
-$stmt = $conn->prepare("SELECT type, status, amount, detail, date FROM transactions t
-    JOIN users u ON t.user_id = u.id WHERE u.username = ? ORDER BY t.date DESC");
+
+// Cek ID user dari username
+$stmt = $conn->prepare("SELECT id, email, saldo FROM users WHERE username = ?");
 $stmt->bind_param("s", $reseller);
 $stmt->execute();
-$result = $stmt->get_result();
-while ($row = $result->fetch_assoc()) {
-    $transactions[] = $row;
+$userResult = $stmt->get_result();
+
+if ($userRow = $userResult->fetch_assoc()) {
+    $userId = $userRow['id'];
+    $email = $userRow['email'];
+    $balance = $userRow['saldo'];
+    $account_id = 'ID-' . str_pad($userId, 3, '0', STR_PAD_LEFT); // ex: ID-001
+
+    // Ambil transaksi
+    $stmt2 = $conn->prepare("SELECT type, status, amount, detail, date FROM transactions WHERE user_id = ? ORDER BY date DESC");
+    $stmt2->bind_param("i", $userId);
+    $stmt2->execute();
+    $result = $stmt2->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $transactions[] = $row;
+    }
+    $stmt2->close();
 }
 $stmt->close();
-
 ?>
+
 <!DOCTYPE html>
 <html lang="id" data-theme="dark">
 <head>
