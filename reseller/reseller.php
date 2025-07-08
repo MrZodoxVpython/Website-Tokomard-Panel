@@ -90,7 +90,6 @@ $formattedSaldo = "Rp. " . number_format($saldo, 0, ',', '.');
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
 
 <!-- HEADER -->
-OK
 <header class="flex items-center justify-between bg-gray-100 dark:bg-gray-800 p-3 shadow sticky top-0 z-20">
   <!-- KIRI: Logo, sidebar toggle, notif, judul -->
   <div class="flex items-center space-x-3">
