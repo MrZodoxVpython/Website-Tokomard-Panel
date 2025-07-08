@@ -100,24 +100,37 @@ $stmt->close();
     </div>
 
 <!-- Riwayat Transaksi -->
-<tbody class="text-gray-300">
-  <?php if (!empty($transactions)): ?>
-    <?php foreach ($transactions as $trx): ?>
-      <tr class="border-t border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
-        <td class="px-2 md:px-4 py-2 w-[16%]"><?= $trx['type'] ?></td>
-        <td class="px-2 md:px-4 py-2 w-[25%] text-green-400 font-semibold"><?= $trx['status'] ?></td>
-        <td class="px-2 md:px-4 py-2 w-[25%]">Rp. <?= number_format($trx['amount'], 0, ',', '.') ?></td>
-        <td class="px-2 md:px-4 py-2 w-[26%]"><?= $trx['detail'] ?></td>
-        <td class="px-2 md:px-4 py-2 w-[25%]"><?= $trx['date'] ?></td>
-      </tr>
-    <?php endforeach; ?>
-  <?php else: ?>
-    <tr>
-      <td colspan="5" class="text-center text-gray-400 py-4">Belum ada transaksi.</td>
-    </tr>
-  <?php endif; ?>
-</tbody>
-
+<!-- Riwayat Transaksi -->
+<div class="bg-gray-800 p-4 -mt-5 rounded-lg shadow border max-w-full border-gray-700">
+  <div class="flex justify-between items-center mb-3">
+    <h3 class="text-lg font-semibold">Transaction History</h3>
+    <input type="text" placeholder="Search Transaction" class="bg-gray-900 text-sm rounded px-3 py-1 border border-gray-600 focus:outline-none" />
+  </div>
+  <div class="overflow-x-auto">
+    <table class="w-full text-[11px] sm:text-sm border-collapse table-fixed">
+      <thead class="bg-gray-100 dark:bg-gray-700">
+        <tr>
+          <th class="px-2 md:px-4 py-2 w-[16%] text-left">TYPE</th>
+          <th class="px-2 md:px-4 py-2 w-[25%] text-left">STATUS</th>
+          <th class="px-2 md:px-4 py-2 w-[25%] text-left">AMOUNT</th>
+          <th class="px-2 md:px-4 py-2 w-[26%] text-left">DETAIL</th>
+          <th class="px-2 md:px-4 py-2 w-[25%] text-left">DATE</th>
+        </tr>
+      </thead>
+      <tbody class="text-gray-300">
+        <?php foreach ($transactions as $trx): ?>
+        <tr class="border-t border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+          <td class="px-2 md:px-4 py-2 w-[16%]"><?= $trx['type'] ?></td>
+          <td class="px-2 md:px-4 py-2 w-[25%] text-green-400 font-semibold"><?= $trx['status'] ?></td>
+          <td class="px-2 md:px-4 py-2 w-[25%]">Rp. <?= number_format($trx['amount'], 0, ',', '.') ?></td>
+          <td class="px-2 md:px-4 py-2 w-[26%]"><?= $trx['detail'] ?></td>
+          <td class="px-2 md:px-4 py-2 w-[25%]"><?= $trx['date'] ?></td>
+        </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </div>
+</div>
   </main>
 </body>
 </html>
