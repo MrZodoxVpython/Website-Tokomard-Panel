@@ -198,7 +198,7 @@ $formattedSaldo = "Rp. " . number_format($saldo, 0, ',', '.');
   <!-- Ikon pengaturan kanan -->
   <a href="?page=setting">
     <div class="w-7 h-7 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xl spin-hover">
-      ⚙️
+      ⚙
     </div>
   </a>
 </div>
