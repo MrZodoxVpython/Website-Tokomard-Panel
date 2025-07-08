@@ -175,8 +175,7 @@ $formattedSaldo = "Rp. " . number_format($saldo, 0, ',', '.');
   <!-- Avatar Upload -->
 
 <p>HALO</p>
-<img src="https://i.imgur.com/q3DzxiB.png" class="w-20 h20 rounded-full>
-<p>HALO</p>
+<img src="https://i.imgur.com/q3DzxiB.png" class="w-20 h20 rounded-full">
   <form action="upload-avatar.php" method="POST" enctype="multipart/form-data" class="flex flex-col items-center mb-1 relative">
     <label for="avatarUpload" class="cursor-pointer relative mt-1">
       <?php
