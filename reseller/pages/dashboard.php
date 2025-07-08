@@ -189,12 +189,12 @@ new Chart(ctx, {
     <table class="w-full text-[11px] sm:text-sm text-left text-gray-800 dark:text-white table-fixed">
       <thead class="bg-gray-100 dark:bg-gray-700">
         <tr>
-          <th class="px-2 md:px-4 py-2 w-[10%]">No</th>
+          <th class="px-2 md:px-4 py-2 w-[5%]">No</th>
           <th class="px-2 md:px-4 py-2 w-[15%]">Username</th>
-          <th class="px-2 md:px-4 py-2 w-[65%]">Protocol</th>
-          <th class="px-2 md:px-4 py-2 w-[105%]">Expired</th>
-          <th class="px-2 md:px-4 py-2 w-[45%]">UUID/Pass</th>
-          <th class="px-2 md:px-4 py-2 w-[20%] hidden md:table-cell">VPS</th>
+          <th class="px-2 md:px-4 py-2 w-[30%]">Protocol</th>
+          <th class="px-2 md:px-4 py-2 w-[20%]">Expired</th>
+          <th class="px-2 md:px-4 py-2 w-[20%]">UUID/Pass</th>
+          <th class="px-2 md:px-4 py-2 w-[10%] hidden md:table-cell">VPS</th>
         </tr>
       </thead>
       <tbody>
