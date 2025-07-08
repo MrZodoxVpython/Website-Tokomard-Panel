@@ -189,7 +189,7 @@ $formattedSaldo = "Rp. " . number_format($saldo, 0, ',', '.');
 <div class="flex">
 <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-gray-800 w-64 p-4 transform -translate-x-full md:translate-x-0 transition-transform z-20">
   <!-- Avatar Upload -->
-<div class="pt-4 flex items-center justify-between gap-4 w-full max-w-xs">
+<div class="-pt-4 flex items-center justify-between gap-4 w-full max-w-xs">
   <!-- Avatar kiri -->
   <a href="?page=dashboard">
     <img src="https://i.imgur.com/q3DzxiB.png" class="w-9 h-9 rounded-full" alt="Avatar">
