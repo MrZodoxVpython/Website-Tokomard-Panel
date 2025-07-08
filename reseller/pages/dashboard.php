@@ -190,7 +190,7 @@ new Chart(ctx, {
       <thead class="bg-gray-100 dark:bg-gray-700">
         <tr>
           <th class="px-2 md:px-4 py-2 w-[15%]">No</th>
-          <th class="px-2 md:px-4 py-2 w-[15%]">Username</th>
+          <th class="px-2 md:px-4 py-2 w-[30%]">Username</th>
           <th class="px-2 md:px-4 py-2 w-[15%]">Protocol</th>
           <th class="px-2 md:px-4 py-2 w-[45%]">Expired</th>
           <th class="px-2 md:px-4 py-2 w-[45%]">UUID/Pass</th>
