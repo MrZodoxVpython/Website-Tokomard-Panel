@@ -2,22 +2,20 @@
 if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . '/../koneksi.php';
 
-// DEBUGGING: Cetak isi session
-$reseller = $_SESSION['reseller'] ?? null;
-if (!$reseller) {
-    echo "<pre>SESSION reseller kosong!</pre>";
-} else {
-    echo "<pre>Session Reseller: [$reseller]</pre>";
+// Validasi session
+if (!isset($_SESSION['username'])) {
+    echo "Session reseller tidak ditemukan.";
+    exit;
 }
 
-$reseller = trim($reseller); // buang spasi tersembunyi jika ada
-$email = $_SESSION['email'] ?? '';
+$reseller = $_SESSION['username'];
+$email = '';
 $avatar = 'https://i.imgur.com/q3DzxiB.png';
 $account_id = '';
 $balance = 0;
 $transactions = [];
 
-// Cek ID user dari username
+// Ambil ID dan saldo user
 $stmt = $conn->prepare("SELECT id, email, saldo FROM users WHERE username = ?");
 $stmt->bind_param("s", $reseller);
 $stmt->execute();
@@ -29,7 +27,7 @@ if ($userRow = $userResult->fetch_assoc()) {
     $balance = $userRow['saldo'];
     $account_id = 'ID-' . str_pad($userId, 3, '0', STR_PAD_LEFT);
 
-    // Ambil transaksi
+    // Ambil transaksi user
     $stmt2 = $conn->prepare("SELECT type, status, amount, detail, date FROM transactions WHERE user_id = ? ORDER BY date DESC");
     $stmt2->bind_param("i", $userId);
     $stmt2->execute();
@@ -39,8 +37,10 @@ if ($userRow = $userResult->fetch_assoc()) {
     }
     $stmt2->close();
 } else {
-    echo "<pre>User ID Not Found untuk reseller: [$reseller]</pre>";
+    echo "User ID tidak ditemukan untuk reseller: $reseller";
+    exit;
 }
+
 $stmt->close();
 ?>
 
