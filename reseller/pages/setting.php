@@ -9,13 +9,17 @@ $account_id = 'ID-453';
 $balance = 30995;
 $role = 'reseller';
 
-$transactions = [
-  ['type' => 'buy', 'status' => 'SUCCESS', 'amount' => 10000, 'detail' => 'Pembelian Trojan', 'date' => '23 January 2024 13:00'],
-  ['type' => 'buy', 'status' => 'SUCCESS', 'amount' => 0, 'detail' => 'Pembelian Trojan', 'date' => '03 February 2024 11:30'],
-  ['type' => 'buy', 'status' => 'SUCCESS', 'amount' => 7000, 'detail' => 'Pembelian Trojan', 'date' => '03 February 2024 15:34'],
-  ['type' => 'buy', 'status' => 'SUCCESS', 'amount' => 7000, 'detail' => 'Pembelian Trojan', 'date' => '03 February 2024 15:35'],
-  ['type' => 'buy', 'status' => 'SUCCESS', 'amount' => 7000, 'detail' => 'Pembelian Trojan', 'date' => '03 February 2024 15:35'],
-];
+$transactions = [];
+$stmt = $conn->prepare("SELECT type, status, amount, detail, date FROM transactions t
+    JOIN users u ON t.user_id = u.id WHERE u.username = ? ORDER BY t.date DESC");
+$stmt->bind_param("s", $reseller);
+$stmt->execute();
+$result = $stmt->get_result();
+while ($row = $result->fetch_assoc()) {
+    $transactions[] = $row;
+}
+$stmt->close();
+
 ?>
 <!DOCTYPE html>
 <html lang="id" data-theme="dark">
