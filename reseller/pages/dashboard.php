@@ -189,7 +189,7 @@ new Chart(ctx, {
     <table class="w-full text-[11px] sm:text-sm text-left text-gray-800 dark:text-white table-fixed">
       <thead class="bg-gray-100 dark:bg-gray-700">
         <tr>
-          <th class="px-2 md:px-4 py-2 w-[12%]">No</th>
+          <th class="px-2 md:px-4 py-2 w-[11%]">No</th>
           <th class="px-2 md:px-4 py-2 w-[35%]">Username</th>
           <th class="px-2 md:px-4 py-2 w-[15%]">Protocol</th>
           <th class="px-2 md:px-4 py-2 w-[20%]">Expired</th>
