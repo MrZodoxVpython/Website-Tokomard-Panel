@@ -1,5 +1,5 @@
 <?php
-require_once '/koneksi.php'; // asumsi koneksi DB kamu di luar folder ini
+require_once __DIR__ . '/../../koneksi.php';
 
 if (session_status() === PHP_SESSION_NONE) session_start();
 $reseller = $_SESSION['reseller'] ?? 'avtar';
