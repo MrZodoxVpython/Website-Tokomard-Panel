@@ -7,7 +7,8 @@ echo "User ID: " . ($userId ?? 'Not Found') . "\n";
 print_r($transactions);
 echo "</pre>";
 
-$reseller = $_SESSION['reseller'];
+$reseller = trim($_SESSION['reseller']);
+
 $email = $_SESSION['email'] ?? '';
 $avatar = 'https://i.imgur.com/q3DzxiB.png';
 $account_id = '';
