@@ -188,8 +188,8 @@ $formattedSaldo = "Rp. " . number_format($saldo, 0, ',', '.');
 <!-- SIDEBAR -->
 <div class="flex">
 <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-gray-800 w-64 p-4 transform -translate-x-full md:translate-x-0 transition-transform z-20">
-  <!-- Avatar Upload -->
-<div class="flex items-center justify-between gap-4 w-full max-w-xs">
+<!-- Avatar Upload -->
+<div class="flex items-start justify-between gap-4 w-full max-w-xs mt-0 pt-0">
   <!-- Avatar kiri -->
   <a href="?page=dashboard">
     <img src="https://i.imgur.com/q3DzxiB.png" class="w-9 h-9 rounded-full" alt="Avatar">
@@ -198,10 +198,11 @@ $formattedSaldo = "Rp. " . number_format($saldo, 0, ',', '.');
   <!-- Ikon pengaturan kanan -->
   <a href="?page=setting">
     <div class="w-7 h-7 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xl spin-hover">
-      ⚙️
+      ⚙
     </div>
   </a>
 </div>
+
   <form action="upload-avatar.php" method="POST" enctype="multipart/form-data" class="flex flex-col items-center mb-1 relative">
     <label for="avatarUpload" class="cursor-pointer relative mt-1">
       <?php
