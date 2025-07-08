@@ -192,7 +192,7 @@ $formattedSaldo = "Rp. " . number_format($saldo, 0, ',', '.');
 <div class="flex items-start justify-between gap-4 w-full max-w-xs mt-0 pt-0">
   <!-- Avatar kiri -->
   <a href="?page=dashboard">
-    <img src="https://i.imgur.com/q3DzxiB.png" class="w-7 h-7 rounded-full" alt="Avatar">
+    <img src="https://i.imgur.com/q3DzxiB.png" class="w-7 h-7 -mt-1 rounded-full" alt="Avatar">
   </a>
 
   <!-- Ikon pengaturan kanan -->
