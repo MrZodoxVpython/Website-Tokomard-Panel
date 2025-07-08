@@ -1,6 +1,11 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . '/../koneksi.php';
+echo "<pre>";
+echo "Session Reseller: " . $reseller . "\n";
+echo "User ID: " . ($userId ?? 'Not Found') . "\n";
+print_r($transactions);
+echo "</pre>";
 
 $reseller = $_SESSION['reseller'];
 $email = $_SESSION['email'] ?? '';
