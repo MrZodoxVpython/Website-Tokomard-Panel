@@ -173,6 +173,8 @@ $formattedSaldo = "Rp. " . number_format($saldo, 0, ',', '.');
 <div class="flex">
 <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white dark:bg-gray-800 w-64 p-4 transform -translate-x-full md:translate-x-0 transition-transform z-20">
   <!-- Avatar Upload -->
+
+<p>HALO</p>
   <form action="upload-avatar.php" method="POST" enctype="multipart/form-data" class="flex flex-col items-center mb-1 relative">
     <label for="avatarUpload" class="cursor-pointer relative mt-1">
       <?php
@@ -184,7 +186,7 @@ $formattedSaldo = "Rp. " . number_format($saldo, 0, ',', '.');
       }
       ?>
       <img src="<?= $avatarPath ?>?v=<?= time() ?>" class="w-20 h-20 rounded-full mb-2">
-https://i.imgur.com/q3DzxiB.png
+
       <!-- Titik merah di avatar DIHAPUS -->
       <!--
       <?php if ($notifCount > 0): ?>
