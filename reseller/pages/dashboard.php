@@ -193,7 +193,7 @@ new Chart(ctx, {
           <th class="px-2 md:px-4 py-2 w-[20%]">Username</th>
           <th class="px-2 md:px-4 py-2 w-[20%]">Protocol</th>
           <th class="px-2 md:px-4 py-2 w-[30%]">Expired</th>
-          <th class="px-2 md:px-4 py-2 w-[35%]">UUID/Pass</th>
+          <th class="px-2 md:px-4 py-2 w-[40%]">UUID/Pass</th>
           <th class="px-2 md:px-4 py-2 w-[20%] hidden md:table-cell">VPS</th>
         </tr>
       </thead>
