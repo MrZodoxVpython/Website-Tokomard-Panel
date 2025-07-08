@@ -187,7 +187,7 @@ $formattedSaldo = "Rp. " . number_format($saldo, 0, ',', '.');
 
 <!-- SIDEBAR -->
 <div class="flex">
-<aside id="sidebar" class="-pt-8 fixed inset-y-0 left-0 bg-white dark:bg-gray-800 w-64 p-4 transform -translate-x-full md:translate-x-0 transition-transform z-20">
+<aside id="sidebar" class="pt-8 fixed inset-y-0 left-0 bg-white dark:bg-gray-800 w-64 p-4 transform -translate-x-full md:translate-x-0 transition-transform z-20">
   <!-- Avatar Upload -->
 <div class="flex items-center justify-between gap-4 w-full max-w-xs">
   <!-- Avatar kiri -->
