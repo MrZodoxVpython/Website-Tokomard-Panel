@@ -2,7 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . '/../koneksi.php';
 
-$reseller = $_SESSION['reseller'] ?? 'avtar';
+$reseller = $_SESSION['reseller'];
 $email = $_SESSION['email'] ?? '';
 $avatar = 'https://i.imgur.com/q3DzxiB.png';
 $account_id = '';
