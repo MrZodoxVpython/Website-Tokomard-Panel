@@ -1,4 +1,6 @@
 <?php
+require_once '../../koneksi.php'; // asumsi koneksi DB kamu di luar folder ini
+
 if (session_status() === PHP_SESSION_NONE) session_start();
 $reseller = $_SESSION['reseller'] ?? 'avtar';
 $email = $_SESSION['email'] ?? 'nafisbau06@gmail.com';
