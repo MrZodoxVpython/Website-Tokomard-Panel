@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		    $stmtUserId->fetch();
 		    $stmtUserId->close();
 
-		    $type = 'manual';
+		    $type = 'deduct';
 		    $status = 'SUCCESS';
 		    $amount = $jumlah;
 		    $detail = 'Pengurangan saldo oleh admin';
