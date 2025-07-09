@@ -60,6 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Kurangi saldo
                 $stmt = $conn->prepare("UPDATE users SET saldo = saldo - ? WHERE username = ?");
                 $stmt->bind_param("is", $hargaFinal, $reseller);
+                if ($stmt->execute()) {
+                    $output = $outputRaw;
                     $output .= "\n✅ Akun berhasil dibuat.";
                     $output .= "\n💳 Saldo terpotong: Rp" . number_format($hargaFinal, 0, ',', '.');
 
