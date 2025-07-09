@@ -42,7 +42,7 @@ else {
 $expired = hitungTanggalExpired($expiredInput);
 
 // Format baris untuk config Xray
-$commentLine = "### $username $expired";
+$commentLine = "#& $username $expired";
 $jsonLine = "},{\"id\": \"$uuid\", \"email\": \"$username\"";
 $tags = ['vmess', 'vmessgrpc'];
 
