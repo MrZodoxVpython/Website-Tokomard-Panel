@@ -21,7 +21,7 @@ $server = [
     ]
 ];
 
-$protocol = 'vmess';
+$protocol = 'vless';
 $output = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
