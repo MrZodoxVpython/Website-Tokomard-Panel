@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="number" name="saldo" value="0" class="w-full mb-4 p-2 rounded bg-gray-700 text-white" min="0">
 
         <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Tambah</button>
-        <a href="../list-user.php" class="ml-4 text-gray-400 hover:text-white">Kembali</a>
+        <a href="list-user.php" class="ml-4 text-gray-400 hover:text-white">Kembali</a>
     </form>
 </div>
 <?php include '../templates/footer.php'; ?>
