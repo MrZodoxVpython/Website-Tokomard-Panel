@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmtUserId->close();
 
                     // Masukkan log transaksi
-                    $detail = 'Pembelian VMess SGDO-2DEV';
+                    $detail = 'Pembelian Vless SGDO-2DEV';
                     $type = 'buy';
                     $status = 'SUCCESS';
                     $dateNow = date('Y-m-d H:i:s');
