@@ -44,8 +44,8 @@ $expired = hitungTanggalExpired($expiredInput);
 // Format baris untuk config Xray
 $commentLine = "#& $username $expired";
 $jsonLine = "},{\"id\": \"$uuid\", \"email\": \"$username\"";
-$tags = ['vmess', 'vmessgrpc'];
+$tags = ['vless', 'vlessgrpc'];
 
 // Proses penambahan akun
-$hasil = prosesXray('vmess', $tags, $commentLine, $jsonLine, $username, $expired, $uuid, $reseller);
+$hasil = prosesXray('vless', $tags, $commentLine, $jsonLine, $username, $expired, $uuid, $reseller);
 
