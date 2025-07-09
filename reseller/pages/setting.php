@@ -131,7 +131,7 @@ if (!in_array($tab, $allowedTabs)) {
         <p class="text-xs text-gray-400">Earn reward points with every purchase.</p>
       </div>
 
-      <div class="text-center bg-green-600 text-white p-2 rounded-lg shadow border border-green-400">
+      <div class="text-center bg-green-600 text-white p-18 rounded-lg shadow border border-green-400">
         <h1 class="text-7xl py-4">🏆</h1>
         <h3 class="text-sm font-semibold mb-1">Reseller</h3>
         <p class="text-sm">Keep up to date with your account.</p>
