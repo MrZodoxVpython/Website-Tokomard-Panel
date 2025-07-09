@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmtTrans->close();
 
                     // Kurangi stok
-                    $stokFile = __DIR__ . '/data/stok-vmess.json';
+                    $stokFile = __DIR__ . '/data/stok-vless.json';
                     $serverName = $server['name'];
                     if (file_exists($stokFile)) {
                         $stokData = json_decode(file_get_contents($stokFile), true);
