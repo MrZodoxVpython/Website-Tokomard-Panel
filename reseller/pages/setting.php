@@ -99,12 +99,32 @@ $stmt->close();
 
       <div class="flex-1 w-full space-y-4">
         <!-- Tabs -->
-        <div class="flex space-x-4 border-b border-gray-700 text-sm">
-          <button class="text-blue-400 border-b-2 border-blue-400 px-2 pb-2">Overview</button>
-          <button class="hover:text-gray-300 px-2 pb-2">General Settings</button>
-          <button class="hover:text-gray-300 px-2 pb-2">Advanced Settings</button>
-        </div>
+	  <div class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-6">Pengaturan Akun</h1>
 
+    <!-- Tabs -->
+    <div class="flex space-x-4 border-b border-gray-700 text-sm mb-6">
+      <a href="?tab=overview" class="px-2 pb-2 <?= $tab === 'overview' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">Overview</a>
+      <a href="?tab=general" class="px-2 pb-2 <?= $tab === 'general' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">General Settings</a>
+      <a href="?tab=advanced" class="px-2 pb-2 <?= $tab === 'advanced' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">Advanced Settings</a>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="bg-gray-800 p-6 rounded-xl shadow">
+      <?php
+      switch ($tab) {
+        case 'general':
+          include 'general.php';
+          break;
+        case 'advanced':
+          include 'advanced.php';
+          break;
+        default:
+          echo "<p>Halo <strong>$reseller</strong>, ini adalah tab Overview.</p>";
+      }
+      ?>
+    </div>
+  </div>
 <!-- Balance & Reseller Box -->
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
   <div class="flex flex-col justify-center items-center text-center bg-green-500/10 text-green-300 p-8 rounded-lg shadow border border-green-400/30">
