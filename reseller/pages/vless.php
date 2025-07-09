@@ -61,7 +61,7 @@ function getCheckoutFile($serverName) {
 
 <div class="mb-6">
     <h2 class="text-2xl font-semibold mb-2">🛰️ Daftar Produk Vless</h2>
-    <p class="text-sm text-gray-600 dark:text-gray-400">Pilih produk VMess yang tersedia sesuai lokasi dan kebutuhan Anda.</p>
+    <p class="text-sm text-gray-600 dark:text-gray-400">Pilih produk Vless yang tersedia sesuai lokasi dan kebutuhan Anda.</p>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
