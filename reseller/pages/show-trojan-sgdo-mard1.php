@@ -210,11 +210,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
 $listCmd = "$sshPrefix \"ls $remotePath/akun-$reseller-*.txt 2>/dev/null\"";
 $fileListRaw = shell_exec($listCmd);
 $files = array_filter(explode("\n", trim($fileListRaw ?? '')));
-if (empty($files)): ?>
-    <div class="text-center bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded">
-            ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>
-            silahkan buat akun terlebih dahulu.
+
+$found = false;
+foreach ($files as $remoteFile):
+    $fn = basename($remoteFile);
+    preg_match("/akun-" . preg_quote($reseller, "/") . "-(.+)\.txt/", $fn, $m);
+    $u = $m[1] ?? 'unknown';
+
+    $content = trim(shell_exec("$sshPrefix \"cat " . escapeshellarg($remoteFile) . "\""));
+
+    // Filter hanya file yang mengandung Trojan
+    if (
+        stripos($content, 'trojan') === false &&
+        !preg_match('/password\s*:\s*[0-9a-fA-F\-]{36}/', $content)
+    ) {
+        continue; // skip file VMess/yang tidak cocok
+    }
+
+    $found = true;
+
+    // tampilkan akun Trojan valid
+    //echo "<div class='p-4 border border-green-500 text-green-300 rounded mb-2'>
+     //   ✅ Akun Trojan: <strong>$u</strong><br>
+      //  <pre class='text-sm whitespace-pre-wrap'>" . htmlspecialchars($content) . "</pre>
+    //</div>";
+endforeach;
+
+if (!$found): ?>
+    <div class="text-center bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded mt-6">
+        ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong> silahkan buat akun terlebih dahulu.
     </div>
+
 <!-- filter tag Trojan only -->
 <?php else:
     foreach ($files as $remoteFile):
