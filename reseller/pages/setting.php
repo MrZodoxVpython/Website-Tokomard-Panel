@@ -131,6 +131,8 @@ if (!in_array($tab, $allowedTabs)) {
         case 'advanced':
           include 'advanced.php';
           break;
+        default:
+          echo "<p>Halo <strong>$reseller</strong>, ini adalah tab Overview.</p>";
       }
       ?>
     </div>
