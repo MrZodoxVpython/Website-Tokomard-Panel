@@ -1,7 +1,7 @@
 <?php
 session_start();
 $__start_time = microtime(true);
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
     header("Location: index.php");
     exit;
 }
