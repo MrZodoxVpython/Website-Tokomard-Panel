@@ -143,7 +143,7 @@ if (!in_array($tab, $allowedTabs)) {
 
 <!-- Riwayat Transaksi -->
 <!-- Riwayat Transaksi -->
-<div class="bg-gray-800 p-4 -mt-5 rounded-lg shadow border max-w-full border-gray-700">
+<div class="bg-gray-800 p-4 -mt-4 rounded-lg shadow border max-w-full border-gray-700">
   <div class="flex justify-between items-center mb-3">
     <h3 class="text-lg font-semibold">Transaction History</h3>
     <input type="text" placeholder="Search Transaction" class="bg-gray-900 text-sm rounded px-3 py-1 border border-gray-600 focus:outline-none" />
