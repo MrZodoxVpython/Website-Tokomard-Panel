@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h3 class="text-xl font-semibold">🧾 Buat Akun VMess</h3>
 
     <?php if ($output): ?>
-        <div class="bg-gray-800 text-green-400 p-4 rounded text-sm font-mono whitespace-pre-wrap border border-green-500"><?= htmlspecialchars($output) ?></div>
+        <div class="bg-gray-800 text-green-400 p-4 rounded text-sm font-mono whitespace-pre-wrap break-all border border-green-500"><?= htmlspecialchars($output) ?></div>
     <?php endif; ?>
 
     <form method="POST" class="space-y-4">
