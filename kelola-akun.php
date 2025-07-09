@@ -4,8 +4,8 @@ error_reporting(E_ALL);
 #echo "✅ No error found!<br>";
 
 session_start();
-if (!isset($_SESSION['username'])) {
-    header("Location: index.php");
+if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
+    header("Location: ../../index.php");
     exit;
 }
 
