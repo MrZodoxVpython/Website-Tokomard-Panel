@@ -132,8 +132,6 @@ if (!in_array($tab, $allowedTabs)) {
     <p class="text-sm">Keep up to date with your account.</p>
   </div>
 </div>
-      </div>
-    </div>
 
 <!-- Riwayat Transaksi -->
 <!-- Riwayat Transaksi -->
