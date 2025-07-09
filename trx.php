@@ -11,7 +11,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
 if (isset($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
     $del_id = (int)$_GET['delete_id'];
     $conn->query("DELETE FROM transactions WHERE id = $del_id");
-    header("Location: transaksi.php");
+    header("Location: trx.php");
     exit;
 }
 
