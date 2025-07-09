@@ -55,18 +55,7 @@ if ($userRow = $userResult->fetch_assoc()) {
 }
 
 $stmt->close();
-// Validasi tab dari URL
 
-// List tab yang diperbolehkan
-$allowedTabs = ['general', 'advanced'];
-
-// Gunakan 'overview' sebagai default jika 'tab' tidak tersedia di URL
-$tab = $_GET['tab'] ?? 'overview';
-
-// Validasi agar hanya tab yang diizinkan
-if (!in_array($tab, $allowedTabs)) {
-    $tab = 'overview';
-}
 ?>
 
 <!DOCTYPE html>
