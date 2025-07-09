@@ -42,7 +42,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmtLog->bind_param("si", $username, $jumlah);
                     $stmtLog->execute();
                     $stmtLog->close();
+		    
+		    // --- Tambahkan transaksi ke tabel transactions
+		    $stmtUserId = $conn->prepare("SELECT id FROM users WHERE username = ?");
+		    $stmtUserId->bind_param("s", $username);
+		    $stmtUserId->execute();
+		    $stmtUserId->bind_result($userId);
+		    $stmtUserId->fetch();
+		    $stmtUserId->close();
 
+		    $type = 'manual';
+		    $status = 'SUCCESS';
+		    $amount = $jumlah;
+		    $detail = 'Pengurangan saldo oleh admin';
+		    $dateNow = date('Y-m-d H:i:s');
+
+		    $stmtTrans = $conn->prepare("INSERT INTO transactions (user_id, type, status, amount, detail, date) VALUES (?, ?, ?, ?, ?, ?)");
+		    $stmtTrans->bind_param("ississ", $userId, $type, $status, $amount, $detail, $dateNow);
+		    $stmtTrans->execute();
+		    $stmtTrans->close();
                     $pesan = "Saldo berhasil dikurangi sejumlah Rp" . number_format($jumlah, 0, ',', '.');
                 } else {
                     $pesan = "Gagal mengurangi saldo.";
