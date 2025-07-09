@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <label class="block mb-2 text-gray-300">Role</label>
         <select name="role" class="w-full mb-4 p-2 rounded bg-gray-700 text-white">
-            <option value="user">User</option>
+            <option value="reseller">Reseller</option>
             <option value="admin">Admin</option>
         </select>
 
