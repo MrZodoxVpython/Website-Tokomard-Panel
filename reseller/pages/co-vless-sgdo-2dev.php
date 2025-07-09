@@ -18,7 +18,7 @@ if (isset($_GET['hapus'])) {
     $newLines = [];
 
     for ($i = 0; $i < count($lines); $i++) {
-        if (preg_match('/^\s*###\s+' . preg_quote($userToDelete) . '\s+\d{4}-\d{2}-\d{2}/', $lines[$i])) {
+        if (preg_match('/^\s*#&\s+' . preg_quote($userToDelete) . '\s+\d{4}-\d{2}-\d{2}/', $lines[$i])) {
             $i++; // skip JSON line
             continue;
         }
