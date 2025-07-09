@@ -42,19 +42,19 @@ $vmessProducts = [
 // Fungsi mapping file sesuai nama server
 function getShowFile($serverName) {
     switch ($serverName) {
-        case 'RW-MARD': return 'show-vmess-rw-mard.php';
-        case 'SGDO-MARD1': return 'show-vmess-sgdo-mard1.php';
-        case 'SGDO-2DEV': return 'show-vmess-sgdo-2dev.php';
-        default: return 'show-vmess.php';
+        case 'RW-MARD': return 'show-vless-rw-mard.php';
+        case 'SGDO-MARD1': return 'show-vless-sgdo-mard1.php';
+        case 'SGDO-2DEV': return 'show-vless-sgdo-2dev.php';
+        default: return 'show-vless.php';
     }
 }
 
 function getCheckoutFile($serverName) {
     switch ($serverName) {
-        case 'RW-MARD': return 'co-vmess-rw-mard.php';
-        case 'SGDO-MARD1': return 'co-vmess-sgdo-mard1.php';
-        case 'SGDO-2DEV': return 'co-vmess-sgdo-2dev.php';
-        default: return 'co-vmess.php';
+        case 'RW-MARD': return 'co-vless-rw-mard.php';
+        case 'SGDO-MARD1': return 'co-vless-sgdo-mard1.php';
+        case 'SGDO-2DEV': return 'co-vless-sgdo-2dev.php';
+        default: return 'co-vless.php';
     }
 }
 ?>
