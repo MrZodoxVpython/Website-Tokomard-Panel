@@ -6,7 +6,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'reseller') {
     header("Location: ../index.php");
     exit;
 }
-$stokFile = __DIR__ . '/data/stok-vless.json';
+$stokFile = __DIR__ . '/data/stok-shadowsocks.json';
 $stokData = json_decode(file_get_contents($stokFile), true);
 
 $vmessProducts = [
@@ -42,26 +42,26 @@ $vmessProducts = [
 // Fungsi mapping file sesuai nama server
 function getShowFile($serverName) {
     switch ($serverName) {
-        case 'RW-MARD': return 'show-vless-rw-mard.php';
-        case 'SGDO-MARD1': return 'show-vless-sgdo-mard1.php';
-        case 'SGDO-2DEV': return 'show-vless-sgdo-2dev.php';
-        default: return 'show-vless.php';
+        case 'RW-MARD': return 'show-shadowsocks-rw-mard.php';
+        case 'SGDO-MARD1': return 'show-shadowsocks-sgdo-mard1.php';
+        case 'SGDO-2DEV': return 'show-shadowsocks-sgdo-2dev.php';
+        default: return 'show-shadowsocks.php';
     }
 }
 
 function getCheckoutFile($serverName) {
     switch ($serverName) {
-        case 'RW-MARD': return 'co-vless-rw-mard.php';
-        case 'SGDO-MARD1': return 'co-vless-sgdo-mard1.php';
-        case 'SGDO-2DEV': return 'co-vless-sgdo-2dev.php';
-        default: return 'co-vless.php';
+        case 'RW-MARD': return 'co-shadowsocks-rw-mard.php';
+        case 'SGDO-MARD1': return 'co-shadowsocks-sgdo-mard1.php';
+        case 'SGDO-2DEV': return 'co-shadowsocks-sgdo-2dev.php';
+        default: return 'co-shadowsocks.php';
     }
 }
 ?>
 
 <div class="mb-6">
     <h2 class="text-2xl font-semibold mb-2">🕵️‍♂️ Daftar Produk Shadowsocks</h2>
-    <p class="text-sm text-gray-600 dark:text-gray-400">Pilih produk Vless yang tersedia sesuai lokasi dan kebutuhan Anda.</p>
+    <p class="text-sm text-gray-600 dark:text-gray-400">Pilih produk Shadowsocks yang tersedia sesuai lokasi dan kebutuhan Anda.</p>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
