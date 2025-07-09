@@ -27,6 +27,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $log->execute();
     $log->close();
 
+    // Ambil ID user dari tabel users
+    $stmtUserId = $conn->prepare("SELECT id FROM users WHERE username = ?");
+    $stmtUserId->bind_param("s", $username);
+    $stmtUserId->execute();
+    $stmtUserId->bind_result($userId);
+    $stmtUserId->fetch();
+    $stmtUserId->close();
+
+    // Simpan ke tabel transactions
+    $type = 'manual';
+    $status = 'SUCCESS';
+    $amount = $jumlah;
+    $detail = 'Penambahan saldo oleh admin';
+    $dateNow = date('Y-m-d H:i:s');
+
+    $stmtTrans = $conn->prepare("INSERT INTO transactions (user_id, type, status, amount, detail, date) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmtTrans->bind_param("ississ", $userId, $type, $status, $amount, $detail, $dateNow);
+    $stmtTrans->execute();
+    $stmtTrans->close();
+
     header("Location: histori.php");
     exit;
 }
