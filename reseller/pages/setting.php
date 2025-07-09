@@ -115,7 +115,7 @@ if (!in_array($tab, $allowedTabs)) {
     <h1 class="text-2xl font-bold mb-6">Pengaturan Akun</h1>
 
     <!-- Tabs -->
-    <div class="flex space-x-4 border-b border-gray-700 text-sm mb-6">
+    <div class="flex space-x-4 border-b border-gray-700 text-sm mb-10">
       <a href="?tab=overview" class="px-2 pb-2 <?= $tab === 'overview' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">Overview</a>
       <a href="?tab=general" class="px-2 pb-2 <?= $tab === 'general' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">General Settings</a>
       <a href="?tab=advanced" class="px-2 pb-2 <?= $tab === 'advanced' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">Advanced Settings</a>
