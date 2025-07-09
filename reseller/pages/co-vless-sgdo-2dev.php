@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="id" class="dark">
 <head>
     <meta charset="UTF-8">
-    <title>Checkout VMess SGDO-2DEV</title>
+    <title>Checkout Vless SGDO-2DEV</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class' }</script>
