@@ -182,7 +182,9 @@ if (!in_array($tab, $allowedTabs)) {
     } elseif ($tab === 'advanced') {
         include 'advanced.php';
     } else {
-        include 'overview.php';
+        // TIDAK include apa pun, karena overview = setting.php itu sendiri
+        // Jadi cukup tampilkan pesan kosong atau abaikan
+        echo ''; // atau kamu bisa tampilkan konten tambahan overview di sini
     }
 ?>
 </div>
