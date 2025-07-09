@@ -122,7 +122,7 @@ if (!in_array($tab, $allowedTabs)) {
     </div>
 
     <!-- Tab Content -->
-    <div class=" p-6 rounded-xl shadow">
+    <div class="rounded-xl shadow">
       <?php
       switch ($tab) {
         case 'general':
