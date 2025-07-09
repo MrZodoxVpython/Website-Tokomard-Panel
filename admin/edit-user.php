@@ -54,7 +54,7 @@ if (!$user) {
     </select>
 
     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Simpan</button>
-    <a href="list-akun.php" class="ml-4 text-gray-400 hover:text-white">Kembali</a>
+    <a href="list-user.php" class="ml-4 text-gray-400 hover:text-white">Kembali</a>
   </form>
 </div>
 <?php include '../templates/footer.php'; ?>
