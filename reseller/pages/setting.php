@@ -111,33 +111,34 @@ if (!in_array($tab, $allowedTabs)) {
     </div>
   </div>
 
-<!-- Wrapper umum -->
-<div class="flex-1 w-full space-y-4">
+  <!-- Konten Kanan -->
+  <div class="flex-1 w-full space-y-6">
 
-  <!-- Tabs -->
-  <div class="w-full max-w-4xl mx-auto px-4">
-    <div class="flex space-x-4 border-b border-gray-700 text-sm mb-4">
-      <a href="?tab=overview" class="px-2 pb-2 <?= $tab === 'overview' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">Overview</a>
-      <a href="?tab=general" class="px-2 pb-2 <?= $tab === 'general' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">General Settings</a>
-      <a href="?tab=advanced" class="px-2 pb-2 <?= $tab === 'advanced' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">Advanced Settings</a>
+    <!-- Tabs -->
+    <div class="w-full px-4">
+      <div class="flex space-x-4 border-b border-gray-700 text-sm -mb-2">
+        <a href="?tab=overview" class="px-2 pb-2 <?= $tab === 'overview' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">Overview</a>
+        <a href="?tab=general" class="px-2 pb-2 <?= $tab === 'general' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">General Settings</a>
+        <a href="?tab=advanced" class="px-2 pb-2 <?= $tab === 'advanced' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">Advanced Settings</a>
+      </div>
     </div>
+
+    <!-- Balance & Reseller Box -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+      <div class="flex flex-col justify-center items-center text-center bg-green-500/10 text-green-300 p-14 rounded-lg shadow border border-green-400/30">
+        <h3 class="text-sm font-semibold mb-1">Balance</h3>
+        <p class="text-2xl font-bold">Rp. <?= number_format($balance, 0, ',', '.') ?></p>
+        <p class="text-xs text-gray-400">Earn reward points with every purchase.</p>
+      </div>
+
+      <div class="text-center bg-green-600 text-white p-8 rounded-lg shadow border border-green-400">
+        <h1 class="text-7xl py-4">🏆</h1>
+        <h3 class="text-sm font-semibold mb-1">Reseller</h3>
+        <p class="text-sm">Keep up to date with your account.</p>
+      </div>
+    </div>
+
   </div>
-
-  <!-- Balance & Reseller Box -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-4xl mx-auto px-4">
-    <div class="flex flex-col justify-center items-center text-center bg-green-500/10 text-green-300 p-8 rounded-lg shadow border border-green-400/30">
-      <h3 class="text-sm font-semibold mb-1">Balance</h3>
-      <p class="text-2xl font-bold">Rp. <?= number_format($balance, 0, ',', '.') ?></p>
-      <p class="text-xs text-gray-400">Earn reward points with every purchase.</p>
-    </div>
-
-    <div class="text-center bg-green-600 text-white p-8 rounded-lg shadow border border-green-400">
-      <h1 class="text-7xl py-4">🏆</h1>
-      <h3 class="text-sm font-semibold mb-1">Reseller</h3>
-      <p class="text-sm">Keep up to date with your account.</p>
-    </div>
-  </div>
-
 </div>
 
 <!-- Riwayat Transaksi -->
