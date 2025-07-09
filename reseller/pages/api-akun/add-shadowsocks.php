@@ -19,7 +19,7 @@ if (php_sapi_name() === 'cli') {
 elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $expiredInput = trim($_POST['expired'] ?? '');
-    $uuid = trim($_POST['uuid'] ?? '');
+    $uuid = trim($_POST['password'] ?? '');
 
     if (empty($username) || empty($expiredInput)) {
         echo "❌ Data tidak lengkap!";
