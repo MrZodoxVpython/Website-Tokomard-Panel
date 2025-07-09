@@ -57,5 +57,5 @@ if (!$user) {
     <a href="list-akun.php" class="ml-4 text-gray-400 hover:text-white">Kembali</a>
   </form>
 </div>
-<?php include '/templates/footer.php'; ?>
+<?php include '../templates/footer.php'; ?>
 
