@@ -178,7 +178,7 @@ if (!in_array($tab, $allowedTabs)) {
 <?php
 // Include konten sesuai tab
 if ($tab === 'general') {
-    include __DIR__ . '/setting/general.php';
+    include __DIR__ . 'setting/general.php';
 } elseif ($tab === 'advanced') {
     include __DIR__ . '/setting/advanced.php';
 } else {
