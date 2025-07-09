@@ -110,6 +110,9 @@ if (!in_array($tab, $allowedTabs)) {
       </div>
 
       <div class="flex-1 w-full space-y-4">
+        <!-- Tabs -->
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-6">Pengaturan Akun</h1>
 
     <!-- Tabs -->
     <div class="flex space-x-4 border-b border-gray-700 text-sm -mb-8">
