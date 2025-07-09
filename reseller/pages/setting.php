@@ -141,23 +141,6 @@ if (!in_array($tab, $allowedTabs)) {
   </div>
 </div>
 
-<!-- Konten Tab -->
-<div class="bg-gray-800 p-6 rounded-xl shadow mt-6">
-  <?php
-  switch ($tab) {
-    case 'general':
-      include 'general.php';
-      break;
-    case 'advanced':
-      include 'advanced.php';
-      break;
-    default:
-      // Tidak perlu apa-apa karena overview sudah di-hardcode di atas
-      break;
-  }
-  ?>
-</div>
-
 <!-- Riwayat Transaksi -->
 <!-- Riwayat Transaksi -->
 <div class="bg-gray-800 p-4 -mt-6 rounded-lg shadow border max-w-full border-gray-700">
