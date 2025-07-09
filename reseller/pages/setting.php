@@ -58,7 +58,7 @@ $stmt->close();
 // Validasi tab dari URL
 
 // List tab yang diperbolehkan
-$allowedTabs = ['overview', 'general', 'advanced'];
+$allowedTabs = ['general', 'advanced'];
 
 // Gunakan 'overview' sebagai default jika 'tab' tidak tersedia di URL
 $tab = $_GET['tab'] ?? 'overview';
