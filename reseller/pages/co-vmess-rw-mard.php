@@ -66,6 +66,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $output .= "\n✅ Akun berhasil dibuat.";
                     $output .= "\n💳 Saldo terpotong: Rp" . number_format($hargaFinal, 0, ',', '.');
 
+                    // Dapatkan ID user (reseller)
+                    $stmtUserId = $conn->prepare("SELECT id FROM users WHERE username = ?");
+                    $stmtUserId->bind_param("s", $reseller);
+                    $stmtUserId->execute();
+                    $stmtUserId->bind_result($userId);
+                    $stmtUserId->fetch();
+                    $stmtUserId->close();
+
+                    // Masukkan log transaksi
+                    $detail = 'Pembelian VMess RW-MARD';
+                    $type = 'buy';
+                    $status = 'SUCCESS';
+                    $dateNow = date('Y-m-d H:i:s');
+
+                    $stmtTrans = $conn->prepare("INSERT INTO transactions (user_id, type, status, amount, detail, date) VALUES (?, ?, ?, ?, ?, ?)");
+                    $stmtTrans->bind_param("ississ", $userId, $type, $status, $hargaFinal, $detail, $dateNow);
+                    $stmtTrans->execute();
+                    $stmtTrans->close();
+
                     $stokFile = __DIR__ . '/data/stok-vmess.json';
                     $serverName = $server['name'];
                     if (file_exists($stokFile)) {
