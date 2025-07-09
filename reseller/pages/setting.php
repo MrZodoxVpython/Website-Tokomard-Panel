@@ -96,45 +96,49 @@ if (!in_array($tab, $allowedTabs)) {
 </head>
 <body class="bg-gray-900 text-white">
   <main class="max-ful mx-auto px-1 py-1">
+<!-- Header: Profil dan Avatar -->
+<div class="flex flex-col md:flex-row items-center md:items-start gap-4 mb-10">
+  <!-- Box Profil -->
+  <div class="bg-gray-800 rounded-lg p-7 w-full pb-8 md:w-1/3 text-center shadow border border-gray-700 overflow-hidden">
+    <img src="<?= $avatar ?>?v=<?= time() ?>" alt="Avatar" class="w-24 h-24 mx-auto rounded-full" />
+    <h2 class="text-xl font-semibold mt-4"><?= $reseller ?></h2>
+    <p class="text-gray-400 text-sm"><?= $email ?></p>
 
-    <!-- Header: Profil dan Avatar -->
-    <div class="flex flex-col md:flex-row items-center md:items-start gap-4 mb-10">
-      <div class="bg-gray-800 rounded-lg p-7 w-full pb-8 md:w-1/3 text-center shadow border border-gray-700 overflow-hidden">
-	<img src="<?= $avatar ?>?v=<?= time() ?>" class="w-24 h-24 mx-auto rounded-full" />
-        <h2 class="text-xl font-semibold"><?= $reseller ?></h2>
-        <p class="text-gray-400 text-sm"><?= $email ?></p>
-        <div class="text-center mt-4 text-left text-sm">
-          <p><strong>Account ID:</strong> <?= $account_id ?></p>
-          <p><strong>Email:</strong> <?= $email ?></p>
-        </div>
-      </div>
-
-      <div class="flex-1 w-full space-y-4">
-        <!-- Tabs -->
-  <div class="max-w-4xl mx-auto px-4 py-8">
-    <!-- Tabs -->
-    <div class="flex space-x-4 border-b border-gray-700 text-sm -mb-8">
-      <a href="?tab=overview" class="px-2 pb-2 <?= $tab === 'overview' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">Overview</a>
-      <a href="?tab=general" class="px-2 pb-2 <?= $tab === 'general' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">General Settings</a>
-      <a href="?tab=advanced" class="px-2 pb-2 <?= $tab === 'advanced' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">Advanced Settings</a>
+    <div class="text-center mt-4 text-left text-sm">
+      <p><strong>Account ID:</strong> <?= $account_id ?></p>
+      <p><strong>Email:</strong> <?= $email ?></p>
     </div>
   </div>
-<!-- Balance & Reseller Box -->
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-  <div class="flex flex-col justify-center items-center text-center bg-green-500/10 text-green-300 p-8 rounded-lg shadow border border-green-400/30">
-    <h3 class="text-sm font-semibold mb-1">Balance</h3>
-    <p class="text-2xl font-bold">Rp. <?= number_format($balance, 0, ',', '.') ?></p>
-    <p class="text-xs text-gray-400">Earn reward points with every purchase.</p>
-  </div>
-  
-  <div class="text-center bg-green-600 text-white p-8 rounded-lg shadow border border-green-400">
-    <h1 class="text-7xl py-4">🏆</h1>
-    <h3 class="text-sm font-semibold mb-1">Reseller</h3>
-    <p class="text-sm">Keep up to date with your account.</p>
+
+  <!-- Konten Kanan -->
+  <div class="flex-1 w-full space-y-6">
+
+    <!-- Tabs -->
+    <div class="max-w-4xl mx-auto px-4 pt-4">
+      <div class="flex space-x-4 border-b border-gray-700 text-sm">
+        <a href="?tab=overview" class="px-2 pb-2 <?= $tab === 'overview' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">Overview</a>
+        <a href="?tab=general" class="px-2 pb-2 <?= $tab === 'general' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">General Settings</a>
+        <a href="?tab=advanced" class="px-2 pb-2 <?= $tab === 'advanced' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">Advanced Settings</a>
+      </div>
+    </div>
+
+    <!-- Balance & Reseller Box -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div class="flex flex-col justify-center items-center text-center bg-green-500/10 text-green-300 p-8 rounded-lg shadow border border-green-400/30">
+        <h3 class="text-sm font-semibold mb-1">Balance</h3>
+        <p class="text-2xl font-bold">Rp. <?= number_format($balance, 0, ',', '.') ?></p>
+        <p class="text-xs text-gray-400">Earn reward points with every purchase.</p>
+      </div>
+
+      <div class="text-center bg-green-600 text-white p-8 rounded-lg shadow border border-green-400">
+        <h1 class="text-7xl py-4">🏆</h1>
+        <h3 class="text-sm font-semibold mb-1">Reseller</h3>
+        <p class="text-sm">Keep up to date with your account.</p>
+      </div>
+    </div>
+
   </div>
 </div>
-      </div>
-    </div>
 
 <!-- Riwayat Transaksi -->
 <!-- Riwayat Transaksi -->
