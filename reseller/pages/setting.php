@@ -176,15 +176,17 @@ if (!in_array($tab, $allowedTabs)) {
 <!-- Include content tab -->
 <div class="mt-8">
 <?php
-// Include konten sesuai tab
-if ($tab === 'general') {
-    include __DIR__ . 'setting/general.php';
-} elseif ($tab === 'advanced') {
-    include __DIR__ . '/setting/advanced.php';
-} else {
-    echo ''; // overview tidak butuh include
+$allowedTabs = ['general', 'advanced'];
+if (in_array($tab, $allowedTabs)) {
+    $file = __DIR__ . "/setting/{$tab}.php";
+    if (file_exists($file)) {
+        include $file;
+    } else {
+        echo "<p class='text-red-400'>File tab tidak ditemukan.</p>";
+    }
 }
 ?>
+
 </div>
   </main>
 </body>
