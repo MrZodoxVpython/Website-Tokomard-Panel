@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $output = "❌ Saldo tidak cukup.\nSaldo Anda: Rp" . number_format($saldoUser, 0, ',', '.') .
                       "\nHarga: Rp" . number_format($hargaFinal, 0, ',', '.');
         } else {
-            // Panggil file lokal add-trojan.php (bukan SSH)
+            // Panggil file lokal add-vless.php (bukan SSH)
             $phpCmd = "php /var/www/html/Website-Tokomard-Panel/reseller/pages/api-akun/add-vmess.php '$username' '$expiredInput' '$password' '$reseller'";
             $outputRaw = shell_exec($phpCmd . ' 2>&1');
 
