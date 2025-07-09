@@ -55,6 +55,10 @@ if ($userRow = $userResult->fetch_assoc()) {
 }
 
 $stmt->close();
+// Validasi tab dari URL
+$allowedTabs = ['overview', 'general', 'advanced'];
+$tab = in_array($_GET['tab'] ?? 'overview', $allowedTabs) ? $_GET['tab'] : 'overview';
+
 ?>
 
 <!DOCTYPE html>
