@@ -50,7 +50,7 @@ if (!$user) {
     <label class="block mb-2 text-gray-300">Role</label>
     <select name="role" class="w-full mb-4 p-2 rounded bg-gray-700 text-white">
       <option value="admin" <?= $user['role'] === 'admin' ? 'selected' : '' ?>>Admin</option>
-      <option value="reseller" <?= $user['role'] === 'reseller' ? 'selected' : '' ?>>reseller</option>
+      <option value="reseller" <?= $user['role'] === 'reseller' ? 'selected' : '' ?>>Reseller</option>
     </select>
 
     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Simpan</button>
