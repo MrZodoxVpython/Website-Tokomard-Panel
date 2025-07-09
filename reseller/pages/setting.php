@@ -132,7 +132,6 @@ if (!in_array($tab, $allowedTabs)) {
           include 'advanced.php';
           break;
         default:
-	  pass
       }
       ?>
     </div>
