@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmtUserId->close();
 
     // Simpan ke tabel transactions
-    $type = 'manual';
+    $type = 'topup';
     $status = 'SUCCESS';
     $amount = $jumlah;
     $detail = 'Penambahan saldo oleh admin';
