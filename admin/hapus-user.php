@@ -40,7 +40,7 @@ function dieCyberpunk($message) {
   <div class="bg-gray-900 p-8 rounded-xl border-2 border-green-500 shadow-lg animate-pulse max-w-md">
     <h1 class="text-3xl mb-4 tracking-widest">🕶️ CYBER DEFENSE SYSTEM</h1>
     <p class="text-lg leading-relaxed">{$message}</p>
-    <a href="list-akun.php" class="mt-6 inline-block text-green-300 border border-green-500 px-4 py-2 rounded hover:bg-green-600 hover:text-black transition">
+    <a href="list-user.php" class="mt-6 inline-block text-green-300 border border-green-500 px-4 py-2 rounded hover:bg-green-600 hover:text-black transition">
       ← Kembali ke Daftar Akun
     </a>
   </div>
