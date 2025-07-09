@@ -5,7 +5,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
-require '/koneksi.php';
+require '../koneksi.php';
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     die("❌ ID tidak valid.");
