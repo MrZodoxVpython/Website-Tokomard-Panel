@@ -462,3 +462,6 @@ OUTPUT:
 RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@152.42.182.187 'systemctl restart xray'
 OUTPUT:
 
+RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@203.194.113.140 "sed -i '/\sRWMARDNIH /{N;/\n##LOCK##/N;d}' /etc/xray/config.json"
+OUTPUT:
+
