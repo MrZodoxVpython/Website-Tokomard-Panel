@@ -89,7 +89,7 @@ $stmt->close();
     <!-- Header: Profil dan Avatar -->
     <div class="flex flex-col md:flex-row items-center md:items-start gap-4 mb-10">
       <div class="bg-gray-800 rounded-lg p-7 w-full pb-8 md:w-1/3 text-center shadow border border-gray-700 overflow-hidden">
-        <img src="<?= $avatar ?>" class="w-24 h-24 mx-auto rounded-full" />
+	<img src="<?= $avatar ?>?v=<?= time() ?>" class="w-24 h-24 mx-auto rounded-full" />
         <h2 class="text-xl font-semibold"><?= $reseller ?></h2>
         <p class="text-gray-400 text-sm"><?= $email ?></p>
         <div class="text-center mt-4 text-left text-sm">
