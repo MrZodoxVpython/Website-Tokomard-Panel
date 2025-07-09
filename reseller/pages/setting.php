@@ -121,22 +121,6 @@ if (!in_array($tab, $allowedTabs)) {
       <a href="?tab=advanced" class="px-2 pb-2 <?= $tab === 'advanced' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">Advanced Settings</a>
     </div>
 
-    <!-- Tab Content -->
-    <div class="rounded-xl shadow">
-      <?php
-      switch ($tab) {
-        case 'general':
-          include 'general.php';
-          break;
-        case 'advanced':
-          include 'advanced.php';
-          break;
-        default:
-	  break;
-      }
-      ?>
-    </div>
-  </div>
 <!-- Balance & Reseller Box -->
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
   <div class="flex flex-col justify-center items-center text-center bg-green-500/10 text-green-300 p-8 rounded-lg shadow border border-green-400/30">
