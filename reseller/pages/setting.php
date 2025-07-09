@@ -97,7 +97,7 @@ if (!in_array($tab, $allowedTabs)) {
 <body class="bg-gray-900 text-white">
   <main class="max-ful mx-auto px-1 py-1">
 <!-- Header: Profil dan Avatar -->
-<div class="flex flex-col md:flex-row items-center md:items-start gap-4 mb-15">
+<div class="flex flex-col md:flex-row items-center md:items-start gap-4 mb-10">
   <!-- Box Profil -->
   <div class="bg-gray-800 rounded-lg p-7 w-full pb-8 md:w-1/3 text-center shadow border border-gray-700 overflow-hidden">
     <img src="<?= $avatar ?>?v=<?= time() ?>" alt="Avatar" class="w-24 h-24 mx-auto rounded-full" />
