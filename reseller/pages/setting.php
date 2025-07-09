@@ -115,7 +115,7 @@ if (!in_array($tab, $allowedTabs)) {
   <div class="flex-1 w-full space-y-6">
 
     <!-- Tabs -->
-    <div class="w-full px-4">
+    <div class="w-full px-14">
       <div class="flex space-x-4 border-b border-gray-700 text-sm mb-4">
         <a href="?tab=overview" class="px-2 pb-2 <?= $tab === 'overview' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">Overview</a>
         <a href="?tab=general" class="px-2 pb-2 <?= $tab === 'general' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">General Settings</a>
