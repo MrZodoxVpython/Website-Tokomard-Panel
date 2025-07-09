@@ -176,16 +176,14 @@ if (!in_array($tab, $allowedTabs)) {
 <!-- Include content tab -->
 <div class="mt-8">
 <?php
-    // Include konten sesuai tab
-    if ($tab === 'general') {
-        include 'general.php';
-    } elseif ($tab === 'advanced') {
-        include 'advanced.php';
-    } else {
-        // TIDAK include apa pun, karena overview = setting.php itu sendiri
-        // Jadi cukup tampilkan pesan kosong atau abaikan
-        echo ''; // atau kamu bisa tampilkan konten tambahan overview di sini
-    }
+// Include konten sesuai tab
+if ($tab === 'general') {
+    include __DIR__ . '/setting/general.php';
+} elseif ($tab === 'advanced') {
+    include __DIR__ . '/setting/advanced.php';
+} else {
+    echo ''; // overview tidak butuh include
+}
 ?>
 </div>
   </main>
