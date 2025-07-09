@@ -173,6 +173,19 @@ if (!in_array($tab, $allowedTabs)) {
     </table>
   </div>
 </div>
+<!-- Include content tab -->
+<div class="mt-8">
+<?php
+    // Include konten sesuai tab
+    if ($tab === 'general') {
+        include 'general.php';
+    } elseif ($tab === 'advanced') {
+        include 'advanced.php';
+    } else {
+        include 'overview.php';
+    }
+?>
+</div>
   </main>
 </body>
 </html>
