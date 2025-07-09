@@ -38,7 +38,7 @@ $sshProducts = [
 ?>
 
 <div class="mb-6">
-    <h2 class="text-2xl font-semibold mb-2">🌐 Daftar Produk Vless</h2>
+    <h2 class="text-2xl font-semibold mb-2">🛰️ Daftar Produk Vless</h2>
     <p class="text-sm text-gray-600 dark:text-gray-400">Pilih produk Vless yang tersedia sesuai lokasi dan kebutuhan Anda.</p>
 </div>
 
