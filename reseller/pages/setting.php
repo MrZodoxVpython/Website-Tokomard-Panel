@@ -9,6 +9,20 @@ if (!isset($_SESSION['username'])) {
 }
 
 $reseller = $_SESSION['username'];
+// Ambil avatar dari JSON
+$defaultAvatar = 'uploads/avatars/default.png';
+$avatarJsonPath = __DIR__ . '/../uploads/avatar.json';
+$avatar = $defaultAvatar;
+
+if ($reseller && file_exists($avatarJsonPath)) {
+    $avatarData = json_decode(file_get_contents($avatarJsonPath), true);
+    if (isset($avatarData[$reseller])) {
+        $customAvatar = __DIR__ . '/../' . $avatarData[$reseller];
+        if (file_exists($customAvatar)) {
+            $avatar = $avatarData[$reseller]; // relative path
+        }
+    }
+}
 $email = '';
 $avatar = 'https://i.imgur.com/q3DzxiB.png';
 $account_id = '';
