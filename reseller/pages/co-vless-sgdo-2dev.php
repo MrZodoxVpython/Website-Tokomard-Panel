@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $phpCmd = "php /var/www/html/Website-Tokomard-Panel/reseller/pages/api-akun/add-vless.php '$username' '$expiredInput' '$password' '$reseller'";
             $outputRaw = shell_exec($phpCmd . ' 2>&1');
 
-            if (!empty(trim($outputRaw)) && str_contains($outputRaw, 'VMESS ACCOUNT')) {
+            if (!empty(trim($outputRaw)) && str_contains($outputRaw, 'VLESS ACCOUNT')) {
                 // Kurangi saldo
                 $stmt = $conn->prepare("UPDATE users SET saldo = saldo - ? WHERE username = ?");
                 $stmt->bind_param("is", $hargaFinal, $reseller);
