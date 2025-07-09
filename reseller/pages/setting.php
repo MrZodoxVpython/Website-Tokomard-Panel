@@ -24,7 +24,6 @@ if ($reseller && file_exists($avatarJsonPath)) {
     }
 }
 $email = '';
-$avatar = 'https://i.imgur.com/q3DzxiB.png';
 $account_id = '';
 $balance = 0;
 $transactions = [];
