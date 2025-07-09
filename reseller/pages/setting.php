@@ -124,7 +124,7 @@ if (!in_array($tab, $allowedTabs)) {
     </div>
 
     <!-- Balance & Reseller Box -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full p-2">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
       <div class="flex flex-col justify-center items-center text-center bg-green-500/10 text-green-300 p-18 rounded-lg shadow border border-green-400/30">
         <h3 class="text-sm font-semibold mb-1">Balance</h3>
         <p class="text-2xl font-bold">Rp. <?= number_format($balance, 0, ',', '.') ?></p>
