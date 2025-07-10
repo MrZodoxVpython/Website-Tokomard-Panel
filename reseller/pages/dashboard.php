@@ -110,7 +110,6 @@ foreach ($remote_servers as $srv) {
         ];
     }
 }
-echo "<pre>RESELLER: {$reseller}</pre>";
 
 ?>
 
