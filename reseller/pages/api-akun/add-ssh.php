@@ -62,5 +62,6 @@ $cmd = "sudo $useradd -e $eExpired -s /bin/false -M $eUsername && echo '$usernam
 shell_exec($cmd);
 
 // Tampilkan hasil akun
-tampilkanSSH($username, $expired, $password);
+$reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? 'unknown';
+tampilkanSSH($username, $expired, $password, $reseller);
 
