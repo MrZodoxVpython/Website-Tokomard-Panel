@@ -5,27 +5,21 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Deteksi apakah dipanggil dari HTTP POST atau dari include/shell_exec
-$isWebRequest = isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST';
-$isInternalCall = php_sapi_name() === 'cli' || basename(__FILE__) !== basename($_SERVER['SCRIPT_FILENAME']);
-
-if (!$isWebRequest && !$isInternalCall) {
+if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo "❌ Akses tidak valid.";
     exit;
 }
 
-// Ambil input (dari POST atau Fallback CLI)
-$username = $_POST['username'] ?? $argv[1] ?? null;
-$expiredInput = $_POST['expired'] ?? $argv[2] ?? null;
-$password = $_POST['password'] ?? $argv[3] ?? null;
+$username = $_POST['username'] ?? null;
+$expiredInput = $_POST['expired'] ?? null;
+$password = $_POST['password'] ?? null;
 
-// Validasi input
+// Validasi
 if (!$username || !$expiredInput || !$password) {
     echo "❌ Data tidak lengkap!";
     exit;
 }
 
-// Validasi format
 if (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
     echo "❌ Username hanya boleh huruf, angka, dan garis bawah (_)";
     exit;
@@ -43,22 +37,20 @@ if ($checkUser !== '') {
     exit;
 }
 
-// Hitung tanggal expired
 $expired = hitungTanggalExpired($expiredInput);
 
-// Escape input
 $eUsername = escapeshellarg($username);
 $ePassword = escapeshellarg($password);
 $eExpired  = escapeshellarg($expired);
 
-// Buat user SSH
-//$cmd = "sudo useradd -e $eExpired -s /bin/false -M $eUsername && echo $username:$password | sudo chpasswd";
+// Path lengkap
 $useradd = "/usr/sbin/useradd";
 $chpasswd = "/usr/sbin/chpasswd";
-$cmd = "echo $username:$password | sudo $chpasswd && sudo $useradd -e $eExpired -s /bin/false -M $eUsername";
 
+// Jalankan sudo tanpa password
+$cmd = "sudo $useradd -e $eExpired -s /bin/false -M $eUsername && echo $username:$password | sudo $chpasswd";
 shell_exec($cmd);
 
-// Tampilkan hasil akun
+// Output akun SSH
 tampilkanSSH($username, $expired, $password);
 
