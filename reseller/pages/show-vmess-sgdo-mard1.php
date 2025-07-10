@@ -217,7 +217,7 @@ foreach ($files as $remoteFile):
     preg_match("/akun-" . preg_quote($reseller, "/") . "-(.+)\.txt/", $fn, $m);
     $u = $m[1] ?? 'unknown';
 
-    $content = trim(shell_exec("$sshPrefix \"cat " . escapeshellarg($remoteFile) . "\""));
+    $content = trim(shell_exec("$sshPrefix \"cat " . escapeshellarg($remoteFile) . "\"") ?? '');
 
     // Filter hanya file yang mengandung VMess
     if (
@@ -249,7 +249,7 @@ if (!$found): ?>
         $u = $m[1] ?? 'unknown';
 
         // Ambil isi file akun (.txt)
-        $content = trim(shell_exec("$sshPrefix \"cat ".escapeshellarg($remoteFile)."\""));
+	$content = trim(shell_exec("$sshPrefix \"cat " . escapeshellarg($remoteFile) . "\"") ?? '');
 
         // ✅ Skip jika file tidak mengandung VMess
         if (
