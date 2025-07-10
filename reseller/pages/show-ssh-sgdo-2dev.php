@@ -86,12 +86,11 @@ $cleanContent = preg_replace('/[\x{00A0}\x{2000}-\x{200B}\x{FEFF}]/u', ' ', $raw
 $cleanContent = preg_replace('/\s+/', ' ', $cleanContent);
 
 //    $cleanContent = preg_replace('/[^\x20-\x7E\s]/', '', $rawContent); // ASCII printable only
-
-    // Filter hanya SSH ACCOUNT
     if (stripos($cleanContent, 'SSH ACCOUNT') === false) {
+        echo "<!-- SKIP: $filename -->";
         continue;
     }
-echo "<!-- SKIP: $filename -->";
+
 
     $content = $rawContent;
 
