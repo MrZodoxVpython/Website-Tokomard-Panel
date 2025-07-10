@@ -217,7 +217,7 @@ foreach ($files as $remoteFile):
     preg_match("/akun-" . preg_quote($reseller, "/") . "-(.+)\.txt/", $fn, $m);
     $u = $m[1] ?? 'unknown';
 
-    $content = trim(shell_exec("$sshPrefix \"cat " . escapeshellarg($remoteFile) . "\""));
+    $content = trim(shell_exec("$sshPrefix \"cat " . escapeshellarg($remoteFile) . "\"") ?? '');
 
     // Filter hanya file yang mengandung Trojan
     if (
