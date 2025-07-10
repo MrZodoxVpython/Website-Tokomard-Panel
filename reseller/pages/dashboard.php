@@ -140,6 +140,7 @@ foreach (['total'=>'Total Akun','vmess'=>'VMess','vless'=>'VLess','trojan'=>'Tro
 ?>
 </div>
 
+echo "<pre>RESELLER: {$reseller}</pre>";
 
 <!-- Grafik -->
 <div class="overflow-x-auto w-full mt-4">
