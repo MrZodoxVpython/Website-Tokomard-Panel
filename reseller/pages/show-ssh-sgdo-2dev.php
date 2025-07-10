@@ -23,7 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $expiredInput = trim($_POST['expired']);
 
         if (preg_match('/^\d+$/', $expiredInput)) {
-            // Tambah hari dari expired sekarang
             $expireStr = trim(shell_exec("chage -l $user | grep 'Account expires' | cut -d: -f2"));
             $expireStr = trim($expireStr);
             $current = $expireStr === "never" ? date('Y-m-d') : date('Y-m-d', strtotime($expireStr));
@@ -34,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!empty($newDate)) {
             shell_exec("sudo chage -E $newDate $user");
-            // Update file akun
             $file = "$logDir/akun-$reseller-$user.txt";
             if (file_exists($file)) {
                 $isi = file_get_contents($file);
@@ -78,14 +76,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $filename = basename($file);
     preg_match('/akun-' . preg_quote($reseller, '/') . '-(.+)\.txt/', $filename, $m);
     $username = $m[1] ?? 'unknown';
-    $content = file_get_contents($file);
 
-    // ✅ Filter hanya akun SSH
-    if (stripos($content, 'SSH ACCOUNT') === false) {
+    // Baca dan bersihkan konten (hapus karakter non-ASCII)
+    $rawContent = file_get_contents($file);
+    $cleanContent = preg_replace('/[^\x20-\x7E\s]/', '', $rawContent); // ASCII printable only
+
+    // Filter hanya SSH ACCOUNT
+    if (stripos($cleanContent, 'SSH ACCOUNT') === false) {
         continue;
     }
 
-    // ✅ Cek status terkunci atau tidak
+    $content = $rawContent;
+
+    // Status akun aktif/kunci
     $rawStatus = shell_exec("passwd -S $username 2>/dev/null");
     $status = $rawStatus !== null ? trim($rawStatus) : '';
     $isLocked = strpos($status, ' L ') !== false;
@@ -96,7 +99,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="space-x-2">
                 <button id="btn-<?= $username ?>" onclick="toggleDetail('<?= $username ?>')" class="btn-show bg-blue-600 px-3 py-1 rounded hover:bg-blue-700">Show</button>
 
-                <!-- Tombol Start/Stop -->
                 <form method="POST" class="inline">
                     <input type="hidden" name="toggle_user" value="<?= htmlspecialchars($username) ?>">
                     <input type="hidden" name="action" value="<?= $isLocked ? 'start' : 'stop' ?>">
@@ -124,22 +126,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div>
 <?php endforeach; ?>
-
-        <?php endif; ?>
+    <?php endif; ?>
 </div>
 <script>
-    function toggleDetail(id) {
-        const box = document.getElementById('detail-' + id);
-        const btn = document.getElementById('btn-' + id);
-        document.querySelectorAll('.detail-box').forEach(b => b.classList.add('hidden'));
-        document.querySelectorAll('.btn-show').forEach(b => b.innerText = 'Show');
-        if (box.classList.contains('hidden')) {
-            box.classList.remove('hidden');
-            btn.innerText = 'Hide';
-        } else {
-            btn.innerText = 'Show';
-        }
+function toggleDetail(id) {
+    const box = document.getElementById('detail-' + id);
+    const btn = document.getElementById('btn-' + id);
+    document.querySelectorAll('.detail-box').forEach(b => b.classList.add('hidden'));
+    document.querySelectorAll('.btn-show').forEach(b => b.innerText = 'Show');
+    if (box.classList.contains('hidden')) {
+        box.classList.remove('hidden');
+        btn.innerText = 'Hide';
+    } else {
+        btn.innerText = 'Show';
     }
+}
 </script>
 </body>
 </html>
