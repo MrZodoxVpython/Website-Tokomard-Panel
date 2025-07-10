@@ -79,7 +79,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Baca dan bersihkan konten (hapus karakter non-ASCII)
     $rawContent = file_get_contents($file);
-    $cleanContent = preg_replace('/[^\x20-\x7E\s]/', '', $rawContent); // ASCII printable only
+    // Hapus karakter whitespace non-standar (non-breaking space, en space, dll)
+$cleanContent = preg_replace('/[\x{00A0}\x{2000}-\x{200B}\x{FEFF}]/u', ' ', $rawContent);
+
+// Normalisasi semua spasi ke biasa
+$cleanContent = preg_replace('/\s+/', ' ', $cleanContent);
+
+//    $cleanContent = preg_replace('/[^\x20-\x7E\s]/', '', $rawContent); // ASCII printable only
 
     // Filter hanya SSH ACCOUNT
     if (stripos($cleanContent, 'SSH ACCOUNT') === false) {
