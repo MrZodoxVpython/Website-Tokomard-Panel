@@ -110,8 +110,6 @@ foreach ($remote_servers as $srv) {
         ];
     }
 }
-echo "<pre>RESELLER: {$reseller}</pre>";
-
 ?>
 
 <!-- Statistik Responsive + Tooltip & Clickable -->
@@ -206,6 +204,8 @@ new Chart(ctx, {
           </tr>
         <?php else : ?>
           <?php foreach ($rows as $r) : ?>
+	  echo "<pre>RESELLER: {$reseller}</pre>";
+
             <tr class="border-t border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
               <td class="px-2 md:px-4 py-2"><?= $r['no'] ?></td>
               <td class="px-2 md:px-4 py-2 truncate"><?= $r['user'] ?></td>
