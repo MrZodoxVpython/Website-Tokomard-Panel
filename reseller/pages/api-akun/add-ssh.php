@@ -5,6 +5,13 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Tolak jika dijalankan dari CLI
+if (php_sapi_name() === 'cli') {
+    echo "❌ Tidak bisa diakses dari CLI.\n";
+    exit;
+}
+
+// Hanya izinkan metode POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo "❌ Akses tidak valid.";
     exit;
@@ -30,12 +37,20 @@ if (strlen($password) < 6) {
     exit;
 }
 
+// Cek apakah user sudah ada
+$checkUser = trim(shell_exec("id -u " . escapeshellarg($username) . " 2>/dev/null"));
+if ($checkUser !== '') {
+    echo "❌ Username sudah terdaftar!";
+    exit;
+}
+
+// Hitung tanggal expired
 $expired = hitungTanggalExpired($expiredInput);
 
 // Escape input shell
 $eUsername = escapeshellarg($username);
 $ePassword = escapeshellarg($password);
-$eExpired = escapeshellarg($expired);
+$eExpired  = escapeshellarg($expired);
 
 // Jalankan perintah membuat user SSH
 $cmd = "sudo useradd -e $eExpired -s /bin/false -M $eUsername && echo $eUsername:$ePassword | sudo chpasswd";
