@@ -23,7 +23,7 @@ $stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
 
-header("Location: list-akun.php");
+header("Location: list-user.php");
 exit;
 
 // Fungsi tampilan error bergaya cyberpunk
