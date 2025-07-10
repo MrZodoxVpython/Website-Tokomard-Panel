@@ -6,19 +6,13 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Validasi agar hanya dijalankan dari browser (bukan CLI)
-if (php_sapi_name() === 'cli' || !isset($_SERVER['REQUEST_METHOD'])) {
-    echo "❌ Tidak bisa diakses dari CLI atau mode langsung.";
-    exit;
-}
-
-// Hanya izinkan metode POST
+// Validasi hanya menerima POST (tidak perlu cek CLI)
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo "❌ Akses tidak valid.";
     exit;
 }
 
-// Ambil input POST
+// Ambil input dari form POST
 $username = $_POST['username'] ?? null;
 $expiredInput = $_POST['expired'] ?? null;
 $password = $_POST['password'] ?? null;
@@ -46,15 +40,15 @@ if ($checkUser !== '') {
     exit;
 }
 
-// Hitung tanggal expired dari input
+// Hitung tanggal expired dari input hari
 $expired = hitungTanggalExpired($expiredInput);
 
-// Escape untuk shell agar aman
+// Escape input shell
 $eUsername = escapeshellarg($username);
 $ePassword = escapeshellarg($password);
 $eExpired  = escapeshellarg($expired);
 
-// Jalankan perintah untuk membuat akun SSH
+// Jalankan perintah menambahkan akun SSH
 $cmd = "sudo useradd -e $eExpired -s /bin/false -M $eUsername && echo $username:$password | sudo chpasswd";
 shell_exec($cmd);
 
