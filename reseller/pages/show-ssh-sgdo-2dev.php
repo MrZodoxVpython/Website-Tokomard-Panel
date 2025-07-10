@@ -91,6 +91,7 @@ $cleanContent = preg_replace('/\s+/', ' ', $cleanContent);
     if (stripos($cleanContent, 'SSH ACCOUNT') === false) {
         continue;
     }
+echo "<!-- SKIP: $filename -->";
 
     $content = $rawContent;
 
