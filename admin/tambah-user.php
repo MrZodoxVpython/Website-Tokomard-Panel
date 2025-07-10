@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $conn->prepare("INSERT INTO users (username, email, password, role, saldo) VALUES (?, ?, ?, ?, ?)");
             $stmt->bind_param("ssssi", $username, $email, $hashed, $role, $saldo);
             if ($stmt->execute()) {
-                header("Location: list-akun.php");
+                header("Location: list-user.php");
                 exit;
             } else {
                 $pesan = "❌ Gagal menambahkan user.";
