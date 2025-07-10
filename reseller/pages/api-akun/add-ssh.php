@@ -1,21 +1,23 @@
 <?php
 require_once __DIR__ . '/lib-akun.php';
 
-// Mulai sesi jika belum aktif
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Validasi hanya menerima POST (tidak perlu cek CLI)
-if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+// Deteksi apakah dipanggil dari HTTP POST atau dari include/shell_exec
+$isWebRequest = isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST';
+$isInternalCall = php_sapi_name() === 'cli' || basename(__FILE__) !== basename($_SERVER['SCRIPT_FILENAME']);
+
+if (!$isWebRequest && !$isInternalCall) {
     echo "❌ Akses tidak valid.";
     exit;
 }
 
-// Ambil input dari form POST
-$username = $_POST['username'] ?? null;
-$expiredInput = $_POST['expired'] ?? null;
-$password = $_POST['password'] ?? null;
+// Ambil input (dari POST atau Fallback CLI)
+$username = $_POST['username'] ?? $argv[1] ?? null;
+$expiredInput = $_POST['expired'] ?? $argv[2] ?? null;
+$password = $_POST['password'] ?? $argv[3] ?? null;
 
 // Validasi input
 if (!$username || !$expiredInput || !$password) {
@@ -23,6 +25,7 @@ if (!$username || !$expiredInput || !$password) {
     exit;
 }
 
+// Validasi format
 if (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
     echo "❌ Username hanya boleh huruf, angka, dan garis bawah (_)";
     exit;
@@ -40,18 +43,18 @@ if ($checkUser !== '') {
     exit;
 }
 
-// Hitung tanggal expired dari input hari
+// Hitung tanggal expired
 $expired = hitungTanggalExpired($expiredInput);
 
-// Escape input shell
+// Escape input
 $eUsername = escapeshellarg($username);
 $ePassword = escapeshellarg($password);
 $eExpired  = escapeshellarg($expired);
 
-// Jalankan perintah menambahkan akun SSH
+// Buat user SSH
 $cmd = "sudo useradd -e $eExpired -s /bin/false -M $eUsername && echo $username:$password | sudo chpasswd";
 shell_exec($cmd);
 
-// Tampilkan hasil akun SSH
+// Tampilkan hasil akun
 tampilkanSSH($username, $expired, $password);
 
