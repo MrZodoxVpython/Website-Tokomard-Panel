@@ -81,7 +81,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $content = file_get_contents($file);
 
             // Deteksi status user (lock/unlock)
-            $status = trim(shell_exec("passwd -S $username 2>/dev/null"));
+	    $rawStatus = shell_exec("passwd -S $username 2>/dev/null");
+	    $status = $rawStatus !== null ? trim($rawStatus) : '';
+
+           // $status = trim(shell_exec("passwd -S $username 2>/dev/null"));
             $isLocked = strpos($status, ' L ') !== false;
         ?>
         <div class="bg-gray-800 p-4 rounded mb-4 shadow">
