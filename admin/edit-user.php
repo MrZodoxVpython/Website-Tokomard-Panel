@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("sssi", $username, $email, $role, $id);
     $stmt->execute();
 
-    header("Location: list-akun.php");
+    header("Location: list-user.php");
     exit;
 }
 
