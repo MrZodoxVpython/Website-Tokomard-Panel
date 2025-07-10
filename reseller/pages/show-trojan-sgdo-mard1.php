@@ -249,7 +249,7 @@ if (!$found): ?>
         $u = $m[1] ?? 'unknown';
 
         // Ambil isi file akun (.txt)
-        $content = trim(shell_exec("$sshPrefix \"cat ".escapeshellarg($remoteFile)."\""));
+	$content = trim(shell_exec("$sshPrefix \"cat " . escapeshellarg($remoteFile) . "\"") ?? '');
 
         // ✅ Skip jika file tidak mengandung VMess
         if (
