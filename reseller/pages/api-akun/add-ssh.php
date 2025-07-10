@@ -55,7 +55,9 @@ $eExpired  = escapeshellarg($expired);
 //$cmd = "sudo useradd -e $eExpired -s /bin/false -M $eUsername && echo $username:$password | sudo chpasswd";
 $useradd = "/usr/sbin/useradd";
 $chpasswd = "/usr/sbin/chpasswd";
-$cmd = "echo $username:$password | sudo $chpasswd && sudo $useradd -e $eExpired -s /bin/false -M $eUsername";
+//$cmd = "echo $username:$password | sudo $chpasswd && sudo $useradd -e $eExpired -s /bin/false -M $eUsername";
+$cmd = "sudo $useradd -e $eExpired -s /bin/false -M $eUsername && echo '$username:$password' | sudo $chpasswd";
+
 
 shell_exec($cmd);
 
