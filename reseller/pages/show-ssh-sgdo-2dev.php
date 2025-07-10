@@ -1,15 +1,21 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
+ini_set('log_errors', 1);
+ini_set('error_log', '/tmp/php-debug.log'); // Ganti jika ingin log ke lokasi lain
 
 session_start();
 $reseller = $_SESSION['reseller'] ?? $_SESSION['username'] ?? 'unknown';
+error_log("DEBUG: Reseller aktif: $reseller");
+
 $logDir = "/etc/xray/data-panel/reseller";
 $akunFiles = glob("$logDir/akun-$reseller-*.txt");
+error_log("DEBUG: Total file ditemukan: " . count($akunFiles));
 
 // Hapus akun
 if (isset($_GET['hapus'])) {
     $user = $_GET['hapus'];
+    error_log("DEBUG: Menghapus user: $user");
     shell_exec("sudo userdel -f $user 2>/dev/null");
     @unlink("$logDir/akun-$reseller-$user.txt");
     header("Location: show-ssh-sgdo-2dev.php");
@@ -21,10 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['edit_user']) && isset($_POST['expired'])) {
         $user = $_POST['edit_user'];
         $expiredInput = trim($_POST['expired']);
+        error_log("DEBUG: Edit expired untuk $user dengan input: $expiredInput");
 
         if (preg_match('/^\d+$/', $expiredInput)) {
             $expireStr = trim(shell_exec("chage -l $user | grep 'Account expires' | cut -d: -f2"));
-            $expireStr = trim($expireStr);
+            error_log("DEBUG: Expired sekarang ($user): $expireStr");
             $current = $expireStr === "never" ? date('Y-m-d') : date('Y-m-d', strtotime($expireStr));
             $newDate = date('Y-m-d', strtotime("+$expiredInput days", strtotime($current)));
         } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $expiredInput)) {
@@ -33,11 +40,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!empty($newDate)) {
             shell_exec("sudo chage -E $newDate $user");
+            error_log("DEBUG: Tanggal expired baru $user: $newDate");
             $file = "$logDir/akun-$reseller-$user.txt";
             if (file_exists($file)) {
                 $isi = file_get_contents($file);
                 $isi = preg_replace('/(Expired On\s*:\s*)(\d{4}-\d{2}-\d{2}|never)/', '${1}' . $newDate, $isi);
                 file_put_contents($file, $isi);
+                error_log("DEBUG: File expired diperbarui: $file");
             }
         }
 
@@ -49,11 +58,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
         $user = $_POST['toggle_user'];
         $action = $_POST['action'];
+        error_log("DEBUG: Toggle $action untuk user $user");
+
         if ($action === 'stop') {
             shell_exec("sudo usermod -L $user");
         } elseif ($action === 'start') {
             shell_exec("sudo usermod -U $user");
         }
+
         header("Location: show-ssh-sgdo-2dev.php");
         exit;
     }
@@ -73,32 +85,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="bg-yellow-500/10 text-yellow-300 p-4 rounded text-center">⚠ Belum ada akun SSH untuk reseller ini.</div>
     <?php else: ?>
     <?php foreach ($akunFiles as $file):
-    $filename = basename($file);
-    preg_match('/akun-' . preg_quote($reseller, '/') . '-(.+)\.txt/', $filename, $m);
-    $username = $m[1] ?? 'unknown';
+        $filename = basename($file);
+        error_log("DEBUG: Memproses file: $filename");
 
-    // Baca dan bersihkan konten (hapus karakter non-ASCII)
-    $rawContent = file_get_contents($file);
-    // Hapus karakter whitespace non-standar (non-breaking space, en space, dll)
-$cleanContent = preg_replace('/[\x{00A0}\x{2000}-\x{200B}\x{FEFF}]/u', ' ', $rawContent);
+        preg_match('/akun-' . preg_quote($reseller, '/') . '-(.+)\.txt/', $filename, $m);
+        $username = $m[1] ?? 'unknown';
+        error_log("DEBUG: Username dari file: $username");
 
-// Normalisasi semua spasi ke biasa
-$cleanContent = preg_replace('/\s+/', ' ', $cleanContent);
+        $rawContent = file_get_contents($file);
+        if ($rawContent === false) {
+            error_log("ERROR: Gagal membaca file: $file");
+            continue;
+        }
 
-//    $cleanContent = preg_replace('/[^\x20-\x7E\s]/', '', $rawContent); // ASCII printable only
-    if (stripos($cleanContent, 'SSH ACCOUNT') === false) {
-        echo "<!-- SKIP: $filename -->";
-        continue;
-    }
+        $cleanContent = preg_replace('/[\x{00A0}\x{2000}-\x{200B}\x{FEFF}]/u', ' ', $rawContent);
+        $cleanContent = preg_replace('/\s+/', ' ', $cleanContent);
 
+        if (stripos($cleanContent, 'SSH ACCOUNT') === false) {
+            error_log("SKIP: File $filename tidak mengandung 'SSH ACCOUNT'");
+            continue;
+        }
 
-    $content = $rawContent;
+        $content = $rawContent;
 
-    // Status akun aktif/kunci
-    $rawStatus = shell_exec("passwd -S $username 2>/dev/null");
-    $status = $rawStatus !== null ? trim($rawStatus) : '';
-    $isLocked = strpos($status, ' L ') !== false;
-?>
+        // Status akun aktif/kunci
+        $rawStatus = shell_exec("passwd -S $username 2>/dev/null");
+        $status = $rawStatus !== null ? trim($rawStatus) : '';
+        $isLocked = strpos($status, ' L ') !== false;
+        error_log("DEBUG: Status akun $username: $status");
+    ?>
     <div class="bg-gray-800 p-4 rounded mb-4 shadow">
         <div class="flex justify-between items-center">
             <div class="text-lg font-semibold"><?= htmlspecialchars($username) ?></div>
@@ -131,7 +146,7 @@ $cleanContent = preg_replace('/\s+/', ' ', $cleanContent);
             <button type="submit" class="bg-green-600 px-4 py-2 rounded hover:bg-green-700">Simpan</button>
         </form>
     </div>
-<?php endforeach; ?>
+    <?php endforeach; ?>
     <?php endif; ?>
 </div>
 <script>
