@@ -113,7 +113,7 @@ function tampilkanXRAY($proto, $username, $expired, $key, $reseller) {
     tampilkanHTML($output);
 }
 
-function tampilkanSSH($username, $expired, $password) {
+function tampilkanSSH($username, $expired, $password, $reseller = 'unknown') {
     $domain = trim(@file_get_contents('/etc/xray/domain'));
     $ip = gethostbyname($domain);
     $displayUsername = preg_match('/^(.+?)_(.+)$/', $username, $match) ? $match[2] : $username;
@@ -132,7 +132,7 @@ Expired On     : $expired
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOL;
 
-    catatLogReseller($_SESSION['username'] ?? 'unknown', $username, $expired, $output);
+    catatLogReseller($reseller, $username, $expired, $output);
     tampilkanHTML($output);
 }
 
