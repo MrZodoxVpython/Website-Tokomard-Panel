@@ -87,8 +87,8 @@ $stmt->close();
   <main class="max-w-full mx-auto px-1 py-1">
 
     <!-- Tab Navigasi -->
-    <div class="w-full px-4 mb-14">
-        <div class="flex space-x-4 border-b border-gray-700 text-sm -mb-2">
+    <div class="w-full px-4 mb-4">
+        <div class="flex space-x-4 border-b border-gray-700 text-sm -mb-16">
         <a href="?page=setting&tab=overview" class="px-2 pb-2 <?= $tab === 'overview' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">Overview</a>
         <a href="?page=setting&tab=general" class="px-2 pb-2 <?= $tab === 'general' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">General Settings</a>
         <a href="?page=setting&tab=advanced" class="px-2 pb-2 <?= $tab === 'advanced' ? 'text-blue-400 border-b-2 border-blue-400' : 'hover:text-gray-300' ?>">Advanced Settings</a>
