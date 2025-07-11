@@ -182,16 +182,20 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
             silahkan buat akun terlebih dahulu.
         </div>
     <?php else: ?>
+<?php $foundValidVless = false; ?>
 <?php foreach ($akunFiles as $file):
     $filename = basename($file);
     preg_match('/akun-' . preg_quote($reseller, '/') . '-(.+)\.txt/', $filename, $m);
     $username = $m[1] ?? 'unknown';
     $content = file_get_contents($file);
 
-    // ✅ Filter hanya akun VMess
-    if (stripos($content, '"protocol": "vless"') === false && stripos($content, 'vless://') === false) {
-        continue; // Lewati Trojan, Shadowsocks, dll
+    // ✅ Filter hanya akun VLESS
+    if (trim($content) === '' || 
+        (stripos($content, '"protocol": "vless"') === false && stripos($content, 'vless://') === false)) {
+        continue;
     }
+
+    $foundValidVless = true;
 
     $isDisabled = false;
 
