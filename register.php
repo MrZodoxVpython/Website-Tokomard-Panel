@@ -24,31 +24,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_P
     $otp = rand(100000, 999999);
     $_SESSION['otp_email'] = $email;
     $_SESSION['otp_code'] = $otp;
-    $_SESSION['otp_expire'] = time() + 300; // 5 menit valid
+    $_SESSION['otp_expire'] = time() + 300;
 
-    // Kirim email OTP
+    // Kirim email
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com'; // Ganti sesuai SMTP
+        $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'akunemailkamu@gmail.com'; // Ganti
-        $mail->Password = 'passwordaplikasi';         // Ganti
+        $mail->Username = 'akunemailkamu@gmail.com';
+        $mail->Password = 'passwordaplikasi';
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
 
         $mail->setFrom('akunemailkamu@gmail.com', 'Tokomard Panel');
         $mail->addAddress($email);
-
         $mail->Subject = 'Kode OTP Pendaftaran';
         $mail->Body    = "Kode OTP Anda: $otp (berlaku 5 menit)";
-
         $mail->send();
-        $_SESSION['flash_error'] = "Kode OTP telah dikirim ke email Anda.";
+
+        // Jika permintaan datang dari fetch JS (tanpa kode_otp), jangan redirect
+        if (!isset($_POST['kode_otp'])) {
+            echo "OTP sent";
+            exit;
+        }
+
+        $_SESSION['flash_error'] = "Kode OTP telah dikirim.";
         header("Location: register.php");
         exit;
     } catch (Exception $e) {
-        $_SESSION['flash_error'] = "Gagal mengirim kode OTP: {$mail->ErrorInfo}";
+        $_SESSION['flash_error'] = "Gagal mengirim OTP: {$mail->ErrorInfo}";
     }
 }
 
