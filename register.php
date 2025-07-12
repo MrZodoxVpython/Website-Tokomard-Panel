@@ -119,40 +119,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
 <?php endif; ?>
 
-    <form method="POST" action="" class="space-y-5">
-      <div>
-        <label for="username" class="block text-sm mb-1">Username</label>
-        <input type="text" id="username" name="username" required
-               class="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-      </div>
+<form method="POST" action="" class="space-y-5" id="registerForm">
+  <!-- Step 1 -->
+  <div id="step1">
+    <div>
+      <label for="username" class="block text-sm mb-1">Username</label>
+      <input type="text" id="username" name="username" required
+             class="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
 
-      <div>
-        <label for="email" class="block text-sm mb-1">Email</label>
-        <input type="email" id="email" name="email" required
-               class="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-      </div>
+    <div>
+      <label for="email" class="block text-sm mb-1">Email</label>
+      <input type="email" id="email" name="email" required
+             class="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
 
-      <div>
-        <label for="password" class="block text-sm mb-1">Password</label>
-        <input type="password" id="password" name="password" required
-               class="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-      </div>
+    <div>
+      <label for="password" class="block text-sm mb-1">Password</label>
+      <input type="password" id="password" name="password" required
+             class="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
 
-      <div>
-        <label for="confirm_password" class="block text-sm mb-1">Konfirmasi Password</label>
-        <input type="password" id="confirm_password" name="confirm_password" required
-               class="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-      </div>
-      <div>
-        <label for="kode_otp" class="block text-sm mb-1">Masukkan Kode OTP yang dikirim ke email</label>
-        <input type="text" id="kode_otp" name="kode_otp" required
-         class="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-      </div>
-      <button type="submit"
-              class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-md transition">
-        Daftar
-      </button>
-    </form>
+    <div>
+      <label for="confirm_password" class="block text-sm mb-1">Konfirmasi Password</label>
+      <input type="password" id="confirm_password" name="confirm_password" required
+             class="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+
+    <button type="button" onclick="kirimOTP()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md transition">
+      Kirim OTP ke Email
+    </button>
+  </div>
+
+  <!-- Step 2: OTP input -->
+  <div id="step2" class="hidden">
+    <div>
+      <label for="kode_otp" class="block text-sm mb-1">Masukkan Kode OTP yang dikirim ke email</label>
+      <input type="text" id="kode_otp" name="kode_otp" required
+       class="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+
+    <button type="submit"
+            class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-md transition">
+      Daftar
+    </button>
+  </div>
+</form>
 
     <!-- Link kembali ke login -->
     <p class="text-sm text-center text-gray-400 mt-6">
@@ -168,6 +180,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
   </div>
+<script>
+function kirimOTP() {
+  const form = document.getElementById('registerForm');
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const confirm = document.getElementById('confirm_password').value;
+
+  if (password !== confirm) {
+    alert("Password tidak cocok");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("email", email);
+
+  fetch("", {
+    method: "POST",
+    body: formData
+  }).then(response => response.text())
+    .then(() => {
+      // Tampilkan form OTP
+      document.getElementById('step1').classList.add('hidden');
+      document.getElementById('step2').classList.remove('hidden');
+    }).catch(err => {
+      alert("Gagal mengirim OTP");
+    });
+}
+</script>
 
 </body>
 </html>
