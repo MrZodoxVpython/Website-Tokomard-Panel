@@ -70,9 +70,10 @@ if (isset($_GET['code'])) {
 	$_SESSION['role'] = $role;
 
 	if ($mode === 'register') {
-	    header("Location: login.php"); // redirect ke login setelah register
+	    $_SESSION['flash_success'] = "Berhasil mendaftarkan akun Google Anda. Silakan login menggunakan Google.";
+	    header("Location: login.php");
 	} else {
-	    header("Location: reseller/reseller.php"); // redirect langsung ke dashboard
+	    header("Location: reseller/reseller.php");
 	}
         exit;
 
