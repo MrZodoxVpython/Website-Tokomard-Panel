@@ -80,13 +80,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $error = "Kode OTP salah atau sudah kedaluwarsa.";
             }
         }
-
         if (!isset($error)) {
             $hashed = password_hash($password, PASSWORD_DEFAULT);
             $stmt = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
             $stmt->bind_param("ssss", $username, $email, $hashed, $role);
 
             if ($stmt->execute()) {
+                // ✅ Bersihkan sesi OTP setelah berhasil
+                unset($_SESSION['otp_code'], $_SESSION['otp_email'], $_SESSION['otp_expire']);
+
                 header("Location: index.php?success=1");
                 exit;
             } else {
