@@ -20,8 +20,6 @@ use PHPMailer\PHPMailer\Exception;
 
 require 'vendor/autoload.php';
 
-session_start();
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_POST['kode_otp'])) {
     $email = $_POST['email'];
     $otp = rand(100000, 999999);
