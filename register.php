@@ -3,9 +3,10 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+session_start();
 include 'koneksi.php';
 require_once 'google-config.php';
-session_start();
+
 $flash_error = $_SESSION['flash_error'] ?? null;
 unset($_SESSION['flash_error']);
 
@@ -15,7 +16,7 @@ $google_login_url = $client->createAuthUrl();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'vendor/autoload.php'; // pastikan sudah install phpmailer
+require 'vendor/autoload.php'; // pastikan sudah install phpmailer via composer
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_POST['kode_otp'])) {
     $email = $_POST['email'];
@@ -24,26 +25,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_P
     $otp = rand(100000, 999999);
     $_SESSION['otp_email'] = $email;
     $_SESSION['otp_code'] = $otp;
-    $_SESSION['otp_expire'] = time() + 300;
-    
+    $_SESSION['otp_expire'] = time() + 300; // 5 menit
+
     // Kirim email
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
         $mail->Host = 'smtp-relay.brevo.com';
         $mail->SMTPAuth = true;
-        $mail->Username = '91ea9c001@smtp-brevo.com';
-        $mail->Password = 'B9L3MgZfrdX6Qjxq'; // SMTP key Brevo
+        $mail->Username = '91ea9c001@smtp-brevo.com'; // dari Brevo > SMTP login
+        $mail->Password = 'B9L3MgZfrdX6Qjxq'; // SMTP key dari Brevo
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
 
-        $mail->setFrom('91ea9c001@smtp-brevo.com', 'Tokomard Panel');
+        $mail->setFrom('noreply@tokomard.store', 'Tokomard Panel');
         $mail->addAddress($email);
         $mail->Subject = 'Kode OTP Pendaftaran';
         $mail->Body    = "Kode OTP Anda: $otp (berlaku 5 menit)";
         $mail->send();
 
-        // Jika permintaan datang dari fetch JS (tanpa kode_otp), jangan redirect
         if (!isset($_POST['kode_otp'])) {
             echo "OTP sent";
             exit;
@@ -54,15 +54,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_P
         exit;
     } catch (Exception $e) {
         $_SESSION['flash_error'] = "Gagal mengirim OTP: {$mail->ErrorInfo}";
+        header("Location: register.php");
+        exit;
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['kode_otp'])) {
     $username = $_POST['username'];
     $email    = $_POST['email'];
     $password = $_POST['password'];
     $confirm  = $_POST['confirm_password'];
-    $kode_otp = $_POST['kode_otp'] ?? '';
+    $kode_otp = $_POST['kode_otp'];
 
     if ($password !== $confirm) {
         $error = "Password dan konfirmasi tidak cocok.";
@@ -75,9 +77,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = "Email tidak valid. Gunakan @reseller.com.";
         }
 
-	// ✅ Validasi kode OTP
+        // Validasi kode OTP
         if (!isset($error)) {
-            if (!isset($_SESSION['otp_code'], $_SESSION['otp_email'], $_SESSION['otp_expire']) ||
+            if (
+                !isset($_SESSION['otp_code'], $_SESSION['otp_email'], $_SESSION['otp_expire']) ||
                 $_SESSION['otp_email'] !== $email ||
                 $_SESSION['otp_code'] != $kode_otp ||
                 time() > $_SESSION['otp_expire']
@@ -85,15 +88,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $error = "Kode OTP salah atau sudah kedaluwarsa.";
             }
         }
+
         if (!isset($error)) {
             $hashed = password_hash($password, PASSWORD_DEFAULT);
             $stmt = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
             $stmt->bind_param("ssss", $username, $email, $hashed, $role);
 
             if ($stmt->execute()) {
-                // ✅ Bersihkan sesi OTP setelah berhasil
                 unset($_SESSION['otp_code'], $_SESSION['otp_email'], $_SESSION['otp_expire']);
-
                 header("Location: index.php?success=1");
                 exit;
             } else {
@@ -101,8 +103,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     }
+
+    if (isset($error)) {
+        $_SESSION['flash_error'] = $error;
+        header("Location: register.php");
+        exit;
+    }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
