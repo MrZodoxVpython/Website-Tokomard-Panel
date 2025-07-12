@@ -38,36 +38,42 @@ if (isset($_GET['code'])) {
         $stmt->execute();
         $result = $stmt->get_result();
 
+
+
         if ($result->num_rows === 0) {
-            // Belum ada, hanya boleh insert jika mode == register
-            if ($mode === 'register') {
-                $username = explode('@', $email)[0];
-                $dummyPass = password_hash(uniqid(), PASSWORD_DEFAULT);
-                $insert = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
-                $insert->bind_param("ssss", $username, $email, $dummyPass, $role);
-                $insert->execute();
-            } else {
-                $_SESSION['error'] = "Akun belum terdaftar. Silakan daftar terlebih dahulu.";
-                header("Location: login.php");
-                exit;
-            }
-        } else {
-            $user = $result->fetch_assoc();
-            $username = $user['username'];
-        }
+	    if ($mode === 'register') {
+	        $username = explode('@', $email)[0];
+	        $dummyPass = password_hash(uniqid(), PASSWORD_DEFAULT);
+	        $insert = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
+	        $insert->bind_param("ssss", $username, $email, $dummyPass, $role);
+	        $insert->execute();
 
-        // Set session
-        $_SESSION['login'] = true;
-        $_SESSION['username'] = $username;
-        $_SESSION['email'] = $email;
-        $_SESSION['role'] = $role;
+	        // Ambil kembali user yang baru dibuat
+	        $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+	        $stmt->bind_param("s", $email);
+	        $stmt->execute();
+	        $result = $stmt->get_result();
+	    } else {
+	        $_SESSION['error'] = "Akun belum terdaftar. Silakan daftar terlebih dahulu.";
+	        header("Location: login.php");
+	        exit;
+	    }
+	}
 
-        // Redirect sesuai mode
-        if ($mode === 'register') {
-            header("Location: login.php");
-        } else {
-            header("Location: reseller/reseller.php");
-        }
+	// Set session
+	$user = $result->fetch_assoc();
+	$username = $user['username'];
+
+	$_SESSION['login'] = true;
+	$_SESSION['username'] = $username;
+	$_SESSION['email'] = $email;
+	$_SESSION['role'] = $role;
+
+	if ($mode === 'register') {
+	    header("Location: login.php"); // redirect ke login setelah register
+	} else {
+	    header("Location: reseller/reseller.php"); // redirect langsung ke dashboard
+	}
         exit;
 
     } catch (Exception $e) {
