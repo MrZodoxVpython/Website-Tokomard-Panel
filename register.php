@@ -16,46 +16,41 @@ $google_login_url = $client->createAuthUrl();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'vendor/autoload.php'; // PHPMailer harus sudah di-install via composer
+require 'vendor/autoload.php';
+
+session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_POST['kode_otp'])) {
     $email = $_POST['email'];
-
-    // Buat OTP dan simpan ke session
     $otp = rand(100000, 999999);
+
     $_SESSION['otp_email'] = $email;
     $_SESSION['otp_code'] = $otp;
     $_SESSION['otp_expire'] = time() + 300;
 
-    // Kirim email
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
-        $mail->Host = 'smtp-relay.brevo.com';
+        $mail->Host = 'smtp.elasticemail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = '91ea9c001@smtp-brevo.com'; // sesuai Login SMTP Brevo kamu
-        $mail->Password = 'B9L3MgZfrdX6Qjxq'; // SMTP key kamu dari Brevo
+        $mail->Username = 'noreply@tokomard.store';
+        $mail->Password = 'DC0B1D3279D2EC86911404DF7A5022D4CADB'; // API Key kamu
         $mail->SMTPSecure = 'tls';
         $mail->Port = 2525;
 
-        // DEBUG Aktif
-        $mail->SMTPDebug = 2; // Bisa diganti 3 untuk info lebih detail
-        $mail->Debugoutput = 'html';
-
-        // Pastikan ini pakai domain yang telah di-autentikasi di Brevo
         $mail->setFrom('noreply@tokomard.store', 'Tokomard Panel');
         $mail->addAddress($email);
         $mail->Subject = 'Kode OTP Pendaftaran';
-        $mail->Body    = "Kode OTP Anda: $otp (berlaku 5 menit)";
+        $mail->Body    = "Kode OTP Anda adalah: $otp (berlaku 5 menit)";
+
+        // Aktifkan debug saat testing
+        $mail->SMTPDebug = 2;
+        $mail->Debugoutput = 'html';
 
         $mail->send();
-
-        echo "OTP sent"; // jangan redirect saat debug
-        exit;
-
+        echo "OTP sent.";
     } catch (Exception $e) {
-        echo "Gagal mengirim OTP: {$mail->ErrorInfo}";
-        exit;
+        echo "Gagal mengirim OTP: " . $mail->ErrorInfo;
     }
 }
 
