@@ -165,7 +165,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <button type="submit"
-            class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-md transition">
+            class="mt-4 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-md transition">
       Daftar
     </button>
   </div>
