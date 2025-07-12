@@ -251,9 +251,7 @@ $formattedSaldo = "Rp. " . number_format($saldo, 0, ',', '.');
   	'topup'        => '💳&nbsp;Top Up',
   	'cek-server'   => '🖥&nbsp;Cek Server',
   	'vip'          => '👑&nbsp;Grup Chat VIP'
-  	'listbug'          => '👑&nbsp;List Bug'
-  	'vip'          => '👑&nbsp;Grup Chat VIP'
-  	'vip'          => '👑&nbsp;Grup Chat VIP'
+  	'bug'          => '👑&nbsp;List Bug'
       ];
       foreach($menus as $k=>$lbl){
         $act = $page==$k?'bg-blue-500 text-white':'hover:bg-blue-100 dark:hover:bg-gray-700';
