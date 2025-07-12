@@ -52,6 +52,12 @@ unset($_SESSION['flash_success']);
   </div>
 
     <p class="text-gray-400 text-center mb-6">Silakan login ke akun Anda</p>
+
+<?php if ($flash_success): ?>
+  <div class="bg-green-600 text-white p-3 mb-4 rounded-md text-center">
+    <?= htmlspecialchars($flash_success) ?>
+  </div>
+<?php endif; ?>
     
     <form method="POST" action="auth.php" class="space-y-5">
       <div>
