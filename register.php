@@ -89,6 +89,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="password" id="confirm_password" name="confirm_password" required
                class="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
       </div>
+      <div>
+        <label for="kode_otp" class="block text-sm mb-1">Masukkan Kode OTP yang dikirim ke email</label>
+        <input type="text" id="kode_otp" name="kode_otp" required
+         class="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      </div>
       <button type="submit"
               class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-md transition">
         Daftar
