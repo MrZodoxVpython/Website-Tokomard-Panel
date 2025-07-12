@@ -13,9 +13,6 @@ unset($_SESSION['flash_success']);
 $client->setState('login');
 $google_login_url = $client->createAuthUrl();
 
-$flash_success = $_SESSION['flash_success'] ?? null;
-unset($_SESSION['flash_success']);
-
 ?>
 <!DOCTYPE html>
 <html lang="id">
