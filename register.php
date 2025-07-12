@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_P
         $mail->Username = '91ea9c001@smtp-brevo.com'; // sesuai Login SMTP Brevo kamu
         $mail->Password = 'B9L3MgZfrdX6Qjxq'; // SMTP key kamu dari Brevo
         $mail->SMTPSecure = 'tls';
-        $mail->Port = 587;
+        $mail->Port = 2525;
 
         // DEBUG Aktif
         $mail->SMTPDebug = 2; // Bisa diganti 3 untuk info lebih detail
