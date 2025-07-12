@@ -38,24 +38,23 @@ if (isset($_GET['code'])) {
         $stmt->execute();
         $result = $stmt->get_result();
 
-
-
-        if ($result->num_rows === 0) {
+	if ($result->num_rows === 0) {
 	    if ($mode === 'register') {
+	        // Insert user
 	        $username = explode('@', $email)[0];
 	        $dummyPass = password_hash(uniqid(), PASSWORD_DEFAULT);
 	        $insert = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
 	        $insert->bind_param("ssss", $username, $email, $dummyPass, $role);
 	        $insert->execute();
 
-	        // Ambil kembali user yang baru dibuat
+	        // Fetch kembali user yang baru dibuat
 	        $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
 	        $stmt->bind_param("s", $email);
 	        $stmt->execute();
 	        $result = $stmt->get_result();
 	    } else {
-	        $_SESSION['error'] = "Akun belum terdaftar. Silakan daftar terlebih dahulu.";
-	        header("Location: login.php");
+	        // ✅ Redirect user ke halaman register jika belum terdaftar
+	        header("Location: register.php?google_email=" . urlencode($email) . "&mode=register");
 	        exit;
 	    }
 	}
