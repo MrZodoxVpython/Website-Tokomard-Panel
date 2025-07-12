@@ -94,6 +94,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       Sudah punya akun?
       <a href="login.php" class="text-blue-400 hover:underline font-semibold">Login di sini</a>
     </p>
+<div class="mt-6 text-center">
+  <p class="text-sm mb-2">Atau daftar dengan</p>
+  <a href="google-login.php" class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" class="w-5 h-5 mr-2" alt="Google logo">
+    Sign in with Google
+  </a>
+</div>
+
   </div>
 
 </body>
