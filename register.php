@@ -57,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email    = $_POST['email'];
     $password = $_POST['password'];
     $confirm  = $_POST['confirm_password'];
+    $kode_otp = $_POST['kode_otp'] ?? '';
 
     if ($password !== $confirm) {
         $error = "Password dan konfirmasi tidak cocok.";
