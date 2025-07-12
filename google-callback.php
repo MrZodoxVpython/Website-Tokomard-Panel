@@ -1,58 +1,82 @@
 <?php
 session_start();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once 'koneksi.php';
 require_once 'google-config.php';
 
 if (isset($_GET['code'])) {
-    $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+    $mode = $_GET['state'] ?? 'login'; // Ambil mode dari query (login/register)
 
-    if (!isset($token['error'])) {
+    try {
+        $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+
+        if (isset($token['error'])) {
+            throw new Exception("Google Auth Error: " . $token['error']);
+        }
+
         $client->setAccessToken($token['access_token']);
 
         $oauth = new Google_Service_Oauth2($client);
         $userInfo = $oauth->userinfo->get();
 
         $email = $userInfo->email;
-        $name = $userInfo->name;
+        $name  = $userInfo->name;
 
-        // Tentukan role
+        // Role berdasarkan domain
         if (strpos($email, '@tokomard.com') !== false) {
             $role = 'admin';
         } else {
-            $role = 'reseller'; // semua domain lain jadi reseller
+            $role = 'reseller';
         }
 
-        // Cek apakah user sudah ada
+        // Cek apakah user sudah terdaftar
         $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
 
         if ($result->num_rows === 0) {
-            // User belum ada → insert
-            $username = explode('@', $email)[0];
-            $defaultPass = password_hash(uniqid(), PASSWORD_DEFAULT);
-            $stmtInsert = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
-            $stmtInsert->bind_param("ssss", $username, $email, $defaultPass, $role);
-            $stmtInsert->execute();
+            // Belum ada, hanya boleh insert jika mode == register
+            if ($mode === 'register') {
+                $username = explode('@', $email)[0];
+                $dummyPass = password_hash(uniqid(), PASSWORD_DEFAULT);
+                $insert = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
+                $insert->bind_param("ssss", $username, $email, $dummyPass, $role);
+                $insert->execute();
+            } else {
+                $_SESSION['error'] = "Akun belum terdaftar. Silakan daftar terlebih dahulu.";
+                header("Location: login.php");
+                exit;
+            }
         } else {
             $user = $result->fetch_assoc();
             $username = $user['username'];
         }
 
-        // Simpan sesi login
+        // Set session
         $_SESSION['login'] = true;
         $_SESSION['username'] = $username;
         $_SESSION['email'] = $email;
         $_SESSION['role'] = $role;
 
-        header("Location: reseller/reseller.php");
+        // Redirect sesuai mode
+        if ($mode === 'register') {
+            header("Location: login.php");
+        } else {
+            header("Location: reseller/reseller.php");
+        }
         exit;
-    } else {
-        echo "Terjadi kesalahan saat otentikasi: " . htmlspecialchars($token['error']);
+
+    } catch (Exception $e) {
+        echo "<h2>Google Login Gagal</h2>";
+        echo "<p>" . htmlspecialchars($e->getMessage()) . "</p>";
     }
+
 } else {
-    header("Location: index.php");
+    echo "Akses tidak sah.";
     exit;
 }
 
