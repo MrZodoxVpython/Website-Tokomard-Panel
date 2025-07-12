@@ -79,10 +79,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 if (in_array($currentTag, ['#vmess', '#vmessgrpc'])) {
-                    if (preg_match('/^\s*###\s+' . preg_quote($userEdit, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line, $matches)) {
-                        $prefix = $matches[1];
-                        $lines[$i] = "$prefix $userEdit $expiredBaru\n";
-                    }
+		    if (preg_match('/^\s*###\s+' . preg_quote($userEdit, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line)) {
+    	            $lines[$i] = "### $userEdit $expiredBaru\n";
+ 	        }
+
+                   // if (preg_match('/^\s*###\s+' . preg_quote($userEdit, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line, $matches)) {
+                    //    $prefix = $matches[1];
+                     //   $lines[$i] = "$prefix $userEdit $expiredBaru\n";
+                   // }
                 }
             }
 
