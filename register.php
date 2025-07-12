@@ -3,9 +3,9 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-session_start();
 include 'koneksi.php';
 require_once 'google-config.php';
+session_start();
 
 $flash_error = $_SESSION['flash_error'] ?? null;
 unset($_SESSION['flash_error']);
@@ -16,16 +16,16 @@ $google_login_url = $client->createAuthUrl();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'vendor/autoload.php'; // pastikan sudah install phpmailer via composer
+require 'vendor/autoload.php'; // PHPMailer harus sudah di-install via composer
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_POST['kode_otp'])) {
     $email = $_POST['email'];
 
-    // Generate kode OTP dan simpan ke session
+    // Buat OTP dan simpan ke session
     $otp = rand(100000, 999999);
     $_SESSION['otp_email'] = $email;
     $_SESSION['otp_code'] = $otp;
-    $_SESSION['otp_expire'] = time() + 300; // 5 menit
+    $_SESSION['otp_expire'] = time() + 300;
 
     // Kirim email
     $mail = new PHPMailer(true);
@@ -33,38 +33,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_P
         $mail->isSMTP();
         $mail->Host = 'smtp-relay.brevo.com';
         $mail->SMTPAuth = true;
-        $mail->Username = '91ea9c001@smtp-brevo.com'; // dari Brevo > SMTP login
-        $mail->Password = 'B9L3MgZfrdX6Qjxq'; // SMTP key dari Brevo
+        $mail->Username = '91ea9c001@smtp-brevo.com'; // sesuai Login SMTP Brevo kamu
+        $mail->Password = 'B9L3MgZfrdX6Qjxq'; // SMTP key kamu dari Brevo
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
 
+        // DEBUG Aktif
+        $mail->SMTPDebug = 2; // Bisa diganti 3 untuk info lebih detail
+        $mail->Debugoutput = 'html';
+
+        // Pastikan ini pakai domain yang telah di-autentikasi di Brevo
         $mail->setFrom('noreply@tokomard.store', 'Tokomard Panel');
         $mail->addAddress($email);
         $mail->Subject = 'Kode OTP Pendaftaran';
         $mail->Body    = "Kode OTP Anda: $otp (berlaku 5 menit)";
+
         $mail->send();
 
-        if (!isset($_POST['kode_otp'])) {
-            echo "OTP sent";
-            exit;
-        }
-
-        $_SESSION['flash_error'] = "Kode OTP telah dikirim.";
-        header("Location: register.php");
+        echo "OTP sent"; // jangan redirect saat debug
         exit;
+
     } catch (Exception $e) {
-        $_SESSION['flash_error'] = "Gagal mengirim OTP: {$mail->ErrorInfo}";
-        header("Location: register.php");
+        echo "Gagal mengirim OTP: {$mail->ErrorInfo}";
         exit;
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['kode_otp'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $email    = $_POST['email'];
     $password = $_POST['password'];
     $confirm  = $_POST['confirm_password'];
-    $kode_otp = $_POST['kode_otp'];
+    $kode_otp = $_POST['kode_otp'] ?? '';
 
     if ($password !== $confirm) {
         $error = "Password dan konfirmasi tidak cocok.";
@@ -77,10 +77,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['kode_otp'])) {
             $error = "Email tidak valid. Gunakan @reseller.com.";
         }
 
-        // Validasi kode OTP
         if (!isset($error)) {
-            if (
-                !isset($_SESSION['otp_code'], $_SESSION['otp_email'], $_SESSION['otp_expire']) ||
+            if (!isset($_SESSION['otp_code'], $_SESSION['otp_email'], $_SESSION['otp_expire']) ||
                 $_SESSION['otp_email'] !== $email ||
                 $_SESSION['otp_code'] != $kode_otp ||
                 time() > $_SESSION['otp_expire']
