@@ -25,19 +25,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_P
     $_SESSION['otp_email'] = $email;
     $_SESSION['otp_code'] = $otp;
     $_SESSION['otp_expire'] = time() + 300;
-
+    
     // Kirim email
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
+        $mail->Host = 'smtp-relay.brevo.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'akunemailkamu@gmail.com';
-        $mail->Password = 'passwordaplikasi';
+        $mail->Username = '91ea9c001@smtp-brevo.com';
+        $mail->Password = 'B9L3MgZfrdX6Qjxq'; // SMTP key Brevo
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
 
-        $mail->setFrom('akunemailkamu@gmail.com', 'Tokomard Panel');
+        $mail->setFrom('91ea9c001@smtp-brevo.com', 'Tokomard Panel');
         $mail->addAddress($email);
         $mail->Subject = 'Kode OTP Pendaftaran';
         $mail->Body    = "Kode OTP Anda: $otp (berlaku 5 menit)";
