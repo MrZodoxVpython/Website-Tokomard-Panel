@@ -12,6 +12,46 @@ unset($_SESSION['flash_error']);
 $client->setState('register');
 $google_login_url = $client->createAuthUrl();
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'vendor/autoload.php'; // pastikan sudah install phpmailer
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_POST['kode_otp'])) {
+    $email = $_POST['email'];
+
+    // Generate kode OTP dan simpan ke session
+    $otp = rand(100000, 999999);
+    $_SESSION['otp_email'] = $email;
+    $_SESSION['otp_code'] = $otp;
+    $_SESSION['otp_expire'] = time() + 300; // 5 menit valid
+
+    // Kirim email OTP
+    $mail = new PHPMailer(true);
+    try {
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com'; // Ganti sesuai SMTP
+        $mail->SMTPAuth = true;
+        $mail->Username = 'akunemailkamu@gmail.com'; // Ganti
+        $mail->Password = 'passwordaplikasi';         // Ganti
+        $mail->SMTPSecure = 'tls';
+        $mail->Port = 587;
+
+        $mail->setFrom('akunemailkamu@gmail.com', 'Tokomard Panel');
+        $mail->addAddress($email);
+
+        $mail->Subject = 'Kode OTP Pendaftaran';
+        $mail->Body    = "Kode OTP Anda: $otp (berlaku 5 menit)";
+
+        $mail->send();
+        $_SESSION['flash_error'] = "Kode OTP telah dikirim ke email Anda.";
+        header("Location: register.php");
+        exit;
+    } catch (Exception $e) {
+        $_SESSION['flash_error'] = "Gagal mengirim kode OTP: {$mail->ErrorInfo}";
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $email    = $_POST['email'];
