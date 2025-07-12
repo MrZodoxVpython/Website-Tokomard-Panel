@@ -69,6 +69,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = "Email tidak valid. Gunakan @reseller.com.";
         }
 
+	// ✅ Validasi kode OTP
+        if (!isset($error)) {
+            if (!isset($_SESSION['otp_code'], $_SESSION['otp_email'], $_SESSION['otp_expire']) ||
+                $_SESSION['otp_email'] !== $email ||
+                $_SESSION['otp_code'] != $kode_otp ||
+                time() > $_SESSION['otp_expire']
+            ) {
+                $error = "Kode OTP salah atau sudah kedaluwarsa.";
+            }
+        }
+
         if (!isset($error)) {
             $hashed = password_hash($password, PASSWORD_DEFAULT);
             $stmt = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
