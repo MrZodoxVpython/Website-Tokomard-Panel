@@ -153,7 +153,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
 
         // 🛠   Update file dan config
         $cmds[] = "$sshPrefix \"sed -i 's|^Expired On[[:space:]]*:[[:space:]]*.*|Expired On     : $expired|' $fileAkun\"";
-        $cmds[] = "$sshPrefix \"sed -i 's|^#& $escapedUser .*|#& $user $expired|' $configPath\"";
+	$cmds[] = "$sshPrefix \"sed -i 's|^#&[[:space:]]*$escapedUser[[:space:]]\\+[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}|#& $user $expired|' $configPath\"";
+
+  //      $cmds[] = "$sshPrefix \"sed -i 's|^#& $escapedUser .*|#& $user $expired|' $configPath\"";
         $cmds[] = "$sshPrefix 'systemctl restart xray'";
 
         echo "CMDs:\n";
