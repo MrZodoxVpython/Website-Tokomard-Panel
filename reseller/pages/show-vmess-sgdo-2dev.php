@@ -70,23 +70,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $expiredBaru = $expiredInput;
         }
 
-        if ($expiredBaru) {
-            $currentTag = '';
+if ($expiredBaru) {
+    $currentTag = '';
 
-            foreach ($lines as $i => $line) {
-                if (preg_match('/^\s*#vmess(grpc)?$/i', trim($line), $m)) {
-                    $currentTag = '#' . strtolower($m[1] . ($m[2] ?? ''));
-                }
+    foreach ($lines as $i => $line) {
+        if (preg_match('/^\s*#vmess(grpc)?$/i', trim($line), $m)) {
+            $currentTag = '#' . strtolower($m[1] . ($m[2] ?? ''));
+        }
 
-                if (in_array($currentTag, ['#vmess', '#vmessgrpc'])) {
-                    if (preg_match('/^\s*###\s+' . preg_quote($userEdit, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line, $matches)) {
-                        $prefix = $matches[1];
-                        $lines[$i] = "$prefix $userEdit $expiredBaru\n";
-                    }
-                }
+        if (in_array($currentTag, ['#vmess', '#vmessgrpc'])) {
+            if (preg_match('/^\s*###\s+' . preg_quote($userEdit, '/') . '\s+\d{4}-\d{2}-\d{2}/', $line)) {
+                $lines[$i] = "### $userEdit $expiredBaru\n";
             }
+        }
+    }
 
-            file_put_contents($configPath, implode('', $lines));
+    file_put_contents($configPath, implode('', $lines));
 
             foreach (glob("$logDir/akun-$reseller-$userEdit.txt") as $file) {
                 $content = file_get_contents($file);
