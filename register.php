@@ -6,6 +6,8 @@ error_reporting(E_ALL);
 include 'koneksi.php';
 require_once 'google-config.php';
 session_start();
+$flash_error = $_SESSION['flash_error'] ?? null;
+unset($_SESSION['flash_error']);
 
 $client->setState('register');
 $google_login_url = $client->createAuthUrl();
@@ -57,11 +59,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h2 class="text-3xl font-bold mb-2 text-center">Buat Akun Baru</h2>
     <p class="text-gray-400 text-center mb-6">Silakan isi data untuk mendaftar</p>
 
-    <?php if (isset($error)): ?>
-      <div class="bg-red-600 text-white p-3 mb-4 rounded-md text-center">
-        <?= htmlspecialchars($error) ?>
-      </div>
-    <?php endif; ?>
+<?php if ($flash_error): ?>
+  <div class="bg-yellow-600 text-white p-3 mb-4 rounded-md text-center">
+    <?= htmlspecialchars($flash_error) ?>
+  </div>
+<?php endif; ?>
 
     <form method="POST" action="" class="space-y-5">
       <div>
