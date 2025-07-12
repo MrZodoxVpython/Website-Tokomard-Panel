@@ -7,6 +7,7 @@ include 'koneksi.php';
 require_once 'google-config.php';
 session_start();
 
+$client->setState('register');
 $google_login_url = $client->createAuthUrl();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
