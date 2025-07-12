@@ -5,7 +5,9 @@ error_reporting(E_ALL);
 
 include 'koneksi.php';
 require_once 'google-config.php';
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 $flash_error = $_SESSION['flash_error'] ?? null;
 unset($_SESSION['flash_error']);
