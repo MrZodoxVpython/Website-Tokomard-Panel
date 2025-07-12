@@ -176,22 +176,33 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
 <body class="bg-gray-900 text-white p-6">
 <div class="max-w-4xl mx-auto">
     <h1 class="text-center text-2xl font-bold mb-4">Daftar Akun VMess (SGDO-2DEV) - <?= htmlspecialchars($reseller) ?></h1>
-    <?php if (empty($akunFiles)) : ?>
-        <div class="text-center bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded">
-            ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>
-            silahkan buat akun terlebih dahulu.
-        </div>
-    <?php else: ?>
-<?php foreach ($akunFiles as $file):
-    $filename = basename($file);
-    preg_match('/akun-' . preg_quote($reseller, '/') . '-(.+)\.txt/', $filename, $m);
-    $username = $m[1] ?? 'unknown';
+<?php
+$foundValidVmess = false;
+foreach ($akunFiles as $file) {
     $content = file_get_contents($file);
-
-    // ✅ Filter hanya akun VMess
-    if (stripos($content, '"protocol": "vmess"') === false && stripos($content, 'vmess://') === false) {
-        continue; // Lewati Trojan, Shadowsocks, dll
+    if (stripos($content, '"protocol": "vmess"') !== false || stripos($content, 'vmess://') !== false) {
+        $foundValidVmess = true;
+        break;
     }
+}
+?>
+
+<?php if (empty($akunFiles) || !$foundValidVmess) : ?>
+    <div class="text-center bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded">
+        ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>
+        silahkan buat akun terlebih dahulu.
+    </div>
+<?php else: ?>
+    <?php foreach ($akunFiles as $file):
+        $filename = basename($file);
+        preg_match('/akun-' . preg_quote($reseller, '/') . '-(.+)\.txt/', $filename, $m);
+        $username = $m[1] ?? 'unknown';
+        $content = file_get_contents($file);
+
+        // ✅ Filter hanya akun VMess
+        if (stripos($content, '"protocol": "vmess"') === false && stripos($content, 'vmess://') === false) {
+            continue;
+        }
 
     $isDisabled = false;
 
