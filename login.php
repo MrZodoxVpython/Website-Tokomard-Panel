@@ -7,6 +7,9 @@ include 'koneksi.php';
 require_once 'google-config.php';
 session_start();
 
+$flash_success = $_SESSION['flash_success'] ?? null;
+unset($_SESSION['flash_success']);
+
 $client->setState('login');
 $google_login_url = $client->createAuthUrl();
 
