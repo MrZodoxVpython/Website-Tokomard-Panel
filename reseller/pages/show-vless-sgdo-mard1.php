@@ -153,8 +153,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_user'])) {
 
         // 🛠   Update file dan config
         $cmds[] = "$sshPrefix \"sed -i 's|^Expired On[[:space:]]*:[[:space:]]*.*|Expired On     : $expired|' $fileAkun\"";
-        $cmds[] = "$sshPrefix \"sed -i 's|^#& $escapedUser .*|#& $user $expired|' $configPath\"";
-        $cmds[] = "$sshPrefix 'systemctl restart xray'";
+	$cmds[] = "$sshPrefix \"sed -i 's/^##& /#& /' $configPath\""; // Step 1: Bersihkan tag jelek
+$cmds[] = "$sshPrefix \"sed -i '/^#& $escapedUser [0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\$/c\\#& $user $expired' $configPath\""; // Step 2: Replace expired
+$cmds[] = "$sshPrefix 'systemctl restart xray'"; // Step 3: Restart Xray
+
+//        $cmds[] = "$sshPrefix \"sed -i 's|^#& $escapedUser .*|#& $user $expired|' $configPath\"";
+ //       $cmds[] = "$sshPrefix 'systemctl restart xray'";
 
         echo "CMDs:\n";
         foreach ($cmds as $c) {
