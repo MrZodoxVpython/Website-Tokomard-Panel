@@ -819,3 +819,6 @@ OUTPUT:
 RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@152.42.182.187 "rm -f /etc/xray/data-panel/reseller/akun-MrZodoxVpython-PEPEPEEKKKKK.txt"
 OUTPUT:
 
+RUNNING: ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@152.42.182.187 'systemctl restart xray'
+OUTPUT:
+
