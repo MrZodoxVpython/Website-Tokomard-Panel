@@ -146,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <div>
-      <label for="confirm_password" class="block text-sm mb-1">Konfirmasi Password</label>
+      <label for="confirm_password" class="block text-sm mb-1 mt-2">Konfirmasi Password</label>
       <input type="password" id="confirm_password" name="confirm_password" required
              class="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
     </div>
