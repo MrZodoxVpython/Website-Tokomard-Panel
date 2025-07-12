@@ -54,8 +54,9 @@ if (isset($_GET['code'])) {
 	        $result = $stmt->get_result();
 	    } else {
 	        // ✅ Redirect user ke halaman register jika belum terdaftar
-	        header("Location: register.php?google_email=" . urlencode($email) . "&mode=register");
-	        exit;
+		$_SESSION['flash_error'] = "Akun Google Anda belum terdaftar. Silakan daftar terlebih dahulu.";
+		header("Location: register.php?google_email=" . urlencode($email) . "&mode=register");
+		exit;
 	    }
 	}
 
