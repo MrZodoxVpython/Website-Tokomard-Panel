@@ -176,7 +176,7 @@ if (isset($_POST['toggle_user']) && isset($_POST['action'])) {
 <body class="bg-gray-900 text-white p-6">
 <div class="max-w-4xl mx-auto">
     <h1 class="text-center text-2xl font-bold mb-4">Daftar Akun Vless (SGDO-2DEV) - <?= htmlspecialchars($reseller) ?></h1>
-    <?php if (empty($akunFiles)) : ?>
+    <?php if (empty($akunFiles) || !$foundValidVless) : ?>
         <div class="text-center bg-yellow-500/10 border border-yellow-400 text-yellow-300 p-4 rounded">
             ⚠ Belum ada daftar akun untuk reseller <strong><?= htmlspecialchars($reseller) ?></strong>
             silahkan buat akun terlebih dahulu.
