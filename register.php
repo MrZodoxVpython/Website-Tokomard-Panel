@@ -271,11 +271,25 @@ function kirimOTP() {
   const formData = new FormData();
   formData.append("email", email);
 
-  fetch("", {
+    fetch("", {
     method: "POST",
     body: formData
-  }).then(response => response.text())
-	  .then(response => response.json())
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById('step1').classList.add('hidden');
+      document.getElementById('step2').classList.remove('hidden');
+      const notif = document.querySelector('.bg-yellow-600');
+      if (notif) notif.remove();
+    } else {
+      alert(data.message || "Gagal mengirim OTP");
+    }
+  })
+  .catch(err => {
+    alert("Gagal parsing response: " + err);
+  });
+
 .then(data => {
   if (data.success) {
     document.getElementById('step1').classList.add('hidden');
