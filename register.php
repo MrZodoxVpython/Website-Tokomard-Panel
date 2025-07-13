@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_P
         $mail->isSMTP();
         $mail->Host = 'smtp.elasticemail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'noreply@tokomard.store';
+        $mail->Username = 'tokomard@gmail.com';
         $mail->Password = 'DC0B1D3279D2EC86911404DF7A5022D4CADB'; // API Key kamu
         $mail->SMTPSecure = 'tls';
         $mail->Port = 2525;
