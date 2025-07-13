@@ -13,8 +13,11 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-$flash_error = $_SESSION['flash_error'] ?? null;
-unset($_SESSION['flash_error']);
+$flash_error = null;
+if (!isset($_POST['email']) || isset($_POST['kode_otp'])) {
+    $flash_error = $_SESSION['flash_error'] ?? null;
+    unset($_SESSION['flash_error']);
+}
 
 $clientGoogle = $client; // Rename biar nggak bentrok
 $clientGoogle->setState('register');
