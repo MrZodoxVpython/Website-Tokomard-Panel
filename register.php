@@ -75,44 +75,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Email tidak valid. Gunakan akun @gmail!";
     }
 
-    // Langsung lempar error jika sudah ada error
+    // Langsung lempar error jika validasi awal gagal
     if (isset($error)) {
         $_SESSION['flash_error'] = $error;
         header("Location: register.php");
         exit;
     }
-        if (!isset($error)) {
-            if (!isset($_SESSION['otp_code'], $_SESSION['otp_email'], $_SESSION['otp_expire']) ||
-                $_SESSION['otp_email'] !== $email ||
-                $_SESSION['otp_code'] != $kode_otp ||
-                time() > $_SESSION['otp_expire']
-            ) {
-                $error = "Kode OTP salah atau sudah kedaluwarsa.";
-            }
-        }
 
-        if (!isset($error)) {
-            $hashed = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
-            $stmt->bind_param("ssss", $username, $email, $hashed, $role);
-
-            if ($stmt->execute()) {
-                unset($_SESSION['otp_code'], $_SESSION['otp_email'], $_SESSION['otp_expire']);
-		$_SESSION['flash_success'] = "Berhasil mendaftarkan akun. Silakan login.";
-		header("Location: login.php");
-		exit;
-            } else {
-                $error = "Registrasi gagal: " . $stmt->error;
-            }
-        }
+    // Validasi OTP
+    if (!isset($_SESSION['otp_code'], $_SESSION['otp_email'], $_SESSION['otp_expire']) ||
+        $_SESSION['otp_email'] !== $email ||
+        $_SESSION['otp_code'] != $kode_otp ||
+        time() > $_SESSION['otp_expire']
+    ) {
+        $error = "Kode OTP salah atau sudah kedaluwarsa.";
+        $_SESSION['flash_error'] = $error;
+        header("Location: register.php");
+        exit;
     }
 
-    if (isset($error)) {
-        $_SESSION['flash_error'] = $error;
+    // Eksekusi query insert
+    $hashed = password_hash($password, PASSWORD_DEFAULT);
+    $stmt = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $username, $email, $hashed, $role);
+
+    if ($stmt->execute()) {
+        unset($_SESSION['otp_code'], $_SESSION['otp_email'], $_SESSION['otp_expire']);
+        $_SESSION['flash_success'] = "Berhasil mendaftarkan akun. Silakan login.";
+        header("Location: login.php");
+        exit;
+    } else {
+        $_SESSION['flash_error'] = "Registrasi gagal: " . $stmt->error;
         header("Location: register.php");
         exit;
     }
 }
+
 ?>
 
 <!DOCTYPE html>
