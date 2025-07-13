@@ -5,6 +5,10 @@ error_reporting(E_ALL);
 
 include 'koneksi.php';
 require_once 'google-config.php';
+require 'vendor/autoload.php';
+
+use GuzzleHttp\Client;
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -12,13 +16,9 @@ if (session_status() === PHP_SESSION_NONE) {
 $flash_error = $_SESSION['flash_error'] ?? null;
 unset($_SESSION['flash_error']);
 
-$client->setState('register');
-$google_login_url = $client->createAuthUrl();
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-require 'vendor/autoload.php';
+$clientGoogle = $client; // Rename biar nggak bentrok
+$clientGoogle->setState('register');
+$google_login_url = $clientGoogle->createAuthUrl();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_POST['kode_otp'])) {
     $email = $_POST['email'];
@@ -28,29 +28,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_P
     $_SESSION['otp_code'] = $otp;
     $_SESSION['otp_expire'] = time() + 300;
 
-    $mail = new PHPMailer(true);
+    // Kirim via API Resend
+    $client = new Client([
+        'base_uri' => 'https://api.resend.com/',
+        'headers' => [
+            'Authorization' => 're_AwrPwQ6f_Jq7UhMrkmBdSAFSLMHu2r9Ai', // GANTI API KEY MU
+            'Content-Type'  => 'application/json',
+        ]
+    ]);
+
     try {
-        $mail->isSMTP();
-        $mail->Host = 'smtp.elasticemail.com';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'tokomard@gmail.com';
-        $mail->Password = 'DC0B1D3279D2EC86911404DF7A5022D4CADB'; // API Key kamu
-        $mail->SMTPSecure = 'tls';
-        $mail->Port = 2525;
+        $client->post('emails', [
+            'json' => [
+                'from' => 'Tokomard Panel <noreply@tokomard.store>', // HARUS verified
+                'to' => [$email],
+                'subject' => 'Kode OTP Pendaftaran',
+                'html' => "<h3>Kode OTP Anda: <strong>$otp</strong></h3><p>Jangan bagikan ke siapa pun. Berlaku 5 menit.</p>",
+            ]
+        ]);
 
-        $mail->setFrom('noreply@tokomard.store', 'Tokomard Panel');
-        $mail->addAddress($email);
-        $mail->Subject = 'Kode OTP Pendaftaran';
-        $mail->Body    = "Kode OTP Anda adalah: $otp (berlaku 5 menit)";
-
-        // Aktifkan debug saat testing
-        $mail->SMTPDebug = 2;
-        $mail->Debugoutput = 'html';
-
-        $mail->send();
         echo "OTP sent.";
+        exit;
     } catch (Exception $e) {
-        echo "Gagal mengirim OTP: " . $mail->ErrorInfo;
+        echo "Gagal mengirim OTP: " . $e->getMessage();
+        exit;
     }
 }
 
