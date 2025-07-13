@@ -63,8 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_P
 	echo json_encode(["success" => true, "message" => "OTP sent"]);
 	exit;
     } catch (Exception $e) {
-        echo "Gagal mengirim OTP: " . $e->getMessage();
-        exit;
+	header('Content-Type: application/json');
+	http_response_code(500);
+	echo json_encode(["success" => false, "message" => "Gagal mengirim OTP: " . $e->getMessage()]);
+	exit;
     }
 }
 
