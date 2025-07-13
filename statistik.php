@@ -16,15 +16,35 @@ $selectedVPS = $_GET['vps'] ?? 'sgdo-2dev';
 $configPath = $vpsList[$selectedVPS]['config'] ?? '/etc/xray/config.json';
 $logPath = '/var/log/xray/access.log'; // bisa disesuaikan jika log berbeda per VPS
 
+$sshPrefix = '';
+$configPath = $vpsList[$selectedVPS]['config'];
+$logPath = '/var/log/xray/access.log'; // Bisa disesuaikan per-VPS jika berbeda
+
+if ($selectedVPS === 'sgdo-2dev') {
+    // VPS lokal (akses langsung)
+    if (!file_exists($configPath)) {
+        echo "<p style='color:red;'>❌ File config.json tidak ditemukan di VPS Lokal!</p>";
+        exit;
+    }
+    $data = file_get_contents($configPath);
+} else {
+    // VPS remote (akses via SSH)
+    $sshPrefix = 'ssh -o StrictHostKeyChecking=no -i /root/.ssh/id_rsa root@' . $vpsList[$selectedVPS]['ip'];
+    $data = shell_exec("$sshPrefix \"cat $configPath\"");
+    if (!$data) {
+        echo "<p style='color:red;'>❌ Gagal mengambil config.json dari VPS $selectedVPS!</p>";
+        exit;
+    }
+}
+
 //$configPath = '/etc/xray/config.json';
 //$logPath = '/var/log/xray/access.log';
 
-if (!file_exists($configPath)) {
-    echo "<p style='color:red;'>❌ File config.json tidak ditemukan!</p>";
-    exit;
-}
-
-$data = file_get_contents($configPath);
+//if (!file_exists($configPath)) {
+//    echo "<p style='color:red;'>❌ File config.json tidak ditemukan!</p>";
+//    exit;
+//}
+//$data = file_get_contents($configPath);
 if ($data === false) {
     echo "<p style='color:red;'>❌ Gagal membaca file config.json!</p>";
     exit;
@@ -98,7 +118,13 @@ $startTime = date('Y/m/d H:i:s', strtotime('-1 minute'));
 $usernames = array_keys($seenUsers);
 
 if (file_exists($logPath)) {
-    $logContent = explode("\n", shell_exec("tail -n 500 /var/log/xray/access.log"));
+    //$logContent = explode("\n", shell_exec("tail -n 500 /var/log/xray/access.log"));
+    if ($selectedVPS === 'sgdo-2dev') {
+    	$logContent = explode("\n", shell_exec("tail -n 500 $logPath"));
+    } else {
+    	$logContent = explode("\n", shell_exec("$sshPrefix \"tail -n 500 $logPath\""));
+    }
+
     $uniqueUsers = [];
     foreach ($logContent as $logLine) {
         if (preg_match('/^(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}).*email: (\S+)/', $logLine, $matches)) {
