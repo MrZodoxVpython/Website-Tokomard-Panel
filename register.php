@@ -269,6 +269,10 @@ function kirimOTP() {
     return;
   }
 
+  // Tampilkan spinner, sembunyikan tombol
+  document.getElementById("otpButton").classList.add("hidden");
+  document.getElementById("otpLoading").classList.remove("hidden");
+
   const formData = new FormData();
   formData.append("email", email);
 
@@ -278,6 +282,9 @@ function kirimOTP() {
   })
   .then(response => response.json())
   .then(data => {
+    document.getElementById("otpButton").classList.remove("hidden");
+    document.getElementById("otpLoading").classList.add("hidden");
+
     if (data.success) {
       document.getElementById('step1').classList.add('hidden');
       document.getElementById('step2').classList.remove('hidden');
@@ -288,6 +295,8 @@ function kirimOTP() {
     }
   })
   .catch(err => {
+    document.getElementById("otpButton").classList.remove("hidden");
+    document.getElementById("otpLoading").classList.add("hidden");
     alert("Gagal parsing response: " + err);
   });
 }
