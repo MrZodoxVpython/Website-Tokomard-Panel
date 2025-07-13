@@ -177,6 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>Register - X-Panel</title>
   <!-- Tailwind CSS CDN -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="SHORTCUT ICON" href="https://i.imgur.com/q3DzxiB.png">
 </head>
 <body class="bg-gray-900 flex items-center justify-center min-h-screen text-white px-4">
 
