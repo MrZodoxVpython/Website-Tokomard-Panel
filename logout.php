@@ -58,7 +58,7 @@ session_destroy();
     </lottie-player>
 
     <h1 class="glitch">Berhasil Logout</h1>
-    <p class="text-gray-300">Terima kasih telah menggunakan <span class="text-pink-400 font-semibold">Tokomard-Xray-Panel</span>.</p>
+    <p class="text-gray-300">Terima kasih telah menggunakan <span class="text-pink-400 font-semibold">Panel Tokomard</span>.</p>
 
     <a href="index.php"
        class="inline-block bg-pink-600 hover:bg-pink-700 text-white px-6 py-2 rounded-md transition font-semibold">
