@@ -275,16 +275,18 @@ function kirimOTP() {
     method: "POST",
     body: formData
   }).then(response => response.text())
-    .then(() => {
-      // Tampilkan form OTP
-      document.getElementById('step1').classList.add('hidden');
-      document.getElementById('step2').classList.remove('hidden');
+	  .then(response => response.json())
+.then(data => {
+  if (data.success) {
+    document.getElementById('step1').classList.add('hidden');
+    document.getElementById('step2').classList.remove('hidden');
+    const notif = document.querySelector('.bg-yellow-600');
+    if (notif) notif.remove();
+  } else {
+    alert(data.message || "Gagal mengirim OTP");
+  }
+})
 
-      const notif = document.querySelector('.bg-yellow-600');
-      if (notif) notif.remove();
-    }).catch(err => {
-      alert("Gagal mengirim OTP");
-    });
 }
 </script>
 
