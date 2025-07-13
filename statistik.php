@@ -6,8 +6,18 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
-$configPath = '/etc/xray/config.json';
-$logPath = '/var/log/xray/access.log';
+$vpsList = [
+    "sgdo-2dev" => ["ip" => "178.128.60.185", "config" => "/etc/xray/config.json"],
+    "sgdo-mard1" => ["ip" => "152.42.182.187", "config" => "/etc/xray/config.json"],
+    "rw-mard" => ["ip" => "203.194.113.140", "config" => "/etc/xray/config.json"]
+];
+
+$selectedVPS = $_GET['vps'] ?? 'sgdo-2dev';
+$configPath = $vpsList[$selectedVPS]['config'] ?? '/etc/xray/config.json';
+$logPath = '/var/log/xray/access.log'; // bisa disesuaikan jika log berbeda per VPS
+
+//$configPath = '/etc/xray/config.json';
+//$logPath = '/var/log/xray/access.log';
 
 if (!file_exists($configPath)) {
     echo "<p style='color:red;'>❌ File config.json tidak ditemukan!</p>";
@@ -124,6 +134,17 @@ error_log("⏱ Setelah include header.php: " . round(microtime(true) - $__start_
     </div>
     <?php endforeach; ?>
   </div>
+
+<div class="flex flex-wrap items-center justify-between mb-6">
+  <h2 class="text-xl font-bold text-white mb-2 sm:mb-0">Pilih VPS:</h2>
+  <form method="get" class="w-full sm:w-auto">
+    <select name="vps" onchange="this.form.submit()" class="bg-gray-800 text-white border border-gray-600 rounded-xl px-4 py-2">
+      <?php foreach ($vpsList as $key => $info): ?>
+        <option value="<?= $key ?>" <?= $key === $selectedVPS ? 'selected' : '' ?>><?= strtoupper($key) ?> (<?= $info['ip'] ?>)</option>
+      <?php endforeach; ?>
+    </select>
+  </form>
+</div>
 
   <!-- Tabel Daftar Akun Aktif -->
   <div class="bg-green-800 rounded-xl p-4 sm:p-6 shadow mb-10">
