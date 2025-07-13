@@ -59,6 +59,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_P
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Jika hanya kirim email untuk OTP (tanpa kode_otp)
+    if (isset($_POST['email']) && empty($_POST['kode_otp'])) {
+        $email = $_POST['email'];
+
+        // Validasi domain email
+        if (strpos($email, '@gmail.com') === false && strpos($email, '@tokomard.com') === false) {
+            $_SESSION['flash_error'] = "Email tidak valid. Gunakan @gmail.com atau @tokomard.com!";
+            header("Location: register.php");
+            exit;
+        }
+
+        $otp = rand(100000, 999999);
+        $_SESSION['otp_email'] = $email;
+        $_SESSION['otp_code'] = $otp;
+        $_SESSION['otp_expire'] = time() + 300;
+
+        // Kirim email via Resend API
+        $client = new \GuzzleHttp\Client([
+            'base_uri' => 'https://api.resend.com/',
+            'headers' => [
+                'Authorization' => 're_AwrPwQ6f_Jq7UhMrkmBdSAFSLMHu2r9Ai',
+                'Content-Type'  => 'application/json',
+            ]
+        ]);
+
+        try {
+            $client->post('emails', [
+                'json' => [
+                    'from' => 'Tokomard Panel <noreply@tokomard.store>',
+                    'to' => [$email],
+                    'subject' => 'Kode OTP Pendaftaran',
+                    'html' => "<h3>Kode OTP Anda: <strong>$otp</strong></h3><p>Jangan bagikan ke siapa pun. Berlaku 5 menit.</p>",
+                ]
+            ]);
+
+            echo "OTP sent.";
+            exit;
+        } catch (Exception $e) {
+            echo "Gagal mengirim OTP: " . $e->getMessage();
+            exit;
+        }
+    }
+
+    // Proses lengkap register setelah user input OTP
     $username = $_POST['username'];
     $email    = $_POST['email'];
     $password = $_POST['password'];
