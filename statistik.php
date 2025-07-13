@@ -17,20 +17,40 @@ $sshPrefix = '';
 $configPath = $vpsList[$selectedVPS]['config'];
 $logPath = '/var/log/xray/access.log'; // Bisa disesuaikan per-VPS jika berbeda
 
-if ($selectedVPS === 'sgdo-2dev') {
-    // VPS lokal (akses langsung)
-    if (!file_exists($configPath)) {
-        echo "<p style='color:red;'>❌ File config.json tidak ditemukan di VPS Lokal!</p>";
-        exit;
+$dataList = [];
+
+if ($selectedVPS === 'all') {
+    foreach ($vpsList as $key => $info) {
+        $path = $info['config'];
+        if ($key === 'sgdo-2dev') {
+            // Lokal
+            if (file_exists($path)) {
+                $content = file_get_contents($path);
+                if ($content !== false) $dataList[] = $content;
+            }
+        } else {
+            // Remote
+            $ssh = 'ssh -o StrictHostKeyChecking=no -i /root/.ssh/id_rsa root@' . $info['ip'];
+            $content = shell_exec("$ssh \"cat $path\"");
+            if ($content) $dataList[] = $content;
+        }
     }
-    $data = file_get_contents($configPath);
+
+    $data = implode("\n", $dataList);
 } else {
-    // VPS remote (akses via SSH)
-    $sshPrefix = 'ssh -o StrictHostKeyChecking=no -i /root/.ssh/id_rsa root@' . $vpsList[$selectedVPS]['ip'];
-    $data = shell_exec("$sshPrefix \"cat $configPath\"");
-    if (!$data) {
-        echo "<p style='color:red;'>❌ Gagal mengambil config.json dari VPS $selectedVPS!</p>";
-        exit;
+    if ($selectedVPS === 'sgdo-2dev') {
+        if (!file_exists($configPath)) {
+            echo "<p style='color:red;'>❌ File config.json tidak ditemukan di VPS Lokal!</p>";
+            exit;
+        }
+        $data = file_get_contents($configPath);
+    } else {
+        $sshPrefix = 'ssh -o StrictHostKeyChecking=no -i /root/.ssh/id_rsa root@' . $vpsList[$selectedVPS]['ip'];
+        $data = shell_exec("$sshPrefix \"cat $configPath\"");
+        if (!$data) {
+            echo "<p style='color:red;'>❌ Gagal mengambil config.json dari VPS $selectedVPS!</p>";
+            exit;
+        }
     }
 }
 
