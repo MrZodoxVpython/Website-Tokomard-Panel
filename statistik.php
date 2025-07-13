@@ -134,23 +134,44 @@ $activeUsers = [];
 $startTime = date('Y/m/d H:i:s', strtotime('-1 minute'));
 $usernames = array_keys($seenUsers);
 
-if (file_exists($logPath)) {
-    //$logContent = explode("\n", shell_exec("tail -n 500 /var/log/xray/access.log"));
-    if ($selectedVPS === 'sgdo-2dev') {
-    	$logContent = explode("\n", shell_exec("tail -n 500 $logPath"));
-    } else {
-    	$logContent = explode("\n", shell_exec("$sshPrefix \"tail -n 500 $logPath\""));
-    }
+$logLines = [];
 
-    $uniqueUsers = [];
-    foreach ($logContent as $logLine) {
-        if (preg_match('/^(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}).*email: (\S+)/', $logLine, $matches)) {
-            $logTime = $matches[1];
-            $logUser = $matches[2];
-            if ($logTime > $startTime && in_array($logUser, $usernames)) {
-                $uniqueUsers[$logUser] = true;
-                $activeUsers[$logUser] = true;
+if ($selectedVPS === 'all') {
+    foreach ($vpsList as $key => $info) {
+        if ($key === 'sgdo-2dev') {
+            if (file_exists($logPath)) {
+                $output = shell_exec("tail -n 500 $logPath");
+                if ($output) {
+                    $logLines = array_merge($logLines, explode("\n", $output));
+                }
             }
+        } else {
+            $ssh = 'ssh -o StrictHostKeyChecking=no -i /root/.ssh/id_rsa root@' . $info['ip'];
+            $output = shell_exec("$ssh \"tail -n 500 $logPath\"");
+            if ($output) {
+                $logLines = array_merge($logLines, explode("\n", $output));
+            }
+        }
+    }
+} else {
+    if ($selectedVPS === 'sgdo-2dev') {
+        if (file_exists($logPath)) {
+            $logLines = explode("\n", shell_exec("tail -n 500 $logPath"));
+        }
+    } else {
+        $logLines = explode("\n", shell_exec("$sshPrefix \"tail -n 500 $logPath\""));
+    }
+}
+
+// Proses log
+$uniqueUsers = [];
+foreach ($logLines as $logLine) {
+    if (preg_match('/^(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}).*email: (\S+)/', $logLine, $matches)) {
+        $logTime = $matches[1];
+        $logUser = $matches[2];
+        if ($logTime > $startTime && in_array($logUser, $usernames)) {
+            $uniqueUsers[$logUser] = true;
+            $activeUsers[$logUser] = true;
         }
     }
 }
