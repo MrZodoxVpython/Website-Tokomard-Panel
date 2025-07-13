@@ -197,13 +197,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
 <script>
 function kirimOTP() {
-  const form = document.getElementById('registerForm');
-  const email = document.getElementById('email').value;
+  const username = document.getElementById('username').value.trim();
+  const email = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value;
   const confirm = document.getElementById('confirm_password').value;
 
+  if (!username || !email || !password || !confirm) {
+    alert("Semua kolom harus diisi!");
+    return;
+  }
+
   if (password !== confirm) {
-    alert("Password tidak cocok");
+    alert("Password dan konfirmasi tidak cocok.");
     return;
   }
 
@@ -218,12 +223,12 @@ function kirimOTP() {
       // Tampilkan form OTP
       document.getElementById('step1').classList.add('hidden');
       document.getElementById('step2').classList.remove('hidden');
+
+      const notif = document.querySelector('.bg-yellow-600');
+      if (notif) notif.remove();
     }).catch(err => {
       alert("Gagal mengirim OTP");
     });
-  const notif = document.querySelector('.bg-yellow-600');
-  if (notif) notif.remove();
-
 }
 </script>
 
