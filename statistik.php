@@ -13,9 +13,6 @@ $vpsList = [
 ];
 
 $selectedVPS = $_GET['vps'] ?? 'sgdo-2dev';
-$configPath = $vpsList[$selectedVPS]['config'] ?? '/etc/xray/config.json';
-$logPath = '/var/log/xray/access.log'; // bisa disesuaikan jika log berbeda per VPS
-
 $sshPrefix = '';
 $configPath = $vpsList[$selectedVPS]['config'];
 $logPath = '/var/log/xray/access.log'; // Bisa disesuaikan per-VPS jika berbeda
