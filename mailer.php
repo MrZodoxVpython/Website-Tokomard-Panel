@@ -1,29 +1,31 @@
 <?php
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
 require 'vendor/autoload.php';
 
-$mail = new PHPMailer(true);
+use GuzzleHttp\Client;
+
+$otp = rand(100000, 999999); // generate OTP
+$emailTujuan = 'yudizlaberoz064@gmail.com'; // ganti dengan email tujuan
+
+$client = new Client([
+    'base_uri' => 'https://api.resend.com/',
+    'headers' => [
+        'Authorization' => 're_AwrPwQ6f_Jq7UhMrkmBdSAFSLMHu2r9Ai', // ganti API Key Resend
+        'Content-Type'  => 'application/json',
+    ]
+]);
 
 try {
-    $mail->isSMTP();
-    $mail->Host = 'smtp.mailersend.net';
-    $mail->SMTPAuth = true;
-    $mail->Username = 'MS_8uGM8H@tokomard.store'; // dari dashboard MailerSend
-    $mail->Password = 'mssp.vxBocLl.3z0vklo5jve47qrx.T9ohzZH'; // API Key/Password SMTP kamu
-    $mail->SMTPSecure = 'tls';
-    $mail->Port = 2525;
+    $res = $client->post('emails', [
+        'json' => [
+            'from' => 'Tokomard Panel <noreply@tokomard.store>', // HARUS verified domain
+            'to' => [$emailTujuan],
+            'subject' => 'Kode OTP Anda',
+            'html' => "<h3>Kode OTP: <strong>$otp</strong></h3><p>Jangan bagikan ke siapa pun. Berlaku 5 menit.</p>",
+        ]
+    ]);
 
-    // Ini sekarang sudah boleh karena domain sudah verified di MailerSend
-    $mail->setFrom('noreply@tokomard.store', 'Tokomard Panel');
-    $mail->addAddress('yudizlaberoz064@gmail.com'); // penerima email
-    $mail->Subject = 'Test Kirim Email via MailerSend';
-    $mail->Body    = '✅ Ini email uji coba dari PHPMailer + MailerSend (SMTP).';
-
-    $mail->send();
-    echo "✅ Email berhasil dikirim.\n";
+    echo "✅ OTP $otp berhasil dikirim ke $emailTujuan\n";
 } catch (Exception $e) {
-    echo "❌ Gagal kirim email: {$mail->ErrorInfo}\n";
+    echo "❌ Gagal kirim OTP: " . $e->getMessage() . "\n";
 }
 
