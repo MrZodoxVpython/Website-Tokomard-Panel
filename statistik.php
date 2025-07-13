@@ -163,9 +163,10 @@ error_log("⏱ Setelah include header.php: " . round(microtime(true) - $__start_
   <h2 class="text-xl font-bold text-white mb-2 sm:mb-0">Pilih VPS:</h2>
   <form method="get" class="w-full sm:w-auto">
     <select name="vps" onchange="this.form.submit()" class="bg-gray-800 text-white border border-gray-600 rounded-xl px-4 py-2">
-      <?php foreach ($vpsList as $key => $info): ?>
-        <option value="<?= $key ?>" <?= $key === $selectedVPS ? 'selected' : '' ?>><?= strtoupper($key) ?> (<?= $info['ip'] ?>)</option>
-      <?php endforeach; ?>
+  <option value="all" <?= $selectedVPS === 'all' ? 'selected' : '' ?>>ALL VPS</option>
+  <?php foreach ($vpsList as $key => $info): ?>
+    <option value="<?= $key ?>" <?= $key === $selectedVPS ? 'selected' : '' ?>><?= strtoupper($key) ?> (<?= $info['ip'] ?>)</option>
+  <?php endforeach; ?>
     </select>
   </form>
 </div>
