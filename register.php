@@ -93,8 +93,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($stmt->execute()) {
                 unset($_SESSION['otp_code'], $_SESSION['otp_email'], $_SESSION['otp_expire']);
-                header("Location: index.php?success=1");
-                exit;
+		$_SESSION['flash_success'] = "Berhasil mendaftarkan akun. Silakan login.";
+		header("Location: login.php");
+		exit;
             } else {
                 $error = "Registrasi gagal: " . $stmt->error;
             }
