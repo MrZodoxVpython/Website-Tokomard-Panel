@@ -67,10 +67,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         if (strpos($email, '@tokomard.com') !== false) {
             $role = 'admin';
-        } elseif (strpos($email, '@reseller.com') !== false) {
-            $role = 'reseller';
         } else {
-            $error = "Email tidak valid. Gunakan @reseller.com.";
+	    $role = 'reseller';
+            $error = "Email tidak valid. Gunakan akun @gmail!";
         }
 
         if (!isset($error)) {
