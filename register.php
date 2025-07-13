@@ -221,6 +221,9 @@ function kirimOTP() {
     }).catch(err => {
       alert("Gagal mengirim OTP");
     });
+  const notif = document.querySelector('.bg-yellow-600');
+  if (notif) notif.remove();
+
 }
 </script>
 
