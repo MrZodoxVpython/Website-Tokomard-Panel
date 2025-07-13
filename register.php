@@ -28,9 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_P
 
     // ⛔ Validasi domain email HARUS dilakukan SEBELUM OTP dibuat!
     if (strpos($email, '@gmail.com') === false && strpos($email, '@tokomard.com') === false) {
-        $_SESSION['flash_error'] = "Email tidak valid. Gunakan @gmail.com atau @tokomard.com!";
-        header("Location: register.php");
-        exit;
+	    http_response_code(400);
+	echo json_encode(["success" => false, "message" => "Email tidak valid. Gunakan akun @gmail!"]);
+	exit;
     }
 
     $otp = rand(100000, 999999);
