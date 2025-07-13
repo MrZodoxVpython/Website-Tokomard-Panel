@@ -118,14 +118,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $confirm  = $_POST['confirm_password'];
     $kode_otp = $_POST['kode_otp'] ?? '';
 
-    if ($password !== $confirm) {
-        $error = "Password dan konfirmasi tidak cocok.";
+    if (!preg_match('/@(gmail\.com|tokomard\.com)$/', $email)) {
+    	$error = "Email tidak valid. Gunakan hanya @gmail.com atau @tokomard.com!";
+    } elseif ($password !== $confirm) {
+    	$error = "Password dan konfirmasi tidak cocok.";
     } elseif (strpos($email, '@tokomard.com') !== false) {
         $role = 'admin';
-    } elseif (strpos($email, '@gmail.com') !== false) {
-        $role = 'reseller';
     } else {
-        $error = "Email tidak valid. Gunakan akun @gmail!";
+        $role = 'reseller';
     }
 
     // Langsung lempar error jika validasi awal gagal
