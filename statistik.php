@@ -130,17 +130,21 @@ error_log("⏱ Setelah include header.php: " . round(microtime(true) - $__start_
     <h2 class="text-xl font-bold text-white mb-4">Daftar Akun Aktif (Online &lt; 1 Menit)</h2>
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-green-700">
-        <thead class="bg-green-700">
-          <tr>
-            <th class="px-4 py-2 text-left text-sm font-semibold text-white">Username</th>
-          </tr>
-        </thead>
-        <tbody class="bg-green-600 divide-y divide-green-700">
-          <?php foreach (array_keys($activeUsers) as $username): ?>
-          <tr>
-            <td class="px-4 py-2 text-sm text-white"><?php echo htmlspecialchars($username); ?></td>
-          </tr>
-          <?php endforeach; ?>
+	<thead class="bg-green-700">
+	  <tr>
+	    <th class="px-4 py-2 text-left text-sm font-semibold text-white">No</th>
+	    <th class="px-4 py-2 text-left text-sm font-semibold text-white">Username</th>
+	  </tr>
+	</thead>
+	<tbody class="bg-green-600 divide-y divide-green-700">
+	  <?php
+	  $no = 1;
+	  foreach (array_keys($activeUsers) as $username): ?>
+	  <tr>
+	    <td class="px-4 py-2 text-sm text-white"><?php echo $no++; ?></td>
+	    <td class="px-4 py-2 text-sm text-white"><?php echo htmlspecialchars($username); ?></td>
+	  </tr>
+	  <?php endforeach; ?>
           <?php if (empty($activeUsers)): ?>
           <tr><td class="px-4 py-2 text-sm text-white text-center">Tidak ada akun aktif saat ini.</td></tr>
           <?php endif; ?>
