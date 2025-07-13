@@ -282,7 +282,7 @@ function kirimOTP() {
   const formData = new FormData();
   formData.append("email", email);
 
-  fetch("", {
+  fetch("kirim_otp.php", {  // ← Ganti dengan endpoint kamu
     method: "POST",
     body: formData
   })
@@ -307,7 +307,6 @@ function kirimOTP() {
   });
 }
 </script>
-
 </body>
 </html>
 
