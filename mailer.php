@@ -4,7 +4,7 @@ require 'vendor/autoload.php';
 use GuzzleHttp\Client;
 
 $otp = rand(100000, 999999); // generate OTP
-$emailTujuan = 'yudizlaberoz064@gmail.com'; // ganti dengan email tujuan
+$emailTujuan = 'mrzodoxvpython@gmail.com'; // ganti dengan email tujuan
 
 $client = new Client([
     'base_uri' => 'https://api.resend.com/',
