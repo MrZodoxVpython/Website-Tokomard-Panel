@@ -29,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_P
     // ⛔ Validasi domain email HARUS dilakukan SEBELUM OTP dibuat!
     if (strpos($email, '@gmail.com') === false && strpos($email, '@tokomard.com') === false) {
 	    http_response_code(400);
+	header('Content-Type: application/json');
 	echo json_encode(["success" => false, "message" => "Email tidak valid. Gunakan akun @gmail!"]);
 	exit;
     }
