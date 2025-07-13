@@ -175,12 +175,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Register - X-Panel</title>
-  <img src="https://i.imgur.com/8IiXQqY.png" alt="Logo" class="mx-auto mb-4 w-15">
   <!-- Tailwind CSS CDN -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-900 flex items-center justify-center min-h-screen text-white px-4">
-
+  <img src="https://i.imgur.com/8IiXQqY.png" alt="Logo" class="mx-auto mb-4 w-15">
   <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-md">
     <h2 class="text-3xl font-bold mb-2 text-center">Buat Akun Baru</h2>
     <p class="text-gray-400 text-center mb-6">Silakan isi data untuk mendaftar</p>
