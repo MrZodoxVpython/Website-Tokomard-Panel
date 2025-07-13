@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_P
     if (strpos($email, '@gmail.com') === false && strpos($email, '@tokomard.com') === false) {
 	http_response_code(400);
 	header('Content-Type: application/json');
-	echo json_encode(["success" => false, "message" => "Email tidak valid. Gunakan email valid @gmail.com!"]);
+	echo json_encode(["success" => false, "message" => "Email tidak valid. Gunakan email @gmail.com!"]);
 	exit;
     }
 
