@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_P
                 'from' => 'Tokomard Panel <noreply@tokomard.store>', // HARUS verified
                 'to' => [$target_email],
                 'subject' => 'Kode OTP Pendaftaran',
-                'html' => "<h3>Kode OTP Anda: <strong>$otp</strong></h3><p>Jangan bagikan ke siapa pun. Berlaku 5 menit.</p>",
+                'html' => "<h3>Kode OTP untuk <strong>$email</strong> adalah: <strong>$otp</strong></h3><p>Jangan bagikan ke siapa pun. Berlaku 5 menit.</p>"
             ]
         ]);
 	header('Content-Type: application/json');
