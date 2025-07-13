@@ -67,15 +67,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($password !== $confirm) {
         $error = "Password dan konfirmasi tidak cocok.";
+    } elseif (strpos($email, '@tokomard.com') !== false) {
+        $role = 'admin';
+    } elseif (strpos($email, '@gmail.com') !== false) {
+        $role = 'reseller';
     } else {
-        if (strpos($email, '@tokomard.com') !== false) {
-            $role = 'admin';
-        } elseif (strpos($email, '@gmail.com') !== false) {
-            $role = 'reseller';
-        } else {
-            $error = "Email tidak valid. Gunakan akun @gmail!";
-        }
+        $error = "Email tidak valid. Gunakan akun @gmail!";
+    }
 
+    // Langsung lempar error jika sudah ada error
+    if (isset($error)) {
+        $_SESSION['flash_error'] = $error;
+        header("Location: register.php");
+        exit;
+    }
         if (!isset($error)) {
             if (!isset($_SESSION['otp_code'], $_SESSION['otp_email'], $_SESSION['otp_expire']) ||
                 $_SESSION['otp_email'] !== $email ||
