@@ -58,9 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && empty($_P
                 'html' => "<h3>Kode OTP Anda: <strong>$otp</strong></h3><p>Jangan bagikan ke siapa pun. Berlaku 5 menit.</p>",
             ]
         ]);
-
-        echo "OTP sent.";
-        exit;
+	echo json_encode(["success" => true, "message" => "OTP sent"]);
+	exit;
     } catch (Exception $e) {
         echo "Gagal mengirim OTP: " . $e->getMessage();
         exit;
