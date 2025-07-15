@@ -231,7 +231,6 @@ include 'templates/header.php';
         ➕ Tambah Akun Lagi
     </a>
 <?php else: ?>
-<body class="bg-gray-900 text-white min-h-screen">
 <div class="max-w-7xl mx-auto p-4">
   <h1 class="text-center text-3xl font-bold mb-6 text-blue-400">Administrator kontrol</h1>
 
