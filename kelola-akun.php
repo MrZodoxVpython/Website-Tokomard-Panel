@@ -3,27 +3,10 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 #echo "✅ No error found!<br>";
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['expired'], $_POST['protokol'])) {
-    // Simpan form ke session
-    $_SESSION['form_data'] = $_POST;
-
-    // Redirect untuk mencegah duplikasi saat refresh
-    $query = http_build_query(['vps' => $_POST['vps'], 'success' => 1]);
-    header("Location: kelola-akun.php?$query");
-    exit;
-}
-
 session_start();
-$formData = $_SESSION['form_data'] ?? null;
-$showSuccess = isset($_GET['success']);
-$hasilTambahAkun = '';
-
-if ($showSuccess && isset($_SESSION['form_cmd'])) {
-    $cmd = $_SESSION['form_cmd'];
-    $output = shell_exec($cmd);
-    $hasilTambahAkun = "<pre class='bg-gray-900 text-green-300 p-4 rounded whitespace-pre'>$output</pre>";
-
-    unset($_SESSION['form_cmd'], $_SESSION['form_data']); // clear setelah dijalankan
+if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
+    header("Location: index.php");
+    exit;
 }
 
 // Daftar IP VPS + user SSH
@@ -45,15 +28,10 @@ $vpsInput = trim($_POST['vps'] ?? $_GET['vps'] ?? '');
 $vps = ($vpsInput === '' || !isset($vpsList[$vpsInput]) || !isset($vpsMap[$vpsInput])) ? 'sgdo-2dev' : $vpsInput;
 
 // Ambil input lain
-$username = trim($formData['username'] ?? $_POST['username'] ?? '');
-$expired  = trim($formData['expired'] ?? $_POST['expired'] ?? '');
-$protokol = trim($formData['protokol'] ?? $_POST['protokol'] ?? '');
-$key      = trim($formData['key'] ?? $_POST['key'] ?? '');
-
-//$username = trim($_POST['username'] ?? '');
-//$expired  = trim($_POST['expired'] ?? '');
-//$protokol = trim($_POST['protokol'] ?? '');
-//$key      = trim($_POST['key'] ?? '');
+$username = trim($_POST['username'] ?? '');
+$expired  = trim($_POST['expired'] ?? '');
+$protokol = trim($_POST['protokol'] ?? '');
+$key      = trim($_POST['key'] ?? '');
 
 // Tentukan path config
 $configPath = $vpsMap[$vps] ?? '/etc/xray/config.json';
@@ -82,8 +60,7 @@ if ($isRemote) {
 }
 
 // Tentukan apakah form disubmit
-//$proses = ($_SERVER['REQUEST_METHOD'] === 'POST' && $username && $expired && $protokol);
-$proses = ($formData && !$showSuccess);
+$proses = ($_SERVER['REQUEST_METHOD'] === 'POST' && $username && $expired && $protokol);
 
 // Fungsi
 function generateUUID() {
@@ -229,31 +206,8 @@ if ($proses && isset($vpsList[$vps])) {
         $cmd = "ssh -o StrictHostKeyChecking=no $vpsUser@$vpsIp 'php /root/tambah-akun.php $usernameSafe $expiredSafe $protokolSafe $keySafe'";
     }
 
-    if ($proses && isset($vpsList[$vps])) {
-    $vpsData = $vpsList[$vps];
-    $vpsIp   = $vpsData['ip'];
-    $vpsUser = $vpsData['user'];
-
-    $usernameSafe = escapeshellarg($username);
-    $expiredSafe  = escapeshellarg($expired);
-    $protokolSafe = escapeshellarg($protokol);
-    $keySafe      = escapeshellarg($key);
-
-    if ($vpsIp === '178.128.60.185' || $vps === 'sgdo-2dev') {
-        $cmd = "php /etc/xray/tambah-akun.php $usernameSafe $expiredSafe $protokolSafe $keySafe";
-    } else {
-        $cmd = "ssh -o StrictHostKeyChecking=no $vpsUser@$vpsIp 'php /root/tambah-akun.php $usernameSafe $expiredSafe $protokolSafe $keySafe'";
-    }
-
-    // Simpan ke session, eksekusi dilakukan setelah redirect
-    $_SESSION['form_cmd'] = $cmd;
-    $_SESSION['form_data'] = $_POST;
-    header("Location: kelola-akun.php?vps=$vps&success=1");
-    exit;
-}
-
-    //$output = shell_exec($cmd);
-    //$hasilTambahAkun = "<pre class='bg-gray-900 text-green-300 p-4 rounded whitespace-pre'>$output</pre>";
+    $output = shell_exec($cmd);
+    $hasilTambahAkun = "<pre class='bg-gray-900 text-green-300 p-4 rounded whitespace-pre'>$output</pre>";
 } elseif ($proses) {
     echo "<p class='text-red-400'>❌ VPS tidak dikenali.</p>";
     return;
@@ -265,7 +219,7 @@ include 'templates/header.php';
 // Form HTML dan daftar akun lanjutan...
 ?>
 <?php if ($proses): ?>
-<?php if (!empty($hasilTambahAkun)) echo $hasilTambahAkun; ?>    
+    
     <?php
     // Tampilkan hasil penambahan akun dari shell_exec (jika ada)
     if (!empty($hasilTambahAkun)) {
