@@ -3,7 +3,22 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 #echo "✅ No error found!<br>";
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['expired'], $_POST['protokol'])) {
+    // Simpan form ke session
+    $_SESSION['form_data'] = $_POST;
+
+    // Redirect untuk mencegah duplikasi saat refresh
+    $query = http_build_query(['vps' => $_POST['vps'], 'success' => 1]);
+    header("Location: kelola-akun.php?$query");
+    exit;
+}
+
 session_start();
+$formData = $_SESSION['form_data'] ?? null;
+unset($_SESSION['form_data']); // hapus agar tidak ke-trigger lagi
+
+$showSuccess = isset($_GET['success']);
+
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
     header("Location: index.php");
     exit;
@@ -28,10 +43,15 @@ $vpsInput = trim($_POST['vps'] ?? $_GET['vps'] ?? '');
 $vps = ($vpsInput === '' || !isset($vpsList[$vpsInput]) || !isset($vpsMap[$vpsInput])) ? 'sgdo-2dev' : $vpsInput;
 
 // Ambil input lain
-$username = trim($_POST['username'] ?? '');
-$expired  = trim($_POST['expired'] ?? '');
-$protokol = trim($_POST['protokol'] ?? '');
-$key      = trim($_POST['key'] ?? '');
+$username = trim($formData['username'] ?? $_POST['username'] ?? '');
+$expired  = trim($formData['expired'] ?? $_POST['expired'] ?? '');
+$protokol = trim($formData['protokol'] ?? $_POST['protokol'] ?? '');
+$key      = trim($formData['key'] ?? $_POST['key'] ?? '');
+
+//$username = trim($_POST['username'] ?? '');
+//$expired  = trim($_POST['expired'] ?? '');
+//$protokol = trim($_POST['protokol'] ?? '');
+//$key      = trim($_POST['key'] ?? '');
 
 // Tentukan path config
 $configPath = $vpsMap[$vps] ?? '/etc/xray/config.json';
@@ -60,7 +80,8 @@ if ($isRemote) {
 }
 
 // Tentukan apakah form disubmit
-$proses = ($_SERVER['REQUEST_METHOD'] === 'POST' && $username && $expired && $protokol);
+//$proses = ($_SERVER['REQUEST_METHOD'] === 'POST' && $username && $expired && $protokol);
+$proses = ($formData && !$showSuccess);
 
 // Fungsi
 function generateUUID() {
