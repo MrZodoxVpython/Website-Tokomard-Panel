@@ -231,6 +231,11 @@ include 'templates/header.php';
         ➕ Tambah Akun Lagi
     </a>
 <?php else: ?>
+<head>
+  <meta charset="UTF-8">
+   <title>Admin Tools</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
 <div class="max-w-7xl mx-auto p-4">
   <h1 class="text-center text-3xl font-bold mb-6 text-blue-400">Administrator kontrol</h1>
 
