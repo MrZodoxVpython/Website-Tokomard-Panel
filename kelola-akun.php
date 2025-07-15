@@ -15,13 +15,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['e
 
 session_start();
 $formData = $_SESSION['form_data'] ?? null;
-unset($_SESSION['form_data']); // hapus agar tidak ke-trigger lagi
-
 $showSuccess = isset($_GET['success']);
+$hasilTambahAkun = '';
 
-if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
-    header("Location: index.php");
-    exit;
+if ($showSuccess && isset($_SESSION['form_cmd'])) {
+    $cmd = $_SESSION['form_cmd'];
+    $output = shell_exec($cmd);
+    $hasilTambahAkun = "<pre class='bg-gray-900 text-green-300 p-4 rounded whitespace-pre'>$output</pre>";
+
+    unset($_SESSION['form_cmd'], $_SESSION['form_data']); // clear setelah dijalankan
 }
 
 // Daftar IP VPS + user SSH
@@ -227,8 +229,31 @@ if ($proses && isset($vpsList[$vps])) {
         $cmd = "ssh -o StrictHostKeyChecking=no $vpsUser@$vpsIp 'php /root/tambah-akun.php $usernameSafe $expiredSafe $protokolSafe $keySafe'";
     }
 
-    $output = shell_exec($cmd);
-    $hasilTambahAkun = "<pre class='bg-gray-900 text-green-300 p-4 rounded whitespace-pre'>$output</pre>";
+    if ($proses && isset($vpsList[$vps])) {
+    $vpsData = $vpsList[$vps];
+    $vpsIp   = $vpsData['ip'];
+    $vpsUser = $vpsData['user'];
+
+    $usernameSafe = escapeshellarg($username);
+    $expiredSafe  = escapeshellarg($expired);
+    $protokolSafe = escapeshellarg($protokol);
+    $keySafe      = escapeshellarg($key);
+
+    if ($vpsIp === '178.128.60.185' || $vps === 'sgdo-2dev') {
+        $cmd = "php /etc/xray/tambah-akun.php $usernameSafe $expiredSafe $protokolSafe $keySafe";
+    } else {
+        $cmd = "ssh -o StrictHostKeyChecking=no $vpsUser@$vpsIp 'php /root/tambah-akun.php $usernameSafe $expiredSafe $protokolSafe $keySafe'";
+    }
+
+    // Simpan ke session, eksekusi dilakukan setelah redirect
+    $_SESSION['form_cmd'] = $cmd;
+    $_SESSION['form_data'] = $_POST;
+    header("Location: kelola-akun.php?vps=$vps&success=1");
+    exit;
+}
+
+    //$output = shell_exec($cmd);
+    //$hasilTambahAkun = "<pre class='bg-gray-900 text-green-300 p-4 rounded whitespace-pre'>$output</pre>";
 } elseif ($proses) {
     echo "<p class='text-red-400'>❌ VPS tidak dikenali.</p>";
     return;
@@ -240,7 +265,7 @@ include 'templates/header.php';
 // Form HTML dan daftar akun lanjutan...
 ?>
 <?php if ($proses): ?>
-    
+<?php if (!empty($hasilTambahAkun)) echo $hasilTambahAkun; ?>    
     <?php
     // Tampilkan hasil penambahan akun dari shell_exec (jika ada)
     if (!empty($hasilTambahAkun)) {
