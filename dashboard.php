@@ -119,16 +119,10 @@ error_log("⏱ Dashboard load time: {$duration} seconds");
   <!-- Action Buttons -->
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-center">
     <a href="kelola-akun.php" class="block bg-indigo-600 hover:bg-indigo-700 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl text-base sm:text-lg font-semibold transition">
-      ➕ Tambah / Kelola Akun
+      ➕⚙️ Tambah / Admin Tools
     </a>
     <a href="statistik.php" class="block bg-gray-700 hover:bg-gray-800 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl text-base sm:text-lg font-semibold transition">
       📊 Lihat Statistik Lengkap
-    </a>
-        <a href="admin.php" class="block bg-pink-700 hover:bg-pink-800 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl text-base sm:text-lg font-semibold transition">
-      📊 Administratrol Tools
-    </a>
-    <a href="statis.php" class="block bg-blue-700 hover:bg-blue-800 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl text-base sm:text-lg font-semibold transition">
-      ☣️ Lihat Lengkap XxX
     </a>
   </div>
 
