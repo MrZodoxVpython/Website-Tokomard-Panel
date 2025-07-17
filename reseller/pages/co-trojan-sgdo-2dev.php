@@ -22,7 +22,9 @@ $server = [
 ];
 
 $protocol = 'trojan';
-$output = null;
+//$output = null;
+$output = $_SESSION['output'] ?? null;
+unset($_SESSION['output']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
@@ -102,9 +104,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $output = "⚠ Akun dibuat, tapi gagal memotong saldo.";
                 }
                 $stmt->close();
-            } else {
-                $output = "❌ Gagal membuat akun: $outputRaw";
-            }
+	        } else {
+  	            $output = "❌ Gagal membuat akun: $outputRaw";
+                }
+
+    		// ✅ Redirect agar tidak eksekusi ulang saat refresh
+    		$_SESSION['output'] = $output;
+    		header("Location: " . $_SERVER['PHP_SELF']);
+    		exit;
+	    }
         }
     }
 }
