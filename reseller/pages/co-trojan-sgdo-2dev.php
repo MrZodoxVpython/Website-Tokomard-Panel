@@ -115,7 +115,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     		$_SESSION['output'] = $output;
 		header("Location: co-trojan-sgdo-2dev.php");
     		exit;
-	    }
         }
     }
 }
