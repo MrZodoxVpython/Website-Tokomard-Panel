@@ -107,6 +107,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $output = "❌ Gagal membuat akun: $output";
             }
+	    $_SESSION['output'] = $output;
+	    header("Location: " . $_SERVER['PHP_SELF']);
+ 	   exit;
         }
     }
 }
