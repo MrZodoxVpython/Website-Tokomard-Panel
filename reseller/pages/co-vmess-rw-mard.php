@@ -21,7 +21,9 @@ $server = [
 ];
 
 $protocol = 'vmess';
-$output = null;
+$output = $_SESSION['output'] ?? null;
+unset($_SESSION['output']);
+//$output = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once __DIR__ . '/api-akun/lib-akun.php';
