@@ -21,7 +21,8 @@ $server = [
 ];
 
 $protocol = 'vmess';
-$output = null;
+$output = $_SESSION['output'] ?? null;
+unset($_SESSION['output']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once __DIR__ . '/api-akun/lib-akun.php';
@@ -105,6 +106,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $output = "❌ Gagal membuat akun: $output";
             }
+	    $_SESSION['output'] = $output;
+	    header("Location: " . $_SERVER['PHP_SELF']);
+	    exit;
         }
     }
 }
