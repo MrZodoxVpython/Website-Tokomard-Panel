@@ -79,22 +79,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     list($updated, $updatedLines) = updateExpired($lines, $user, $new_expired, $proto, $tagMap);
-
     if ($updated) {
-        $newConfig = implode("\n", $updatedLines);
-        if ($isRemote) {
-            $tmpFile = "/tmp/tmp_config_" . uniqid() . ".json";
-            file_put_contents($tmpFile, $newConfig);
-            shell_exec("scp -o StrictHostKeyChecking=no $tmpFile $sshUser@$sshIp:$configPath");
-	    $restartResult = shell_exec("ssh $sshUser@$sshIp 'systemctl restart xray 2>&1; echo ExitCode:\$?'");
-echo "<pre>$restartResult</pre>";
-            //shell_exec("ssh $sshUser@$sshIp 'systemctl restart xray'");
-            unlink($tmpFile);
-        } else {
-            file_put_contents($configPath, $newConfig);
-            shell_exec("systemctl restart xray");
-        }
+    $newConfig = implode("\n", $updatedLines);
+    if ($isRemote) {
+        $tmpFile = "/tmp/tmp_config_" . uniqid() . ".json";
+        file_put_contents($tmpFile, $newConfig);
+
+        // Salin ke VPS
+        $scpOutput = shell_exec("scp -o StrictHostKeyChecking=no $tmpFile $sshUser@$sshIp:$configPath 2>&1");
+
+        // Restart Xray
+        $restartOutput = shell_exec("ssh -o StrictHostKeyChecking=no $sshUser@$sshIp 'systemctl restart xray && echo ✅ Restart sukses || echo ❌ Restart gagal' 2>&1");
+
+        unlink($tmpFile);
+
+        // Tampilkan output (debug sementara, boleh dihapus setelah yakin)
+        echo "<pre class='text-sm bg-gray-900 text-white p-3 rounded mb-4 overflow-x-auto'>";
+        echo "📦 <b>SCP Output:</b>\n" . htmlspecialchars($scpOutput);
+        echo "\n\n🚀 <b>Restart Output:</b>\n" . htmlspecialchars($restartOutput);
+        echo "</pre>";
+    } else {
+        file_put_contents($configPath, $newConfig);
+        shell_exec("systemctl restart xray");
     }
+}
 }
 
 include 'templates/header.php';
