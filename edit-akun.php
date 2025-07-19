@@ -86,7 +86,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $tmpFile = "/tmp/tmp_config_" . uniqid() . ".json";
             file_put_contents($tmpFile, $newConfig);
             shell_exec("scp -o StrictHostKeyChecking=no $tmpFile $sshUser@$sshIp:$configPath");
-            shell_exec("ssh $sshUser@$sshIp 'systemctl restart xray'");
+	    $restartResult = shell_exec("ssh $sshUser@$sshIp 'systemctl restart xray 2>&1; echo ExitCode:\$?'");
+echo "<pre>$restartResult</pre>";
+            //shell_exec("ssh $sshUser@$sshIp 'systemctl restart xray'");
             unlink($tmpFile);
         } else {
             file_put_contents($configPath, $newConfig);
