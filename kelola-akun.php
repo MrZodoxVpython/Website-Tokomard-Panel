@@ -430,14 +430,20 @@ if ($isRemote) {
             echo "<td class='py-2 px-3'>$date</td>";
             echo "<td class='py-2 px-3'>";
 	    echo "<a href='edit-akun.php?user=$user&proto=$proto&vps=$vps' class='text-yellow-400 hover:underline'>Edit</a> | ";
-	    echo "<a href='hapus-akun.php?user=$user&proto=$proto&vps=$vps' class='text-red-400 hover:underline' onclick=\"return confirm('Yakin hapus akun $user?')\">Hapus</a> | ";
+	    echo "<a href='hapus-akun.php?user={$akun['username']}&proto=ssh&vps=$vps' class='text-red-400 hover:underline' onclick=\"return confirm('Yakin hapus akun {$akun['username']}?')\">Hapus</a>";
+
+//	    echo "<a href='hapus-akun.php?user=$user&proto=$proto&vps=$vps' class='text-red-400 hover:underline' onclick=\"return confirm('Yakin hapus akun $user?')\">Hapus</a> | ";
 
 //            echo "<a href='edit-akun.php?user=$user&proto=$proto' class='text-yellow-400 hover:underline'>Edit</a> | ";
  //           echo "<a href='hapus-akun.php?user=$user&proto=$proto' class='text-red-400 hover:underline' onclick=\"return confirm('Yakin hapus akun $user?')\">Hapus</a> | ";
             if ($akunStatus === 'INACTIVE') {
-                echo "<a href='?action=start&user=$user&proto=$proto' class='text-green-400 hover:underline'>Start</a>";
+		echo "<a href='?action=start&user=$user&proto=$proto&vps=$vps' class='text-green-400 hover:underline'>Start</a>";
+
+//                echo "<a href='?action=start&user=$user&proto=$proto' class='text-green-400 hover:underline'>Start</a>";
             } else {
-                echo "<a href='?action=stop&user=$user&proto=$proto' class='text-red-400 hover:underline'>Stop</a>";
+//                echo "<a href='?action=stop&user=$user&proto=$proto' class='text-red-400 hover:underline'>Stop</a>";
+		echo "<a href='?action=stop&user=$user&proto=$proto&vps=$vps' class='text-red-400 hover:underline'>Stop</a>";
+
             }
             echo "</td></tr>";
             $no++;
