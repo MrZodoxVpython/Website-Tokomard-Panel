@@ -89,15 +89,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $scpOutput = shell_exec("scp -o StrictHostKeyChecking=no $tmpFile $sshUser@$sshIp:$configPath 2>&1");
 
         // Restart Xray
-        $restartOutput = shell_exec("ssh -o StrictHostKeyChecking=no $sshUser@$sshIp 'systemctl restart xray && echo ✅ Restart sukses || echo ❌ Restart gagal' 2>&1");
+        $restartOutput = shell_exec("ssh -o StrictHostKeyChecking=no $sshUser@$sshIp 'systemctl restart xray' 2>&1");
 
         unlink($tmpFile);
-
-        // Tampilkan output (debug sementara, boleh dihapus setelah yakin)
-        echo "<pre class='text-sm bg-gray-900 text-white p-3 rounded mb-4 overflow-x-auto'>";
-        echo "📦 <b>SCP Output:</b>\n" . htmlspecialchars($scpOutput);
-        echo "\n\n🚀 <b>Restart Output:</b>\n" . htmlspecialchars($restartOutput);
-        echo "</pre>";
     } else {
         file_put_contents($configPath, $newConfig);
         shell_exec("systemctl restart xray");
