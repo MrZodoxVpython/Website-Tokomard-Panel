@@ -93,12 +93,44 @@ function insertIntoTag($configPath, $tag, $commentLine, $jsonLine) {
 }
 
 // Handle start/stop akun
-if (isset($_GET['action'], $_GET['user'], $_GET['proto'])) {
+
+if (isset($_GET['action'], $_GET['user'], $_GET['proto'], $_GET['vps'])) {
     $action = $_GET['action'];
     $user   = $_GET['user'];
     $proto  = $_GET['proto'];
+    $vps    = $_GET['vps'];
 
-    $lines = file($configPath);
+    // VPS Map dan Lokasi config
+    $vpsList = [
+        'sgdo-2dev' => ['user' => 'root', 'ip' => '127.0.0.1'],
+        'sgdo-mard1' => ['user' => 'root', 'ip' => '152.42.182.187'],
+        'rw-mard' => ['user' => 'root', 'ip' => '203.194.113.140'],
+    ];
+    $vpsMap = [
+        'sgdo-2dev' => '/etc/xray/config.json',
+        'sgdo-mard1' => '/etc/xray/config.json',
+        'rw-mard' => '/etc/xray/config.json',
+    ];
+
+    $sshUser = $vpsList[$vps]['user'];
+    $sshIp   = $vpsList[$vps]['ip'];
+    $configPath = $vpsMap[$vps];
+    $isRemote = $vps !== 'sgdo-2dev';
+
+    // Ambil config
+    if ($isRemote) {
+        $configContent = shell_exec("ssh -o StrictHostKeyChecking=no $sshUser@$sshIp 'cat $configPath'");
+        if (!$configContent) {
+            die("❌ Gagal ambil config.json dari VPS $vps");
+        }
+        $lines = explode("\n", $configContent);
+    } else {
+        if (!file_exists($configPath)) {
+            die("❌ Config file tidak ditemukan di lokal");
+        }
+        $lines = file($configPath);
+    }
+
     $updated = false;
 
     for ($i = 0; $i < count($lines); $i++) {
@@ -171,14 +203,23 @@ if (isset($_GET['action'], $_GET['user'], $_GET['proto'])) {
     }
 
     if ($updated) {
-        file_put_contents($configPath, implode("\n", array_map('rtrim', $lines)) . "\n");
-        shell_exec('systemctl restart xray');
+        $newConfig = implode("\n", array_map('rtrim', $lines)) . "\n";
+
+        if ($isRemote) {
+            $tmpFile = "/tmp/tmp_config_" . uniqid() . ".json";
+            file_put_contents($tmpFile, $newConfig);
+            shell_exec("scp -o StrictHostKeyChecking=no $tmpFile $sshUser@$sshIp:$configPath");
+            shell_exec("ssh -o StrictHostKeyChecking=no $sshUser@$sshIp 'systemctl restart xray'");
+            unlink($tmpFile);
+        } else {
+            file_put_contents($configPath, $newConfig);
+            shell_exec('systemctl restart xray');
+        }
     }
 
-    header("Location: kelola-akun.php");
+    header("Location: kelola-akun.php?vps=" . urlencode($vps));
     exit;
 }
-
 // Generate UUID kalau kosong
 if (!$key) {
     $key = generateUUID();
