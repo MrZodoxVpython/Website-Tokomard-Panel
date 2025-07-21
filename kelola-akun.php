@@ -300,6 +300,9 @@ include 'templates/header.php';
     <a href="admin/statistik.php" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-3 rounded-xl text-center shadow">
       📈 Full Cek User Xray  M
     </a>
+    <a href="admin/list-user.php" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-xl text-center shadow">
+      📋 Registered Users
+    </a>
       <a href="admin/log-akses.php" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-3 rounded-xl text-center shadow">
       🧾 Log Akses User
     </a>
@@ -314,8 +317,6 @@ include 'templates/header.php';
     </a>
     <a href="admin/pengaturan.php" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-3 rounded-xl text-center shadow">
       🔧 Pengaturan Sistem
-    <a href="admin/list-user.php" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-xl text-center shadow">
-      📋 Registered Users
     </a>
   </div>
 
