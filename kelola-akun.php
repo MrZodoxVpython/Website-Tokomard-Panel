@@ -301,7 +301,7 @@ include 'templates/header.php';
       📈 Full Cek User Xray  M
     </a>
     <a href="admin/list-user.php" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-xl text-center shadow">
-      📋 Registered Users
+      📋 Registered Users M
     </a>
       <a href="admin/log-akses.php" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-3 rounded-xl text-center shadow">
       🧾 Log Akses User
